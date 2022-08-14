@@ -72,7 +72,7 @@ void TMZ2Setup_StageLoad(void)
     RSDK.SetDrawGroupProperties(1, false, TMZ2Setup_DrawHook_RemoveDynTilesPalette);
 
     if (isMainGameMode()) {
-        if (globals->atlEnabled && !PlayerHelpers_CheckStageReload()) {
+        if (globals->atlEnabled && !CutsceneRules_CheckStageReload()) {
             Zone_ReloadStoredEntities(480 << 16, 7920 << 16, true);
             CREATE_ENTITY(TMZ1Outro, NULL, 0, 0);
         }

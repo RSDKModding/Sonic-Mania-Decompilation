@@ -106,7 +106,7 @@ void Smog_Create(void *data)
         OOZSetup->smogTimer = 0;
 
         if (!(SceneInfo->milliseconds || SceneInfo->seconds || SceneInfo->minutes)
-            || (isMainGameMode() && globals->enableIntro && !PlayerHelpers_CheckStageReload())) {
+            || (isMainGameMode() && globals->enableIntro && !CutsceneRules_CheckStageReload())) {
             Smog->starPostID        = 0;
             OOZSetup->useSmogEffect = true;
             globals->restartFlags   = OOZSetup->useSmogEffect;

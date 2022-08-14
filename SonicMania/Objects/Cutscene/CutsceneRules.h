@@ -30,6 +30,14 @@ void CutsceneRules_EditorLoad(void);
 void CutsceneRules_Serialize(void);
 
 // Extra Entity Functions
+bool32 CutsceneRules_IsAct1(void);
+bool32 CutsceneRules_IsAct2(void);
+bool32 CutsceneRules_IsIntroEnabled(void);
+bool32 CutsceneRules_IsAct1Regular(void);
+bool32 CutsceneRules_CheckStageReload(void);
+bool32 CutsceneRules_CheckPlayerPos(int32 x1, int32 y1, int32 x2, int32 y2);
+
+// Extra Helpers
 void CutsceneRules_SetupEntity(void *e, Vector2 *size, Hitbox *hitbox);
 void CutsceneRules_DrawCutsceneBounds(void *e, Vector2 *size);
 

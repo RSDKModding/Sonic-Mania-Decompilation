@@ -14,7 +14,7 @@ void HCZ1Intro_Update(void)
     RSDK_THIS(HCZ1Intro);
 
     if (!self->activated) {
-        if (!isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {
+        if (!isMainGameMode() || !globals->enableIntro || CutsceneRules_CheckStageReload()) {
             self->active = ACTIVE_NEVER;
         }
         else {
@@ -45,7 +45,7 @@ void HCZ1Intro_Create(void *data)
 
 void HCZ1Intro_StageLoad(void)
 {
-    if (isMainGameMode() && globals->enableIntro && !PlayerHelpers_CheckStageReload() && !Zone->actID) {
+    if (isMainGameMode() && globals->enableIntro && !CutsceneRules_CheckStageReload() && !Zone->actID) {
         Water->disableWaterSplash = true;
     }
 }

@@ -14,7 +14,7 @@ void MSZ1KIntro_Update(void)
     RSDK_THIS(MSZ1KIntro);
 
     if (!self->activated) {
-        if (!isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {
+        if (!isMainGameMode() || !globals->enableIntro || CutsceneRules_CheckStageReload()) {
             self->active = ACTIVE_NEVER;
         }
         else {

@@ -102,8 +102,8 @@ void Summary_State_SetupText(void)
         }
     }
 
-    self->leaderCharacterID   = HUD_CharacterIndexFromID(GET_CHARACTER_ID(1));
-    self->sidekickCharacterID = HUD_CharacterIndexFromID(GET_CHARACTER_ID(2));
+    self->leaderCharacterID   = HUD_CharacterIndexFromID(GET_CHARACTER_ID(1)) + 1;
+    self->sidekickCharacterID = HUD_CharacterIndexFromID(GET_CHARACTER_ID(2)) + 1;
 
     foreach_all(UIPicture, picture)
     {

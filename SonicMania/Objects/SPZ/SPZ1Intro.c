@@ -14,7 +14,7 @@ void SPZ1Intro_Update(void)
     RSDK_THIS(SPZ1Intro);
 
     if (!self->activated) {
-        if (!isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {
+        if (!isMainGameMode() || !globals->enableIntro || CutsceneRules_CheckStageReload()) {
             self->active = ACTIVE_NEVER;
         }
         else {

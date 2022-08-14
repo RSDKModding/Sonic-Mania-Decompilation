@@ -81,7 +81,7 @@ void MMZSetup_StageLoad(void)
 #endif
 
         MMZSetup->panelAniDuration = 16;
-        if (!PlayerHelpers_CheckStageReload() && PlayerHelpers_CheckPlayerPos(0x73C0000, 0x2C0000, 0x1040000, 0x82C0000)) {
+        if (!CutsceneRules_CheckStageReload() && CutsceneRules_CheckPlayerPos(TO_FIXED(44), TO_FIXED(1852), TO_FIXED(260), TO_FIXED(2092))) {
             Zone->cameraBoundsB[0] = 2092;
             Zone->cameraBoundsB[1] = 2092;
             Zone->cameraBoundsB[2] = 2092;
@@ -89,17 +89,17 @@ void MMZSetup_StageLoad(void)
         }
 
         if (isMainGameMode() && globals->atlEnabled) {
-            if (!PlayerHelpers_CheckStageReload())
-                Zone_ReloadStoredEntities(256 << 16, 2092 << 16, true);
+            if (!CutsceneRules_CheckStageReload())
+                Zone_ReloadStoredEntities(TO_FIXED(256), TO_FIXED(2092), true);
         }
 
 #if MANIA_USE_PLUS
-        if (isMainGameMode() && PlayerHelpers_CheckAct2())
+        if (isMainGameMode() && CutsceneRules_IsAct2())
             Zone->stageFinishCallback = MMZSetup_StageFinish_EndAct2;
 #endif
     }
     else {
-        if (isMainGameMode() && PlayerHelpers_CheckAct1()) {
+        if (isMainGameMode() && CutsceneRules_IsAct1()) {
             Zone->shouldRecoverPlayers = true;
             Zone->stageFinishCallback = MMZSetup_StageFinish_EndAct1;
         }

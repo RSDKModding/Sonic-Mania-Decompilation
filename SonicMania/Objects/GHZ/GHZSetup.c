@@ -64,11 +64,11 @@ void GHZSetup_StageLoad(void)
         BGSwitch->layerIDs[3]                    = GHZ_BG_OUTSIDE;
 
         if (isMainGameMode() && globals->atlEnabled) {
-            if (!PlayerHelpers_CheckStageReload())
+            if (!CutsceneRules_CheckStageReload())
                 GHZSetup_HandleActTransition();
         }
 
-        if (isMainGameMode() && PlayerHelpers_CheckAct2())
+        if (isMainGameMode() && CutsceneRules_IsAct2())
             Zone->stageFinishCallback = GHZSetup_StageFinish_EndAct2;
     }
     else {
@@ -79,7 +79,7 @@ void GHZSetup_StageLoad(void)
         BGSwitch->switchCallback[GHZ_BG_OUTSIDE] = GHZSetup_BGSwitch_Outside_Act1;
         BGSwitch->switchCallback[GHZ_BG_CAVES]   = GHZSetup_BGSwitch_Caves_Act1;
 
-        if (!isMainGameMode() || !globals->atlEnabled || PlayerHelpers_CheckStageReload()) {
+        if (!isMainGameMode() || !globals->atlEnabled || CutsceneRules_CheckStageReload()) {
             BGSwitch->layerIDs[0] = GHZ_BG_OUTSIDE;
             BGSwitch->layerIDs[1] = GHZ_BG_OUTSIDE;
             BGSwitch->layerIDs[2] = GHZ_BG_OUTSIDE;
@@ -89,7 +89,7 @@ void GHZSetup_StageLoad(void)
             GHZSetup_SetupAct1BG();
         }
 
-        if (isMainGameMode() && PlayerHelpers_CheckAct1())
+        if (isMainGameMode() && CutsceneRules_IsAct1())
             Zone->stageFinishCallback = GHZSetup_StageFinish_EndAct1;
     }
 

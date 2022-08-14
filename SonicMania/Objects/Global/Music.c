@@ -418,9 +418,9 @@ void Music_GetNextTrackStartPos(EntityMusic *entity)
 
     if (!stackCount) {
         if (Music->activeTrack > TRACK_NONE) {
-            if (Music->nextTrack == TRACK_NONE) {
+            if (Music->nextTrack == TRACK_NONE) 
                 Music->nextTrack = Music->activeTrack;
-            }
+
             Music->trackStartPos = RSDK.GetChannelPos(Music->channelID);
         }
     }
@@ -442,6 +442,7 @@ void Music_JingleFadeOut(uint8 trackID, bool32 transitionFade)
             else {
                 music->timer = 1;
             }
+            break;
         }
     }
 #else
@@ -493,21 +494,24 @@ void Music_FinishJingle(EntityMusic *entity)
 {
     if (entity) {
         EntityMusic *music = RSDK_GET_ENTITY(SLOT_MUSIC, Music);
-        if (music->classID != Music->classID || music->state != Music_State_PlayOnFade) {
+        if (music->classID == Music->classID && music->state == Music_State_PlayOnFade) {
+            destroyEntity(entity);
+        }
+        else {
             destroyEntity(music);
 
             // remove all of these buggers that have higher priority and thus wont be played
             for (int32 slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
                 EntityMusic *stack = RSDK_GET_ENTITY(slot, Music);
-                if (stack->classID == Music->classID && stack->trackPriority > entity->trackPriority) {
+                if (stack->classID == Music->classID && stack != entity && entity->trackPriority <= stack->trackPriority) {
                     destroyEntity(entity);
                     return;
                 }
             }
 
-            bool32 restartTrack = entity->restartTrack;
+            bool32 shouldRestartTrack = entity->restartTrack;
             destroyEntity(entity);
-            int32 priority = 0;
+            int32 priority = TRACK_PRIORITY_NONE;
 
             EntityMusic *trackPtr = NULL;
             // the next track to be played will be the track with the highest priority on the stack (may be none)
@@ -526,7 +530,7 @@ void Music_FinishJingle(EntityMusic *entity)
                 }
                 else {
                     Music->activeTrack = trackPtr->trackID;
-                    if (restartTrack)
+                    if (shouldRestartTrack)
                         trackPtr->trackStartPos = 0;
                     Music->channelID = RSDK.PlayStream(Music->trackNames[Music->activeTrack], 0, trackPtr->trackStartPos,
                                                        Music->trackLoops[Music->activeTrack], true);
@@ -542,7 +546,7 @@ void Music_FinishJingle(EntityMusic *entity)
                 Music->activeTrack = Music->nextTrack;
                 Music->nextTrack   = TRACK_NONE;
 
-                if (restartTrack)
+                if (shouldRestartTrack)
                     Music->trackStartPos = 0;
 
                 Music->channelID =
@@ -560,9 +564,6 @@ void Music_FinishJingle(EntityMusic *entity)
                     RSDK.SetChannelAttributes(Music->channelID, 1.0, 0.0, 0.75);
                 }
             }
-        }
-        else {
-            destroyEntity(entity);
         }
     }
 }
@@ -590,19 +591,15 @@ void Music_TransitionTrack(uint8 trackID, float fadeSpeed)
         case TRACK_EGGMAN2:
         case TRACK_HBHMISCHIEF:
             music            = RSDK_GET_ENTITY(SLOT_MUSIC, Music);
-            Music->nextTrack = trackID;
             break;
 
         default:
-            if (Music_CheckMusicStack_Active()) {
-                Music->nextTrack = trackID;
-            }
-            else {
-                music            = RSDK_GET_ENTITY(SLOT_MUSIC, Music);
-                Music->nextTrack = trackID;
-            }
+            if (!Music_CheckMusicStack_Active()) 
+                music = RSDK_GET_ENTITY(SLOT_MUSIC, Music);
             break;
     }
+
+    Music->nextTrack = trackID;
 #else
     if (Music->playing1UPTrack || Music->playingDrownTrack) {
         Music->nextTrack = Music->prevTrack;

@@ -92,7 +92,7 @@ void CPZSetup_StageLoad(void)
         BGSwitch->layerIDs[3] = CPZ_BG_CPZ1;
 
         bool32 setCPZ1BG = false;
-        if (!PlayerHelpers_CheckStageReload() || PlayerHelpers_CheckPlayerPos(0x18900000, 0xAC0000, 0x2560000, 0x19800000)) {
+        if (!CutsceneRules_CheckStageReload() && CutsceneRules_CheckPlayerPos(TO_FIXED(172), TO_FIXED(6288), TO_FIXED(598), TO_FIXED(6528))) {
             setCPZ1BG = true;
 
             Zone->cameraBoundsB[0] = 6528;
@@ -102,11 +102,11 @@ void CPZSetup_StageLoad(void)
         }
 
         if (isMainGameMode() && globals->atlEnabled) {
-            if (!PlayerHelpers_CheckStageReload())
-                Zone_ReloadStoredEntities(384 << 16, 6528 << 16, true);
+            if (!CutsceneRules_CheckStageReload())
+                Zone_ReloadStoredEntities(TO_FIXED(384), TO_FIXED(6528), true);
         }
 
-        if (isMainGameMode() && PlayerHelpers_CheckAct2()) {
+        if (isMainGameMode() && CutsceneRules_IsAct2()) {
             foreach_all(CPZ2Outro, outro)
             {
                 CPZSetup->outro           = outro;
@@ -128,7 +128,7 @@ void CPZSetup_StageLoad(void)
 
             backgroundAct1->scrollPos += -0x118000 * backgroundAct1->parallaxFactor;
             for (int32 i = 0; i < backgroundAct1->scrollInfoCount; ++i)
-                backgroundAct1->scrollInfo[i].scrollPos += 0x470000 * backgroundAct1->scrollInfo[i].parallaxFactor;
+                backgroundAct1->scrollInfo[i].scrollPos += TO_FIXED(71) * backgroundAct1->scrollInfo[i].parallaxFactor;
         }
         else {
             for (; BGSwitch->screenID < RSDK.GetVideoSetting(VIDEOSETTING_SCREENCOUNT); BGSwitch->screenID++) CPZSetup_BGSwitch_Act2BG();
@@ -142,7 +142,7 @@ void CPZSetup_StageLoad(void)
     else {
         if (isMainGameMode()) {
             if (globals->enableIntro) {
-                if (!PlayerHelpers_CheckStageReload()) {
+                if (!CutsceneRules_CheckStageReload()) {
                     globals->suppressAutoMusic = true;
                     globals->suppressTitlecard = true;
                 }
@@ -150,7 +150,7 @@ void CPZSetup_StageLoad(void)
         }
 
         if (isMainGameMode()) {
-            if (PlayerHelpers_CheckAct1())
+            if (CutsceneRules_IsAct1())
                 Zone->stageFinishCallback = CPZSetup_StageFinish_EndAct1;
         }
 
@@ -178,7 +178,7 @@ void CPZSetup_BGSwitch_Act1BG(void)
 void CPZSetup_StageFinish_EndAct1(void)
 {
     RSDK.GetTileLayer(0);
-    Zone_StoreEntities((ScreenInfo->position.x + ScreenInfo->center.x) << 16, (ScreenInfo->size.y + ScreenInfo->position.y) << 16);
+    Zone_StoreEntities(TO_FIXED(ScreenInfo->position.x + ScreenInfo->center.x), TO_FIXED(ScreenInfo->size.y + ScreenInfo->position.y));
     RSDK.LoadScene();
 }
 

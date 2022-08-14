@@ -446,7 +446,7 @@ void ItemBox_CheckHit(void)
                 self->position.y += self->moveOffset.y;
 
                 if (side == C_BOTTOM) {
-                    self->active = ACTIVE_ALWAYS;
+                    self->active = ACTIVE_NORMAL;
 
                     if (!self->lrzConvPhys)
                         self->state = ItemBox_State_Falling;

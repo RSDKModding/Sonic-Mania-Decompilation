@@ -13,7 +13,7 @@ void OOZ1Outro_Update(void)
 {
     RSDK_THIS(OOZ1Outro);
 
-    if (isMainGameMode() && globals->enableIntro && !PlayerHelpers_CheckStageReload()) {
+    if (isMainGameMode() && globals->enableIntro && !CutsceneRules_CheckStageReload()) {
         self->activated = true;
         CutsceneSeq_StartSequence(self, OOZ1Outro_Cutscene_FadeIn, OOZ1Outro_Cutscene_PostActClearSetup, OOZ1Outro_Cutscene_FallIntoAct2,
                                   OOZ1Outro_Cutscene_BeginAct, StateMachine_None);

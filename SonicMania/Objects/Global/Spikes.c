@@ -202,10 +202,39 @@ void Spikes_Update(void)
                     int32 storedY = player->position.y;
 
                     uint8 side = C_NONE;
+
+#if RETRO_REV0U
+                    Vector2 storePos     = player->position;
+                    Vector2 storeVel     = player->velocity;
+                    int32 storeGroundVel = player->groundVel;
+                    bool32 storeOnGround = player->onGround;
+                    int32 storeAngle     = player->angle;
+
+                    if (player->state == Ice_PlayerState_Frozen)
+                        side = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, &Ice->hitboxPlayerBlockOuter, true);
+                    else
+                        side = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, Player_GetHitbox(player), true);
+                    Vector2 collidePos = player->position;
+
+                    player->position  = storePos;
+                    player->velocity  = storeVel;
+                    player->groundVel = storeGroundVel;
+                    player->onGround  = storeOnGround;
+                    player->angle     = storeAngle;
+                    switch (side) {
+                        default:
+                        case C_NONE: break;
+                        case C_TOP: player->position.y = collidePos.y; break;
+                        case C_LEFT: player->position.x = collidePos.x; break;
+                        case C_RIGHT: player->position.x = collidePos.x; break;
+                        case C_BOTTOM: player->position.y = collidePos.y; break;
+                    }
+#else
                     if (player->state == Ice_PlayerState_Frozen)
                         side = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, &Ice->hitboxPlayerBlockOuter, false);
                     else
                         side = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, Player_GetHitbox(player), false);
+#endif
 
                     switch (side) {
                         case C_TOP:

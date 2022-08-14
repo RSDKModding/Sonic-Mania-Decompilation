@@ -134,10 +134,10 @@ void TMZ1Setup_StageLoad(void)
     RSDK.SetDrawGroupProperties(Zone->hudDrawGroup - 1, false, StateMachine_None);
     RSDK.SetDrawGroupProperties(Zone->hudDrawGroup, false, StateMachine_None);
 
-    if (isMainGameMode() && PlayerHelpers_CheckAct1())
+    if (isMainGameMode() && CutsceneRules_IsAct1())
         Zone->stageFinishCallback = TMZ1Setup_StageFinish_EndAct1;
 
-    if (PlayerHelpers_CheckStageReload())
+    if (CutsceneRules_CheckStageReload())
         TMZ1Setup->hasAchievement = true;
 }
 

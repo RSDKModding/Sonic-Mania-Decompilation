@@ -274,7 +274,7 @@ void OOZSetup_StageLoad(void)
             Zone->cameraBoundsB[0] = 1600;
 
         if (isMainGameMode() && globals->enableIntro) {
-            if (!PlayerHelpers_CheckStageReload()) {
+            if (!CutsceneRules_CheckStageReload()) {
                 SaveGame_LoadPlayerState();
                 globals->suppressAutoMusic = true;
                 globals->suppressTitlecard = true;
@@ -282,7 +282,7 @@ void OOZSetup_StageLoad(void)
         }
 
 #if MANIA_USE_PLUS
-        if (isMainGameMode() && PlayerHelpers_CheckAct2())
+        if (isMainGameMode() && CutsceneRules_IsAct2())
             Zone->stageFinishCallback = OOZ2Outro_StageFinish_EndAct2;
 
         if (SceneInfo->filter & FILTER_ENCORE) {

@@ -42,14 +42,14 @@ void SSZ1Setup_StageLoad(void)
 
     if (isMainGameMode()) {
         if (globals->enableIntro) {
-            if (!PlayerHelpers_CheckStageReload()) {
+            if (!CutsceneRules_CheckStageReload()) {
                 globals->suppressAutoMusic = true;
                 globals->suppressTitlecard = true;
             }
         }
     }
 
-    if (isMainGameMode() && PlayerHelpers_CheckAct1()) {
+    if (isMainGameMode() && CutsceneRules_IsAct1()) {
         foreach_all(SSZ1Outro, outro)
         {
             SSZ1Setup->outro = outro;

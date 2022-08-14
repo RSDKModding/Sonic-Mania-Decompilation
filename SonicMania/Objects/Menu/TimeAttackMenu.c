@@ -303,7 +303,7 @@ void TimeAttackMenu_SetEncoreLayouts(bool32 enabled)
     EntityUIButtonPrompt *prompt = TimeAttackMenu->switchModePrompt;
     prompt->promptID             = 21 - (enabled != false);
 
-    foreach_active(UITAZoneModule, module) { module->isEncore = enabled; }
+    foreach_all(UITAZoneModule, module) { module->isEncore = enabled; }
 }
 
 void TimeAttackMenu_DeleteReplayActionCB(void)

@@ -86,7 +86,7 @@ void PSZ2Setup_StageLoad(void)
     PSZ2Setup->aniTiles1 = RSDK.LoadSpriteSheet("PSZ2/AniTiles.gif", SCOPE_STAGE);
     PSZ2Setup->aniTiles2 = RSDK.LoadSpriteSheet("PSZ2/AniTiles2.gif", SCOPE_STAGE);
 
-    if (!isMainGameMode() || !globals->atlEnabled || PlayerHelpers_CheckStageReload()) {
+    if (!isMainGameMode() || !globals->atlEnabled || CutsceneRules_CheckStageReload()) {
         Zone->cameraBoundsL[0] = 1024;
         Zone->cameraBoundsL[1] = 1024;
         Zone->cameraBoundsL[2] = 1024;
@@ -101,7 +101,7 @@ void PSZ2Setup_StageLoad(void)
         PSZ2Setup_ActTransitionLoad();
     }
 
-    if (isMainGameMode() && PlayerHelpers_CheckAct2())
+    if (isMainGameMode() && CutsceneRules_IsAct2())
         Zone->stageFinishCallback = PSZ2Setup_StageFinish_EndAct2;
 
 #if MANIA_USE_PLUS

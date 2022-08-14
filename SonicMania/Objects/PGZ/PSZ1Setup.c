@@ -238,7 +238,7 @@ void PSZ1Setup_StageLoad(void)
     PSZ1Setup->buttonSideAniFrame    = 0;
     RSDK.DrawAniTiles(PSZ1Setup->aniTiles1, 223, 0, 224, 16, 32);
 
-    if (isMainGameMode() && PlayerHelpers_CheckAct1())
+    if (isMainGameMode() && CutsceneRules_IsAct1())
         Zone->stageFinishCallback = PSZ1Setup_StageFinish_EndAct1;
 
 #if MANIA_USE_PLUS

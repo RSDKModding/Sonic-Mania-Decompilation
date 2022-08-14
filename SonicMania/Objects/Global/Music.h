@@ -34,8 +34,8 @@ typedef enum {
     TRACK_PRIORITY_ANY     = 10,
     TRACK_PRIORITY_POWERUP = 100,
     TRACK_PRIORITY_SUPER   = 1000,
-    TRACK_PRIORITY_DROWN   = 1000,
-    TRACK_PRIORITY_1UP     = 10000,
+    TRACK_PRIORITY_DROWN   = 10000,
+    TRACK_PRIORITY_1UP     = 100000,
 } TrackPriorityValues;
 
 // Object Class

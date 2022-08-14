@@ -20,11 +20,17 @@ void SSZSpikeBall_Update(void)
         if (self->type < SSZSPIKEBALL_MOVEBALL_UP)
             Player_CheckCollisionBox(player, self, &SSZSpikeBall->hitboxBase[self->type]);
 
-        if (Player_CheckCollisionTouch(player, &self->spikeBallPos, &SSZSpikeBall->hitboxSpikeBall)) {
+        Vector2 posStore = self->position;
+        self->position   = self->spikeBallPos;
+        if (Player_CheckCollisionTouch(player, self, &SSZSpikeBall->hitboxSpikeBall)) {
+            self->position = posStore;
 #if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x400, 2, &player->uncurlTimer))
 #endif
                 Player_Hurt(player, self);
+        }
+        else {
+            self->position = posStore;
         }
     }
 }

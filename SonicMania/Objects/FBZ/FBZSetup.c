@@ -98,7 +98,7 @@ void FBZSetup_StageLoad(void)
         foreach_all(ParallaxSprite, parallaxSprite) { destroyEntity(parallaxSprite); }
     }
 
-    if (isMainGameMode() && PlayerHelpers_CheckAct1()) {
+    if (isMainGameMode() && CutsceneRules_IsAct1()) {
         foreach_all(FBZ1Outro, outro)
         {
             Zone->shouldRecoverPlayers = true;
@@ -108,12 +108,12 @@ void FBZSetup_StageLoad(void)
         Zone->stageFinishCallback = FBZSetup_StageFinish_EndAct1;
     }
 
-    if (isMainGameMode() && globals->atlEnabled && !PlayerHelpers_CheckStageReload()) {
+    if (isMainGameMode() && globals->atlEnabled && !CutsceneRules_CheckStageReload()) {
         FBZSetup_ActTransitionLoad();
     }
 
 #if MANIA_USE_PLUS
-    if (isMainGameMode() && PlayerHelpers_CheckAct2())
+    if (isMainGameMode() && CutsceneRules_IsAct2())
         Zone->stageFinishCallback = FBZSetup_StageFinish_EndAct2;
 
     if ((SceneInfo->filter & FILTER_ENCORE)) {

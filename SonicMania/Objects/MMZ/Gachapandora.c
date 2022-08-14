@@ -18,7 +18,12 @@ void Gachapandora_Update(void)
 
 void Gachapandora_LateUpdate(void) {}
 
-void Gachapandora_StaticUpdate(void) { RSDK.AddDrawListRef(Zone->objectDrawGroup[0] + 1, RSDK.GetEntitySlot(Gachapandora->eggman)); }
+void Gachapandora_StaticUpdate(void) { 
+    // Bug Details: 
+    // there's no NULL check here for Gachapandora->eggman so this will be called even on MMZ1 and its NULL.
+    // Gachapandora->eggman also isn't cleared on StageLoad so this can point to a random entity
+    RSDK.AddDrawListRef(Zone->objectDrawGroup[0] + 1, RSDK.GetEntitySlot(Gachapandora->eggman)); 
+}
 
 void Gachapandora_Draw(void)
 {

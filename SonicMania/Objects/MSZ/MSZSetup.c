@@ -176,19 +176,19 @@ void MSZSetup_StageLoad(void)
                 Zone->cameraBoundsL[2] = 0;
                 Zone->cameraBoundsL[3] = 0;
 
-                if (!PlayerHelpers_CheckStageReload() && PlayerHelpers_CheckPlayerPos(0x1440000, 0x4C0000, 0x1F40000, 0x2340000)) {
+                if (!CutsceneRules_CheckStageReload() && CutsceneRules_CheckPlayerPos(TO_FIXED(76), TO_FIXED(324), TO_FIXED(500), TO_FIXED(564))) {
                     Zone->cameraBoundsB[0] = 564;
                     Zone->cameraBoundsB[1] = 564;
                     Zone->cameraBoundsB[2] = 564;
                     Zone->cameraBoundsB[3] = 564;
                 }
 
-                if (isMainGameMode() && globals->atlEnabled && !PlayerHelpers_CheckStageReload()) {
-                    Zone_ReloadStoredEntities(288 << 16, 560 << 16, true);
+                if (isMainGameMode() && globals->atlEnabled && !CutsceneRules_CheckStageReload()) {
+                    Zone_ReloadStoredEntities(TO_FIXED(288), TO_FIXED(560), true);
                 }
             }
             else if (isMainGameMode() && globals->atlEnabled) {
-                if (!PlayerHelpers_CheckStageReload()) {
+                if (!CutsceneRules_CheckStageReload()) {
                     MSZSetup_HandleRestart();
                 }
                 else {
@@ -201,7 +201,7 @@ void MSZSetup_StageLoad(void)
                 globals->parallaxOffset[1] = 0;
             }
 
-            if (isMainGameMode() && PlayerHelpers_CheckAct2()) {
+            if (isMainGameMode() && CutsceneRules_IsAct2()) {
                 foreach_all(MSZ2Cutscene, cutscene)
                 {
                     MSZSetup->msz2Cutscene = cutscene;
@@ -219,7 +219,7 @@ void MSZSetup_StageLoad(void)
                 RSDK.ResetEntitySlot(32, MSZSetup->classID, MSZSetup_State_ManageFade_E);
 
                 if (isMainGameMode()) {
-                    if (PlayerHelpers_CheckAct1())
+                    if (CutsceneRules_IsAct1())
                         Zone->stageFinishCallback = MSZSetup_StageFinish_EndAct1E;
                 }
             }
@@ -227,10 +227,10 @@ void MSZSetup_StageLoad(void)
                 if (RSDK.GetEntityCount(Tornado->classID, false) <= 0) {
                     RSDK.ResetEntitySlot(32, MSZSetup->classID, MSZSetup_State_ManageFade_K);
 
-                    if (!PlayerHelpers_CheckIntro())
+                    if (!CutsceneRules_IsIntroEnabled())
                         FXFade_StopAll();
 
-                    if (PlayerHelpers_CheckAct1Regular()) {
+                    if (CutsceneRules_IsAct1Regular()) {
                         Zone->shouldRecoverPlayers = true;
                         Zone->stageFinishCallback = MSZSetup_StageFinish_EndAct1K;
                     }
@@ -240,7 +240,7 @@ void MSZSetup_StageLoad(void)
                     MSZSetup_ReloadBGParallax_Multiply(0x400);
                     RSDK.ResetEntitySlot(32, MSZSetup->classID, MSZSetup_State_ManageFade_ST);
 
-                    if (PlayerHelpers_CheckAct1Regular())
+                    if (CutsceneRules_IsAct1Regular())
                         Zone->stageFinishCallback = MSZSetup_StageFinish_EndAct1ST;
                     GiantPistol->inCutscene = true;
                 }
@@ -248,10 +248,10 @@ void MSZSetup_StageLoad(void)
 #else
             if (CHECK_CHARACTER_ID(ID_KNUCKLES, 1)) {
                 RSDK.ResetEntitySlot(17, MSZSetup->classID, MSZSetup_State_ManageFade_K);
-                if (!PlayerHelpers_CheckIntro())
+                if (!CutsceneRules_IsIntroEnabled())
                     FXFade_StopAll();
 
-                if (PlayerHelpers_CheckAct1Regular()) {
+                if (CutsceneRules_IsAct1Regular()) {
                     Zone->shouldRecoverPlayers = true;
                     Zone->stageFinishCallback = MSZSetup_StageFinish_EndAct1K;
                 }
@@ -261,7 +261,7 @@ void MSZSetup_StageLoad(void)
                 MSZSetup_ReloadBGParallax_Multiply(0x400);
                 RSDK.ResetEntitySlot(17, MSZSetup->classID, MSZSetup_State_ManageFade_ST);
 
-                if (PlayerHelpers_CheckAct1Regular())
+                if (CutsceneRules_IsAct1Regular())
                     Zone->stageFinishCallback = MSZSetup_StageFinish_EndAct1ST;
             }
 #endif

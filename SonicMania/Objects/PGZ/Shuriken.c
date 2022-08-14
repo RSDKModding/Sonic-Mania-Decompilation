@@ -77,10 +77,10 @@ void Shuriken_StageLoad(void)
     Shuriken->hitboxRange.right  = 64;
     Shuriken->hitboxRange.bottom = 256;
 
-    Shuriken->hitboxArrow.top    = -3;
-    Shuriken->hitboxArrow.left   = -16;
-    Shuriken->hitboxArrow.right  = 16;
-    Shuriken->hitboxArrow.bottom = 5;
+    Shuriken->hitboxShuriken.top    = -3;
+    Shuriken->hitboxShuriken.left   = -16;
+    Shuriken->hitboxShuriken.right  = 16;
+    Shuriken->hitboxShuriken.bottom = 5;
 
     Shuriken->hitboxPlatform.top    = 0;
     Shuriken->hitboxPlatform.left   = -16;
@@ -97,11 +97,11 @@ void Shuriken_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &Shuriken->hitboxArrow)) {
+        if (Player_CheckCollisionTouch(player, self, &Shuriken->hitboxShuriken)) {
 #if MANIA_USE_PLUS
             if (Player_CheckMightyShellHit(player, self, -0x400, -0x600)) {
                 self->interaction = false;
-                self->state       = Shuriken_State_ArrowDebris;
+                self->state       = Shuriken_State_ShurikenDebris;
             }
             else {
 #endif
@@ -121,8 +121,9 @@ void Shuriken_HandleSolidCollisions(void)
 
     foreach_active(Player, player)
     {
+        bool32 wasOnGround = self->onGround;
         if (Player_CheckCollisionPlatform(player, self, &Shuriken->hitboxPlatform)) {
-            if (!player->onGround && !player->sidekick && !self->dropTimer)
+            if (!wasOnGround && !player->sidekick && !self->dropTimer)
                 self->dropTimer = 1;
 
             self->activePlayers |= 1 << RSDK.GetEntitySlot(player);
@@ -154,7 +155,7 @@ void Shuriken_State_AwaitActivate(void)
 
         if (!((timer + self->intervalOffset) % self->interval)) {
             RSDK.SetSpriteAnimation(Shuriken->aniFrames, 2, &self->animator, false, 0);
-            self->state = Shuriken_State_FireArrow;
+            self->state = Shuriken_State_FireShuriken;
             self->timer = 0;
         }
     }
@@ -198,22 +199,22 @@ void Shuriken_State_ShootDelay(void)
     }
     else {
         RSDK.SetSpriteAnimation(Shuriken->aniFrames, 2, &self->animator, false, 0);
-        self->state = Shuriken_State_FireArrow;
-        Shuriken_State_FireArrow();
+        self->state = Shuriken_State_FireShuriken;
+        Shuriken_State_FireShuriken();
     }
 }
 
-void Shuriken_State_FireArrow(void)
+void Shuriken_State_FireShuriken(void)
 {
     RSDK_THIS(Shuriken);
 
     if (self->timer >= 15) {
         RSDK.PlaySfx(Shuriken->sfxArrowLaunch, false, 255);
         RSDK.SetSpriteAnimation(Shuriken->aniFrames, 3, &self->animator, false, 0);
-        self->state = Shuriken_State_ArrowFired;
+        self->state = Shuriken_State_ShurikenFired;
 
         EntityShuriken *shuriken = CREATE_ENTITY(Shuriken, self, self->position.x, self->position.y);
-        shuriken->state          = Shuriken_State_ArrowSetup;
+        shuriken->state          = Shuriken_State_InitShuriken;
         shuriken->direction      = self->direction;
         shuriken->active         = ACTIVE_NORMAL;
         shuriken->velocity.x     = self->direction == FLIP_NONE ? 0x40000 : -0x40000;
@@ -223,15 +224,15 @@ void Shuriken_State_FireArrow(void)
     }
 }
 
-void Shuriken_State_ArrowFired(void)
+void Shuriken_State_ShurikenFired(void)
 {
     RSDK_THIS(Shuriken);
 
     bool32 collided = false;
     foreach_active(Shuriken, shuriken)
     {
-        if (shuriken->state == Shuriken_State_ArrowInAir) {
-            if (RSDK.CheckObjectCollisionTouchBox(self, &Shuriken->hitboxShooter, shuriken, &Shuriken->hitboxArrow)) {
+        if (shuriken->state == Shuriken_State_ShurikenThrown) {
+            if (RSDK.CheckObjectCollisionTouchBox(self, &Shuriken->hitboxShooter, shuriken, &Shuriken->hitboxShuriken)) {
                 collided = true;
                 foreach_break;
             }
@@ -255,7 +256,7 @@ void Shuriken_State_Deactivate(void)
         self->timer++;
 }
 
-void Shuriken_State_ArrowSetup(void)
+void Shuriken_State_InitShuriken(void)
 {
     RSDK_THIS(Shuriken);
 
@@ -265,11 +266,11 @@ void Shuriken_State_ArrowSetup(void)
     self->drawGroup = Zone->objectDrawGroup[1] - 1;
     RSDK.SetSpriteAnimation(Shuriken->aniFrames, 5, &self->animator, true, 0);
 
-    self->state = Shuriken_State_ArrowInAir;
-    Shuriken_State_ArrowInAir();
+    self->state = Shuriken_State_ShurikenThrown;
+    Shuriken_State_ShurikenThrown();
 }
 
-void Shuriken_State_ArrowInAir(void)
+void Shuriken_State_ShurikenThrown(void)
 {
     RSDK_THIS(Shuriken);
 
@@ -292,20 +293,20 @@ void Shuriken_State_ArrowInAir(void)
         foreach_active(Shuriken, shuriken)
         {
             if (shuriken != self) {
-                if (RSDK.CheckObjectCollisionTouchBox(self, &Shuriken->hitboxArrow, shuriken, &Shuriken->hitboxArrow)) {
+                if (RSDK.CheckObjectCollisionTouchBox(self, &Shuriken->hitboxShuriken, shuriken, &Shuriken->hitboxShuriken)) {
                     shuriken->velocity.y = 0;
-                    shuriken->state      = Shuriken_State_ArrowFall;
+                    shuriken->state      = Shuriken_State_ShurikenFall;
                 }
             }
         }
 
         self->velocity.x = 0;
         RSDK.PlaySfx(Shuriken->sfxArrowHit, false, 255);
-        self->state = Shuriken_State_ArrowOnWall;
+        self->state = Shuriken_State_ShurikenStuck;
     }
 }
 
-void Shuriken_State_ArrowOnWall(void)
+void Shuriken_State_ShurikenStuck(void)
 {
     RSDK_THIS(Shuriken);
 
@@ -327,11 +328,11 @@ void Shuriken_State_ArrowOnWall(void)
         self->updateRange.x = 0x4000000;
         self->updateRange.y = 0x4000000;
         self->velocity.y    = 0;
-        self->state         = Shuriken_State_ArrowFall;
+        self->state         = Shuriken_State_ShurikenFall;
     }
 }
 
-void Shuriken_State_ArrowFall(void)
+void Shuriken_State_ShurikenFall(void)
 {
     RSDK_THIS(Shuriken);
 
@@ -347,7 +348,7 @@ void Shuriken_State_ArrowFall(void)
 }
 
 #if MANIA_USE_PLUS
-void Shuriken_State_ArrowDebris(void)
+void Shuriken_State_ShurikenDebris(void)
 {
     RSDK_THIS(Shuriken);
 

@@ -3512,7 +3512,7 @@ void Player_Hit(EntityPlayer *player)
             break;
 
         case PLAYER_HURT_DIE: // Hurt, dies.
-            player->deathType = PLAYER_DEATH_DIE_NOSFX;
+            player->deathType = PLAYER_DEATH_DIE_USESFX;
             break;
     }
 }

@@ -188,11 +188,11 @@ void PhantomMystic_Draw_CupSwap(void)
 
     Vector2 drawPos = self->position;
     if (self->invincibilityTimer & 1) {
-        RSDK.CopyPalette(2, 128, 0, 128, 128);
+        RSDK.CopyPalette(6, 128, 4, 128, 128);
 
         RSDK.DrawSprite(&self->mysticAnimator, &self->mysticPos, false);
 
-        RSDK.CopyPalette(1, 128, 0, 128, 128);
+        RSDK.CopyPalette(5, 128, 4, 128, 128);
     }
     else {
         RSDK.DrawSprite(&self->mysticAnimator, &self->mysticPos, false);

@@ -36,19 +36,19 @@ void LRZ3Setup_StageLoad(void)
         Zone_StartFadeIn(10, 0x000000);
     }
 
-    if (isMainGameMode() && globals->enableIntro && (!PlayerHelpers_CheckStageReload() || !PlayerHelpers_CheckStageReload())) {
+    if (isMainGameMode() && globals->enableIntro && (!CutsceneRules_CheckStageReload() || !CutsceneRules_CheckStageReload())) {
         CREATE_ENTITY(LRZ3Cutscene, NULL, 0, 0);
     }
 
 #if MANIA_USE_PLUS
     if (globals->gameMode == MODE_ENCORE && globals->tempFlags) {
-        if (!PlayerHelpers_CheckStageReload()) {
+        if (!CutsceneRules_CheckStageReload()) {
             foreach_all(Player, player) { player->position.y += 0x8000000; }
         }
     }
 #endif
 
-    if (isMainGameMode() && PlayerHelpers_CheckAct2()) {
+    if (isMainGameMode() && CutsceneRules_IsAct2()) {
 #if MANIA_USE_PLUS
         if (globals->gameMode == MODE_ENCORE) {
             if (!globals->tempFlags) {

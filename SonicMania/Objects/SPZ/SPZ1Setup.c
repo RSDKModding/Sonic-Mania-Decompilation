@@ -92,10 +92,10 @@ void SPZ1Setup_StageLoad(void)
     Animals->animalTypes[0] = ANIMAL_PECKY;
     Animals->animalTypes[1] = ANIMAL_MICKY;
 
-    if (isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload())
+    if (isMainGameMode() || !globals->enableIntro || CutsceneRules_CheckStageReload())
         FXFade_StopAll();
 
-    if (isMainGameMode() && PlayerHelpers_CheckAct1()) {
+    if (isMainGameMode() && CutsceneRules_IsAct1()) {
         Zone->shouldRecoverPlayers = true;
         Zone->stageFinishCallback = SPZ1Setup_StageFinish_EndAct1;
     }

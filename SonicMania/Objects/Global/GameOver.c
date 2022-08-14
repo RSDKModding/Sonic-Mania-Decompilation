@@ -313,6 +313,7 @@ void GameOver_State_ExitLetters(void)
 #endif
             RSDK.SetVideoSetting(VIDEOSETTING_SCREENCOUNT, 1);
             RSDK.SetScene("Presentation", "Menu");
+            RSDK.LoadScene();
         }
         else if (self->animator.animationID != 6) {
             StarPost->storedMS      = 0;
@@ -324,6 +325,7 @@ void GameOver_State_ExitLetters(void)
             SaveRAM *saveRAM = SaveGame->saveRAM;
             if (globals->gameMode >= MODE_TIMEATTACK) {
                 RSDK.SetScene("Presentation", "Menu");
+                RSDK.LoadScene();
             }
             else if (globals->continues > 0) {
                 saveRAM->storedStageID = SceneInfo->listPos;
@@ -340,6 +342,7 @@ void GameOver_State_ExitLetters(void)
                 }
 #endif
                 RSDK.SetScene("Presentation", "Continue");
+                RSDK.LoadScene();
             }
             else {
                 saveRAM->lives    = 3;
@@ -357,10 +360,9 @@ void GameOver_State_ExitLetters(void)
                 UIWaitSpinner_StartWait();
                 SaveGame_SaveFile(GameOver_SaveGameCallback);
                 RSDK.SetScene("Presentation", "Menu");
+                // GameOver_SaveGameCallback() loads the scene instead of doing it here
             }
         }
-
-        RSDK.LoadScene();
     }
 }
 

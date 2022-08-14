@@ -14,7 +14,7 @@ void CPZ1Intro_Update(void)
     RSDK_THIS(CPZ1Intro);
 
     if (!self->activated) {
-        if (!isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {
+        if (!isMainGameMode() || !globals->enableIntro || CutsceneRules_CheckStageReload()) {
             destroyEntity(CPZ1Intro->fxRuby);
             self->active = ACTIVE_NEVER;
         }

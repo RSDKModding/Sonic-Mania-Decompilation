@@ -197,20 +197,20 @@ void HCZSetup_StageLoad(void)
     Water->waterPalette = 1;
 
     if (Zone->actID) {
-        if (!PlayerHelpers_CheckStageReload())
-            PlayerHelpers_CheckPlayerPos(1424 << 16, 176 << 16, 608 << 16, 1664 << 16);
+        if (!CutsceneRules_CheckStageReload())
+            CutsceneRules_CheckPlayerPos(TO_FIXED(176), TO_FIXED(1424), TO_FIXED(608), TO_FIXED(1664));
 
         Zone->cameraBoundsL[0] = 168;
         Zone->cameraBoundsL[1] = 168;
         Zone->cameraBoundsL[2] = 168;
         Zone->cameraBoundsL[3] = 168;
 
-        if (isMainGameMode() && globals->atlEnabled && !PlayerHelpers_CheckStageReload())
-            Zone_ReloadStoredEntities(388 << 16, 1696 << 16, true);
+        if (isMainGameMode() && globals->atlEnabled && !CutsceneRules_CheckStageReload())
+            Zone_ReloadStoredEntities(TO_FIXED(388), TO_FIXED(1696), true);
 
         Zone->stageFinishCallback = HCZSetup_StageFinish_EndAct2;
     }
-    else if (isMainGameMode() && PlayerHelpers_CheckAct1()) {
+    else if (isMainGameMode() && CutsceneRules_IsAct1()) {
         Zone->shouldRecoverPlayers = true;
         Zone->stageFinishCallback = HCZSetup_StageFinish_EndAct1;
     }

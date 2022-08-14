@@ -8,7 +8,7 @@ struct ObjectShuriken {
     RSDK_OBJECT
     Hitbox hitboxShooter;
     Hitbox hitboxRange;
-    Hitbox hitboxArrow;
+    Hitbox hitboxShuriken;
     Hitbox hitboxPlatform;
     int32 timerGroups[255];
     uint16 aniFrames;
@@ -56,17 +56,17 @@ void Shuriken_State_Init(void);
 void Shuriken_State_AwaitActivate(void);
 void Shuriken_State_CheckPlayerInRange(void);
 void Shuriken_State_ShootDelay(void);
-void Shuriken_State_FireArrow(void);
-void Shuriken_State_ArrowFired(void);
+void Shuriken_State_FireShuriken(void);
+void Shuriken_State_ShurikenFired(void);
 void Shuriken_State_Deactivate(void);
 
 // Arrow States
-void Shuriken_State_ArrowSetup(void);
-void Shuriken_State_ArrowInAir(void);
-void Shuriken_State_ArrowOnWall(void);
-void Shuriken_State_ArrowFall(void);
+void Shuriken_State_InitShuriken(void);
+void Shuriken_State_ShurikenThrown(void);
+void Shuriken_State_ShurikenStuck(void);
+void Shuriken_State_ShurikenFall(void);
 #if MANIA_USE_PLUS
-void Shuriken_State_ArrowDebris(void);
+void Shuriken_State_ShurikenDebris(void);
 #endif
 
 #endif //! OBJ_SHURIKEN_H

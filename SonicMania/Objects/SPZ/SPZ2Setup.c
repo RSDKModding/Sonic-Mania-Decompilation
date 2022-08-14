@@ -111,7 +111,7 @@ void SPZ2Setup_StageLoad(void)
     Animals->animalTypes[1] = ANIMAL_MICKY;
 
     if (isMainGameMode() && globals->atlEnabled) {
-        if (!PlayerHelpers_CheckStageReload()) {
+        if (!CutsceneRules_CheckStageReload()) {
             Zone->cameraBoundsL[0] = 0x100 - ScreenInfo->center.x;
             Zone_ReloadStoredEntities(256 << 16, 1376 << 16, true);
 
@@ -119,7 +119,7 @@ void SPZ2Setup_StageLoad(void)
         }
     }
 
-    if (isMainGameMode() && PlayerHelpers_CheckAct2()) {
+    if (isMainGameMode() && CutsceneRules_IsAct2()) {
         foreach_all(SPZ2Outro, entity) { foreach_break; }
         SPZ2Setup->outro = entity;
 

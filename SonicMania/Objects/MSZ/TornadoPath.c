@@ -30,7 +30,7 @@ void TornadoPath_Create(void *data)
         switch (self->type) {
             case TORNADOPATH_START:
                 if (!StarPost->postIDs[0]
-                    && PlayerHelpers_CheckPlayerPos(self->position.x - (self->size.x >> 1), self->position.y - (self->size.y >> 1),
+                    && CutsceneRules_CheckPlayerPos(self->position.x - (self->size.x >> 1), self->position.y - (self->size.y >> 1),
                                                     self->position.x + (self->size.x >> 1), self->position.y + (self->size.y >> 1))) {
                     TornadoPath_SetupHitbox();
                     self->active = ACTIVE_NORMAL;
@@ -78,15 +78,15 @@ void TornadoPath_Create(void *data)
 
             case TORNADOPATH_ENTERTORNADO:
             case TORNADOPATH_ENTERTORNADO_FLYTOBOSS:
-                if (StarPost->postIDs[0]
-                    || !PlayerHelpers_CheckPlayerPos(self->position.y - (self->size.y >> 1), self->position.x - (self->size.x >> 1),
-                                                     self->position.x + (self->size.x >> 1), self->position.y + (self->size.y >> 1))) {
-                    self->active       = ACTIVE_XBOUNDS;
+                if (!StarPost->postIDs[0]
+                    && CutsceneRules_CheckPlayerPos(self->position.x - (self->size.x >> 1), self->position.y - (self->size.y >> 1),
+                                                    self->position.x + (self->size.x >> 1), self->position.y + (self->size.y >> 1))) {
+                    self->active       = ACTIVE_NEVER;
                     self->state        = TornadoPath_State_PrepareCatchPlayer;
                     self->currentSpeed = self->targetSpeed;
                 }
                 else {
-                    self->active       = ACTIVE_NEVER;
+                    self->active       = ACTIVE_XBOUNDS;
                     self->state        = TornadoPath_State_PrepareCatchPlayer;
                     self->currentSpeed = self->targetSpeed;
                 }

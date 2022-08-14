@@ -2564,12 +2564,12 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(ParticleHelpers_SetupFallingParticles);
 
     // Helpers/PlayerHelpers
-    ADD_PUBLIC_FUNC(PlayerHelpers_CheckAct1);
-    ADD_PUBLIC_FUNC(PlayerHelpers_CheckAct2);
-    ADD_PUBLIC_FUNC(PlayerHelpers_CheckIntro);
-    ADD_PUBLIC_FUNC(PlayerHelpers_CheckAct1Regular);
-    ADD_PUBLIC_FUNC(PlayerHelpers_CheckStageReload);
-    ADD_PUBLIC_FUNC(PlayerHelpers_CheckPlayerPos);
+    ADD_PUBLIC_FUNC(CutsceneRules_IsAct1);
+    ADD_PUBLIC_FUNC(CutsceneRules_IsAct2);
+    ADD_PUBLIC_FUNC(CutsceneRules_IsIntroEnabled);
+    ADD_PUBLIC_FUNC(CutsceneRules_IsAct1Regular);
+    ADD_PUBLIC_FUNC(CutsceneRules_CheckStageReload);
+    ADD_PUBLIC_FUNC(CutsceneRules_CheckPlayerPos);
 
     // Helpers/PlayerProbe
     ADD_PUBLIC_FUNC(PlayerProbe_Print);
@@ -4939,15 +4939,15 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Shuriken_State_AwaitActivate);
     ADD_PUBLIC_FUNC(Shuriken_State_CheckPlayerInRange);
     ADD_PUBLIC_FUNC(Shuriken_State_ShootDelay);
-    ADD_PUBLIC_FUNC(Shuriken_State_FireArrow);
-    ADD_PUBLIC_FUNC(Shuriken_State_ArrowFired);
+    ADD_PUBLIC_FUNC(Shuriken_State_FireShuriken);
+    ADD_PUBLIC_FUNC(Shuriken_State_ShurikenFired);
     ADD_PUBLIC_FUNC(Shuriken_State_Deactivate);
-    ADD_PUBLIC_FUNC(Shuriken_State_ArrowSetup);
-    ADD_PUBLIC_FUNC(Shuriken_State_ArrowInAir);
-    ADD_PUBLIC_FUNC(Shuriken_State_ArrowOnWall);
-    ADD_PUBLIC_FUNC(Shuriken_State_ArrowFall);
+    ADD_PUBLIC_FUNC(Shuriken_State_InitShuriken);
+    ADD_PUBLIC_FUNC(Shuriken_State_ShurikenThrown);
+    ADD_PUBLIC_FUNC(Shuriken_State_ShurikenStuck);
+    ADD_PUBLIC_FUNC(Shuriken_State_ShurikenFall);
 #if MANIA_USE_PLUS
-    ADD_PUBLIC_FUNC(Shuriken_State_ArrowDebris);
+    ADD_PUBLIC_FUNC(Shuriken_State_ShurikenDebris);
 #endif
 
     // PGZ/Snowflakes

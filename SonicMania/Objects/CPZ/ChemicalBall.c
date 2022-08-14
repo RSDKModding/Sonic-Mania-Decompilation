@@ -80,8 +80,15 @@ void ChemicalBall_CheckHit(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, &self->drawPos, &ChemicalBall->hitboxBall))
+        Vector2 posStore = self->position;
+        self->position   = self->drawPos;
+        if (Player_CheckCollisionTouch(player, self, &ChemicalBall->hitboxBall)) {
+            self->position = posStore;
             Player_Hurt(player, self);
+        }
+        else {
+            self->position = posStore;
+        }
     }
 }
 

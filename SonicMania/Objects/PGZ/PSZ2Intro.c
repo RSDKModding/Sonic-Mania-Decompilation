@@ -50,7 +50,7 @@ void PSZ2Intro_StageLoad(void)
         foreach_break;
     }
 
-    if (!isMainGameMode() || !globals->atlEnabled || PlayerHelpers_CheckStageReload()) {
+    if (!isMainGameMode() || !globals->atlEnabled || CutsceneRules_CheckStageReload()) {
         foreach_all(PSZ2Intro, intro) { destroyEntity(intro); }
     }
 }

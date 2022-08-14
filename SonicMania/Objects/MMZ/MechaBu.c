@@ -98,22 +98,28 @@ void MechaBu_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (self->planeFilter <= 0 || player->collisionPlane == (((uint8)self->planeFilter - 1) & 1)) {
-            if (Player_CheckCollisionTouch(player, &self->sawPos, &MechaBu->hitboxSaw)) {
+            Vector2 posStore = self->position;
+            self->position   = self->sawPos;
+            if (Player_CheckCollisionTouch(player, self, &MechaBu->hitboxSaw)) {
+                self->position = posStore;
 #if MANIA_USE_PLUS
                 if (!Player_CheckMightyUnspin(player, 0x200, 2, &player->uncurlTimer))
 #endif
                     Player_Hurt(player, self);
             }
-            else if (Player_CheckBadnikTouch(player, self, &MechaBu->hitboxSaw) && Player_CheckBadnikBreak(player, self, false)) {
-                EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->sawPos.x, self->sawPos.y);
-                RSDK.SetSpriteAnimation(MechaBu->aniFrames, 7, &debris->animator, false, 0);
-                debris->velocity.x      = RSDK.Rand(-2, 3) << 16;
-                debris->velocity.y      = RSDK.Rand(-4, -1) << 16;
-                debris->gravityStrength = 0x3800;
-                debris->drawGroup       = self->drawGroup;
-                debris->updateRange.x   = 0x200000;
-                debris->updateRange.y   = 0x200000;
-                destroyEntity(self);
+            else {
+                self->position = posStore;
+                if (Player_CheckBadnikTouch(player, self, &MechaBu->hitboxSaw) && Player_CheckBadnikBreak(player, self, false)) {
+                    EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->sawPos.x, self->sawPos.y);
+                    RSDK.SetSpriteAnimation(MechaBu->aniFrames, 7, &debris->animator, false, 0);
+                    debris->velocity.x      = RSDK.Rand(-2, 3) << 16;
+                    debris->velocity.y      = RSDK.Rand(-4, -1) << 16;
+                    debris->gravityStrength = 0x3800;
+                    debris->drawGroup       = self->drawGroup;
+                    debris->updateRange.x   = 0x200000;
+                    debris->updateRange.y   = 0x200000;
+                    destroyEntity(self);
+                }
             }
         }
     }

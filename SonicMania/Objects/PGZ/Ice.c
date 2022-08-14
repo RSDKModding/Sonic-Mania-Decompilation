@@ -740,8 +740,24 @@ void Ice_State_IceBlock(void)
         int32 playerY      = player->position.y;
 
         if (player->state == Ice_PlayerState_Frozen) {
-            int32 side = RSDK.CheckObjectCollisionBox(self, &self->hitboxPlayerBlockCheck, player, &Ice->hitboxPlayerBlockOuter, false);
-            switch (side) {
+            switch (RSDK.CheckObjectCollisionBox(self, &self->hitboxPlayerBlockCheck, player, &Ice->hitboxPlayerBlockOuter, false)) {
+                default:
+                case C_NONE:
+                    player->position.x = playerX;
+                    player->position.y = playerY;
+
+                    self->position.x -= self->playerMoveOffset.x;
+                    self->position.y -= self->playerMoveOffset.y;
+                    if (Player_CheckCollisionBox(player, self, &self->hitboxBlock) == C_TOP) {
+                        player->position.x += self->playerMoveOffset.x;
+                        player->position.y += self->playerMoveOffset.y;
+                    }
+
+                    self->position.x += self->playerMoveOffset.x;
+                    self->position.y += self->playerMoveOffset.y;
+                    noCollision = false;
+                    break;
+
                 case C_TOP:
                     if (player->velocity.y < 0x40000) {
                         player->position.x = playerX;
@@ -840,29 +856,17 @@ void Ice_State_IceBlock(void)
                         foreach_return;
                     }
                     break;
-
-                default:
-                    player->position.x = playerX;
-                    player->position.y = playerY;
-
-                    self->position.x -= self->playerMoveOffset.x;
-                    self->position.y -= self->playerMoveOffset.y;
-                    if (Player_CheckCollisionBox(player, self, &self->hitboxBlock) == C_TOP) {
-                        player->position.x += self->playerMoveOffset.x;
-                        player->position.y += self->playerMoveOffset.y;
-                    }
-
-                    self->position.x += self->playerMoveOffset.x;
-                    self->position.y += self->playerMoveOffset.y;
-                    noCollision = false;
-                    break;
             }
         }
 
         if (noCollision) {
-            int32 side = RSDK.CheckObjectCollisionBox(self, &self->hitboxBlock, player, &Ice->hitboxPlayerBlockOuter, false);
-            if (side >= C_LEFT) {
-                if (side <= C_RIGHT) {
+            switch (RSDK.CheckObjectCollisionBox(self, &self->hitboxBlock, player, &Ice->hitboxPlayerBlockOuter, false)) {
+                default:
+                case C_NONE:
+                case C_TOP: break;
+
+                case C_LEFT:
+                case C_RIGHT:
                     if (self->knuxSmash && player->characterID == ID_KNUCKLES) {
                         Ice_Shatter(self, 0, 0);
                         player->position.x = playerX;
@@ -870,7 +874,8 @@ void Ice_State_IceBlock(void)
                         foreach_return;
                     }
                     else if (player->shield == SHIELD_FIRE && player->invincibleTimer <= 0) {
-                        if (RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield)->shieldAnimator.animationID == SHIELDANI_FIREATTACK) {
+                        if (RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield)->shieldAnimator.animationID
+                            == SHIELDANI_FIREATTACK) {
                             if (player->position.x >= self->position.x) {
                                 if (player->velocity.x <= -0x78000) {
                                     Ice_FullShatter(player, player->velocity.x, 0);
@@ -887,13 +892,16 @@ void Ice_State_IceBlock(void)
                             }
                         }
                     }
-                }
-                else if (side == C_BOTTOM && self->bottomSmash) {
-                    Ice_Shatter(self, 0, 0);
-                    player->position.x = playerX;
-                    player->position.y = playerY;
-                    foreach_return;
-                }
+                    break;
+                    
+                case C_BOTTOM:
+                    if (self->bottomSmash) {
+                        Ice_Shatter(self, 0, 0);
+                        player->position.x = playerX;
+                        player->position.y = playerY;
+                        foreach_return;
+                    }
+                    break;
             }
 
             player->position.x = playerX;
@@ -904,7 +912,7 @@ void Ice_State_IceBlock(void)
 #if MANIA_USE_PLUS
             int32 prevVel = player->velocity.y;
 #endif
-            side          = Player_CheckCollisionBox(player, self, &self->hitboxBlock);
+            int32 side = Player_CheckCollisionBox(player, self, &self->hitboxBlock);
             if (side) {
                 if (player->shield == SHIELD_FIRE && player->invincibleTimer <= 0 && !self->glintTimer) {
                     if (self->blockAnimator.animationID == ICEANI_PILLARBLOCK) {

@@ -121,7 +121,7 @@ void LRZ2Setup_StageLoad(void)
     Animals->animalTypes[0] = ANIMAL_FLICKY;
     Animals->animalTypes[1] = ANIMAL_CUCKY;
 
-    if (!isMainGameMode() || !globals->atlEnabled || PlayerHelpers_CheckStageReload()) {
+    if (!isMainGameMode() || !globals->atlEnabled || CutsceneRules_CheckStageReload()) {
         for (int32 p = 0; p < Player->playerCount; ++p) {
             Zone->cameraBoundsL[p] += 0x100;
         }

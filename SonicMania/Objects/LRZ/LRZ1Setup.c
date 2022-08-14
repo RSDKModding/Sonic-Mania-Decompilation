@@ -106,7 +106,7 @@ void LRZ1Setup_StageLoad(void)
     Animals->animalTypes[1] = ANIMAL_RICKY;
 #endif
 
-    if (isMainGameMode() && PlayerHelpers_CheckAct1())
+    if (isMainGameMode() && CutsceneRules_IsAct1())
         Zone->stageFinishCallback = LRZ1Setup_StageFinish_EndAct1;
 
 #if MANIA_USE_PLUS
@@ -119,7 +119,7 @@ void LRZ1Setup_StageLoad(void)
         for (int32 i = 0; i < 0x400; ++i) LRZ1Setup->background2->deformationData[i] = LRZ1Setup->deformBG[i & 0x1F];
     }
 
-    if (!isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {
+    if (!isMainGameMode() || !globals->enableIntro || CutsceneRules_CheckStageReload()) {
         Zone->cameraBoundsL[0] = 2732;
         Zone->cameraBoundsL[1] = 2732;
         Zone->cameraBoundsL[2] = 2732;

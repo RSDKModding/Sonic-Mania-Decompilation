@@ -619,12 +619,12 @@ void Zone_HandlePlayerBounds(void)
         if (player->state != Player_State_Death && !player->deathType) {
             if (Zone->playerBoundsB[playerID] <= Zone->deathBoundary[playerID]) {
                 if (player->position.y > Zone->deathBoundary[playerID]) {
-                    player->deathType                  = PLAYER_DEATH_DIE_NOSFX;
+                    player->deathType                  = PLAYER_DEATH_DIE_USESFX;
                     Zone->playerBoundActiveB[playerID] = false;
                 }
             }
             else if (player->position.y > Zone->playerBoundsB[playerID]) {
-                player->deathType                  = PLAYER_DEATH_DIE_NOSFX;
+                player->deathType                  = PLAYER_DEATH_DIE_USESFX;
                 Zone->playerBoundActiveB[playerID] = false;
             }
         }

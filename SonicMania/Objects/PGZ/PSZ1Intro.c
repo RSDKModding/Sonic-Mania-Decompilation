@@ -38,7 +38,7 @@ void PSZ1Intro_Create(void *data)
         self->active      = ACTIVE_NORMAL;
         self->isPermanent = true;
 
-        if (!isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {
+        if (!isMainGameMode() || !globals->enableIntro || CutsceneRules_CheckStageReload()) {
             destroyEntity(self);
 
             foreach_all(HangGlider, glider) { destroyEntity(glider); }

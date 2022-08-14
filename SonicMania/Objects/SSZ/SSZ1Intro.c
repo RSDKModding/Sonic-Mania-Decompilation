@@ -13,7 +13,7 @@ void SSZ1Intro_Update(void)
 {
     RSDK_THIS(SSZ1Intro);
     if (!self->activated) {
-        if (!isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {
+        if (!isMainGameMode() || !globals->enableIntro || CutsceneRules_CheckStageReload()) {
             destroyEntity(SSZ1Intro->fxRuby);
             self->active = ACTIVE_NEVER;
         }
