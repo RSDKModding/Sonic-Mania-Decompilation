@@ -105,22 +105,52 @@ void Smog_Create(void *data)
 
         OOZSetup->smogTimer = 0;
 
-        if (!(SceneInfo->milliseconds || SceneInfo->seconds || SceneInfo->minutes)
-            || (isMainGameMode() && globals->enableIntro && !CutsceneRules_CheckStageReload())) {
+        if (!SceneInfo->milliseconds && !SceneInfo->seconds && !SceneInfo->minutes) {
             Smog->starPostID        = 0;
+            globals->restartFlags   = 1;
+            globals->tempFlags      = 1;
             OOZSetup->useSmogEffect = true;
-            globals->restartFlags   = OOZSetup->useSmogEffect;
-            globals->tempFlags      = OOZSetup->useSmogEffect;
         }
         else {
-            if (SceneInfo->minutes != globals->tempMinutes || SceneInfo->seconds != globals->tempSeconds
-                || SceneInfo->milliseconds != globals->tempMilliseconds) {
-                OOZSetup->useSmogEffect = globals->restartFlags;
-                Zone_StartFadeOut_MusicFade(10, 0x000000);
+            if (isMainGameMode() && globals->enableIntro) {
+                if (CutsceneRules_CheckStageReload()) {
+                    if (SceneInfo->minutes == globals->tempMinutes && SceneInfo->seconds == globals->tempSeconds
+                        && SceneInfo->milliseconds == globals->tempMilliseconds) {
+                        OOZSetup->useSmogEffect = globals->tempFlags;
+                    }
+                    else {
+                        OOZSetup->useSmogEffect = globals->restartFlags;
+                    }
+
+                    EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
+                    zone->fadeColor  = 0x000000;
+                    zone->timer      = 0;
+                    zone->visible    = true;
+                    zone->drawGroup  = DRAWGROUP_COUNT - 1;
+                    zone->stateDraw  = Zone_Draw_Fade;
+                }
+                else {
+                    Smog->starPostID        = 0;
+                    globals->restartFlags   = 1;
+                    globals->tempFlags      = 1;
+                    OOZSetup->useSmogEffect = true;
+                }
             }
             else {
-                OOZSetup->useSmogEffect = globals->tempFlags;
-                Zone_StartFadeOut_MusicFade(10, 0x000000);
+                if (SceneInfo->minutes == globals->tempMinutes && SceneInfo->seconds == globals->tempSeconds
+                    && SceneInfo->milliseconds == globals->tempMilliseconds) {
+                    OOZSetup->useSmogEffect = globals->tempFlags;
+                }
+                else {
+                    OOZSetup->useSmogEffect = globals->restartFlags;
+                }
+
+                EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
+                zone->fadeColor = 0x000000;
+                zone->timer     = 0;
+                zone->visible   = true;
+                zone->drawGroup = DRAWGROUP_COUNT - 1;
+                zone->stateDraw = Zone_Draw_Fade;
             }
         }
     }

@@ -743,10 +743,14 @@ void APICallback_ClearAchievements(void)
 
 void APICallback_UnlockAchievement(const char *name)
 {
+    // Silly Workaround
+    AchievementID id;
+    id.id = name;
+
     if (APICallback->achievementsDisabled)
         LogHelpers_Print("SKIP UnlockAchievement(%s)", name);
     else if (APICallback->UnlockAchievement)
-        APICallback->UnlockAchievement(name);
+        APICallback->UnlockAchievement(&id);
     else if (sku_platform == PLATFORM_DEV)
         LogHelpers_Print("DUMMY UnlockAchievement(%s)", name);
     else

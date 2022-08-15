@@ -65,7 +65,7 @@ struct ObjectAPICallback {
     int32 (*LaunchManual)(void);
     int32 (*ExitGame)(void);
     void (*ClearAchievements)(void);
-    int32 (*UnlockAchievement)(const char *);
+    int32 (*UnlockAchievement)(AchievementID *);
     int32 (*SetRichPresence)(int32, String *);
     int32 (*LoadUserFile)(const char *, void *, size_t, void (*)(int32));
     int32 (*SaveUserFile)(const char *, void *, size_t, void (*)(int32));

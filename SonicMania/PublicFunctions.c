@@ -1765,8 +1765,10 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(HUD_DrawNumbersBase10);
     ADD_PUBLIC_FUNC(HUD_DrawNumbersBase16);
     ADD_PUBLIC_FUNC(HUD_DrawNumbersHyperRing);
+#if GAME_VERSION != VER_100
     ADD_PUBLIC_FUNC(HUD_GetButtonFrame);
     ADD_PUBLIC_FUNC(HUD_GetActionButtonFrames);
+#endif
     ADD_PUBLIC_FUNC(HUD_State_MoveIn);
     ADD_PUBLIC_FUNC(HUD_State_MoveOut);
     ADD_PUBLIC_FUNC(HUD_MoveIn);

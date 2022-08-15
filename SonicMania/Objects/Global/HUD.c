@@ -147,7 +147,11 @@ void HUD_Draw(void)
     HUD_DrawNumbersBase10(&drawPos, player->score, 0);
 
     // Draw "Time"
+#if GAME_VERSION != VER_100
     self->hudElementsAnimator.frameID = self->timeFlashFrame + 1;
+#else
+    self->hudElementsAnimator.frameID = 1;
+#endif
     RSDK.DrawSprite(&self->hudElementsAnimator, &timePos, true);
 
     if (!self->enableTimeFlash || Zone->persistentTimer & 8) {
