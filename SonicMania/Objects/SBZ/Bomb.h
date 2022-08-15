@@ -34,7 +34,7 @@ void Bomb_Update(void);
 void Bomb_LateUpdate(void);
 void Bomb_StaticUpdate(void);
 void Bomb_Draw(void);
-void Bomb_Create(void* data);
+void Bomb_Create(void *data);
 void Bomb_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Bomb_EditorDraw(void);
@@ -55,4 +55,4 @@ void Bomb_State_Idle(void);
 void Bomb_State_Explode(void);
 void Bomb_State_Shrapnel(void);
 
-#endif //!OBJ_BOMB_H
+#endif //! OBJ_BOMB_H

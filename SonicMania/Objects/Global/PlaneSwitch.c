@@ -49,7 +49,7 @@ void PlaneSwitch_StageLoad(void) { PlaneSwitch->aniFrames = RSDK.LoadSpriteAnima
 void PlaneSwitch_DrawSprites(void)
 {
     RSDK_THIS(PlaneSwitch);
-        
+
     Vector2 drawPos;
 
     drawPos.x = self->position.x - TO_FIXED(8);
@@ -75,12 +75,12 @@ void PlaneSwitch_DrawSprites(void)
     }
 }
 
-// Custom function, but it allows me to majorly shrink any planeSwitch code 
+// Custom function, but it allows me to majorly shrink any planeSwitch code
 // it's based on all the repeated planeswitch code, just made more modular
 // (and also it means you can add planeswitches to basically anything with ease :P)
 void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *self, void *o, int32 flags, int32 size, bool32 switchdrawGroup, uint8 low, uint8 high)
 {
-    Entity *other    = (Entity *)o;
+    Entity *other = (Entity *)o;
 
     Vector2 pivotPos = other->position;
     Vector2 pivotVel = other->velocity;

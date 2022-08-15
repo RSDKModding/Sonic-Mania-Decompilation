@@ -14,7 +14,7 @@ void EncoreRoute_Update(void)
 {
     RSDK_THIS(EncoreRoute);
 
-    uint8 layerSrc = -1;
+    uint8 layerSrc  = -1;
     uint8 layerDest = -1;
 
     switch (self->layerSrc) {

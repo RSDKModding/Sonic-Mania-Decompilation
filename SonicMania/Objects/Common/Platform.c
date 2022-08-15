@@ -737,7 +737,7 @@ void Platform_State_Push(void)
 
     bool32 collided =
         RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, TO_FIXED(self->hitbox.left + 16), TO_FIXED(self->hitbox.bottom), 4);
-    int32 y         = self->position.y;
+    int32 y = self->position.y;
 
     collided |= RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, TO_FIXED(0), TO_FIXED(self->hitbox.bottom), 4);
     if (self->position.y < y)
@@ -1028,8 +1028,9 @@ void Platform_State_Push_Fall(void)
     self->position.x = self->drawPos.x;
     self->position.y = self->drawPos.y;
 
-    bool32 collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, TO_FIXED(self->hitbox.left + 16), TO_FIXED(self->hitbox.bottom), 4);
-    int32 y         = self->position.y;
+    bool32 collided =
+        RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, TO_FIXED(self->hitbox.left + 16), TO_FIXED(self->hitbox.bottom), 4);
+    int32 y = self->position.y;
 
     collided |= RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, TO_FIXED(0), TO_FIXED(self->hitbox.bottom), 4);
     if (self->position.y < y)
@@ -1685,8 +1686,7 @@ void Platform_Collision_Solid_Hurt_Top(void)
         uint16 playerID = RSDK.GetEntitySlot(player);
 
         switch (Player_CheckCollisionBox(player, self, solidHitbox)) {
-            case C_TOP:
-                Platform_HandleStood(self, player, playerID, 0xFF);
+            case C_TOP: Platform_HandleStood(self, player, playerID, 0xFF);
 
 #if MANIA_USE_PLUS
                 if (!Player_CheckMightyUnspin(player, 0x400, 0, &player->uncurlTimer))
@@ -2078,7 +2078,8 @@ void Platform_HandleStood_Barrel(EntityPlatform *self, EntityPlayer *player, int
     if (player->jumpPress)
         Player_Action_Jump(player);
 }
-void Platform_HandleStood_Sticky(EntityPlatform* self, EntityPlayer* player, int32 playerID, uint8 cSide) {
+void Platform_HandleStood_Sticky(EntityPlatform *self, EntityPlayer *player, int32 playerID, uint8 cSide)
+{
 
     bool32 isStuck = false;
     if ((self->collision == PLATFORM_C_SOLID_STICKY || self->collision == PLATFORM_C_SOLID_STICKY + cSide) && cSide)

@@ -8,53 +8,53 @@
 #define sku_language SKU->language
 #define sku_region   SKU->region
 
-#define API_GetConfirmButtonFlip              API.GetConfirmButtonFlip
-#define API_UnlockAchievement(info)           API.TryUnlockAchievement(info)
-#define API_SetAchievementsEnabled(enabled)   API.SetAchievementsEnabled(enabled)
-#define API_GetAchievementsEnabled()          API.GetAchievementsEnabled()
-#define API_SetRichPresence                   API.SetRichPresence
-#define API_LaunchManual                      API.LaunchManual
-#define API_LoadUserFile                      API.LoadUserFile
-#define API_SaveUserFile                      API.SaveUserFile
-#define API_GetNoSave()                       API.GetNoSave()
-#define API_SetNoSave(status)                 API.SetNoSave(status)
-#define API_GetUserAuthStatus                 API.GetUserAuthStatus
-#define API_ClearPrerollErrors                API.ClearPrerollErrors
-#define API_GetInputDeviceID                  RSDK.GetInputDeviceID
-#define API_AssignInputSlotToDevice           RSDK.AssignInputSlotToDevice
-#define API_IsInputDeviceAssigned(deviceID)   RSDK.IsInputDeviceAssigned(deviceID)
-#define API_IsInputSlotAssigned(inputSlot)    RSDK.IsInputSlotAssigned(inputSlot)
-#define API_GetFilteredInputDeviceID          RSDK.GetFilteredInputDeviceID
-#define API_ResetInputSlotAssignments         RSDK.ResetInputSlotAssignments
-#define API_GetInputDeviceType                RSDK.GetInputDeviceType
-#define API_GetUsername                       API.GetUsername
-#define API_ReadLeaderboardEntry              API.ReadLeaderboardEntry
+#define API_GetConfirmButtonFlip            API.GetConfirmButtonFlip
+#define API_UnlockAchievement(info)         API.TryUnlockAchievement(info)
+#define API_SetAchievementsEnabled(enabled) API.SetAchievementsEnabled(enabled)
+#define API_GetAchievementsEnabled()        API.GetAchievementsEnabled()
+#define API_SetRichPresence                 API.SetRichPresence
+#define API_LaunchManual                    API.LaunchManual
+#define API_LoadUserFile                    API.LoadUserFile
+#define API_SaveUserFile                    API.SaveUserFile
+#define API_GetNoSave()                     API.GetNoSave()
+#define API_SetNoSave(status)               API.SetNoSave(status)
+#define API_GetUserAuthStatus               API.GetUserAuthStatus
+#define API_ClearPrerollErrors              API.ClearPrerollErrors
+#define API_GetInputDeviceID                RSDK.GetInputDeviceID
+#define API_AssignInputSlotToDevice         RSDK.AssignInputSlotToDevice
+#define API_IsInputDeviceAssigned(deviceID) RSDK.IsInputDeviceAssigned(deviceID)
+#define API_IsInputSlotAssigned(inputSlot)  RSDK.IsInputSlotAssigned(inputSlot)
+#define API_GetFilteredInputDeviceID        RSDK.GetFilteredInputDeviceID
+#define API_ResetInputSlotAssignments       RSDK.ResetInputSlotAssignments
+#define API_GetInputDeviceType              RSDK.GetInputDeviceType
+#define API_GetUsername                     API.GetUsername
+#define API_ReadLeaderboardEntry            API.ReadLeaderboardEntry
 #else
 #define sku_platform GameInfo->platform
 #define sku_language GameInfo->language
 #define sku_region   GameInfo->region
 
-#define API_GetConfirmButtonFlip              APICallback_GetConfirmButtonFlip
-#define API_UnlockAchievement(info)           APICallback_UnlockAchievement((info)->id)
-#define API_SetAchievementsEnabled(enabled)   APICallback->achievementsDisabled = !(enabled)
-#define API_GetAchievementsEnabled()          !APICallback->achievementsDisabled
-#define API_SetRichPresence                   APICallback_SetRichPresence
-#define API_LaunchManual                      APICallback_LaunchManual
-#define API_LoadUserFile                      APICallback_LoadUserFile
-#define API_SaveUserFile                      APICallback_SaveUserFile
-#define API_GetNoSave()                       globals->noSave
-#define API_SetNoSave(status)                 globals->noSave = status
-#define API_GetUserAuthStatus                 APICallback_GetUserAuthStatus
-#define API_ClearPrerollErrors                APICallback_ClearPrerollErrors
-#define API_GetInputDeviceID                  APICallback_ControllerIDForInputID
-#define API_AssignInputSlotToDevice           APICallback_AssignControllerID
-#define API_IsInputDeviceAssigned(deviceID)   ; // doesn't exist in preplus afaik
-#define API_IsInputSlotAssigned(inputSlot)    !APICallback_InputIDIsDisconnected(inputSlot)
-#define API_GetFilteredInputDeviceID          APICallback_MostRecentActiveControllerID
-#define API_ResetInputSlotAssignments         APICallback_ResetControllerAssignments
-#define API_GetInputDeviceType                APICallback_GetControllerType
-#define API_GetUsername                       APICallback_GetUsername
-#define API_ReadLeaderboardEntry              APICallback_ReadLeaderboardEntry
+#define API_GetConfirmButtonFlip            APICallback_GetConfirmButtonFlip
+#define API_UnlockAchievement(info)         APICallback_UnlockAchievement((info)->id)
+#define API_SetAchievementsEnabled(enabled) APICallback->achievementsDisabled = !(enabled)
+#define API_GetAchievementsEnabled()        !APICallback->achievementsDisabled
+#define API_SetRichPresence                 APICallback_SetRichPresence
+#define API_LaunchManual                    APICallback_LaunchManual
+#define API_LoadUserFile                    APICallback_LoadUserFile
+#define API_SaveUserFile                    APICallback_SaveUserFile
+#define API_GetNoSave()                     globals->noSave
+#define API_SetNoSave(status)               globals->noSave = status
+#define API_GetUserAuthStatus               APICallback_GetUserAuthStatus
+#define API_ClearPrerollErrors              APICallback_ClearPrerollErrors
+#define API_GetInputDeviceID                APICallback_ControllerIDForInputID
+#define API_AssignInputSlotToDevice         APICallback_AssignControllerID
+#define API_IsInputDeviceAssigned(deviceID) ; // doesn't exist in preplus afaik
+#define API_IsInputSlotAssigned(inputSlot)  !APICallback_InputIDIsDisconnected(inputSlot)
+#define API_GetFilteredInputDeviceID        APICallback_MostRecentActiveControllerID
+#define API_ResetInputSlotAssignments       APICallback_ResetControllerAssignments
+#define API_GetInputDeviceType              APICallback_GetControllerType
+#define API_GetUsername                     APICallback_GetUsername
+#define API_ReadLeaderboardEntry            APICallback_ReadLeaderboardEntry
 #endif
 
 // 90% sure this is "DialogRunner" in plus/1.05

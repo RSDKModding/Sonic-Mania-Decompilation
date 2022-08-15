@@ -1742,10 +1742,8 @@ bool32 Player_CheckP2KeyPress(void)
 
     RSDKControllerState *controller = &ControllerInfo[self->controllerID];
 
-    return controller->keyUp.down || controller->keyDown.down
-           || controller->keyLeft.down || controller->keyRight.down
-           || controller->keyA.down || controller->keyB.down
-           || controller->keyC.down || controller->keyX.down;
+    return controller->keyUp.down || controller->keyDown.down || controller->keyLeft.down || controller->keyRight.down || controller->keyA.down
+           || controller->keyB.down || controller->keyC.down || controller->keyX.down;
 }
 EntityPlayer *Player_GetNearestPlayerX(void)
 {
@@ -1897,7 +1895,8 @@ void Player_HandleDeath(EntityPlayer *player)
 
             globals->characterFlags &= ~(1 << HUD_CharacterIndexFromID(player2->characterID));
 
-            if (player->state == Player_State_FlyToPlayer || player->state == Player_State_ReturnToPlayer || player->state == Player_State_HoldRespawn) {
+            if (player->state == Player_State_FlyToPlayer || player->state == Player_State_ReturnToPlayer
+                || player->state == Player_State_HoldRespawn) {
                 if (!EncoreIntro) {
                     Player_HandleQuickRespawn(player);
                     Player_ResetBoundaries(player);
@@ -2095,7 +2094,7 @@ void Player_HandleDeath(EntityPlayer *player)
                 }
                 else {
                     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-                    Player->respawnTimer   = 0;
+                    Player->respawnTimer  = 0;
                     Player_SwapMainPlayer(true);
 
                     if (globals->stock) {
@@ -2343,10 +2342,7 @@ bool32 Player_HurtFlip(EntityPlayer *player)
     return true;
 }
 // Hits the player if not invulnerable and the player's shield doesn't match shield, returns true if player was hit
-bool32 Player_ElementHurt(EntityPlayer *player, void *entity, int32 shield)
-{
-    return player->shield != shield ? Player_Hurt(player, entity) : false;
-}
+bool32 Player_ElementHurt(EntityPlayer *player, void *entity, int32 shield) { return player->shield != shield ? Player_Hurt(player, entity) : false; }
 bool32 Player_CheckAttacking(EntityPlayer *player, void *e)
 {
     Entity *entity   = (Entity *)e;
@@ -2611,7 +2607,7 @@ bool32 Player_CheckMightyShellHit(EntityPlayer *player, void *e, int32 velX, int
 #endif
 bool32 Player_CheckItemBreak(EntityPlayer *player, void *e, bool32 hitIfNotAttacking)
 {
-    Entity *entity  = (Entity *)e;
+    Entity *entity = (Entity *)e;
 #if MANIA_USE_PLUS
     int32 anim      = player->animator.animationID;
     int32 character = player->characterID;
@@ -2885,14 +2881,14 @@ void Player_HandleGroundAnimation(void)
                         RSDK.SetSpriteAnimation(self->aniFrames, ANI_WALK, &self->animator, false, 0);
                     }
                     self->animator.speed = (velocity >> 12) + 48;
-                    self->minJogVelocity   = 0x40000;
+                    self->minJogVelocity = 0x40000;
                 }
                 else if (velocity < self->minRunVelocity) {
                     if (self->animator.animationID != ANI_WALK || self->animator.frameID == 3)
                         RSDK.SetSpriteAnimation(self->aniFrames, ANI_JOG, &self->animator, false, 0);
                     self->animator.speed = (velocity >> 12) + 0x40;
-                    self->minJogVelocity   = 0x38000;
-                    self->minRunVelocity    = 0x60000;
+                    self->minJogVelocity = 0x38000;
+                    self->minRunVelocity = 0x60000;
                 }
                 else if (velocity < self->minDashVelocity) {
                     if (self->animator.animationID == ANI_DASH || self->animator.animationID == ANI_RUN)
@@ -2900,9 +2896,9 @@ void Player_HandleGroundAnimation(void)
                     else
                         RSDK.SetSpriteAnimation(self->aniFrames, ANI_RUN, &self->animator, false, 0);
 
-                    self->animator.speed = MIN((velocity >> 12) + 0x60, 0x200);
-                    self->minRunVelocity    = 0x58000;
-                    self->minDashVelocity    = 0xC0000;
+                    self->animator.speed  = MIN((velocity >> 12) + 0x60, 0x200);
+                    self->minRunVelocity  = 0x58000;
+                    self->minDashVelocity = 0xC0000;
                 }
                 else {
                     if (self->animator.animationID == ANI_DASH || self->animator.animationID == ANI_RUN)
@@ -2913,9 +2909,9 @@ void Player_HandleGroundAnimation(void)
                 }
             }
             else {
-                self->minJogVelocity = 0x40000;
+                self->minJogVelocity  = 0x40000;
                 self->minRunVelocity  = 0x60000;
-                self->minDashVelocity  = 0xC0000;
+                self->minDashVelocity = 0xC0000;
 
                 Vector2 posStore = self->position;
 
@@ -3161,7 +3157,7 @@ void Player_HandleAirMovement(void)
         if (self->rotation < 0x200)
             self->rotation += 4;
     }
-    else if (self->rotation > 0) 
+    else if (self->rotation > 0)
         self->rotation -= 4;
     else
         self->rotation = 0;
@@ -3628,9 +3624,9 @@ void Player_HandleSidekickRespawn(void)
             Player->respawnTimer = 0;
 
         if (Player->respawnTimer >= 240) {
-            Player->respawnTimer    = 0;
+            Player->respawnTimer   = 0;
             self->state            = Player_State_HoldRespawn;
-            self->forceRespawn      = true;
+            self->forceRespawn     = true;
             self->position.x       = -0x400000;
             self->position.y       = -0x400000;
             self->abilityValues[0] = 0;
@@ -3926,7 +3922,7 @@ void Player_State_LookUp(void)
 
     Player_Gravity_False();
 
-    self->nextAirState     = Player_State_Air;
+    self->nextAirState = Player_State_Air;
 
     if (self->up) {
         RSDK.SetSpriteAnimation(self->aniFrames, ANI_LOOK_UP, &self->animator, false, 1);
@@ -3980,7 +3976,7 @@ void Player_State_Crouch(void)
 
     Player_Gravity_False();
 
-    self->nextAirState     = Player_State_Air;
+    self->nextAirState = Player_State_Air;
 
     if (self->down) {
         RSDK.SetSpriteAnimation(self->aniFrames, ANI_CROUCH, &self->animator, false, 1);
@@ -4277,7 +4273,7 @@ void Player_State_Hurt(void)
 
         Player_Gravity_False();
 
-        self->skidding         = false;
+        self->skidding = false;
     }
     else {
         Player_Gravity_True();
@@ -4825,7 +4821,7 @@ void Player_State_KnuxGlideRight(void)
 
         Player_Gravity_False();
 
-        self->skidding         = 0;
+        self->skidding = 0;
     }
     else {
         self->timer = 0;
@@ -4924,7 +4920,7 @@ void Player_State_KnuxGlideSlide(void)
         else {
             Player_Gravity_False();
 
-            self->animator.speed     = 1;
+            self->animator.speed = 1;
 
             if (self->timer >= 16) {
                 self->state    = Player_State_Ground;
@@ -5113,7 +5109,6 @@ void Player_State_KnuxLedgePullUp(void)
     }
 
     memcpy(&self->animator, &backup, sizeof(backup));
-
 }
 #if MANIA_USE_PLUS
 void Player_State_MightyHammerDrop(void)
@@ -5422,8 +5417,8 @@ void Player_State_RayGlide(void)
 
         Player_Gravity_False();
 
-        self->skidding         = 0;
-        self->abilityValue     = 0;
+        self->skidding     = 0;
+        self->abilityValue = 0;
     }
     else {
         if (!self->jumpHold || self->position.y < Zone->playerBoundsT[self->playerID] + 0x100000) {
@@ -5452,7 +5447,7 @@ void Player_State_FlyToPlayer(void)
         leader = (EntityPlayer *)Zone->entityStorage[1];
 #endif
 
-    Player->respawnTimer  = 0;
+    Player->respawnTimer = 0;
     self->tileCollisions = TILECOLLISION_NONE;
     self->interaction    = false;
 
@@ -5467,10 +5462,10 @@ void Player_State_FlyToPlayer(void)
         default:
         case ID_SONIC:
 #if MANIA_USE_PLUS
-        case ID_MIGHTY: 
-        case ID_RAY: 
+        case ID_MIGHTY:
+        case ID_RAY:
 #endif
-            RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->animator, false, 0); 
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->animator, false, 0);
             break;
 
         case ID_TAILS:
@@ -5668,9 +5663,9 @@ void Player_State_HoldRespawn(void)
             dust->isPermanent = true;
             dust->position.y  = (ScreenInfo->position.y - 128) << 16;
 #if MANIA_USE_PLUS
-            self->tileCollisions  = TILECOLLISION_NONE;
+            self->tileCollisions = TILECOLLISION_NONE;
             self->interaction    = false;
-            self->forceRespawn    = false;
+            self->forceRespawn   = false;
             self->drawGroup      = Zone->playerDrawGroup[1] + 1;
             self->angle          = 128;
 
@@ -5821,11 +5816,11 @@ void Player_FinishedReturnToPlayer(EntityPlayer *player, EntityPlayer *leader)
 void Player_State_EncoreRespawn(void)
 {
     EntityPlayer *leader = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    
+
     if (leader->state != Player_State_Death && leader->state != Player_State_Drown) {
 #if MANIA_USE_PLUS
         RSDK_THIS(Player);
-        
+
         if (globals->stock) {
             Player_ChangeCharacter(self, GET_STOCK_ID(1));
             globals->stock >>= 8;
@@ -5886,7 +5881,7 @@ void Player_State_Victory(void)
                     self->onGround = false;
                 }
                 break;
-            
+
             default:
             case ID_TAILS: self->groundVel = 0; break;
 
@@ -6286,10 +6281,10 @@ void Player_Input_P1(void)
             RSDKControllerState *controller = &ControllerInfo[self->controllerID];
             RSDKAnalogState *stick          = &AnalogStickInfoL[self->controllerID];
 
-            self->up                        = controller->keyUp.down;
-            self->down                      = controller->keyDown.down;
-            self->left                      = controller->keyLeft.down;
-            self->right                     = controller->keyRight.down;
+            self->up    = controller->keyUp.down;
+            self->down  = controller->keyDown.down;
+            self->left  = controller->keyLeft.down;
+            self->right = controller->keyRight.down;
 
             self->up |= stick->keyUp.down;
             self->down |= stick->keyDown.down;
@@ -6594,10 +6589,8 @@ void Player_Input_P2_Player(void)
                 self->right = false;
             }
 
-            self->jumpPress = controller->keyA.press || controller->keyB.press
-                              || controller->keyC.press || controller->keyX.press;
-            self->jumpHold = controller->keyA.down || controller->keyB.down
-                             || controller->keyC.down || controller->keyX.down;
+            self->jumpPress = controller->keyA.press || controller->keyB.press || controller->keyC.press || controller->keyX.press;
+            self->jumpHold  = controller->keyA.down || controller->keyB.down || controller->keyC.down || controller->keyX.down;
 
             if (self->right || self->up || self->down || self->left) {
                 Player->aiInputSwapTimer = 0;

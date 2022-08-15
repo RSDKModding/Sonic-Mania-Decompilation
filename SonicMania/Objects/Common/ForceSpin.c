@@ -25,7 +25,7 @@ void ForceSpin_Update(void)
             if (pivotPos.x >= self->position.x) {
                 if (self->direction) {
                     if (player->state == Player_State_TubeRoll || player->state == Player_State_TubeAirRoll) {
-                        player->state = player->onGround ? Player_State_Roll : Player_State_Air;
+                        player->state           = player->onGround ? Player_State_Roll : Player_State_Air;
                         player->nextGroundState = StateMachine_None;
                         player->nextAirState    = StateMachine_None;
                     }
@@ -67,7 +67,7 @@ void ForceSpin_Create(void *data)
     self->drawFX |= FX_FLIP;
 
     if (!SceneInfo->inEditor) {
-        self->active = ACTIVE_BOUNDS;
+        self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = TO_FIXED(32) + abs(self->size * RSDK.Sin256(self->angle) << 11);
         self->updateRange.y = TO_FIXED(32) + abs(self->size * RSDK.Cos256(self->angle) << 11);
         self->visible       = false;

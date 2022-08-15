@@ -13,7 +13,7 @@ struct ObjectExtrasMenu {
 
 // Entity Class
 struct EntityExtrasMenu {
-	RSDK_ENTITY
+    RSDK_ENTITY
 };
 
 // Object Struct
@@ -24,7 +24,7 @@ void ExtrasMenu_Update(void);
 void ExtrasMenu_LateUpdate(void);
 void ExtrasMenu_StaticUpdate(void);
 void ExtrasMenu_Draw(void);
-void ExtrasMenu_Create(void* data);
+void ExtrasMenu_Create(void *data);
 void ExtrasMenu_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ExtrasMenu_EditorDraw(void);
@@ -55,4 +55,4 @@ void ExtrasMenu_Start_BSS_Mania(void);
 void ExtrasMenu_BSS_Mania_ActionCB(void);
 #endif
 
-#endif //!OBJ_EXTRASMENU_H
+#endif //! OBJ_EXTRASMENU_H

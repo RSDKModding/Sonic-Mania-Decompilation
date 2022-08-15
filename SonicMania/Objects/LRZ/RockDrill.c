@@ -197,7 +197,7 @@ void RockDrill_Explode(void)
     }
 }
 
-void RockDrill_SpawnDebris(int offset)
+void RockDrill_SpawnDebris(int32 offset)
 {
     RSDK_THIS(RockDrill);
 

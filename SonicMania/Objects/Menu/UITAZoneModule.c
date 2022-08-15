@@ -899,7 +899,7 @@ void UITAZoneModule_ShowLeaderboards(int32 player, int32 zone, int32 act, bool32
 
         int32 isUser = wasUser ? 0 : (*records != 0);
 
-        leaderboard->taRecord    = *records;
+        leaderboard->taRecord        = *records;
         leaderboard->viewingUserRank = isUser;
 
         APICallback_FetchLeaderboardData(zone, act, player, 0, 100, isUser);

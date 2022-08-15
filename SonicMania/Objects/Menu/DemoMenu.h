@@ -11,7 +11,7 @@ struct ObjectDemoMenu {
 
 // Entity Class
 struct EntityDemoMenu {
-	RSDK_ENTITY
+    RSDK_ENTITY
     StateMachine(state);
     int32 timer;
     int32 selectedZone;
@@ -36,7 +36,7 @@ void DemoMenu_Update(void);
 void DemoMenu_LateUpdate(void);
 void DemoMenu_StaticUpdate(void);
 void DemoMenu_Draw(void);
-void DemoMenu_Create(void* data);
+void DemoMenu_Create(void *data);
 void DemoMenu_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void DemoMenu_EditorDraw(void);
@@ -52,4 +52,4 @@ void DemoMenu_State_Selection(void);
 void DemoMenu_State_Load(void);
 void DemoMenu_State_Disappear(void);
 
-#endif //!OBJ_DEMOMENU_H
+#endif //! OBJ_DEMOMENU_H

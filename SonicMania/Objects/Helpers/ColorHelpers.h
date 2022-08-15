@@ -5,12 +5,12 @@
 
 // Object Class
 struct ObjectColorHelpers {
-	RSDK_OBJECT
+    RSDK_OBJECT
 };
 
 // Entity Class
 struct EntityColorHelpers {
-	RSDK_ENTITY
+    RSDK_ENTITY
 };
 
 // Object Entity
@@ -21,7 +21,7 @@ void ColorHelpers_Update(void);
 void ColorHelpers_LateUpdate(void);
 void ColorHelpers_StaticUpdate(void);
 void ColorHelpers_Draw(void);
-void ColorHelpers_Create(void* data);
+void ColorHelpers_Create(void *data);
 void ColorHelpers_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ColorHelpers_EditorDraw(void);
@@ -35,4 +35,4 @@ uint16 ColorHelpers_PackRGB(uint8 r, uint8 g, uint8 b);
 void ColorHelpers_RGBToHSL(uint32 r, uint32 g, uint32 b, uint32 *hue, uint32 *saturation, uint32 *luminance);
 void ColorHelpers_HSLToRGB(uint32 hue, uint32 saturation, uint32 luminance, uint32 *r, uint32 *g, uint32 *b);
 
-#endif //!OBJ_COLORHELPERS_H
+#endif //! OBJ_COLORHELPERS_H

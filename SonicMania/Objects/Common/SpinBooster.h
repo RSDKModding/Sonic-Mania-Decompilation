@@ -33,7 +33,7 @@ void SpinBooster_Update(void);
 void SpinBooster_LateUpdate(void);
 void SpinBooster_StaticUpdate(void);
 void SpinBooster_Draw(void);
-void SpinBooster_Create(void* data);
+void SpinBooster_Create(void *data);
 void SpinBooster_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SpinBooster_EditorDraw(void);
@@ -49,5 +49,4 @@ void SpinBooster_DrawArrow(int32 x1, int32 y1, int32 x2, int32 y2, uint32 color)
 void SpinBooster_DrawSprites(void);
 void SpinBooster_HandleForceRoll(EntityPlayer *player);
 
-
-#endif //!OBJ_SPINBOOSTER_H
+#endif //! OBJ_SPINBOOSTER_H

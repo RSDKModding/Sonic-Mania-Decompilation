@@ -113,7 +113,7 @@ void ERZStart_SetupObjects(void)
     }
 }
 
-void ERZStart_HandlePlayerHover(EntityCutsceneSeq *seq, EntityPlayer *player, int posY)
+void ERZStart_HandlePlayerHover(EntityCutsceneSeq *seq, EntityPlayer *player, int32 posY)
 {
     RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
     player->position.x = 0x300000;
@@ -155,8 +155,8 @@ bool32 ERZStart_Cutscene_FadeIn(EntityCutsceneSeq *host)
         camera->boundsB        = Zone->cameraBoundsB[0];
         ruby->state            = ERZStart_RubyHover;
 
-        int angle = 0;
-        for (int i = 0; i < 7; ++i) {
+        int32 angle = 0;
+        for (int32 i = 0; i < 7; ++i) {
             EntityChaosEmerald *emerald = ERZStart->emeralds[i];
             emerald->originPos.x        = player1->position.x;
             emerald->originPos.y        = player1->position.y;
@@ -577,7 +577,7 @@ bool32 ERZStart_Cutscene_PreparePlayerTransform(EntityCutsceneSeq *host)
     if (++ERZStart->timer >= 60) {
         ERZStart->timer = 0;
 
-        for (int i = 0; i < 7; ++i) {
+        for (int32 i = 0; i < 7; ++i) {
             EntityChaosEmerald *emerald = ERZStart->emeralds[i];
             emerald->drawFX |= FX_SCALE;
             emerald->scale.x = 0x200;

@@ -68,7 +68,7 @@ void Platform_Update(void);
 void Platform_LateUpdate(void);
 void Platform_StaticUpdate(void);
 void Platform_Draw(void);
-void Platform_Create(void* data);
+void Platform_Create(void *data);
 void Platform_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Platform_EditorDraw(void);
@@ -78,7 +78,7 @@ void Platform_Serialize(void);
 
 // Extra Entity Functions
 
-//States
+// States
 void Platform_State_Fixed(void);
 void Platform_State_Fall(void);
 void Platform_State_Falling(void);
@@ -136,4 +136,4 @@ void Platform_HandleStood_Hold(EntityPlatform *self, EntityPlayer *player, int32
 void Platform_HandleStood_Barrel(EntityPlatform *self, EntityPlayer *player, int32 playerID, int32 stoodPlayers);
 void Platform_HandleStood_Sticky(EntityPlatform *self, EntityPlayer *player, int32 playerID, uint8 cSide);
 
-#endif //!OBJ_PLATFORM_H
+#endif //! OBJ_PLATFORM_H

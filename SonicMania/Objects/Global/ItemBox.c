@@ -696,9 +696,9 @@ void ItemBox_GivePowerup(void)
                             }
                         }
                         else {
-                            player2->classID    = Player->classID;
+                            player2->classID     = Player->classID;
                             Player->respawnTimer = 0;
-                            EntityDust *dust    = CREATE_ENTITY(Dust, INT_TO_VOID(1), player2->position.x, player2->position.y);
+                            EntityDust *dust     = CREATE_ENTITY(Dust, INT_TO_VOID(1), player2->position.x, player2->position.y);
 
                             dust->visible         = false;
                             dust->active          = ACTIVE_NEVER;
@@ -828,8 +828,8 @@ void ItemBox_Break(EntityItemBox *itemBox, EntityPlayer *player)
     explosion->drawGroup       = Zone->objectDrawGroup[1];
 
     for (int32 d = 0; d < 6; ++d) {
-        EntityDebris *debris =
-            CREATE_ENTITY(Debris, NULL, itemBox->position.x + RSDK.Rand(-0x80000, 0x80000), itemBox->position.y + RSDK.Rand(-TO_FIXED(8), TO_FIXED(8)));
+        EntityDebris *debris    = CREATE_ENTITY(Debris, NULL, itemBox->position.x + RSDK.Rand(-0x80000, 0x80000),
+                                             itemBox->position.y + RSDK.Rand(-TO_FIXED(8), TO_FIXED(8)));
         debris->state           = Debris_State_Fall;
         debris->gravityStrength = 0x4000;
         debris->velocity.x      = RSDK.Rand(0, TO_FIXED(2));

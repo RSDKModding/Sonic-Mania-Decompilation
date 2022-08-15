@@ -131,7 +131,7 @@ void LEDPanel_SetupActiveText(int32 row, String *src)
     RSDK.CopyString(&self->activeText[row], src);
 
     self->activeTextSize[row] = self->activeText[row].length;
-    for (int i = 0; i < self->activeText[row].length; ++i) {
+    for (int32 i = 0; i < self->activeText[row].length; ++i) {
         if (self->activeText[row].chars[i] != 27) {
             self->activeTextSize[row] = i;
             break;

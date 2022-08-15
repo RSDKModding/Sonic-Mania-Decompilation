@@ -146,7 +146,7 @@ void RubyPortal_HandleTileDestruction(void)
                     EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, INT_TO_VOID(BREAKWALL_TILE_FIXED), spawnX, spawnY);
 
                     wall->drawGroup       = Zone->objectDrawGroup[0] + 1;
-                    wall->targetLayer         = Zone->fgLayer[0];
+                    wall->targetLayer     = Zone->fgLayer[0];
                     wall->tileInfo        = tile;
                     wall->drawFX          = FX_SCALE | FX_ROTATE | FX_FLIP;
                     wall->tilePos.x       = tx;
@@ -167,7 +167,7 @@ void RubyPortal_HandleTileDestruction(void)
                     EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, INT_TO_VOID(BREAKWALL_TILE_FIXED), spawnX, spawnY);
 
                     wall->drawGroup       = Zone->objectDrawGroup[1];
-                    wall->targetLayer         = Zone->fgLayer[1];
+                    wall->targetLayer     = Zone->fgLayer[1];
                     wall->tileInfo        = tile;
                     wall->drawFX          = FX_SCALE | FX_ROTATE | FX_FLIP;
                     wall->tilePos.x       = tx;

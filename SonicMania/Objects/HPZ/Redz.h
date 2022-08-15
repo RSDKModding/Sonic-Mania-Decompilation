@@ -33,7 +33,7 @@ void Redz_Update(void);
 void Redz_LateUpdate(void);
 void Redz_StaticUpdate(void);
 void Redz_Draw(void);
-void Redz_Create(void* data);
+void Redz_Create(void *data);
 void Redz_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Redz_EditorDraw(void);
@@ -55,4 +55,4 @@ void Redz_State_Attack(void);
 void Redz_Flame_Setup(void);
 void Redz_Flame_State(void);
 
-#endif //!OBJ_REDZ_H
+#endif //! OBJ_REDZ_H

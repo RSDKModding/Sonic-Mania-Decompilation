@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectERZOutro {
     RSDK_OBJECT
-    int32 unused; // Might be "ushort aniFrames" and was used inEditor but I do not know
+    int32 unused; // Might be "uint16 aniFrames" and was used inEditor but I do not know
     Vector2 playerPos;
     EntityFXRuby *fxRuby;
     EntityPhantomKing *king;

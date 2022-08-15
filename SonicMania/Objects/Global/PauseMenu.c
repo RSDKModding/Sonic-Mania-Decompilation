@@ -368,7 +368,7 @@ void PauseMenu_CheckAndReassignControllers(void)
 
 #if MANIA_USE_PLUS
     UNUSED(deviceID); // be quiet compiler I know it aint used!!
-    
+
     int32 id = API_GetFilteredInputDeviceID(true, true, 5);
 #else
     int32 id = API_GetFilteredInputDeviceID(deviceID);

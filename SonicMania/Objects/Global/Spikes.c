@@ -202,7 +202,7 @@ void Spikes_Update(void)
                     int32 storedY = player->position.y;
 
                     uint8 side = C_NONE;
-                    
+
                     if (player->state == Ice_PlayerState_Frozen)
                         side = MathHelpers_CheckBoxCollision(self, &self->hitbox, player, &Ice->hitboxPlayerBlockOuter);
                     else
@@ -415,7 +415,7 @@ void Spikes_Draw_Global(void)
     RSDK_THIS(Spikes);
 
     Vector2 drawPos = self->position;
-    int32 cnt = self->count >> 1;
+    int32 cnt       = self->count >> 1;
     switch (self->type) {
         case C_TOP:
         case C_BOTTOM:
@@ -459,7 +459,7 @@ void Spikes_Draw_Stage(void)
     RSDK_THIS(Spikes);
 
     Vector2 drawPos = self->position;
-    int32 cnt = self->count >> 1;
+    int32 cnt       = self->count >> 1;
 
     switch (self->type) {
         case C_TOP:
@@ -678,7 +678,7 @@ void Spikes_EditorDraw(void)
     }
 
     Vector2 drawPos = self->position;
-    int32 cnt = self->count >> 1;
+    int32 cnt       = self->count >> 1;
 
     switch (type) {
         case C_TOP:

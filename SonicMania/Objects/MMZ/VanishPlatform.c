@@ -14,9 +14,9 @@ void VanishPlatform_Update(void)
     RSDK_THIS(VanishPlatform);
 
     if (!((Zone->timer + self->intervalOffset) % self->interval) && self->state == Platform_State_Fixed) {
-        self->active        = ACTIVE_NORMAL;
-        self->timer = self->duration;
-        self->state         = VanishPlatform_State_Appear;
+        self->active = ACTIVE_NORMAL;
+        self->timer  = self->duration;
+        self->state  = VanishPlatform_State_Appear;
     }
 
     if (self->scale.x <= 336) {

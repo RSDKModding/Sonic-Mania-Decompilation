@@ -35,7 +35,7 @@ typedef enum {
     ZONE_AIZ,
 #endif
     // total zone count
-    ZONE_COUNT, 
+    ZONE_COUNT,
     // zone count for save files
     ZONE_COUNT_SAVEFILE = ZONE_ERZ + 1,
 } ZoneIDs;

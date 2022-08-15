@@ -369,7 +369,7 @@ void PuyoBean_CheckCollisions(void)
     self->onGround |= partner->onGround;
 }
 
-int PuyoBean_GetBeanChainRemovalCount(int32 playerID, EntityPuyoBean *bean, int32 x, int32 y)
+int32 PuyoBean_GetBeanChainRemovalCount(int32 playerID, EntityPuyoBean *bean, int32 x, int32 y)
 {
     PuyoBean->beanLinkTable[PUYO_PLAYFIELD_W * y + x] = true;
 
@@ -428,7 +428,7 @@ int PuyoBean_GetBeanChainRemovalCount(int32 playerID, EntityPuyoBean *bean, int3
     return junkBeanCount + beanLinkCount + 1;
 }
 
-int PuyoBean_GetAvaliableLinks(int32 playerID, EntityPuyoBean *bean, int32 x, int32 y)
+int32 PuyoBean_GetAvaliableLinks(int32 playerID, EntityPuyoBean *bean, int32 x, int32 y)
 {
     int32 avaliableLinks = 0;
     for (int32 i = 0; i < 4; ++i) {

@@ -16,7 +16,7 @@ typedef enum {
 // Object Class
 struct ObjectERZGunner {
     RSDK_OBJECT
-    // Technically a "Vector2" but since that can't be saved in static objects, it's an int array
+    // Technically a "Vector2" but since that can't be saved in static objects, it's an int32 array
     TABLE(int32 rocketOffsets[32], { -22, -24, -10, -24, -22, -31, -10, -31, -22, -38, -10, -38, -22, -45, -10, -45,
                                      10,  -24, 22,  -24, 10,  -31, 22,  -31, 10,  -38, 22,  -38, 10,  -45, 22,  -45 });
     int32 launchedRocketID;
@@ -68,7 +68,7 @@ void ERZGunner_Serialize(void);
 void ERZGunner_HandleDudExhaust(void);
 void ERZGunner_HandleMalfunctionDudExhaust(void);
 void ERZGunner_SpawnDust(void);
-void ERZGunner_HandleRotations(int angle);
+void ERZGunner_HandleRotations(int32 angle);
 void ERZGunner_CheckPlayerMissileCollisions(void);
 void ERZGunner_CheckPlayerExplosionCollisions(void);
 void ERZGunner_Hit(EntityERZGunner *entity);

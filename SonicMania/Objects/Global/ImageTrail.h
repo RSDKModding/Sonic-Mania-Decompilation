@@ -40,7 +40,7 @@ void ImageTrail_Update(void);
 void ImageTrail_LateUpdate(void);
 void ImageTrail_StaticUpdate(void);
 void ImageTrail_Draw(void);
-void ImageTrail_Create(void* data);
+void ImageTrail_Create(void *data);
 void ImageTrail_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ImageTrail_EditorDraw(void);
@@ -50,5 +50,4 @@ void ImageTrail_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_IMAGETRAIL_H
+#endif //! OBJ_IMAGETRAIL_H

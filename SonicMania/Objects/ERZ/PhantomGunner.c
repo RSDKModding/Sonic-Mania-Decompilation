@@ -175,7 +175,7 @@ void PhantomGunner_SpawnDust(void)
     }
 }
 
-void PhantomGunner_HandleRotations(int angle)
+void PhantomGunner_HandleRotations(int32 angle)
 {
     RSDK_THIS(PhantomGunner);
 

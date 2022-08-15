@@ -192,7 +192,7 @@ bool32 HotaruHiWatt_SfxCheck_HHWLaser(void)
     return count > 0;
 }
 
-void HotaruHiWatt_SfxUpdate_HHWLaser(int sfx)
+void HotaruHiWatt_SfxUpdate_HHWLaser(int32 sfx)
 {
     if (!(Soundboard->sfxPlayingTimer[sfx] % 6))
         Camera_ShakeScreen(0, 0, 2);

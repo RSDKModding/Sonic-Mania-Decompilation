@@ -97,7 +97,7 @@ void SPZ1Setup_StageLoad(void)
 
     if (isMainGameMode() && CutsceneRules_IsAct1()) {
         Zone->shouldRecoverPlayers = true;
-        Zone->stageFinishCallback = SPZ1Setup_StageFinish_EndAct1;
+        Zone->stageFinishCallback  = SPZ1Setup_StageFinish_EndAct1;
     }
 
 #if MANIA_USE_PLUS

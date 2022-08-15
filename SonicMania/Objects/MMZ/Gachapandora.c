@@ -18,11 +18,12 @@ void Gachapandora_Update(void)
 
 void Gachapandora_LateUpdate(void) {}
 
-void Gachapandora_StaticUpdate(void) { 
-    // Bug Details: 
+void Gachapandora_StaticUpdate(void)
+{
+    // Bug Details:
     // there's no NULL check here for Gachapandora->eggman so this will be called even on MMZ1 and its NULL.
     // Gachapandora->eggman also isn't cleared on StageLoad so this can point to a random entity
-    RSDK.AddDrawListRef(Zone->objectDrawGroup[0] + 1, RSDK.GetEntitySlot(Gachapandora->eggman)); 
+    RSDK.AddDrawListRef(Zone->objectDrawGroup[0] + 1, RSDK.GetEntitySlot(Gachapandora->eggman));
 }
 
 void Gachapandora_Draw(void)
@@ -296,7 +297,7 @@ void Gachapandora_CheckPlayerCollisions_Prize(void)
     }
 }
 
-void Gachapandora_Explode(int xMin, int xMax, int yMin, int yMax)
+void Gachapandora_Explode(int32 xMin, int32 xMax, int32 yMin, int32 yMax)
 {
     RSDK_THIS(Gachapandora);
 
@@ -396,7 +397,7 @@ void Gachapandora_HandleSparksAndDebris(void)
         switch (type) {
             case 2:
             case 0: {
-                int off                    = RSDK.Rand(-12, 12);
+                int32 off                  = RSDK.Rand(-12, 12);
                 EntityGachapandora *debris = CREATE_ENTITY(Gachapandora, INT_TO_VOID(GACHAPANDORA_DEBRIS),
                                                            self->position.x + (off << 16) + self->velocity.x, self->position.y + 0x300000);
 
@@ -969,7 +970,7 @@ void Gachapandora_Draw_Boss(void)
         self->mainAnimator.frameID = 5;
         RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 
-        for (int i = 0; i < GACHAPANDORA_CAPSULE_COUNT; ++i) {
+        for (int32 i = 0; i < GACHAPANDORA_CAPSULE_COUNT; ++i) {
             if (Gachapandora->capsuleOffsetL[i] != 0xFF) {
                 self->capsuleAnimator.frameID = ((Gachapandora->capsuleTypeL[i] % 3) >> 1) + 2 * (Gachapandora->capsuleTypeL[i] / 3);
                 drawPos.x                     = self->position.x - (Gachapandora->capsuleOffsets[56 - (Gachapandora->capsuleOffsetL[i] >> 2)] << 16);
@@ -1013,7 +1014,7 @@ void Gachapandora_Draw_Boss(void)
         self->mainAnimator.frameID = 1;
         RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 
-        int storeDir    = self->direction;
+        int32 storeDir  = self->direction;
         self->direction = Gachapandora->handleDir;
         drawPos.y += 0x1A0000;
         RSDK.DrawSprite(&self->handleAnimator, &drawPos, false);
@@ -1026,7 +1027,7 @@ void Gachapandora_Draw_BossDestroyed(void)
 {
     RSDK_THIS(Gachapandora);
 
-    int storeDir    = self->direction;
+    int32 storeDir  = self->direction;
     Vector2 drawPos = self->position;
     if (SceneInfo->currentDrawGroup == Zone->objectDrawGroup[0]) {
         self->mainAnimator.frameID = 0;

@@ -7,7 +7,7 @@ typedef enum {
     UITEXT_ALIGN_LEFT,
     UITEXT_ALIGN_CENTER,
     UITEXT_ALIGN_RIGHT,
-}UITextAlignments;
+} UITextAlignments;
 
 // Object Class
 struct ObjectUIText {

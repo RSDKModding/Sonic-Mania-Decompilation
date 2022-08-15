@@ -32,7 +32,7 @@ void Letterboard_Update(void);
 void Letterboard_LateUpdate(void);
 void Letterboard_StaticUpdate(void);
 void Letterboard_Draw(void);
-void Letterboard_Create(void* data);
+void Letterboard_Create(void *data);
 void Letterboard_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Letterboard_EditorDraw(void);
@@ -45,4 +45,4 @@ void Letterboard_State_Controller(void);
 void Letterboard_State_CheckPlayerSpin(void);
 void Letterboard_State_Spun(void);
 
-#endif //!OBJ_LETTERBOARD_H
+#endif //! OBJ_LETTERBOARD_H

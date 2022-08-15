@@ -41,7 +41,7 @@ void Technosqueek_Update(void);
 void Technosqueek_LateUpdate(void);
 void Technosqueek_StaticUpdate(void);
 void Technosqueek_Draw(void);
-void Technosqueek_Create(void* data);
+void Technosqueek_Create(void *data);
 void Technosqueek_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Technosqueek_EditorDraw(void);
@@ -63,4 +63,4 @@ void Technosqueek_State_MoveVertical(void);
 void Technosqueek_State_TurnVertical(void);
 void Technosqueek_State_Fall(void);
 
-#endif //!OBJ_TECHNOSQUEEK_H
+#endif //! OBJ_TECHNOSQUEEK_H

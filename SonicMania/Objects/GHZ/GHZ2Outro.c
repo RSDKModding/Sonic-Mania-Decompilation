@@ -251,7 +251,7 @@ bool32 GHZ2Outro_Cutscene_BreakupGroup(EntityCutsceneSeq *host)
             eggman->timer      = 30;
             eggman->velocity.x = 0;
             eggman->velocity.y = -0x30000;
-            eggman->nextState = Eggman_State_ProcessUntilEnd;
+            eggman->nextState  = Eggman_State_ProcessUntilEnd;
             eggman->state      = Eggman_State_FallUntilTimerReset;
             eggman->animID     = 3;
             break;

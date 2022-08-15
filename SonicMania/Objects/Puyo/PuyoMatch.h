@@ -61,7 +61,7 @@ void PuyoMatch_EditorLoad(void);
 void PuyoMatch_Serialize(void);
 
 // Extra Entity Functions
-void PuyoMatch_AddPuyoCombo(int playerID, int score);
+void PuyoMatch_AddPuyoCombo(int32 playerID, int32 score);
 void PuyoMatch_SetupNextBeans(EntityPuyoMatch *match);
 void PuyoMatch_DropNextBeans(void);
 void PuyoMatch_DropJunkBeans(void);

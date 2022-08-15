@@ -66,24 +66,24 @@ void DNARiser_Create(void *data)
 
 void DNARiser_StageLoad(void)
 {
-    DNARiser->aniFrames     = RSDK.LoadSpriteAnimation("CPZ/DNARiser.bin", SCOPE_STAGE);
+    DNARiser->aniFrames = RSDK.LoadSpriteAnimation("CPZ/DNARiser.bin", SCOPE_STAGE);
 
     DNARiser->hitbox.top    = -16;
     DNARiser->hitbox.bottom = 16;
     DNARiser->hitbox.left   = -16;
     DNARiser->hitbox.right  = 16;
 
-    DNARiser->active        = ACTIVE_ALWAYS;
+    DNARiser->active = ACTIVE_ALWAYS;
 
-    DNARiser->sfxBurst      = RSDK.GetSfx("CPZ/DNABurst.wav");
-    DNARiser->sfxGrab       = RSDK.GetSfx("CPZ/DNAGrab.wav");
-    DNARiser->sfxScan       = RSDK.GetSfx("CPZ/DNAScan.wav");
-    DNARiser->sfxTiny[0]    = RSDK.GetSfx("CPZ/DNATiny0.wav");
-    DNARiser->sfxTiny[1]    = RSDK.GetSfx("CPZ/DNATiny1.wav");
-    DNARiser->sfxTiny[2]    = RSDK.GetSfx("CPZ/DNATiny2.wav");
-    DNARiser->sfxTiny[3]    = RSDK.GetSfx("CPZ/DNATiny3.wav");
-    DNARiser->sfxTiny[4]    = RSDK.GetSfx("CPZ/DNATiny4.wav");
-    DNARiser->sfxTiny[5]    = RSDK.GetSfx("CPZ/DNATiny5.wav");
+    DNARiser->sfxBurst   = RSDK.GetSfx("CPZ/DNABurst.wav");
+    DNARiser->sfxGrab    = RSDK.GetSfx("CPZ/DNAGrab.wav");
+    DNARiser->sfxScan    = RSDK.GetSfx("CPZ/DNAScan.wav");
+    DNARiser->sfxTiny[0] = RSDK.GetSfx("CPZ/DNATiny0.wav");
+    DNARiser->sfxTiny[1] = RSDK.GetSfx("CPZ/DNATiny1.wav");
+    DNARiser->sfxTiny[2] = RSDK.GetSfx("CPZ/DNATiny2.wav");
+    DNARiser->sfxTiny[3] = RSDK.GetSfx("CPZ/DNATiny3.wav");
+    DNARiser->sfxTiny[4] = RSDK.GetSfx("CPZ/DNATiny4.wav");
+    DNARiser->sfxTiny[5] = RSDK.GetSfx("CPZ/DNATiny5.wav");
 }
 
 void DNARiser_State_BubbleBurst(void)
@@ -403,8 +403,9 @@ void DNARiser_State_OrbSetup(void)
     self->state     = DNARiser_State_OrbIdle;
 }
 
-void DNARiser_State_OrbIdle(void) {
-    // 20220614 rdc said i could come back and comment these >:] 
+void DNARiser_State_OrbIdle(void)
+{
+    // 20220614 rdc said i could come back and comment these >:]
 }
 
 void DNARiser_State_OrbFall(void)
@@ -595,8 +596,8 @@ void DNARiser_Draw_Helix(void)
         for (int32 i = 0; i < 8; ++i) {
             bool32 isYellowSmall = (isYellowBig && i <= 3) || (!isYellowBig && i >= 4);
             bool32 canDraw       = SceneInfo->currentDrawGroup == Zone->objectDrawGroup[1]
-                                 ? ((isYellowBig && !isYellowSmall) || (!isYellowBig && isYellowSmall))
-                                 : ((isYellowBig && isYellowSmall) || (!isYellowBig && !isYellowSmall));
+                                       ? ((isYellowBig && !isYellowSmall) || (!isYellowBig && isYellowSmall))
+                                       : ((isYellowBig && isYellowSmall) || (!isYellowBig && !isYellowSmall));
 
             if (drawFlags[i] && canDraw) {
                 if (!isYellowSmall)

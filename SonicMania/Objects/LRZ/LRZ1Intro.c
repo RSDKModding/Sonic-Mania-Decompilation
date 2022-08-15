@@ -92,8 +92,8 @@ void LRZ1Intro_HandleLavaContact(void)
     RSDK_THIS(LRZ1Intro);
 
     if (!(Zone->timer & 3)) {
-        int32 x                                                              = self->position.x + 0xE00000;
-        int32 y                                                              = self->spawnPosY + RSDK.Rand(0x400000, 0x580000);
+        int32 x                                                                = self->position.x + 0xE00000;
+        int32 y                                                                = self->spawnPosY + RSDK.Rand(0x400000, 0x580000);
         CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawGroup[1];
     }
 

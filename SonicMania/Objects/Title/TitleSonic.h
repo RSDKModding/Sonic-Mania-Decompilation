@@ -24,7 +24,7 @@ void TitleSonic_Update(void);
 void TitleSonic_LateUpdate(void);
 void TitleSonic_StaticUpdate(void);
 void TitleSonic_Draw(void);
-void TitleSonic_Create(void* data);
+void TitleSonic_Create(void *data);
 void TitleSonic_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TitleSonic_EditorDraw(void);
@@ -34,5 +34,4 @@ void TitleSonic_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_TITLESONIC_H
+#endif //! OBJ_TITLESONIC_H

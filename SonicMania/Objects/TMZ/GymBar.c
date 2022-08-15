@@ -26,7 +26,7 @@ void GymBar_Draw(void)
         RSDK.DrawSprite(&self->animator, &drawPos, false);
 
         self->animator.frameID = 1;
-        for (int i = 0; i < self->size; ++i) {
+        for (int32 i = 0; i < self->size; ++i) {
             RSDK.DrawSprite(&self->animator, &drawPos, false);
             drawPos.y += 0x80000;
         }
@@ -37,7 +37,7 @@ void GymBar_Draw(void)
         RSDK.DrawSprite(&self->animator, &drawPos, false);
 
         self->animator.frameID = 1;
-        for (int i = 0; i < self->size; ++i) {
+        for (int32 i = 0; i < self->size; ++i) {
             RSDK.DrawSprite(&self->animator, &drawPos, false);
             drawPos.x += 0x80000;
         }

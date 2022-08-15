@@ -29,7 +29,7 @@ void SpikeLog_Update(void);
 void SpikeLog_LateUpdate(void);
 void SpikeLog_StaticUpdate(void);
 void SpikeLog_Draw(void);
-void SpikeLog_Create(void* data);
+void SpikeLog_Create(void *data);
 void SpikeLog_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SpikeLog_EditorDraw(void);
@@ -41,5 +41,4 @@ void SpikeLog_Serialize(void);
 void SpikeLog_State_Main(void);
 void SpikeLog_State_Burn(void);
 
-
-#endif //!OBJ_SPIKELOG_H
+#endif //! OBJ_SPIKELOG_H

@@ -68,7 +68,7 @@ void PuyoMatch_StageLoad(void)
     PuyoMatch->comboPower = 120; // the lower this is, the more junk will drop from combos, likewise the higher it is, the less junk will drop
 }
 
-void PuyoMatch_AddPuyoCombo(int playerID, int score)
+void PuyoMatch_AddPuyoCombo(int32 playerID, int32 score)
 {
     foreach_active(PuyoMatch, match)
     {
@@ -266,7 +266,7 @@ void PuyoMatch_State_HandleCombos(void)
     RSDK_THIS(PuyoMatch);
 
     self->comboBeanCount = 0;
-    if (++self->comboCount == 3 && self->stateInput == PuyoBean_Input_Player) 
+    if (++self->comboCount == 3 && self->stateInput == PuyoBean_Input_Player)
         API_UnlockAchievement(&achievementList[ACH_CPZ]);
 
     uint8 comboColors          = 0;

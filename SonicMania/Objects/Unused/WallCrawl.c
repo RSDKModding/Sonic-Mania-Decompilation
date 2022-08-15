@@ -52,22 +52,22 @@ void WallCrawl_Create(void *data)
 
 void WallCrawl_StageLoad(void)
 {
-    WallCrawl->aniFrames                = RSDK.LoadSpriteAnimation("Blueprint/WallCrawl.bin", SCOPE_STAGE);
+    WallCrawl->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/WallCrawl.bin", SCOPE_STAGE);
 
-    WallCrawl->hitboxBadnik.left              = -14;
-    WallCrawl->hitboxBadnik.top               = -14;
-    WallCrawl->hitboxBadnik.right             = 14;
-    WallCrawl->hitboxBadnik.bottom            = 14;
+    WallCrawl->hitboxBadnik.left   = -14;
+    WallCrawl->hitboxBadnik.top    = -14;
+    WallCrawl->hitboxBadnik.right  = 14;
+    WallCrawl->hitboxBadnik.bottom = 14;
 
-    WallCrawl->hitboxRange.left            = -128;
-    WallCrawl->hitboxRange.top             = -128;
-    WallCrawl->hitboxRange.right           = 128;
-    WallCrawl->hitboxRange.bottom          = 128;
+    WallCrawl->hitboxRange.left   = -128;
+    WallCrawl->hitboxRange.top    = -128;
+    WallCrawl->hitboxRange.right  = 128;
+    WallCrawl->hitboxRange.bottom = 128;
 
-    WallCrawl->hitboxLaser.left           = -132;
-    WallCrawl->hitboxLaser.top            = 8;
-    WallCrawl->hitboxLaser.right          = 132;
-    WallCrawl->hitboxLaser.bottom         = -8;
+    WallCrawl->hitboxLaser.left   = -132;
+    WallCrawl->hitboxLaser.top    = 8;
+    WallCrawl->hitboxLaser.right  = 132;
+    WallCrawl->hitboxLaser.bottom = -8;
 
     WallCrawl->hitboxProjectile.left   = -24;
     WallCrawl->hitboxProjectile.top    = -1;
@@ -126,8 +126,8 @@ void WallCrawl_State_Init(void)
 {
     RSDK_THIS(WallCrawl);
 
-    int32 offsetY    = -0xC0000;
-    self->active = ACTIVE_NORMAL;
+    int32 offsetY = -0xC0000;
+    self->active  = ACTIVE_NORMAL;
     if (self->direction & FLIP_Y)
         offsetY = 0xC0000;
 
@@ -162,11 +162,11 @@ void WallCrawl_State_Moving(void)
                 }
             }
             else {
-                int32 offsetX   = -0x180000;
-                self->state = WallCrawl_State_Idle;
+                int32 offsetX = -0x180000;
+                self->state   = WallCrawl_State_Idle;
                 if (!(self->direction & FLIP_X))
                     offsetX = 0x180000;
-                self->idleTimer                                                                                       = 30;
+                self->idleTimer                                                                                      = 30;
                 CREATE_ENTITY(WallCrawl, INT_TO_VOID(true), self->position.x + offsetX, self->position.y)->direction = self->direction;
                 self->timer                                                                                          = 180;
                 self->playerPtr                                                                                      = NULL;
@@ -185,8 +185,8 @@ void WallCrawl_State_Moving(void)
     }
 
     self->position.y += self->velocity.y;
-    int32 offsetY    = -0xC0000;
-    self->active = ACTIVE_NORMAL;
+    int32 offsetY = -0xC0000;
+    self->active  = ACTIVE_NORMAL;
     if (self->direction & FLIP_Y)
         offsetY = 0xC0000;
 
@@ -194,7 +194,7 @@ void WallCrawl_State_Moving(void)
     if (!(self->direction & FLIP_X))
         offsetX = 0xC0000;
     if (!RSDK.ObjectTileGrip(self, Zone->collisionLayers, (2 * ((self->direction & 1) != 0) + 1), 0, offsetX, offsetY, 0)) {
-        self->state    = WallCrawl_State_Idle;
+        self->state     = WallCrawl_State_Idle;
         self->idleTimer = 30;
         if (self->playerPtr) {
             self->playerPtr = 0;
@@ -247,7 +247,8 @@ void WallCrawl_EditorDraw(void)
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
-void WallCrawl_EditorLoad(void) {
+void WallCrawl_EditorLoad(void)
+{
     WallCrawl->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/WallCrawl.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(WallCrawl, direction);

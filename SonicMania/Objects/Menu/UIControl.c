@@ -538,7 +538,7 @@ void UIControl_SetInactiveMenu(EntityUIControl *control)
 
 #if MANIA_USE_PLUS
     RSDK_THIS(UIControl);
-    
+
     if (self->promptCount) {
         for (int32 p = 0; p < control->promptCount; ++p) control->prompts[p]->active = ACTIVE_BOUNDS;
     }

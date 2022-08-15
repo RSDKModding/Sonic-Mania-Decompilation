@@ -53,7 +53,7 @@ void SpikeCorridor_Create(void *data)
 
 void SpikeCorridor_StageLoad(void)
 {
-    SpikeCorridor->aniFrames    = RSDK.LoadSpriteAnimation("MMZ/SpikeCorridor.bin", SCOPE_STAGE);
+    SpikeCorridor->aniFrames = RSDK.LoadSpriteAnimation("MMZ/SpikeCorridor.bin", SCOPE_STAGE);
 
     SpikeCorridor->sfxDrop      = RSDK.GetSfx("Stage/Drop.wav");
     SpikeCorridor->sfxImpact    = RSDK.GetSfx("Stage/Impact2.wav");
@@ -84,8 +84,8 @@ void SpikeCorridor_HandleDrawing(Animator *animator, int32 offsetY, int8 size, b
     int32 startX = self->position.x - (self->colWidth << 18);
 
     Vector2 drawPos;
-    drawPos.x    = 0;
-    drawPos.y    = self->position.y + offsetY;
+    drawPos.x = 0;
+    drawPos.y = self->position.y + offsetY;
 
     int32 anim = useWarnAnim ? 5 : 0;
 
@@ -199,15 +199,15 @@ void SpikeCorridor_StateDropper_Setup(void)
     self->hitbox.right  = (8 * self->colWidth) >> 1;
     self->hitbox.bottom = self->yOffset + 24 * self->rowHeight;
 
-    self->startPos    = self->position;
-    self->active        = ACTIVE_BOUNDS;
-    self->visible       = true;
-    self->rowID         = 0;
-    self->lastSize      = -1;
-    self->timer         = 0;
+    self->startPos = self->position;
+    self->active   = ACTIVE_BOUNDS;
+    self->visible  = true;
+    self->rowID    = 0;
+    self->lastSize = -1;
+    self->timer    = 0;
 
     SpikeCorridor_StateDropper_CheckForPlayer();
-    self->state     = SpikeCorridor_StateDropper_CheckForPlayer;
+    self->state = SpikeCorridor_StateDropper_CheckForPlayer;
 
     self->stateDraw = StateMachine_None;
 }
@@ -276,7 +276,7 @@ void SpikeCorridor_StateDropper_SpawnSpikes(void)
     fallRow->yOffset             = 0;
     fallRow->fallOffset          = (self->yOffset + 24 * (self->rowHeight - self->rowID++ - 1)) << 16;
 
-    self->timer                = 0;
+    self->timer = 0;
 
     if (self->rowID >= self->rowHeight) {
         self->interaction = false;
@@ -312,7 +312,7 @@ void SpikeCorridor_StateSpikes_Setup(void)
     self->visible   = true;
     self->stateDraw = SpikeCorridor_Draw_Spikes;
 
-    self->state     = SpikeCorridor_StateSpikes_Fall;
+    self->state = SpikeCorridor_StateSpikes_Fall;
     SpikeCorridor_StateSpikes_Fall();
 }
 
@@ -381,7 +381,7 @@ void SpikeCorridor_EditorDraw(void)
     if (showGizmos()) {
         RSDK_DRAWING_OVERLAY(true);
 
-        int yOffset      = 0;
+        int32 yOffset    = 0;
         self->fallOffset = (self->yOffset + 24 * (self->rowHeight - 1)) << 16;
 
         while (yOffset < self->fallOffset) {

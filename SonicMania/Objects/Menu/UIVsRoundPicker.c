@@ -346,7 +346,7 @@ void UIVsRoundPicker_EditorDraw(void)
 {
     RSDK_THIS(UIVsRoundPicker);
 
-    int sizeY = self->size.y;
+    int32 sizeY = self->size.y;
 
     self->visible       = true;
     self->drawGroup     = 2;

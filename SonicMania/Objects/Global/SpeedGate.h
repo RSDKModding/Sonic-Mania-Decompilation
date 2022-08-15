@@ -42,7 +42,7 @@ void SpeedGate_Update(void);
 void SpeedGate_LateUpdate(void);
 void SpeedGate_StaticUpdate(void);
 void SpeedGate_Draw(void);
-void SpeedGate_Create(void* data);
+void SpeedGate_Create(void *data);
 void SpeedGate_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SpeedGate_EditorDraw(void);
@@ -55,4 +55,4 @@ void SpeedGate_State_WaitForStart(void);
 void SpeedGate_State_ProcessGate(void);
 void SpeedGate_State_HandleFinished(void);
 
-#endif //!OBJ_SPEEDGATE_H
+#endif //! OBJ_SPEEDGATE_H

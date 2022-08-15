@@ -49,7 +49,7 @@ void StarPost_Update(void);
 void StarPost_LateUpdate(void);
 void StarPost_StaticUpdate(void);
 void StarPost_Draw(void);
-void StarPost_Create(void* data);
+void StarPost_Create(void *data);
 void StarPost_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void StarPost_EditorDraw(void);
@@ -68,4 +68,4 @@ void StarPost_CheckCollisions(void);
 void StarPost_State_Idle(void);
 void StarPost_State_Spinning(void);
 
-#endif //!OBJ_STARPOST_H
+#endif //! OBJ_STARPOST_H

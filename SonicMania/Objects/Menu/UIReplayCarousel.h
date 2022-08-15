@@ -54,7 +54,7 @@ void UIReplayCarousel_Update(void);
 void UIReplayCarousel_LateUpdate(void);
 void UIReplayCarousel_StaticUpdate(void);
 void UIReplayCarousel_Draw(void);
-void UIReplayCarousel_Create(void* data);
+void UIReplayCarousel_Create(void *data);
 void UIReplayCarousel_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UIReplayCarousel_EditorDraw(void);
@@ -72,7 +72,8 @@ void UIReplayCarousel_SetupVisibleReplayButtons(void);
 void UIReplayCarousel_DrawBGShapes(int32 drawX, int32 drawY, bool32 encore, int16 replayID);
 void UIReplayCarousel_DrawStageInfo(int32 drawX, int32 drawY, uint8 act, uint8 characterID, int32 score, int32 replayID);
 void UIReplayCarousel_DrawZoneIcon(int32 drawX, int32 drawY, uint8 zoneID, int16 replayID);
-void UIReplayCarousel_DrawReplayInfo(int32 drawX, int32 drawY, uint8 zoneID, uint8 act, uint8 characterID, bool32 isEncore, int32 score, int32 replayID);
+void UIReplayCarousel_DrawReplayInfo(int32 drawX, int32 drawY, uint8 zoneID, uint8 act, uint8 characterID, bool32 isEncore, int32 score,
+                                     int32 replayID);
 void UIReplayCarousel_StartAction(void);
 void UIReplayCarousel_SetUnselected(void);
 
@@ -87,4 +88,4 @@ void UIReplayCarousel_State_StartAction(void);
 
 #endif
 
-#endif //!OBJ_UIREPLAYCAROUSEL_H
+#endif //! OBJ_UIREPLAYCAROUSEL_H

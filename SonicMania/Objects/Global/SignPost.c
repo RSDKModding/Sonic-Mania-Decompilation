@@ -241,10 +241,10 @@ void SignPost_HandleSparkles(void)
         int32 y          = self->position.y + RSDK.Rand(-TO_FIXED(32), TO_FIXED(8));
         EntityRing *ring = CREATE_ENTITY(Ring, NULL, x, y);
 
-        ring->state      = Ring_State_Sparkle;
-        ring->stateDraw  = Ring_Draw_Sparkle;
-        ring->active     = ACTIVE_NORMAL;
-        ring->visible    = false;
+        ring->state     = Ring_State_Sparkle;
+        ring->stateDraw = Ring_Draw_Sparkle;
+        ring->active    = ACTIVE_NORMAL;
+        ring->visible   = false;
         RSDK.SetSpriteAnimation(Ring->aniFrames, self->sparkleType + 2, &ring->animator, true, 0);
         int32 cnt = ring->animator.frameCount;
         if (ring->animator.animationID == 2) {
@@ -502,7 +502,7 @@ void SignPost_State_Falling(void)
         self->type = SIGNPOST_RUNPAST;
         if (globals->gameMode < MODE_COMPETITION) {
             switch (GET_CHARACTER_ID(1)) {
-                default: 
+                default:
                 case ID_SONIC: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_SONIC, &self->facePlateAnimator, true, 0); break;
                 case ID_TAILS: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_TAILS, &self->facePlateAnimator, true, 0); break;
                 case ID_KNUCKLES: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_KNUX, &self->facePlateAnimator, true, 0); break;
@@ -567,7 +567,7 @@ void SignPost_State_Falling(void)
                     itemBox->state      = ItemBox_State_Falling;
                     self->itemBounceCount++;
                     self->velocity.y = -TO_FIXED(2);
-                    if (self->itemBounceCount == 2) 
+                    if (self->itemBounceCount == 2)
                         API_UnlockAchievement(&achievementList[ACH_SIGNPOST]);
                 }
             }

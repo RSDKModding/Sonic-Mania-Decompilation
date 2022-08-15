@@ -406,14 +406,14 @@ void Water_State_Water(void)
 
         if (canEnterWater) {
             EntityWater *currentPool = NULL;
-            uint16 underwater     = 0;
+            uint16 underwater        = 0;
             foreach_active(Water, pool)
             {
                 if (pool->type == WATER_POOL) {
                     if (RSDK.CheckObjectCollisionTouchBox(pool, &pool->hitbox, player, &Water->hitboxPoint)) {
-                        currentPool        = pool;
+                        currentPool    = pool;
                         pool->childPtr = player;
-                        underwater      = RSDK.GetEntitySlot(pool);
+                        underwater     = RSDK.GetEntitySlot(pool);
                     }
                     else if (pool->childPtr == player) {
                         pool->childPtr = NULL;
@@ -497,10 +497,10 @@ void Water_State_Water(void)
                     if (player->velocity.y && (!Current || !((1 << RSDK.GetEntitySlot(player)) & Current->activePlayers))) {
                         if (!Water->disableWaterSplash) {
                             if (currentPool) {
-                                EntityWater *splash =
-                                    CREATE_ENTITY(Water, INT_TO_VOID(WATER_SPLASH), player->position.x, currentPool->position.y - (currentPool->size.x >> 1));
-                                splash->drawGroup = player->drawGroup;
-                                splash->childPtr  = currentPool;
+                                EntityWater *splash = CREATE_ENTITY(Water, INT_TO_VOID(WATER_SPLASH), player->position.x,
+                                                                    currentPool->position.y - (currentPool->size.x >> 1));
+                                splash->drawGroup   = player->drawGroup;
+                                splash->childPtr    = currentPool;
                             }
                             else {
                                 CREATE_ENTITY(Water, INT_TO_VOID(WATER_SPLASH), player->position.x, Water->waterLevel);
@@ -834,8 +834,8 @@ void Water_State_Bubble(void)
                                                      && anim != ANI_SWIM_LIFT;
                                     }
                                     else if (player->characterID == ID_KNUCKLES) {
-                                        canBreathe = anim != ANI_LEDGE_PULL_UP && anim != ANI_GLIDE && anim != ANI_GLIDE_SLIDE && anim != ANI_CLIMB_IDLE
-                                                     && anim != ANI_CLIMB_UP && anim != ANI_CLIMB_DOWN;
+                                        canBreathe = anim != ANI_LEDGE_PULL_UP && anim != ANI_GLIDE && anim != ANI_GLIDE_SLIDE
+                                                     && anim != ANI_CLIMB_IDLE && anim != ANI_CLIMB_UP && anim != ANI_CLIMB_DOWN;
                                     }
 
                                     if (canBreathe && (anim != ANI_FAN && anim != ANI_CLING)) {

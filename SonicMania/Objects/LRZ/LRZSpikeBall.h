@@ -45,7 +45,7 @@ void LRZSpikeBall_EditorLoad(void);
 void LRZSpikeBall_Serialize(void);
 
 // Extra Entity Functions
-int LRZSpikeBall_GetBaseFrameID(void);
+int32 LRZSpikeBall_GetBaseFrameID(void);
 
 void LRZSpikeBall_CheckPlayerBaseCollisions(void);
 void LRZSpikeBall_CheckPlayerBallCollisions(void);

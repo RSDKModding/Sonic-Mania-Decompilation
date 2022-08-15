@@ -23,7 +23,7 @@ void CPZ2Outro_Update(void);
 void CPZ2Outro_LateUpdate(void);
 void CPZ2Outro_StaticUpdate(void);
 void CPZ2Outro_Draw(void);
-void CPZ2Outro_Create(void* data);
+void CPZ2Outro_Create(void *data);
 void CPZ2Outro_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void CPZ2Outro_EditorDraw(void);
@@ -35,4 +35,4 @@ void CPZ2Outro_Serialize(void);
 void CPZ2Outro_SetupCutscene(void);
 bool32 CPZ2Outro_Cutscene_Outro(EntityCutsceneSeq *host);
 
-#endif //!OBJ_CPZ2OUTRO_H
+#endif //! OBJ_CPZ2OUTRO_H

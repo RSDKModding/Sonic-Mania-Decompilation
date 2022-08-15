@@ -845,7 +845,8 @@ void HeavyShinobi_StateAsteron_Explode(void)
             if (self->playerPtr == player) {
                 if (player->state != Ice_PlayerState_Frozen) {
                     RSDK.PlaySfx(HeavyShinobi->sfxExplode, false, 255);
-                    CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawGroup[1] + 2;
+                    CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup =
+                        Zone->objectDrawGroup[1] + 2;
                     --HeavyShinobi->activeShurikens;
 
                     destroyEntity(self);

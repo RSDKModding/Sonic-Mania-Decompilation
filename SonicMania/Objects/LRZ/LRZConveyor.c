@@ -76,7 +76,7 @@ void LRZConveyor_StageLoad(void)
     LRZConveyor->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/LRZConveyor.bin", SCOPE_STAGE);
 
     color lineColors[] = { 0x225BDD, 0x429AFD, 0x51DEFF, 0xAFFDF0 };
-    for (int i = 0; i < 0x40; ++i) LRZConveyor->lineColors[i] = lineColors[i & 3];
+    for (int32 i = 0; i < 0x40; ++i) LRZConveyor->lineColors[i] = lineColors[i & 3];
 }
 
 void LRZConveyor_HandleBehaviour(void)
@@ -127,7 +127,7 @@ void LRZConveyor_HandlePlayerInteractions(void)
     }
 }
 
-int LRZConveyor_HandlePlayerCollisions(EntityLRZConveyor *conveyor, void *p, Hitbox *hitboxPtr)
+int32 LRZConveyor_HandlePlayerCollisions(EntityLRZConveyor *conveyor, void *p, Hitbox *hitboxPtr)
 {
     EntityPlayer *player = (EntityPlayer *)p;
 
@@ -141,7 +141,7 @@ int LRZConveyor_HandlePlayerCollisions(EntityLRZConveyor *conveyor, void *p, Hit
 
     if (abs(distX) >> 16 > conveyor->length >> 1) {
         if (abs(distX) >> 16 <= (conveyor->length >> 1) + 16) {
-            int len = conveyor->length >> 1;
+            int32 len = conveyor->length >> 1;
             if (distX >= 0) {
                 if (distX >> 16 < len)
                     len = distX >> 16;
@@ -152,22 +152,22 @@ int LRZConveyor_HandlePlayerCollisions(EntityLRZConveyor *conveyor, void *p, Hit
                     len = distX >> 16;
             }
 
-            int slope     = (len * (conveyor->slope << 8)) >> 16;
-            int angle     = RSDK.ATan2(distX - (conveyor->length << 15) * (((distX >> 31) & 0xFFFFFFFE) + 1), 0x100000);
+            int32 slope   = (len * (conveyor->slope << 8)) >> 16;
+            int32 angle   = RSDK.ATan2(distX - (conveyor->length << 15) * (((distX >> 31) & 0xFFFFFFFE) + 1), 0x100000);
             hitbox.top    = slope - (RSDK.Sin256(angle) >> 4);
             hitbox.bottom = slope + (RSDK.Sin256(angle) >> 4);
         }
     }
     else {
-        int slope     = ((distX >> 16) * (conveyor->slope << 8)) >> 16;
+        int32 slope   = ((distX >> 16) * (conveyor->slope << 8)) >> 16;
         hitbox.top    = slope - 16;
         hitbox.bottom = slope + 16;
     }
 
-    int storeDir        = conveyor->direction;
+    int32 storeDir      = conveyor->direction;
     conveyor->direction = FLIP_NONE;
 
-    int side = C_NONE;
+    int32 side = C_NONE;
     if (Player_CheckValidState(player)) {
         side                = Player_CheckCollisionBox(player, conveyor, &hitbox);
         conveyor->direction = storeDir;
@@ -184,7 +184,7 @@ int LRZConveyor_HandlePlayerCollisions(EntityLRZConveyor *conveyor, void *p, Hit
             playerHitbox.bottom = 8;
         }
 
-        side = MathHelpers_CheckBoxCollision(conveyor, &hitbox, player, &playerHitbox);
+        side                = MathHelpers_CheckBoxCollision(conveyor, &hitbox, player, &playerHitbox);
         conveyor->direction = storeDir;
     }
 

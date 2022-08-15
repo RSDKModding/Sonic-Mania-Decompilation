@@ -56,7 +56,7 @@ void LRZConveyor_Serialize(void);
 // Extra Entity Functions
 void LRZConveyor_HandleBehaviour(void);
 void LRZConveyor_HandlePlayerInteractions(void);
-int LRZConveyor_HandlePlayerCollisions(EntityLRZConveyor *conveyor, void *p, Hitbox *hitboxPtr);
+int32 LRZConveyor_HandlePlayerCollisions(EntityLRZConveyor *conveyor, void *p, Hitbox *hitboxPtr);
 void LRZConveyor_DrawWheels(void);
 void LRZConveyor_DrawDeformedLine(int32 startY, int32 startX, int32 endX, int32 endY, int32 offsetX, int32 offsetY, int32 len, color *color);
 void LRZConveyor_DrawConveyorLines(void);

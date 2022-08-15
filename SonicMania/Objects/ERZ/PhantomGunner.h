@@ -71,7 +71,7 @@ void PhantomGunner_Serialize(void);
 void PhantomGunner_HandleDudExhaust(void);
 void PhantomGunner_HandleMalfunctionDudExhaust(void);
 void PhantomGunner_SpawnDust(void);
-void PhantomGunner_HandleRotations(int angle);
+void PhantomGunner_HandleRotations(int32 angle);
 void PhantomGunner_CheckPlayerMissileCollisions(void);
 void PhantomGunner_CheckPlayerExplosionCollisions(void);
 void PhantomGunner_Hit(EntityPhantomGunner *entity);

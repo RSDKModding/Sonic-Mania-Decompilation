@@ -439,9 +439,9 @@ void BSS_Setup_State_GlobeJettison(void)
     BSS_Setup_LaunchSpheres();
 
     if (++self->spinTimer == 128) {
-        self->spinTimer  = 0;
-        self->speedupLevel   = 8;
-        self->globeSpeed = 8;
+        self->spinTimer    = 0;
+        self->speedupLevel = 8;
+        self->globeSpeed   = 8;
         BSS_Setup_SetupFinishSequence();
 
         EntityBSS_Player *player = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
@@ -770,7 +770,7 @@ void BSS_Setup_HandleCollectableMovement(void)
             }
             else {
                 collectable->classID = BSS_Collectable->classID;
-                collectable->type     = tile & 0x3FF;
+                collectable->type    = tile & 0x3FF;
                 if (y < 112) {
                     self->xMultiplier             = BSS_Setup->xMultiplierTable[y];
                     self->divisor                 = BSS_Setup->divisorTable[y];
@@ -928,7 +928,7 @@ void BSS_Setup_State_GlobeExit(void)
     RSDK_THIS(BSS_Setup);
 
     PauseMenu->disableEvents = true;
-    self->speedupLevel           = 0;
+    self->speedupLevel       = 0;
 
     if (self->spinTimer <= 0) {
         CREATE_ENTITY(BSS_Message, INT_TO_VOID(BSS_MESSAGE_FINISHED), self->position.x, self->position.y);

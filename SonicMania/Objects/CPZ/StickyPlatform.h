@@ -12,9 +12,9 @@ typedef enum {
 
 // Object Class
 struct ObjectStickyPlatform {
-	RSDK_OBJECT
-	uint16 sfxLand;
-	uint16 aniFrames;
+    RSDK_OBJECT
+    uint16 sfxLand;
+    uint16 aniFrames;
 };
 
 // Entity Class
@@ -41,7 +41,7 @@ void StickyPlatform_Update(void);
 void StickyPlatform_LateUpdate(void);
 void StickyPlatform_StaticUpdate(void);
 void StickyPlatform_Draw(void);
-void StickyPlatform_Create(void* data);
+void StickyPlatform_Create(void *data);
 void StickyPlatform_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void StickyPlatform_EditorDraw(void);
@@ -57,4 +57,4 @@ void StickyPlatform_State_MoveBack(void);
 void StickyPlatform_State_MoveBackForth(void);
 void StickyPlatform_State_Oscillating(void);
 
-#endif //!OBJ_STICKYPLATFORM_H
+#endif //! OBJ_STICKYPLATFORM_H

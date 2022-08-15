@@ -70,8 +70,8 @@ void PhantomHand_StageLoad(void)
     PhantomHand->hitbox.right  = 20;
     PhantomHand->hitbox.bottom = 20;
 
-    int pos = 3;
-    for (int i = 0; i < PhantomHand->debrisInfo[0]; ++i) {
+    int32 pos = 3;
+    for (int32 i = 0; i < PhantomHand->debrisInfo[0]; ++i) {
         PhantomHand->debrisInfo[pos + 0] = RSDK.Rand(-0x20000, 0x20000);
         PhantomHand->debrisInfo[pos + 1] = RSDK.Rand(-0x10000, -0x40000);
 
@@ -84,13 +84,13 @@ void PhantomHand_StageLoad(void)
     PhantomHand->grabbedPlayers[3] = false;
 }
 
-void PhantomHand_CheckPlayerGrab(int playerX, int playerY)
+void PhantomHand_CheckPlayerGrab(int32 playerX, int32 playerY)
 {
     RSDK_THIS(PhantomHand);
 
     if (self->position.x >= playerX) {
         if (self->position.x > playerX) {
-            int dist = MIN((self->position.x - playerX) >> 5, 0x10000);
+            int32 dist = MIN((self->position.x - playerX) >> 5, 0x10000);
             self->position.x -= dist;
         }
     }
@@ -110,8 +110,8 @@ void PhantomHand_CheckPlayerGrab(int playerX, int playerY)
     foreach_active(Player, player)
     {
         if (player->state != Player_State_Static) {
-            int rx = (player->position.x - self->position.x) >> 16;
-            int ry = (player->position.y - self->position.y) >> 16;
+            int32 rx = (player->position.x - self->position.x) >> 16;
+            int32 ry = (player->position.y - self->position.y) >> 16;
             if (rx * rx + ry * ry < 0x100) {
                 if (!PhantomHand->grabbedPlayers[player->playerID]) {
                     PhantomHand->grabbedPlayers[player->playerID] = true;
@@ -196,7 +196,7 @@ void PhantomHand_State_TryGrabPlayers(void)
     RSDK.ProcessAnimation(&self->handAnimator);
 
     bool32 playersActive = true;
-    for (int i = SLOT_PLAYER1; i < SLOT_PLAYER1 + 2; ++i) {
+    for (int32 i = SLOT_PLAYER1; i < SLOT_PLAYER1 + 2; ++i) {
         EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
         if (player->classID == Player->classID)
             playersActive = playersActive && player->interaction && player->state == Player_State_Static;
@@ -206,7 +206,7 @@ void PhantomHand_State_TryGrabPlayers(void)
         self->state = PhantomHand_State_Disappear;
     }
     else {
-        int dist = 0x7FFFFFFF;
+        int32 dist = 0x7FFFFFFF;
 
         EntityPlayer *playerPtr = NULL;
         if (self->direction == FLIP_NONE) {

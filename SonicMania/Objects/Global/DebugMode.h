@@ -4,7 +4,7 @@
 #include "Game.h"
 
 #define DEBUGMODE_ADD_OBJ(object) DebugMode_AddObject(object->classID, object##_DebugDraw, object##_DebugSpawn)
-#define DEBUGMODE_OBJECT_COUNT     (0x100)
+#define DEBUGMODE_OBJECT_COUNT    (0x100)
 
 // Object Class
 struct ObjectDebugMode {

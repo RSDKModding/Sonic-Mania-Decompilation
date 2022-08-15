@@ -96,7 +96,7 @@ void CableWarp_State_CablePlug(void)
 #if MANIA_USE_PLUS
         int32 velY = player->velocity.y;
 #endif
-        
+
         if (Player_CheckCollisionBox(player, self, &CableWarp->hitboxPlug) == C_TOP) {
 #if MANIA_USE_PLUS
             if (player->animator.animationID == ANI_JUMP || player->state == Player_State_DropDash
@@ -302,8 +302,8 @@ void CableWarp_StateTransport_EndNode(void)
         RSDK_GET_ENTITY(self->slotID, CableWarp);
         EntityCableWarp *nextNode = RSDK_GET_ENTITY(self->nextSlot, CableWarp);
 
-        int32 rx                    = (nextNode->position.x - player->position.x) >> 16;
-        int32 ry                    = (nextNode->position.y - player->position.y) >> 16;
+        int32 rx = (nextNode->position.x - player->position.x) >> 16;
+        int32 ry = (nextNode->position.y - player->position.y) >> 16;
         if (rx * rx + ry * ry < 0x100) {
             player->position.x = nextNode->position.x;
             player->position.y = nextNode->position.y;

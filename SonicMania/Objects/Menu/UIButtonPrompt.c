@@ -163,7 +163,7 @@ void UIButtonPrompt_Create(void *data)
 
 void UIButtonPrompt_StageLoad(void)
 {
-    UIButtonPrompt->type    = UIBUTTONPROMPT_KEYBOARD;
+    UIButtonPrompt->type      = UIBUTTONPROMPT_KEYBOARD;
     UIButtonPrompt->inputSlot = CONT_P1;
 
     UIButtonPrompt->aniFrames = RSDK.LoadSpriteAnimation("UI/Buttons.bin", SCOPE_STAGE);

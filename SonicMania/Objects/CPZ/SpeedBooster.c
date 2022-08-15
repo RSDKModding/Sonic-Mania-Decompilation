@@ -234,12 +234,12 @@ void SpeedBooster_EditorDraw(void)
 {
     RSDK_THIS(SpeedBooster);
 
-    self->visible = true;
+    self->visible       = true;
     self->drawPos       = self->position;
     self->updateRange.x = 0x400000;
     self->updateRange.y = 0x400000;
 
-    self->active        = ACTIVE_BOUNDS;
+    self->active = ACTIVE_BOUNDS;
     if (!self->speed)
         self->speed = RSDK.CheckSceneFolder("CPZ") ? 10 : 16;
     self->groundVel = self->speed << 16;

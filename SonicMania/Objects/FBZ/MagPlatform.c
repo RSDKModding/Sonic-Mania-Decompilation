@@ -51,7 +51,7 @@ void MagPlatform_Collide_SolidAllHazardBottom(void)
 {
     RSDK_THIS(MagPlatform);
 
-    Hitbox *hitbox       = RSDK.GetHitbox(&self->animator, 1);
+    Hitbox *hitbox     = RSDK.GetHitbox(&self->animator, 1);
     self->stoodPlayers = 0;
     self->pushPlayersL = 0;
     self->pushPlayersR = 0;
@@ -86,7 +86,7 @@ void MagPlatform_Collide_SolidAllHazardBottom(void)
             case C_BOTTOM:
                 if (!player->onGround) {
 #if MANIA_USE_PLUS
-                    if (!Player_CheckMightyUnspin(player, 0x400, true, &player->uncurlTimer)) 
+                    if (!Player_CheckMightyUnspin(player, 0x400, true, &player->uncurlTimer))
 #endif
                         Player_Hurt(player, self);
                 }
@@ -96,7 +96,7 @@ void MagPlatform_Collide_SolidAllHazardBottom(void)
                     }
                     else {
 #if MANIA_USE_PLUS
-                        if (!Player_CheckMightyUnspin(player, 0x300, true, &player->uncurlTimer)) 
+                        if (!Player_CheckMightyUnspin(player, 0x300, true, &player->uncurlTimer))
 #endif
                             Player_Hurt(player, self);
                     }
@@ -120,7 +120,7 @@ void MagPlatform_State_Rise(void)
     RSDK_THIS(MagPlatform);
 
     self->drawPos.y += self->velocity.y;
-    int32 posY       = self->position.y;
+    int32 posY = self->position.y;
 
     self->position.y = self->drawPos.y;
     self->velocity.y -= 0x3800;

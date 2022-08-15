@@ -47,7 +47,7 @@ void PhantomHand_EditorLoad(void);
 void PhantomHand_Serialize(void);
 
 // Extra Entity Functions
-void PhantomHand_CheckPlayerGrab(int playerX, int playerY);
+void PhantomHand_CheckPlayerGrab(int32 playerX, int32 playerY);
 
 void PhantomHand_State_Summon(void);
 void PhantomHand_State_Appear(void);

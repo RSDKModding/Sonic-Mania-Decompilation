@@ -200,7 +200,7 @@ void RollerMKII_CheckPlayerCollisions_Rolling(void)
     }
 }
 
-int RollerMKII_HandleObjectCollisions(Entity *otherEntity, Hitbox *hitbox)
+int32 RollerMKII_HandleObjectCollisions(Entity *otherEntity, Hitbox *hitbox)
 {
     RSDK_THIS(RollerMKII);
 
@@ -267,7 +267,8 @@ void RollerMKII_HandleCollisions(void)
 
     foreach_all(PlaneSwitch, planeSwitch)
     {
-        PlaneSwitch_CheckCollisions(planeSwitch, self, planeSwitch->flags, planeSwitch->size, true, Zone->playerDrawGroup[0], Zone->playerDrawGroup[1]);
+        PlaneSwitch_CheckCollisions(planeSwitch, self, planeSwitch->flags, planeSwitch->size, true, Zone->playerDrawGroup[0],
+                                    Zone->playerDrawGroup[1]);
     }
 
     foreach_all(Platform, platform) { RollerMKII_HandlePlatformCollisions(platform); }

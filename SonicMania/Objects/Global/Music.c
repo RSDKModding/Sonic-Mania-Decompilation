@@ -418,7 +418,7 @@ void Music_GetNextTrackStartPos(EntityMusic *entity)
 
     if (!stackCount) {
         if (Music->activeTrack > TRACK_NONE) {
-            if (Music->nextTrack == TRACK_NONE) 
+            if (Music->nextTrack == TRACK_NONE)
                 Music->nextTrack = Music->activeTrack;
 
             Music->trackStartPos = RSDK.GetChannelPos(Music->channelID);
@@ -589,12 +589,10 @@ void Music_TransitionTrack(uint8 trackID, float fadeSpeed)
         case TRACK_HBHBOSS:
         case TRACK_EGGMAN1:
         case TRACK_EGGMAN2:
-        case TRACK_HBHMISCHIEF:
-            music            = RSDK_GET_ENTITY(SLOT_MUSIC, Music);
-            break;
+        case TRACK_HBHMISCHIEF: music = RSDK_GET_ENTITY(SLOT_MUSIC, Music); break;
 
         default:
-            if (!Music_CheckMusicStack_Active()) 
+            if (!Music_CheckMusicStack_Active())
                 music = RSDK_GET_ENTITY(SLOT_MUSIC, Music);
             break;
     }
@@ -632,7 +630,6 @@ void Music_FadeOut(float fadeSpeed)
         music->fadeSpeed = fadeSpeed;
     }
 }
-
 
 #if MANIA_USE_PLUS
 void Music_State_Jingle(void)

@@ -21,7 +21,7 @@ void UIDiorama_Update(void)
         if (parent->active != ACTIVE_ALWAYS)
             self->timer = 2;
 
-        if (self->parentActivity != parent->active && parent->active == ACTIVE_ALWAYS) 
+        if (self->parentActivity != parent->active && parent->active == ACTIVE_ALWAYS)
             changeDiorama = true;
 
         self->parentActivity = parent->active;

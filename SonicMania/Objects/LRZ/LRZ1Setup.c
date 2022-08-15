@@ -127,10 +127,10 @@ void LRZ1Setup_StageLoad(void)
         foreach_all(LRZ1Intro, intro) { destroyEntity(intro); }
     }
 #else
-    Zone->cameraBoundsL[0]  = 648;
-    Zone->cameraBoundsL[1]  = 648;
-    Zone->cameraBoundsL[2]  = 648;
-    Zone->cameraBoundsL[3]  = 648;
+    Zone->cameraBoundsL[0] = 648;
+    Zone->cameraBoundsL[1] = 648;
+    Zone->cameraBoundsL[2] = 648;
+    Zone->cameraBoundsL[3] = 648;
 #endif
 }
 

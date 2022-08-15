@@ -681,7 +681,7 @@ void GigaMetal_StateBody_Marching(void)
             if (tile != (uint16)-1) {
                 EntityBreakableWall *block = CREATE_ENTITY(BreakableWall, INT_TO_VOID(BREAKWALL_TILE_DYNAMIC), (tileX << 20) + 0x80000, spawnY);
                 block->drawGroup           = Zone->objectDrawGroup[1];
-                block->targetLayer             = Zone->fgLayer[1];
+                block->targetLayer         = Zone->fgLayer[1];
                 block->tileInfo            = tile;
                 block->tilePos.x           = tileX;
                 block->tilePos.y           = endY;
@@ -691,7 +691,7 @@ void GigaMetal_StateBody_Marching(void)
                 if (tileX > 224) {
                     block                = CREATE_ENTITY(BreakableWall, INT_TO_VOID(BREAKWALL_TILE_DYNAMIC), (tileX << 20) - 0xDF80000, spawnY);
                     block->drawGroup     = Zone->objectDrawGroup[1];
-                    block->targetLayer       = Zone->fgLayer[1];
+                    block->targetLayer   = Zone->fgLayer[1];
                     block->tileInfo      = tile;
                     block->tilePos.y     = endY;
                     block->tilePos.x     = tileX - 224;
@@ -994,8 +994,8 @@ void GigaMetal_StateHead_ChargeLaser(void)
     RSDK.ProcessAnimation(&self->armAnimator);
 
     if (++self->timer == 120) {
-        self->timer                                                                                        = 0;
-        self->state                                                                                        = GigaMetal_StateHead_FiringLaser;
+        self->timer                                                                                          = 0;
+        self->state                                                                                          = GigaMetal_StateHead_FiringLaser;
         CREATE_ENTITY(GigaMetal, INT_TO_VOID(GIGAMETAL_LASEREDGE), self->position.x, self->position.y)->body = self;
         RSDK.PlaySfx(MetalSonic->sfxMSFireball, false, 255);
     }

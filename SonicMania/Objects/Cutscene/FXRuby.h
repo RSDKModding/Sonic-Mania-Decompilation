@@ -42,7 +42,7 @@ void FXRuby_Update(void);
 void FXRuby_LateUpdate(void);
 void FXRuby_StaticUpdate(void);
 void FXRuby_Draw(void);
-void FXRuby_Create(void* data);
+void FXRuby_Create(void *data);
 void FXRuby_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void FXRuby_EditorDraw(void);
@@ -61,4 +61,4 @@ void FXRuby_State_IncreaseStageDeform(void);
 void FXRuby_State_DecreaseStageDeform(void);
 void FXRuby_State_ShrinkAndDestroy(void);
 
-#endif //!OBJ_FXRUBY_H
+#endif //! OBJ_FXRUBY_H

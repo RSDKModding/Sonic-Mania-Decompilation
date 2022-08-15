@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectSpringboard {
     RSDK_OBJECT
-    //Unused here, was used in S2' 13 for getting the 'force' from propertyValue, mania just uses an editable var
+    // Unused here, was used in S2' 13 for getting the 'force' from propertyValue, mania just uses an editable var
     TABLE(int32 forces[3], { -0x40000, -0xA0000, -0x80000 });
     TABLE(int32 springPower[40], { 0x00000,  0x00000,  0x00000,  0x00000,  0x00000,  0x00000,  0x00000,  0x00000,  -0x10000, -0x10000,
                                    -0x10000, -0x10000, -0x10000, -0x10000, -0x10000, -0x10000, -0x10000, -0x10000, -0x10000, -0x10000,
@@ -35,7 +35,7 @@ void Springboard_Update(void);
 void Springboard_LateUpdate(void);
 void Springboard_StaticUpdate(void);
 void Springboard_Draw(void);
-void Springboard_Create(void* data);
+void Springboard_Create(void *data);
 void Springboard_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Springboard_EditorDraw(void);
@@ -47,4 +47,4 @@ void Springboard_Serialize(void);
 void Springboard_DebugSpawn(void);
 void Springboard_DebugDraw(void);
 
-#endif //!OBJ_SPRINGBOARD_H
+#endif //! OBJ_SPRINGBOARD_H

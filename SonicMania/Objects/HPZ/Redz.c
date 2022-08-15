@@ -112,10 +112,10 @@ void Redz_State_Init(void)
 
     self->active = ACTIVE_NORMAL;
     RSDK.SetSpriteAnimation(Redz->aniFrames, 0, &self->animator, true, 0);
-    self->animator.frameID        = 0;
-    self->animator.speed = 1;
-    self->state                   = Redz_State_Walk;
-    self->velocity.x              = (2 * (self->direction != FLIP_NONE) - 1) << 15;
+    self->animator.frameID = 0;
+    self->animator.speed   = 1;
+    self->state            = Redz_State_Walk;
+    self->velocity.x       = (2 * (self->direction != FLIP_NONE) - 1) << 15;
     Redz_State_Walk();
 }
 
@@ -127,8 +127,8 @@ void Redz_State_Walk(void)
     if (!RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, (2 * (self->direction != FLIP_NONE) - 1) << 19, 0x100000, 8)) {
         self->state = Redz_State_Turn;
         RSDK.SetSpriteAnimation(Redz->aniFrames, 0, &self->animator, true, 0);
-        self->animator.frameID        = 0;
-        self->animator.speed = 0;
+        self->animator.frameID = 0;
+        self->animator.speed   = 0;
     }
 
     if (self->attackDelay <= 0) {
@@ -137,9 +137,9 @@ void Redz_State_Walk(void)
             if (RSDK.CheckObjectCollisionTouchBox(player, &Redz->hitboxRange, self, &Redz->attackbox)) {
                 self->state = Redz_State_PrepareAttack;
                 RSDK.SetSpriteAnimation(Redz->aniFrames, 0, &self->animator, true, 0);
-                self->animator.frameID        = 0;
-                self->attackDelay                   = 60;
-                self->animator.speed = 0;
+                self->animator.frameID = 0;
+                self->attackDelay      = 60;
+                self->animator.speed   = 0;
             }
         }
     }
@@ -154,7 +154,7 @@ void Redz_State_Turn(void)
 
     if (self->timer < 59) {
         self->timer++;
-        self->state  = Redz_State_Walk;
+        self->state = Redz_State_Walk;
     }
     else {
         self->timer = 0;
@@ -170,7 +170,7 @@ void Redz_State_PrepareAttack(void)
 {
     RSDK_THIS(Redz);
     if (self->timer >= 30) {
-        self->state  = Redz_State_Attack;
+        self->state = Redz_State_Attack;
         self->timer = 0;
         RSDK.SetSpriteAnimation(Redz->aniFrames, 1, &self->animator, true, 0);
         RSDK.PlaySfx(Redz->sfxFlame, false, 255);
@@ -186,9 +186,9 @@ void Redz_State_Attack(void)
     if (self->timer >= 90) {
         self->timer = 0;
         RSDK.SetSpriteAnimation(Redz->aniFrames, 0, &self->animator, true, 0);
-        self->animator.frameID        = 0;
-        self->animator.speed = 1;
-        self->state                   = Redz_State_Walk;
+        self->animator.frameID = 0;
+        self->animator.speed   = 1;
+        self->state            = Redz_State_Walk;
     }
 
     if (!(self->timer & 3)) {
@@ -209,9 +209,9 @@ void Redz_Flame_Setup(void)
 
     self->active = ACTIVE_NORMAL;
     RSDK.SetSpriteAnimation(Redz->aniFrames, 2, &self->animator, true, 0);
-    self->animator.frameID        = 0;
-    self->state                   = Redz_Flame_State;
-    self->animator.speed = 1;
+    self->animator.frameID = 0;
+    self->state            = Redz_Flame_State;
+    self->animator.speed   = 1;
     Redz_Flame_State();
 }
 

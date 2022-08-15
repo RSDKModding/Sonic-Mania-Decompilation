@@ -122,7 +122,7 @@ Vector2 MathHelpers_GetBezierPoint(int32 percent, int32 x1, int32 y1, int32 x2, 
 
 int32 MathHelpers_SquareRoot(uint32 num)
 {
-    int32 rem  = 1 << 30; // 1 << 31 would result in the value having to be unsigned, so this is the max
+    int32 rem = 1 << 30; // 1 << 31 would result in the value having to be unsigned, so this is the max
     while (rem > num) rem >>= 2;
 
     int32 root = 0;

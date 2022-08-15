@@ -104,29 +104,29 @@ void Clucker_Create(void *data)
 
 void Clucker_StageLoad(void)
 {
-    Clucker->aniFrames           = RSDK.LoadSpriteAnimation("FBZ/Clucker.bin", SCOPE_STAGE);
+    Clucker->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Clucker.bin", SCOPE_STAGE);
 
     Clucker->hitboxBadnik.left   = -16;
     Clucker->hitboxBadnik.top    = -8;
     Clucker->hitboxBadnik.right  = 16;
     Clucker->hitboxBadnik.bottom = 8;
 
-    Clucker->hitboxRange.left    = -128;
-    Clucker->hitboxRange.top     = -256;
-    Clucker->hitboxRange.right   = 128;
-    Clucker->hitboxRange.bottom  = 32;
+    Clucker->hitboxRange.left   = -128;
+    Clucker->hitboxRange.top    = -256;
+    Clucker->hitboxRange.right  = 128;
+    Clucker->hitboxRange.bottom = 32;
 
-    Clucker->hitboxSolid.left    = -16;
-    Clucker->hitboxSolid.top     = -8;
-    Clucker->hitboxSolid.right   = 16;
-    Clucker->hitboxSolid.bottom  = 8;
+    Clucker->hitboxSolid.left   = -16;
+    Clucker->hitboxSolid.top    = -8;
+    Clucker->hitboxSolid.right  = 16;
+    Clucker->hitboxSolid.bottom = 8;
 
-    Clucker->hitboxEgg.left      = -4;
-    Clucker->hitboxEgg.top       = -4;
-    Clucker->hitboxEgg.right     = 4;
-    Clucker->hitboxEgg.bottom    = 4;
+    Clucker->hitboxEgg.left   = -4;
+    Clucker->hitboxEgg.top    = -4;
+    Clucker->hitboxEgg.right  = 4;
+    Clucker->hitboxEgg.bottom = 4;
 
-    Clucker->sfxShot             = RSDK.GetSfx("Stage/Shot.wav");
+    Clucker->sfxShot = RSDK.GetSfx("Stage/Shot.wav");
 
     DEBUGMODE_ADD_OBJ(Clucker);
 }
@@ -272,7 +272,7 @@ void Clucker_State_Shoot(void)
         }
         projectile->direction = self->direction;
 
-        self->timer           = self->delay;
+        self->timer = self->delay;
         RSDK.PlaySfx(Clucker->sfxShot, false, 255);
     }
 
@@ -364,7 +364,7 @@ void Clucker_EditorDraw(void)
     RSDK.SetSpriteAnimation(Clucker->aniFrames, 0, &self->animator, true, 0);
 
     self->yOffset = -0x180000;
-    int32 dir = self->direction;
+    int32 dir     = self->direction;
     self->direction *= FLIP_Y;
     Clucker_Draw();
     self->direction = dir;

@@ -34,7 +34,7 @@ void EggTV_Draw(void)
 void EggTV_Create(void *data)
 {
     RSDK_THIS(EggTV);
-    
+
     self->active    = ACTIVE_BOUNDS;
     self->drawGroup = self->drawOverTV ? Zone->objectDrawGroup[0] : (Zone->fgDrawGroup[0] + 1);
 
@@ -62,8 +62,8 @@ void EggTV_DrawScanlines(void)
     int32 y = (((Zone->timer >> 1) & 1) << 16) - (self->size.y >> 1) + self->position.y;
     if (self->size.y >= 0 && (self->size.y & 0xFFFF0000)) {
         for (int32 i = 0; i < (self->size.y >> 16); i += 2) {
-            RSDK.DrawLine(self->position.x - (self->size.x >> 1), y, self->position.x + (self->size.x >> 1), y, 0x404060,
-                          self->scanlineAlpha, INK_BLEND, false);
+            RSDK.DrawLine(self->position.x - (self->size.x >> 1), y, self->position.x + (self->size.x >> 1), y, 0x404060, self->scanlineAlpha,
+                          INK_BLEND, false);
             y += 0x20000;
         }
     }

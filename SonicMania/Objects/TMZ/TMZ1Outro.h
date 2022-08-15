@@ -22,7 +22,7 @@ void TMZ1Outro_Update(void);
 void TMZ1Outro_LateUpdate(void);
 void TMZ1Outro_StaticUpdate(void);
 void TMZ1Outro_Draw(void);
-void TMZ1Outro_Create(void* data);
+void TMZ1Outro_Create(void *data);
 void TMZ1Outro_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TMZ1Outro_EditorDraw(void);
@@ -38,4 +38,4 @@ bool32 TMZ1Outro_CutsceneAct1_EnterMonarch(EntityCutsceneSeq *host);
 
 bool32 TMZ1Outro_CutsceneAct2_BeginAct2(EntityCutsceneSeq *host);
 
-#endif //!OBJ_TMZ1OUTRO_H
+#endif //! OBJ_TMZ1OUTRO_H

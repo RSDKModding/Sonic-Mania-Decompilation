@@ -64,7 +64,7 @@ void Shiversaw_Update(void);
 void Shiversaw_LateUpdate(void);
 void Shiversaw_StaticUpdate(void);
 void Shiversaw_Draw(void);
-void Shiversaw_Create(void* data);
+void Shiversaw_Create(void *data);
 void Shiversaw_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Shiversaw_EditorDraw(void);
@@ -108,4 +108,4 @@ void Shiversaw_ProcessSawMovement(int32 sawID);
 
 void Shiversaw_StateDust_Debris(void);
 
-#endif //!OBJ_SHIVERSAW_H
+#endif //! OBJ_SHIVERSAW_H

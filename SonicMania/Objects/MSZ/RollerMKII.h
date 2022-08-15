@@ -56,7 +56,7 @@ void RollerMKII_CheckOffScreen(void);
 
 void RollerMKII_CheckPlayerCollisions(void);
 void RollerMKII_CheckPlayerCollisions_Rolling(void);
-int RollerMKII_HandleObjectCollisions(Entity *otherEntity, Hitbox *hitbox);
+int32 RollerMKII_HandleObjectCollisions(Entity *otherEntity, Hitbox *hitbox);
 bool32 RollerMKII_HandlePlatformCollisions(EntityPlatform *platform);
 void RollerMKII_HandleCollisions(void);
 

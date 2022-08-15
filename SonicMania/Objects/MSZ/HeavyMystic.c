@@ -444,7 +444,7 @@ void HeavyMystic_StateBoss_AwaitPlayer(void)
             self->inkEffect = INK_ALPHA;
             self->visible   = true;
 
-            self->state                                       = HeavyMystic_StateBoss_BeginShow;
+            self->state                                           = HeavyMystic_StateBoss_BeginShow;
             RSDK.GetTileLayer(Zone->fgLayer[1])->scanlineCallback = HeavyMystic_Scanline_Curtains;
 
             foreach_active(MSZSpotlight, spotlight) { spotlight->state = MSZSpotlight_State_Appear; }
@@ -998,8 +998,8 @@ void HeavyMystic_StateBoss_TransformBackIntoRouge(void)
 
     if (self->animator.frameID == self->animator.frameCount - 1) {
         CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawGroup[1];
-        self->velocity.x                                                                                   = 0;
-        self->velocity.y                                                                                   = -0x20000;
+        self->velocity.x                                                                                     = 0;
+        self->velocity.y                                                                                     = -0x20000;
         RSDK.PlaySfx(HeavyMystic->sfxPoof, false, 255);
 
         self->velocity.y      = -0x40000;
@@ -1539,8 +1539,8 @@ void HeavyMystic_StateBox_Transforming(void)
 
     if (!(Zone->timer & 7)) {
         RSDK.PlaySfx(HeavyMystic->sfxMagicBox, false, 255);
-        int32 x                                                               = self->position.x + (RSDK.Rand(-24, 25) << 16);
-        int32 y                                                               = self->position.y + (RSDK.Rand(-24, 25) << 16);
+        int32 x                                                                 = self->position.x + (RSDK.Rand(-24, 25) << 16);
+        int32 y                                                                 = self->position.y + (RSDK.Rand(-24, 25) << 16);
         CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), x, y)->drawGroup = Zone->objectDrawGroup[1] + 2;
     }
 
@@ -1624,9 +1624,9 @@ void HeavyMystic_StateBox_ShowContents(void)
 
     if (++self->timer > 96) {
         CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawGroup[1] + 2;
-        self->visible                                                                                       = true;
-        self->scale.x                                                                                       = 0;
-        self->scale.y                                                                                       = 0;
+        self->visible                                                                                         = true;
+        self->scale.x                                                                                         = 0;
+        self->scale.y                                                                                         = 0;
         RSDK.PlaySfx(HeavyMystic->sfxAssemble, false, 255);
         self->stateDraw = HeavyMystic_Draw_BoxClosed;
         self->state     = HeavyMystic_StateBox_Reappear;

@@ -28,7 +28,7 @@ void InvincibleStars_Update(void);
 void InvincibleStars_LateUpdate(void);
 void InvincibleStars_StaticUpdate(void);
 void InvincibleStars_Draw(void);
-void InvincibleStars_Create(void* data);
+void InvincibleStars_Create(void *data);
 void InvincibleStars_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void InvincibleStars_EditorDraw(void);
@@ -38,5 +38,4 @@ void InvincibleStars_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_INVINCIBLESTARS_H
+#endif //! OBJ_INVINCIBLESTARS_H

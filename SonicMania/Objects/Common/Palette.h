@@ -14,7 +14,7 @@ typedef enum {
     PALETTE_BANK_5,
     PALETTE_BANK_6,
     PALETTE_BANK_7,
-}PaletteBankIDs;
+} PaletteBankIDs;
 
 // Object Class
 struct ObjectPalette {

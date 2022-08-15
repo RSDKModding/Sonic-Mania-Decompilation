@@ -20,7 +20,7 @@ void DebugMode_Update(void)
 
     bool32 moved = false;
 
-#if MANIA_USE_PLUS 
+#if MANIA_USE_PLUS
     if (ControllerInfo[CONT_P1].keyUp.down || (AnalogStickInfoL[CONT_P1].vDelta > 0.3)) {
         self->position.y -= self->velocity.y;
         moved = true;
@@ -83,7 +83,7 @@ void DebugMode_Update(void)
     else if (keyBack) {
         // Do this so we can access the player variables again
         RSDK_THIS(Player);
-        self->classID       = Player->classID;
+        self->classID        = Player->classID;
         self->groundVel      = 0;
         self->velocity.x     = 0;
         self->velocity.y     = 0;
@@ -113,7 +113,7 @@ void DebugMode_Update(void)
 
         if (ControllerInfo[CONT_P1].keyB.press) {
             DebugMode->itemType--;
-            
+
             if (DebugMode->itemType >= DebugMode->itemTypeCount)
                 DebugMode->itemType = DebugMode->itemTypeCount - 1;
         }
@@ -150,9 +150,9 @@ void DebugMode_StageLoad(void)
     DebugMode->debugActive = false;
 
     for (int32 i = 0; i < DEBUGMODE_OBJECT_COUNT; ++i) {
-        DebugMode->classIDs[i]  = TYPE_BLANK;
-        DebugMode->draw[i]      = StateMachine_None;
-        DebugMode->spawn[i]     = DebugMode_NullState;
+        DebugMode->classIDs[i] = TYPE_BLANK;
+        DebugMode->draw[i]     = StateMachine_None;
+        DebugMode->spawn[i]    = DebugMode_NullState;
     }
 }
 
@@ -161,9 +161,9 @@ void DebugMode_NullState(void) {}
 void DebugMode_AddObject(uint16 id, void (*draw)(void), void (*spawn)(void))
 {
     if (DebugMode->itemCount < DEBUGMODE_OBJECT_COUNT) {
-        DebugMode->classIDs[DebugMode->itemCount]  = id;
-        DebugMode->draw[DebugMode->itemCount]      = draw;
-        DebugMode->spawn[DebugMode->itemCount]     = spawn;
+        DebugMode->classIDs[DebugMode->itemCount] = id;
+        DebugMode->draw[DebugMode->itemCount]     = draw;
+        DebugMode->spawn[DebugMode->itemCount]    = spawn;
         DebugMode->itemCount++;
     }
 }

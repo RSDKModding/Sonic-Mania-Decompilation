@@ -102,7 +102,7 @@ void Debris_FallFlickerSetup(int32 aniFrames, int32 *entries)
     if (entries) {
         // format:
         // entryCount
-        // 
+        //
         // [for each entry]
         // frame
         // dir

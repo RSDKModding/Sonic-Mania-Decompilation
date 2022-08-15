@@ -42,7 +42,7 @@ void HCZOneWayDoor_Update(void);
 void HCZOneWayDoor_LateUpdate(void);
 void HCZOneWayDoor_StaticUpdate(void);
 void HCZOneWayDoor_Draw(void);
-void HCZOneWayDoor_Create(void* data);
+void HCZOneWayDoor_Create(void *data);
 void HCZOneWayDoor_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void HCZOneWayDoor_EditorDraw(void);
@@ -54,4 +54,4 @@ void HCZOneWayDoor_Serialize(void);
 void HCZOneWayDoor_SetupHitboxes(void);
 void HCZOneWayDoor_DrawSprites(void);
 
-#endif //!OBJ_HCZONEWAYDOOR_H
+#endif //! OBJ_HCZONEWAYDOOR_H

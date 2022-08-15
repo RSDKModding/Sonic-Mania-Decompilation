@@ -43,7 +43,7 @@ void Batbot_Update(void);
 void Batbot_LateUpdate(void);
 void Batbot_StaticUpdate(void);
 void Batbot_Draw(void);
-void Batbot_Create(void* data);
+void Batbot_Create(void *data);
 void Batbot_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Batbot_EditorDraw(void);
@@ -63,4 +63,4 @@ void Batbot_State_Attack(void);
 void Batbot_State_SwoopLeft(void);
 void Batbot_State_SwoopRight(void);
 
-#endif //!OBJ_BATBOT_H
+#endif //! OBJ_BATBOT_H

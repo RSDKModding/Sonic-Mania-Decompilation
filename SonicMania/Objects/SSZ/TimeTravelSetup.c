@@ -22,8 +22,8 @@ void TimeTravelSetup_StaticUpdate(void)
             onScreenRange.x = 0;
             onScreenRange.y = 0;
             if (RSDK.CheckOnScreen(player, &onScreenRange)) {
-                ParticleHelpers_SetupParticleFX(Debris_State_Fall, TimeTravelSetup_Particle_TimeSparkle, 0x1800, player->position.x, player->position.y,
-                                                0x200000, 0x200000);
+                ParticleHelpers_SetupParticleFX(Debris_State_Fall, TimeTravelSetup_Particle_TimeSparkle, 0x1800, player->position.x,
+                                                player->position.y, 0x200000, 0x200000);
             }
         }
     }

@@ -32,7 +32,7 @@ void Reagent_Update(void);
 void Reagent_LateUpdate(void);
 void Reagent_StaticUpdate(void);
 void Reagent_Draw(void);
-void Reagent_Create(void* data);
+void Reagent_Create(void *data);
 void Reagent_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Reagent_EditorDraw(void);
@@ -44,4 +44,4 @@ void Reagent_Serialize(void);
 void Reagent_State_CheckPoolCollisions(void);
 void Reagent_State_ChangingPoolType(void);
 
-#endif //!OBJ_REAGENT_H
+#endif //! OBJ_REAGENT_H

@@ -123,15 +123,15 @@ void PBL_Crane_HandlePrizes(void)
             globals->characterFlags |= playerID;
             PBL_Crane->prizeID = PBL_CRANE_PRIZEID_BUDDY;
 
-            if (!GET_CHARACTER_ID(1)) 
+            if (!GET_CHARACTER_ID(1))
                 globals->playerID |= playerID;
-            else if (!GET_CHARACTER_ID(2)) 
+            else if (!GET_CHARACTER_ID(2))
                 globals->playerID |= playerID << 8;
-            else if (!GET_STOCK_ID(1)) 
+            else if (!GET_STOCK_ID(1))
                 globals->stock |= playerID;
-            else if (!GET_STOCK_ID(2)) 
+            else if (!GET_STOCK_ID(2))
                 globals->stock |= playerID << 8;
-            else if (!GET_STOCK_ID(3)) 
+            else if (!GET_STOCK_ID(3))
                 globals->stock |= playerID << 16;
 
             break;

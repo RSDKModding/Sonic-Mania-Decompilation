@@ -95,7 +95,7 @@ void TryAgainE_Create(void *data)
 
         RSDK.SetSpriteAnimation(TryAgainE->playerFrames, 2 * HUD_CharacterIndexFromID(GET_CHARACTER_ID(1)), &self->player1Animator, true, 3);
 
-        if (GET_CHARACTER_ID(2) != ID_NONE) 
+        if (GET_CHARACTER_ID(2) != ID_NONE)
             RSDK.SetSpriteAnimation(TryAgainE->playerFrames, 2 * HUD_CharacterIndexFromID(GET_CHARACTER_ID(2)), &self->player2Animator, true, 3);
     }
 }

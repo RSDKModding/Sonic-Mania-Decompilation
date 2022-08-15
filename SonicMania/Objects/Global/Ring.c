@@ -408,7 +408,8 @@ uint8 Ring_CheckPlatformCollisions(EntityPlatform *platform)
 
             case PLATFORM_C_TILED:
                 side = C_NONE;
-                if (RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, self, &Ring->hitbox) && self->collisionLayers & Zone->moveLayerMask) {
+                if (RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, self, &Ring->hitbox)
+                    && self->collisionLayers & Zone->moveLayerMask) {
                     TileLayer *moveLayer  = RSDK.GetTileLayer(Zone->moveLayer);
                     moveLayer->position.x = -(platform->drawPos.x + platform->tileOrigin.x) >> 16;
                     moveLayer->position.y = -(platform->drawPos.y + platform->tileOrigin.y) >> 16;

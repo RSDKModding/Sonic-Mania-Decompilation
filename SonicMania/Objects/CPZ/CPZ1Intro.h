@@ -29,7 +29,7 @@ void CPZ1Intro_Update(void);
 void CPZ1Intro_LateUpdate(void);
 void CPZ1Intro_StaticUpdate(void);
 void CPZ1Intro_Draw(void);
-void CPZ1Intro_Create(void* data);
+void CPZ1Intro_Create(void *data);
 void CPZ1Intro_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void CPZ1Intro_EditorDraw(void);
@@ -56,4 +56,4 @@ bool32 CPZ1Intro_Cutscene_ChemicalDrop(EntityCutsceneSeq *host);
 bool32 CPZ1Intro_Cutscene_PlayerChemicalReact(EntityCutsceneSeq *host);
 bool32 CPZ1Intro_Cutscene_ReadyStage(EntityCutsceneSeq *host);
 
-#endif //!OBJ_CPZ1INTRO_H
+#endif //! OBJ_CPZ1INTRO_H

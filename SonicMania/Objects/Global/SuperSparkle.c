@@ -24,7 +24,7 @@ void SuperSparkle_Update(void)
 
         if (self->canSpawnSparkle) {
             if (++self->timer == 12) {
-                self->timer          = 0;
+                self->timer = 0;
 
                 EntityDebris *sparkle = CREATE_ENTITY(Debris, NULL, player->position.x, player->position.y);
                 sparkle->state        = Debris_State_Move;

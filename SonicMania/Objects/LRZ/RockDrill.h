@@ -46,7 +46,7 @@ void RockDrill_Update(void);
 void RockDrill_LateUpdate(void);
 void RockDrill_StaticUpdate(void);
 void RockDrill_Draw(void);
-void RockDrill_Create(void* data);
+void RockDrill_Create(void *data);
 void RockDrill_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void RockDrill_EditorDraw(void);
@@ -65,4 +65,4 @@ void RockDrill_State_Drilling(void);
 void RockDrill_State_Falling(void);
 void RockDrill_State_Explode(void);
 
-#endif //!OBJ_ROCKDRILL_H
+#endif //! OBJ_ROCKDRILL_H

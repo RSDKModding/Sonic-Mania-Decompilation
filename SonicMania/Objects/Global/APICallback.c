@@ -69,11 +69,11 @@ void APICallback_StageLoad(void)
     APICallback->GetControllerType            = RSDK.GetAPIFunction("GetControllerType");
     APICallback->ShowSteamControllerOverlay   = RSDK.GetAPIFunction("ShowSteamControllerOverlay");
 
-    APICallback->inputSlots[0] = CONT_P1;
-    APICallback->inputSlots[1] = CONT_P2;
-    APICallback->inputSlots[2] = CONT_P3;
-    APICallback->inputSlots[3] = CONT_P4;
-    APICallback->controllerCount  = 4;
+    APICallback->inputSlots[0]   = CONT_P1;
+    APICallback->inputSlots[1]   = CONT_P2;
+    APICallback->inputSlots[2]   = CONT_P3;
+    APICallback->inputSlots[3]   = CONT_P4;
+    APICallback->controllerCount = 4;
 }
 
 void APICallback_SetRichPresence(int32 id, String *msg)

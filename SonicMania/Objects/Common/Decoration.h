@@ -32,7 +32,7 @@ void Decoration_Update(void);
 void Decoration_LateUpdate(void);
 void Decoration_StaticUpdate(void);
 void Decoration_Draw(void);
-void Decoration_Create(void* data);
+void Decoration_Create(void *data);
 void Decoration_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Decoration_EditorDraw(void);
@@ -43,4 +43,4 @@ void Decoration_Serialize(void);
 // Extra Entity Functions
 void Decoration_DrawSprite(void);
 
-#endif //!OBJ_DECORATION_H
+#endif //! OBJ_DECORATION_H

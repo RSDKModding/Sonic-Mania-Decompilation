@@ -200,7 +200,7 @@ void Options_LoadValuesFromSettings(OptionsRAM *options)
 void Options_LoadOptionsCallback(int32 status)
 {
     OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
-    bool32 success         = false;
+    bool32 success      = false;
 
 #if MANIA_USE_PLUS
     if (status == STATUS_OK || status == STATUS_NOTFOUND) {

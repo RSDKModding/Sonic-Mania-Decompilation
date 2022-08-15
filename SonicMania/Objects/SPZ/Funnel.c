@@ -313,7 +313,8 @@ void Funnel_StageLoad(void)
     Funnel->sfxPimPom = RSDK.GetSfx("Stage/PimPom.wav");
 }
 
-void Funnel_State_None(void) {
+void Funnel_State_None(void)
+{
     // this is never used actually LOL
 }
 

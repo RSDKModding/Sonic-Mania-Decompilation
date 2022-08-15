@@ -160,7 +160,7 @@ void UICarousel_HandleButtonPositions(void)
 
         item->position.x = positions[id].x + self->offset.x;
         item->position.y = positions[id].y + self->offset.y;
-        item->drawGroup = id - control->buttonCount + 12;
+        item->drawGroup  = id - control->buttonCount + 12;
     }
 }
 

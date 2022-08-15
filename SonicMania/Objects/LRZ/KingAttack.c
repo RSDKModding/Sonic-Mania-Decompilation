@@ -29,7 +29,7 @@ void KingAttack_Draw(void)
 
     switch (self->type) {
         case KINGATTACK_LASER:
-            for (int i = 0; i < 6; i += 2) {
+            for (int32 i = 0; i < 6; i += 2) {
                 Vector2 vertices[4];
                 color colors[4];
 
@@ -313,7 +313,7 @@ void KingAttack_State_OrbitAppear(void)
     self->velocity.x = self->position.x;
     self->velocity.y = self->position.y;
 
-    int x = 0;
+    int32 x = 0;
     if (king->direction)
         x = RSDK.Cos1024(self->angle) - 0x240;
     else

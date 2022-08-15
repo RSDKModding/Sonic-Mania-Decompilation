@@ -352,7 +352,7 @@ void UIReplayCarousel_DrawStageInfo(int32 drawX, int32 drawY, uint8 act, uint8 c
     RSDK_THIS(UIReplayCarousel);
     Vector2 drawPos;
     uint32 colors[] = { 0xE82858, 0x5870E0, 0xF0D808, 0x010101 };
-    int32 widths[]   = { 60, 82, 52, 70 };
+    int32 widths[]  = { 60, 82, 52, 70 };
 
     drawPos.x = drawX - 0x990000;
     drawPos.y = drawY + 0x1D8000;
@@ -456,8 +456,8 @@ void UIReplayCarousel_DrawReplayInfo(int32 drawX, int32 drawY, uint8 zoneID, uin
         else
             RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 3, &self->zoneNameAnimators[id], true, 0);
 
-        RSDK.DrawText(&self->zoneNameAnimators[id], &drawPos, &self->zoneNameText[id], 0, self->zoneNameText[id].length, ALIGN_LEFT, 0, INT_TO_VOID(2),
-                      NULL, false);
+        RSDK.DrawText(&self->zoneNameAnimators[id], &drawPos, &self->zoneNameText[id], 0, self->zoneNameText[id].length, ALIGN_LEFT, 0,
+                      INT_TO_VOID(2), NULL, false);
     }
 
     drawPos.x = drawX - 0x430000;
@@ -512,7 +512,8 @@ void UIReplayCarousel_Draw_NoReplays(void)
     UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, 96, 16, 16, 0x00, 0x00, 0x00);
 
     drawPos.x -= RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->noReplaysText, 0, self->noReplaysText.length, 0) << 15;
-    RSDK.DrawText(&self->createTimeAnimator, &drawPos, &self->noReplaysText, 0, self->noReplaysText.length, ALIGN_LEFT, 0, INT_TO_VOID(2), NULL, false);
+    RSDK.DrawText(&self->createTimeAnimator, &drawPos, &self->noReplaysText, 0, self->noReplaysText.length, ALIGN_LEFT, 0, INT_TO_VOID(2), NULL,
+                  false);
 }
 
 void UIReplayCarousel_Draw_Carousel(void)

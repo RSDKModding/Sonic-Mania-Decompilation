@@ -211,7 +211,7 @@ bool32 HeavyGunner_SfxCheck_RocketBurn(void)
     return active;
 }
 
-void HeavyGunner_HandleBGWrap(int multiplier)
+void HeavyGunner_HandleBGWrap(int32 multiplier)
 {
     TileLayer *background1 = RSDK.GetTileLayer(0);
     for (int32 s = 0; s < background1->scrollInfoCount; ++s) {
@@ -1362,12 +1362,14 @@ void HeavyGunner_StateHeli_HandleAttacks(void)
         child->missileID = 0;
         ++self->missileID;
 
-        child = CREATE_ENTITY(HeavyGunner, INT_TO_VOID((dudID == 1) + HEAVYGUNNER_MISSILE_F), self->position.x - 0x200000, self->position.y - 0x100000);
+        child =
+            CREATE_ENTITY(HeavyGunner, INT_TO_VOID((dudID == 1) + HEAVYGUNNER_MISSILE_F), self->position.x - 0x200000, self->position.y - 0x100000);
         child->parent    = self;
         child->missileID = 15 * ((dudID != 1) + 1);
         ++self->missileID;
 
-        child = CREATE_ENTITY(HeavyGunner, INT_TO_VOID((dudID == 2) + HEAVYGUNNER_MISSILE_F), self->position.x - 0x200000, self->position.y - 0x100000);
+        child =
+            CREATE_ENTITY(HeavyGunner, INT_TO_VOID((dudID == 2) + HEAVYGUNNER_MISSILE_F), self->position.x - 0x200000, self->position.y - 0x100000);
         child->velocity.y += 0x10000;
         child->parent    = self;
         child->missileID = 30 * ((dudID != 2) + 1);

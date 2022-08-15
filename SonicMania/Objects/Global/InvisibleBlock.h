@@ -31,7 +31,7 @@ void InvisibleBlock_Update(void);
 void InvisibleBlock_LateUpdate(void);
 void InvisibleBlock_StaticUpdate(void);
 void InvisibleBlock_Draw(void);
-void InvisibleBlock_Create(void* data);
+void InvisibleBlock_Create(void *data);
 void InvisibleBlock_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void InvisibleBlock_EditorDraw(void);
@@ -42,4 +42,4 @@ void InvisibleBlock_Serialize(void);
 // Extra Entity Functions
 void InvisibleBlock_DrawSprites(void);
 
-#endif //!OBJ_INVISIBLEBLOCK_H
+#endif //! OBJ_INVISIBLEBLOCK_H

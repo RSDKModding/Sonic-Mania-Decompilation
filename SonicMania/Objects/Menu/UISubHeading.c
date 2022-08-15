@@ -176,7 +176,7 @@ void UISubHeading_SetupActions(void)
 void UISubHeading_HandleMenuReturn(int32 slot)
 {
     EntityUIControl *control = ManiaModeMenu->secretsMenu;
-    SaveRAM *saveGame       = (SaveRAM *)SaveGame_GetDataPtr(slot, false);
+    SaveRAM *saveGame        = (SaveRAM *)SaveGame_GetDataPtr(slot, false);
 
     UIButton_SetChoiceSelection(control->buttons[0], (saveGame->medalMods & GET_MEDAL_MOD(MEDAL_NOTIMEOVER)) != 0);
     UIButton_SetChoiceSelection(control->buttons[1], (saveGame->medalMods & GET_MEDAL_MOD(MEDAL_ANDKNUCKLES)) != 0);

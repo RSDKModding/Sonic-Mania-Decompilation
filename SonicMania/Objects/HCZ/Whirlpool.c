@@ -113,7 +113,7 @@ void Whirlpool_StaticUpdate(void)
 
     if (Whirlpool->timer > 0) {
         if (!Whirlpool->playingWhirlpoolSfx) {
-            Whirlpool->sfxChannel = RSDK.PlaySfx(Whirlpool->sfxWhirlpool, 56284, 255);
+            Whirlpool->sfxChannel          = RSDK.PlaySfx(Whirlpool->sfxWhirlpool, 56284, 255);
             Whirlpool->playingWhirlpoolSfx = true;
         }
     }

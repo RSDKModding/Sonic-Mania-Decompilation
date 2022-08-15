@@ -75,7 +75,7 @@ void LRZSpikeBall_StageLoad(void)
     LRZSpikeBall->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
 }
 
-int LRZSpikeBall_GetBaseFrameID(void)
+int32 LRZSpikeBall_GetBaseFrameID(void)
 {
     RSDK_THIS(LRZSpikeBall);
 

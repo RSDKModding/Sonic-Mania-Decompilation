@@ -37,7 +37,7 @@ void Stegway_Update(void);
 void Stegway_LateUpdate(void);
 void Stegway_StaticUpdate(void);
 void Stegway_Draw(void);
-void Stegway_Create(void* data);
+void Stegway_Create(void *data);
 void Stegway_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Stegway_EditorDraw(void);
@@ -60,4 +60,4 @@ void Stegway_State_RevUp(void);
 void Stegway_State_RevRelease(void);
 void Stegway_State_Dash(void);
 
-#endif //!OBJ_STEGWAY_H
+#endif //! OBJ_STEGWAY_H

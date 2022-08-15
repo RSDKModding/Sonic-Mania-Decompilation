@@ -107,7 +107,7 @@ void Gachapandora_Serialize(void);
 
 // Extra Entity Functions
 void Gachapandora_CheckPlayerCollisions_Prize(void);
-void Gachapandora_Explode(int xMin, int xMax, int yMin, int yMax);
+void Gachapandora_Explode(int32 xMin, int32 xMax, int32 yMin, int32 yMax);
 
 void Gachapandora_Player_StateInput_P1Grabbed(void);
 void Gachapandora_Player_StateInput_P2PlayerGrabbed(void);

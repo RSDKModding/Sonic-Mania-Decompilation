@@ -155,7 +155,7 @@ void ERZGunner_SpawnDust(void)
 {
     RSDK_THIS(ERZGunner);
 
-    for (int i = 0; i < 4; ++i) {
+    for (int32 i = 0; i < 4; ++i) {
         int32 x          = self->position.x + RSDK.Rand(-0x100000, 0x100000);
         int32 y          = self->position.y + RSDK.Rand(-0x280000, -0x180000);
         EntityDust *dust = CREATE_ENTITY(Dust, NULL, x, y);
@@ -165,7 +165,7 @@ void ERZGunner_SpawnDust(void)
     }
 }
 
-void ERZGunner_HandleRotations(int angle)
+void ERZGunner_HandleRotations(int32 angle)
 {
     RSDK_THIS(ERZGunner);
 

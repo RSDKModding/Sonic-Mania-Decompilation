@@ -372,7 +372,7 @@ void CrimsonEye_Hit(void)
 
 void CrimsonEye_SetupBG2Layer(void)
 {
-    for (int y = 0; y < 48; ++y) {
+    for (int32 y = 0; y < 48; ++y) {
         uint16 tile = RSDK.GetTile(1, 0, y + 24 * (2 - y / 24));
 
         RSDK.SetTile(1, 0, y, tile);
@@ -399,7 +399,7 @@ void CrimsonEye_SetupBG2Layer(void)
 void CrimsonEye_DrawHook_DisableFGSilhouette(void) { RSDK.SetActivePalette(0, 0, ScreenInfo->size.y); }
 void CrimsonEye_DrawHook_EnableFGSilhouette(void) { RSDK.SetActivePalette(5, 0, ScreenInfo->size.y); }
 
-void CrimsonEye_SetArrowDir(int type)
+void CrimsonEye_SetArrowDir(int32 type)
 {
     foreach_active(CrimsonEye, boss)
     {
@@ -603,7 +603,7 @@ void CrimsonEye_StateContainer_HandleElevator(void)
     for (int32 i = 0; i < PLAYER_COUNT; ++i) {
         EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
         // NOTE:
-        // according to IDA, the original code is 
+        // according to IDA, the original code is
         // if (player->classID)
         // but this crashes the game when super & without a sidekick so this fix will stay
         if (player->classID == Player->classID)
@@ -612,7 +612,7 @@ void CrimsonEye_StateContainer_HandleElevator(void)
 
     TileLayer *elevatorLayer = CrimsonEye->liftBackground;
     elevatorLayer->scrollPos = -0x800000;
-    for (int i = 0; i < elevatorLayer->scrollInfoCount; ++i) {
+    for (int32 i = 0; i < elevatorLayer->scrollInfoCount; ++i) {
         elevatorLayer->scrollInfo[i].scrollSpeed = elevatorLayer->scrollInfo[i].parallaxFactor * (CrimsonEye->elevatorSpeed / 24);
     }
 
@@ -1207,7 +1207,8 @@ void CrimsonEye_State_Shot(void)
         destroyEntity(self);
 }
 
-void CrimsonEye_State_Arrow(void) {
+void CrimsonEye_State_Arrow(void)
+{
     // hi poe
 }
 

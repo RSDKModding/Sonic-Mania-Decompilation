@@ -30,7 +30,7 @@ void Crabmeat_Update(void);
 void Crabmeat_LateUpdate(void);
 void Crabmeat_StaticUpdate(void);
 void Crabmeat_Draw(void);
-void Crabmeat_Create(void* data);
+void Crabmeat_Create(void *data);
 void Crabmeat_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Crabmeat_EditorDraw(void);
@@ -50,4 +50,4 @@ void Crabmeat_State_Moving(void);
 void Crabmeat_State_Shoot(void);
 void Crabmeat_State_Projectile(void);
 
-#endif //!OBJ_CRABMEAT_H
+#endif //! OBJ_CRABMEAT_H

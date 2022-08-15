@@ -52,12 +52,12 @@ void Springboard_Update(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID   = RSDK.GetEntitySlot(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         int32 playerGndVel = player->groundVel;
         int32 playerVelX   = player->velocity.x;
-        int32 springPos  = CLAMP((player->position.x - self->position.x + 0x1C0000) >> 17, 0, 27);
-        bool32 bounced   = false;
+        int32 springPos    = CLAMP((player->position.x - self->position.x + 0x1C0000) >> 17, 0, 27);
+        bool32 bounced     = false;
 
         if (!self->direction) {
             int32 hitboxTop = 0;
@@ -98,7 +98,7 @@ void Springboard_Update(void)
                     break;
 
                 case C_TOP:
-#if MANIA_USE_PLUS 
+#if MANIA_USE_PLUS
                     if (player->state == Player_State_MightyHammerDrop)
                         player->state = Player_State_Air;
 #endif
@@ -128,7 +128,7 @@ void Springboard_Update(void)
             if (!((1 << playerID) & self->activePlayers))
                 collision = Player_CheckCollisionBox(player, self, &hitbox);
             else
-                 collision = Player_CheckCollisionPlatform(player, self, &hitbox);
+                collision = Player_CheckCollisionPlatform(player, self, &hitbox);
 
             bounced = collision == C_TOP;
             switch (collision) {
@@ -137,7 +137,7 @@ void Springboard_Update(void)
                 case C_BOTTOM: break;
 
                 case C_TOP:
-#if MANIA_USE_PLUS 
+#if MANIA_USE_PLUS
                     if (player->state == Player_State_MightyHammerDrop) {
                         player->state = Player_State_Air;
                     }

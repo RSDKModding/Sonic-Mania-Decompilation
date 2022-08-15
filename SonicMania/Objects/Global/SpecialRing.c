@@ -139,7 +139,6 @@ void SpecialRing_DebugSpawn(void)
     specialRing->enabled           = true;
 }
 
-
 void SpecialRing_State_Idle(void)
 {
     RSDK_THIS(SpecialRing);
@@ -252,8 +251,8 @@ void SpecialRing_State_Warp(void)
         RSDK.PlaySfx(SpecialRing->sfxSpecialWarp, false, 0xFE);
         destroyEntity(self);
 
-        SaveRAM *saveRAM      = SaveGame->saveRAM;
-        saveRAM->storedStageID  = SceneInfo->listPos;
+        SaveRAM *saveRAM       = SaveGame->saveRAM;
+        saveRAM->storedStageID = SceneInfo->listPos;
         RSDK.SetScene("Special Stage", "");
         SceneInfo->listPos += saveRAM->nextSpecialStage;
 #if MANIA_USE_PLUS

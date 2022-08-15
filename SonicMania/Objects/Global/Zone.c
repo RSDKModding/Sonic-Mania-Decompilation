@@ -191,7 +191,7 @@ void Zone_StageLoad(void)
     // Layer IDs
     Zone->fgLayer[0] = RSDK.GetTileLayerID("FG Low");
     Zone->fgLayer[1] = RSDK.GetTileLayerID("FG High");
-    Zone->moveLayer = RSDK.GetTileLayerID("Move");
+    Zone->moveLayer  = RSDK.GetTileLayerID("Move");
 #if MANIA_USE_PLUS
     Zone->scratchLayer = RSDK.GetTileLayerID("Scratch");
 #endif
@@ -1361,7 +1361,7 @@ void Zone_State_SwapPlayers(void)
         if (Competition->sessionManager)
             Zone->playerSwapEnabled = false;
 
-        for (int i = 0; i < Zone->vsSwapCBCount; ++i) {
+        for (int32 i = 0; i < Zone->vsSwapCBCount; ++i) {
             StateMachine_Run(Zone->vsSwapCB[i]);
         }
 

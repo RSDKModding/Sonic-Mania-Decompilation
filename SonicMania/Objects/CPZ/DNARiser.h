@@ -55,7 +55,7 @@ void DNARiser_Update(void);
 void DNARiser_LateUpdate(void);
 void DNARiser_StaticUpdate(void);
 void DNARiser_Draw(void);
-void DNARiser_Create(void* data);
+void DNARiser_Create(void *data);
 void DNARiser_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void DNARiser_EditorDraw(void);
@@ -80,4 +80,4 @@ void DNARiser_State_OrbFall(void);
 void DNARiser_Draw_Main(void);
 void DNARiser_Draw_Helix(void);
 
-#endif //!OBJ_DNARISER_H
+#endif //! OBJ_DNARISER_H

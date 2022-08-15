@@ -6,7 +6,7 @@
 #if MANIA_USE_PLUS
 // Object Class
 struct ObjectPSZ1Intro {
-	RSDK_OBJECT
+    RSDK_OBJECT
 };
 
 // Entity Class
@@ -24,7 +24,7 @@ void PSZ1Intro_Update(void);
 void PSZ1Intro_LateUpdate(void);
 void PSZ1Intro_StaticUpdate(void);
 void PSZ1Intro_Draw(void);
-void PSZ1Intro_Create(void* data);
+void PSZ1Intro_Create(void *data);
 void PSZ1Intro_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PSZ1Intro_EditorDraw(void);
@@ -41,4 +41,4 @@ bool32 PSZ1Intro_Cutscene_HandleLanding(EntityCutsceneSeq *host);
 
 #endif
 
-#endif //!OBJ_PSZ1INTRO_H
+#endif //! OBJ_PSZ1INTRO_H

@@ -6,13 +6,13 @@
 typedef enum {
     CPZBOSS_PLAYER,
     CPZBOSS_EGGMAN,
-}CPZBossTypes;
+} CPZBossTypes;
 
 // Object Class
 struct ObjectCPZBoss {
     RSDK_OBJECT
     Hitbox hitboxPlayerTrigger;
-    EntityPuyoMatch* managers[2];
+    EntityPuyoMatch *managers[2];
     uint16 hudSlotID;
     uint16 aniFrames;
     uint16 playerFrames;
@@ -40,7 +40,7 @@ void CPZBoss_Update(void);
 void CPZBoss_LateUpdate(void);
 void CPZBoss_StaticUpdate(void);
 void CPZBoss_Draw(void);
-void CPZBoss_Create(void* data);
+void CPZBoss_Create(void *data);
 void CPZBoss_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void CPZBoss_EditorDraw(void);
@@ -71,4 +71,4 @@ void CPZBoss_State_EggmanFall(void);
 void CPZBoss_State_PlayerExit(void);
 void CPZBoss_State_Destroyed(void);
 
-#endif //!OBJ_CPZBOSS_H
+#endif //! OBJ_CPZBOSS_H

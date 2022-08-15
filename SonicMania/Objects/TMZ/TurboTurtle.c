@@ -257,7 +257,7 @@ void TurboTurtle_HandleFans(void)
     self->direction = storeDir;
 }
 
-void TurboTurtle_HandleFanParticles(uint8 type, int strength, int length)
+void TurboTurtle_HandleFanParticles(uint8 type, int32 strength, int32 length)
 {
     RSDK_THIS(TurboTurtle);
 

@@ -35,7 +35,7 @@ void PBL_Player_LateUpdate(void)
     Matrix *mat = &PBL_Camera->matWorld;
 
     self->zdepth = mat->values[2][3] + mat->values[2][0] * FROM_FIXED(self->position.x) + mat->values[2][2] * FROM_FIXED(self->position.y)
-                    + mat->values[2][1] * FROM_FIXED(self->height);
+                   + mat->values[2][1] * FROM_FIXED(self->height);
 }
 
 void PBL_Player_StaticUpdate(void) {}

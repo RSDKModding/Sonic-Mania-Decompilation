@@ -75,8 +75,8 @@ void TMZBarrier_StageLoad(void)
         TMZBarrier->postID          = 0;
         TMZBarrier->clearedBarriers = 0;
 
-        globals->restartFlags       = 0;
-        globals->tempFlags          = 0;
+        globals->restartFlags = 0;
+        globals->tempFlags    = 0;
     }
 }
 

@@ -11,7 +11,7 @@ typedef enum {
     WEATHERMOBILE_RAIN_MANAGER,
     WEATHERMOBILE_RAIN,
     WEATHERMOBILE_CLOUD,
-}WeatherMobileTypes;
+} WeatherMobileTypes;
 
 // Object Class
 struct ObjectWeatherMobile {
@@ -70,7 +70,7 @@ void WeatherMobile_Update(void);
 void WeatherMobile_LateUpdate(void);
 void WeatherMobile_StaticUpdate(void);
 void WeatherMobile_Draw(void);
-void WeatherMobile_Create(void* data);
+void WeatherMobile_Create(void *data);
 void WeatherMobile_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void WeatherMobile_EditorDraw(void);
@@ -122,4 +122,4 @@ void WeatherMobile_State_FleeRise(void);
 void WeatherMobile_State_FleeAdjust(void);
 void WeatherMobile_State_Flee(void);
 
-#endif //!OBJ_WEATHERMOBILE_H
+#endif //! OBJ_WEATHERMOBILE_H

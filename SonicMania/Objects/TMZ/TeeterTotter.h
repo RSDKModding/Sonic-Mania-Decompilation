@@ -8,7 +8,7 @@
 typedef enum {
     TEETERTOTTER_COLOR_ORANGEBLUE,
     TEETERTOTTER_COLOR_BLUEORANGE,
-}TeeterTotterColors;
+} TeeterTotterColors;
 
 // Object Class
 struct ObjectTeeterTotter {

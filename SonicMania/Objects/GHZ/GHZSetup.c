@@ -58,10 +58,10 @@ void GHZSetup_StageLoad(void)
         BGSwitch->switchCallback[GHZ_BG_OUTSIDE] = GHZSetup_BGSwitch_Outside_Act2;
         BGSwitch->switchCallback[GHZ_BG_CAVES]   = GHZSetup_BGSwitch_Caves_Act2;
 
-        BGSwitch->layerIDs[0]                    = GHZ_BG_OUTSIDE;
-        BGSwitch->layerIDs[1]                    = GHZ_BG_OUTSIDE;
-        BGSwitch->layerIDs[2]                    = GHZ_BG_OUTSIDE;
-        BGSwitch->layerIDs[3]                    = GHZ_BG_OUTSIDE;
+        BGSwitch->layerIDs[0] = GHZ_BG_OUTSIDE;
+        BGSwitch->layerIDs[1] = GHZ_BG_OUTSIDE;
+        BGSwitch->layerIDs[2] = GHZ_BG_OUTSIDE;
+        BGSwitch->layerIDs[3] = GHZ_BG_OUTSIDE;
 
         if (isMainGameMode() && globals->atlEnabled) {
             if (!CutsceneRules_CheckStageReload())

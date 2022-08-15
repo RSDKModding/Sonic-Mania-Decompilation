@@ -40,7 +40,7 @@ void PuyoScore_Create(void *data)
 
 void PuyoScore_StageLoad(void) { PuyoScore->aniFrames = RSDK.LoadSpriteAnimation("Puyo/PuyoUI.bin", SCOPE_STAGE); }
 
-void PuyoScore_DrawScore(int score)
+void PuyoScore_DrawScore(int32 score)
 {
     RSDK_THIS(PuyoScore);
 

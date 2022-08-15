@@ -480,7 +480,7 @@ void LaundroMobile_HandleStageWrap(void)
                         trail->position.y -= offsetY;
                         trail->currentPos.x -= offsetX;
                         trail->currentPos.y -= offsetY;
-                        for (int i = 0; i < IMAGETRAIL_TRACK_COUNT; ++i) {
+                        for (int32 i = 0; i < IMAGETRAIL_TRACK_COUNT; ++i) {
                             trail->statePos[i].x -= offsetX;
                             trail->statePos[i].y -= offsetY;
                         }
@@ -1500,7 +1500,7 @@ void LaundroMobile_Draw_Boss_Destroyed(void)
     self->mainAnimator.frameID = 1;
     RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 
-    for (int r = 0; r < 4; ++r) {
+    for (int32 r = 0; r < 4; ++r) {
         self->direction = r >= 2 ? FLIP_X : FLIP_NONE;
         uint8 angle     = LaundroMobile->rocketAngles[r] >> 8;
         if (angle < 0x80) {

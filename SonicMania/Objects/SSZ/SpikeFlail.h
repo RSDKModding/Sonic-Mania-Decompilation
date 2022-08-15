@@ -31,7 +31,7 @@ void SpikeFlail_Update(void);
 void SpikeFlail_LateUpdate(void);
 void SpikeFlail_StaticUpdate(void);
 void SpikeFlail_Draw(void);
-void SpikeFlail_Create(void* data);
+void SpikeFlail_Create(void *data);
 void SpikeFlail_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SpikeFlail_EditorDraw(void);
@@ -42,6 +42,6 @@ void SpikeFlail_Serialize(void);
 // Extra Entity Functions
 void SpikeFlail_SetupHitbox(void);
 void SpikeFlail_CheckPlayerCollisions(void);
-Vector2 SpikeFlail_GetScale(int ballPos, int angle);
+Vector2 SpikeFlail_GetScale(int32 ballPos, int32 angle);
 
-#endif //!OBJ_SPIKEFLAIL_H
+#endif //! OBJ_SPIKEFLAIL_H

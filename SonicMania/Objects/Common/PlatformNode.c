@@ -35,7 +35,6 @@ void PlatformNode_EditorDraw(void)
         RSDK_DRAWING_OVERLAY(false);
     }
 
-
     RSDK.SetSpriteAnimation(PlatformNode->aniFrames, 0, &self->animator, false, 0);
     RSDK.DrawSprite(&self->animator, NULL, false);
 }

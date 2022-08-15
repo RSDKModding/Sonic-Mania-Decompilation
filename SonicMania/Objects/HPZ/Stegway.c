@@ -186,7 +186,7 @@ void Stegway_State_Moving(void)
         self->state = Stegway_State_Turn;
         Stegway_SetupAnims(3, false);
         self->showJet = false;
-        self->noFloor  = false;
+        self->noFloor = false;
     }
     Stegway_CheckOffScreen();
 }
@@ -267,7 +267,7 @@ void Stegway_State_Dash(void)
                 self->state      = Stegway_State_Moving;
                 Stegway_SetupAnims(0, false);
                 self->mainAnimator.frameID = 0;
-                self->showJet             = false;
+                self->showJet              = false;
                 self->noFloor              = false;
             }
         }
@@ -277,7 +277,7 @@ void Stegway_State_Dash(void)
         self->state = Stegway_State_Turn;
         Stegway_SetupAnims(3, false);
         self->showJet = false;
-        self->noFloor  = false;
+        self->noFloor = false;
     }
 }
 

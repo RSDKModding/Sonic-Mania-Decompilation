@@ -71,7 +71,7 @@ void ConveyorWheel_EditorDraw(void)
         RSDK_DRAWING_OVERLAY(true);
 
         DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &ConveyorWheel->hitbox, FLIP_NONE, 0xFF0000);
-    
+
         RSDK_DRAWING_OVERLAY(false);
     }
 }

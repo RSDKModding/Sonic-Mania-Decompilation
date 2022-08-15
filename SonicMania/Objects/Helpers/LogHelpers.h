@@ -40,5 +40,4 @@ void LogHelpers_Print(const char *message, ...);
 void LogHelpers_PrintVector2(const char *message, Vector2 value);
 #endif
 
-
 #endif //! OBJ_LOGHELPERS_H

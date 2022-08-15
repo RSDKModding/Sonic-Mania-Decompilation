@@ -28,7 +28,7 @@ void Bridge_Update(void)
     }
 
     self->stoodEntityCount = 0;
-    self->bridgeDepth       = (self->depression * self->timer) >> 7;
+    self->bridgeDepth      = (self->depression * self->timer) >> 7;
 
     foreach_active(Player, player)
     {
@@ -146,7 +146,7 @@ bool32 Bridge_HandleCollisions(void *e, EntityBridge *self, Hitbox *entityHitbox
 
     // use EntityPlayer as the type so we can access player variables if needed
     // if `isPlayer` is false, then only base entity variables will be accessed
-    EntityPlayer *entity  = (EntityPlayer *)e;
+    EntityPlayer *entity = (EntityPlayer *)e;
 
     bool32 bridgeCollided = false;
 

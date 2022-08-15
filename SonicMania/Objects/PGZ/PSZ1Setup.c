@@ -252,10 +252,10 @@ void PSZ1Setup_StageLoad(void)
     BGSwitch->switchCallback[PSZ1_BG_INSIDE]  = PSZ1Setup_BGSwitch_Inside;
     BGSwitch->switchCallback[PSZ1_BG_OUTSIDE] = PSZ1Setup_BGSwitch_Outside;
 
-    BGSwitch->layerIDs[0]                     = PSZ1_BG_INSIDE;
-    BGSwitch->layerIDs[1]                     = PSZ1_BG_INSIDE;
-    BGSwitch->layerIDs[2]                     = PSZ1_BG_INSIDE;
-    BGSwitch->layerIDs[3]                     = PSZ1_BG_INSIDE;
+    BGSwitch->layerIDs[0] = PSZ1_BG_INSIDE;
+    BGSwitch->layerIDs[1] = PSZ1_BG_INSIDE;
+    BGSwitch->layerIDs[2] = PSZ1_BG_INSIDE;
+    BGSwitch->layerIDs[3] = PSZ1_BG_INSIDE;
 #endif
 }
 

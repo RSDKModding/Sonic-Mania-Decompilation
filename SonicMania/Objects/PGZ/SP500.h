@@ -52,7 +52,7 @@ void SP500_Update(void);
 void SP500_LateUpdate(void);
 void SP500_StaticUpdate(void);
 void SP500_Draw(void);
-void SP500_Create(void* data);
+void SP500_Create(void *data);
 void SP500_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SP500_EditorDraw(void);
@@ -73,4 +73,4 @@ void SP500_State_NextPrintRow(void);
 void SP500_State_PrintFinished(void);
 void SP500_State_MoveToTarget(void);
 
-#endif //!OBJ_SP500_H
+#endif //! OBJ_SP500_H

@@ -90,7 +90,7 @@ void LRZSpiral_HandlePlayerExit(EntityPlayer *player)
         if (player->animator.speed > 0x200)
             player->animator.speed = 0x200;
 
-        player->minRunVelocity = 0x58000;
+        player->minRunVelocity  = 0x58000;
         player->minDashVelocity = 0xC0000;
     }
     else {

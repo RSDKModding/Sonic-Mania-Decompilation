@@ -28,7 +28,6 @@ void AIZRockPile_Update(void)
                 int32 jumping   = player->animator.animationID == ANI_JUMP;
                 int32 groundVel = player->groundVel;
 
-                
                 if (self->smashSides || self->smashTop) {
                     int32 side = Player_CheckCollisionBox(player, self, hitbox);
                     if (self->smashSides && (side == C_LEFT || side == C_RIGHT)) {
@@ -136,7 +135,7 @@ void AIZRockPile_StageLoad(void)
 {
     AIZRockPile->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Platform.bin", SCOPE_STAGE);
 
-    AIZRockPile->sfxBreak   = RSDK.GetSfx("Stage/LedgeBreak3.wav");
+    AIZRockPile->sfxBreak = RSDK.GetSfx("Stage/LedgeBreak3.wav");
 }
 
 void AIZRockPile_SpawnRocks(int32 *speeds)
@@ -147,12 +146,12 @@ void AIZRockPile_SpawnRocks(int32 *speeds)
         EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, self->position.x + self->rockPositions[2 * i],
                                              self->position.y + self->rockPositions[(2 * i) + 1]);
         RSDK.SetSpriteAnimation(AIZRockPile->aniFrames, 1, &debris->animator, true, 0);
-        debris->velocity.x    = speeds[2 * i];
-        debris->velocity.y    = speeds[(2 * i) + 1];
-        debris->drawGroup     = Zone->objectDrawGroup[1];
-        debris->updateRange.x = 0x800000;
-        debris->updateRange.y = 0x800000;
-        debris->gravityStrength       = 0x1800;
+        debris->velocity.x      = speeds[2 * i];
+        debris->velocity.y      = speeds[(2 * i) + 1];
+        debris->drawGroup       = Zone->objectDrawGroup[1];
+        debris->updateRange.x   = 0x800000;
+        debris->updateRange.y   = 0x800000;
+        debris->gravityStrength = 0x1800;
     }
 
     RSDK.PlaySfx(AIZRockPile->sfxBreak, false, 255);

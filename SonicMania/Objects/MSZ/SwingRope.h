@@ -35,7 +35,7 @@ void SwingRope_Update(void);
 void SwingRope_LateUpdate(void);
 void SwingRope_StaticUpdate(void);
 void SwingRope_Draw(void);
-void SwingRope_Create(void* data);
+void SwingRope_Create(void *data);
 void SwingRope_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SwingRope_EditorDraw(void);
@@ -47,4 +47,4 @@ void SwingRope_Serialize(void);
 void SwingRope_DebugDraw(void);
 void SwingRope_DebugSpawn(void);
 
-#endif //!OBJ_SWINGROPE_H
+#endif //! OBJ_SWINGROPE_H

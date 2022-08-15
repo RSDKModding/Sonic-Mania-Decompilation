@@ -146,11 +146,11 @@ void Smog_Create(void *data)
                 }
 
                 EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
-                zone->fadeColor = 0x000000;
-                zone->timer     = 0;
-                zone->visible   = true;
-                zone->drawGroup = DRAWGROUP_COUNT - 1;
-                zone->stateDraw = Zone_Draw_Fade;
+                zone->fadeColor  = 0x000000;
+                zone->timer      = 0;
+                zone->visible    = true;
+                zone->drawGroup  = DRAWGROUP_COUNT - 1;
+                zone->stateDraw  = Zone_Draw_Fade;
             }
         }
     }

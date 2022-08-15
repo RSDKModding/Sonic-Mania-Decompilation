@@ -53,7 +53,7 @@ void Competition_Create(void *data)
         self->visible     = true;
         self->drawGroup   = Zone->hudDrawGroup - 1;
 
-        self->seconds     = SceneInfo->seconds;
+        self->seconds = SceneInfo->seconds;
         if (SceneInfo->minutes == 9) {
             self->timer = 0;
 

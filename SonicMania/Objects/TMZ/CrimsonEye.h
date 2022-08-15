@@ -104,7 +104,7 @@ void CrimsonEye_SetupBG2Layer(void);
 void CrimsonEye_DrawHook_DisableFGSilhouette(void);
 void CrimsonEye_DrawHook_EnableFGSilhouette(void);
 
-void CrimsonEye_SetArrowDir(int type);
+void CrimsonEye_SetArrowDir(int32 type);
 
 void CrimsonEye_StateContainer_SetupArena(void);
 void CrimsonEye_StateContainer_AwaitPlayer(void);

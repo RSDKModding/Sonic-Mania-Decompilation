@@ -80,8 +80,8 @@ void ERZMystic_CheckPlayerCollisions(void)
 {
     RSDK_THIS(ERZMystic);
 
-    int storeX = self->position.x;
-    int storeY = self->position.y;
+    int32 storeX = self->position.x;
+    int32 storeY = self->position.y;
 
     self->position.x = self->mysticPos.x;
     self->position.y = self->mysticPos.y;
@@ -93,7 +93,7 @@ void ERZMystic_CheckPlayerCollisions(void)
         }
 
         if (self->cupBlastAnimator.frameID > 8 && self->cupBlastAnimator.frameID < 26) {
-            for (int i = 0; i < 3; ++i) {
+            for (int32 i = 0; i < 3; ++i) {
                 if (i != self->correctCup) {
                     self->position.x = storeX + self->cupPos[i];
                     if (abs(self->position.x - player->position.x) < 0x400000 && player->position.y > self->position.y)
@@ -142,7 +142,7 @@ void ERZMystic_Draw_CupSetup(void)
 
     RSDK.DrawSprite(&self->mysticAnimator, &self->mysticPos, false);
 
-    for (int i = 0; i < 3; ++i) {
+    for (int32 i = 0; i < 3; ++i) {
         Vector2 drawPos;
         drawPos.x = self->position.x + self->cupPos[i];
         if (i == 1) {

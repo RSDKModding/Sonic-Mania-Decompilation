@@ -381,7 +381,7 @@ void OptionsMenu_InitVideoOptionsMenu(void)
         int32 options[7];
 
         options[0] = RSDK.GetVideoSetting(VIDEOSETTING_SHADERID); // filter
-        options[1] = optionsRAM->windowSize;                   // window size
+        options[1] = optionsRAM->windowSize;                      // window size
         options[2] = RSDK.GetVideoSetting(VIDEOSETTING_BORDERED); // bordered
 
         // fullscreen
@@ -389,7 +389,7 @@ void OptionsMenu_InitVideoOptionsMenu(void)
         if (!RSDK.GetVideoSetting(VIDEOSETTING_WINDOWED) || optionsRAM->windowSize == 4)
             options[3] = 1;
 
-        options[4] = 0;                                              // fullscreen res
+        options[4] = 0;                                                 // fullscreen res
         options[5] = RSDK.GetVideoSetting(VIDEOSETTING_VSYNC);          // vsync
         options[6] = RSDK.GetVideoSetting(VIDEOSETTING_TRIPLEBUFFERED); // triple buffered
 
@@ -511,7 +511,7 @@ void OptionsMenu_VideoMenuButton_ActionCB(void)
 {
     if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV) {
         RSDK.SetVideoSetting(VIDEOSETTING_STORE, false);
-#if MANIA_USE_EGS  
+#if MANIA_USE_EGS
         API.ShowLimitedVideoOptions(8);
 #endif
         UIControl_MatchMenuTag("Video WIN");
@@ -563,7 +563,7 @@ void OptionsMenu_ControlsMenuButton_ActionCB(void)
 
 void OptionsMenu_SetDefaultMappings(void)
 {
-    ControllerInfo[CONT_P1].keyUp.keyMap    = KEYMAP_UP;
+    ControllerInfo[CONT_P1].keyUp.keyMap     = KEYMAP_UP;
     ControllerInfo[CONT_P1].keyDown.keyMap   = KEYMAP_DOWN;
     ControllerInfo[CONT_P1].keyLeft.keyMap   = KEYMAP_LEFT;
     ControllerInfo[CONT_P1].keyRight.keyMap  = KEYMAP_RIGHT;

@@ -121,7 +121,7 @@ struct ObjectLocalization {
 
 // Entity Class
 struct EntityLocalization {
-	RSDK_ENTITY
+    RSDK_ENTITY
 };
 
 // Object Struct
@@ -132,7 +132,7 @@ void Localization_Update(void);
 void Localization_LateUpdate(void);
 void Localization_StaticUpdate(void);
 void Localization_Draw(void);
-void Localization_Create(void* data);
+void Localization_Create(void *data);
 void Localization_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Localization_EditorDraw(void);
@@ -146,4 +146,4 @@ void Localization_GetString(String *string, uint8 id);
 void Localization_GetZoneName(String *string, uint8 zone);
 void Localization_GetZoneInitials(String *string, uint8 zone);
 
-#endif //!OBJ_LOCALIZATION_H
+#endif //! OBJ_LOCALIZATION_H

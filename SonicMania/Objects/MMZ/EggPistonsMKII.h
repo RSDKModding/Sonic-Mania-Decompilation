@@ -10,7 +10,7 @@ typedef enum {
     EGGPISTON_BARRIER,
     EGGPISTON_PLASMABALL,
     EGGPISTON_ALARM,
-}EggPistonMKIITypes;
+} EggPistonMKIITypes;
 
 // Object Class
 struct ObjectEggPistonsMKII {
@@ -55,7 +55,7 @@ void EggPistonsMKII_Update(void);
 void EggPistonsMKII_LateUpdate(void);
 void EggPistonsMKII_StaticUpdate(void);
 void EggPistonsMKII_Draw(void);
-void EggPistonsMKII_Create(void* data);
+void EggPistonsMKII_Create(void *data);
 void EggPistonsMKII_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void EggPistonsMKII_EditorDraw(void);
@@ -105,4 +105,4 @@ void EggPistonsMKII_StateAlarm_Destroyed(void);
 void EggPistonsMKII_StateBarrier_Solid(void);
 void EggPistonsMKII_StateBarrier_Explode(void);
 
-#endif //!OBJ_EGGPISTONSMKII_H
+#endif //! OBJ_EGGPISTONSMKII_H

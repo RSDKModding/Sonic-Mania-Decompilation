@@ -33,7 +33,7 @@ void TVPole_Draw(void)
 
     drawPos.x += 0x80000;
     self->animator.frameID = 1;
-    for (int i = 0; i < self->length; ++i) {
+    for (int32 i = 0; i < self->length; ++i) {
         RSDK.DrawSprite(&self->animator, &drawPos, false);
         drawPos.x += 0x80000;
     }

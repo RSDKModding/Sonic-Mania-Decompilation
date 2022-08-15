@@ -102,7 +102,7 @@ void FBZSetup_StageLoad(void)
         foreach_all(FBZ1Outro, outro)
         {
             Zone->shouldRecoverPlayers = true;
-            FBZSetup->outro           = outro;
+            FBZSetup->outro            = outro;
             foreach_break;
         }
         Zone->stageFinishCallback = FBZSetup_StageFinish_EndAct1;
@@ -158,7 +158,7 @@ void FBZSetup_AddDynamicBG(ScanlineInfo *scanlines, int32 parallaxFactorX, int32
     int32 end   = start + lineCount;
 
     if (start < SCREEN_YSIZE && end > 0) {
-        end     = MIN(end, SCREEN_YSIZE);
+        end = MIN(end, SCREEN_YSIZE);
 
         // sourcePosY = start layer line
         int32 scanlineY = sourcePosY;
@@ -168,7 +168,7 @@ void FBZSetup_AddDynamicBG(ScanlineInfo *scanlines, int32 parallaxFactorX, int32
         }
 
         ScanlineInfo *scanlinePtr = &scanlines[start];
-        int32 count = end - start;
+        int32 count               = end - start;
         for (int32 i = 0; i < count; ++i) {
             scanlinePtr->position.x = scanlineX;
             scanlinePtr->position.y = scanlineY;
@@ -182,8 +182,8 @@ void FBZSetup_AddDynamicBG(ScanlineInfo *scanlines, int32 parallaxFactorX, int32
 
 void FBZSetup_Scanline_BGInside(ScanlineInfo *scanlines)
 {
-    RSDKScreenInfo *screen    = &ScreenInfo[SceneInfo->currentScreenID];
-    int32 y                   = screen->position.y >> 3;
+    RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
+    int32 y                = screen->position.y >> 3;
 
     // Handle the cool deformation on the BG Inside layer
     ScanlineInfo *scanlinePtr = scanlines;
@@ -246,7 +246,7 @@ void FBZSetup_BGSwitch_ShowInside1_Dup(void)
 
 void FBZSetup_Trigger_ShowExterior(void)
 {
-    int32 id                                                        = (2 * (Zone->actID != 0) + 3);
+    int32 id                                                       = (2 * (Zone->actID != 0) + 3);
     RSDK.GetTileLayer(id)->drawGroup[GenericTrigger->playerID]     = DRAWGROUP_COUNT;
     RSDK.GetTileLayer(id + 1)->drawGroup[GenericTrigger->playerID] = 6;
 
@@ -261,7 +261,7 @@ void FBZSetup_Trigger_ShowExterior(void)
 
 void FBZSetup_Trigger_ShowInterior(void)
 {
-    int32 id                                                        = (2 * (Zone->actID != 0) + 3);
+    int32 id                                                       = (2 * (Zone->actID != 0) + 3);
     RSDK.GetTileLayer(id)->drawGroup[GenericTrigger->playerID]     = 6;
     RSDK.GetTileLayer(id + 1)->drawGroup[GenericTrigger->playerID] = DRAWGROUP_COUNT;
 

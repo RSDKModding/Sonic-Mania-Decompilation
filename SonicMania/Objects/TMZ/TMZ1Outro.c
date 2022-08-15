@@ -99,7 +99,7 @@ bool32 TMZ1Outro_CutsceneAct1_ElevatorRide(EntityCutsceneSeq *host)
         // unbroken monitors do not do any collision/gravity checks, so they're moved offscreen as expected
         // however, unbroken monitors DO do gravity & collision, so the elevator collision overrides the code here and allows em to be carried into
         // act 2
-        itembox->position.y -= CrimsonEye->targetElevatorSpeed; 
+        itembox->position.y -= CrimsonEye->targetElevatorSpeed;
     }
 
     foreach_active(SignPost, signPost) { signPost->position.y -= CrimsonEye->targetElevatorSpeed; }

@@ -253,10 +253,10 @@ void SpecialClear_Create(void *data)
             if (globals->gameMode < MODE_TIMEATTACK && self->machBonus + self->ringBonus >= 10000)
                 self->hasContinues = true;
 
-            SaveRAM *saveRAM       = SaveGame->saveRAM;
-            self->score             = saveRAM->score;
-            self->score1UP          = saveRAM->score1UP;
-            self->lives             = saveRAM->lives;
+            SaveRAM *saveRAM = SaveGame->saveRAM;
+            self->score      = saveRAM->score;
+            self->score1UP   = saveRAM->score1UP;
+            self->lives      = saveRAM->lives;
             if (saveRAM->chaosEmeralds == 0b01111111)
                 self->messageType = SC_MSG_ALLEMERALDS;
             else
@@ -583,11 +583,11 @@ void SpecialClear_State_ShowTotalScore_Continues(void)
     if (self->timer == 360) {
         self->timer = 0;
 
-        SaveRAM *saveRAM       = SaveGame->saveRAM;
-        saveRAM->score          = self->score;
-        globals->restartScore   = self->score;
-        saveRAM->score1UP       = self->score1UP;
-        saveRAM->lives          = self->lives;
+        SaveRAM *saveRAM      = SaveGame->saveRAM;
+        saveRAM->score        = self->score;
+        globals->restartScore = self->score;
+        saveRAM->score1UP     = self->score1UP;
+        saveRAM->lives        = self->lives;
 #if MANIA_USE_PLUS
         saveRAM->continues      = globals->continues;
         saveRAM->characterFlags = globals->characterFlags;
@@ -613,10 +613,10 @@ void SpecialClear_State_ShowTotalScore_NoContinues(void)
     RSDK_THIS(SpecialClear);
 
     if (++self->timer == 120) {
-        self->timer             = 0;
-        SaveRAM *saveRAM       = SaveGame->saveRAM;
-        saveRAM->score          = self->score;
-        globals->restartScore   = self->score;
+        self->timer           = 0;
+        SaveRAM *saveRAM      = SaveGame->saveRAM;
+        saveRAM->score        = self->score;
+        globals->restartScore = self->score;
 
         if (saveRAM->chaosEmeralds == 0b01111111) {
             self->state = SpecialClear_State_ExitFinishMessage;

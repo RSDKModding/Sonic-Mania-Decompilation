@@ -35,7 +35,7 @@ void Bridge_Update(void);
 void Bridge_LateUpdate(void);
 void Bridge_StaticUpdate(void);
 void Bridge_Draw(void);
-void Bridge_Create(void* data);
+void Bridge_Create(void *data);
 void Bridge_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Bridge_EditorDraw(void);
@@ -47,5 +47,4 @@ void Bridge_Serialize(void);
 void Bridge_Burn(int32 offset);
 bool32 Bridge_HandleCollisions(void *e, EntityBridge *self, Hitbox *entityHitbox, bool32 updateVars, bool32 isPlayer);
 
-
-#endif //!OBJ_BRIDGE_H
+#endif //! OBJ_BRIDGE_H

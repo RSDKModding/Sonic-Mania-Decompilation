@@ -162,7 +162,7 @@ void MenuSetup_StageLoad(void)
     }
 #else
     Music_Stop();
-    Music->activeTrack      = TRACK_NONE;
+    Music->activeTrack = TRACK_NONE;
 #endif
 
     if (!SceneInfo->inEditor) {
@@ -212,7 +212,7 @@ void MenuSetup_StartTransition(void (*callback)(void), int32 delay)
 #if MANIA_USE_PLUS
     menuSetup->state = ManiaModeMenu_State_HandleTransition;
 #else
-    menuSetup->state        = MenuSetup_State_HandleTransition;
+    menuSetup->state = MenuSetup_State_HandleTransition;
 #endif
     menuSetup->callback = callback;
 }
@@ -369,8 +369,8 @@ void MenuSetup_Initialize(void)
             MenuSetup->delSavePrompt = prompt;
 
         EntityUIControl *leaderboardsControl = MenuSetup->leaderboards;
-        x                              = leaderboardsControl->startPos.x - leaderboardsControl->cameraOffset.x;
-        y                              = leaderboardsControl->startPos.y - leaderboardsControl->cameraOffset.y;
+        x                                    = leaderboardsControl->startPos.x - leaderboardsControl->cameraOffset.x;
+        y                                    = leaderboardsControl->startPos.y - leaderboardsControl->cameraOffset.y;
 
         hitbox.right  = leaderboardsControl->size.x >> 17;
         hitbox.left   = -(leaderboardsControl->size.x >> 17);
@@ -381,8 +381,8 @@ void MenuSetup_Initialize(void)
             MenuSetup->leaderboardPrompt = prompt;
 
         EntityUIControl *optionsControl = MenuSetup->options;
-        x                         = optionsControl->startPos.x - optionsControl->cameraOffset.x;
-        y                         = optionsControl->startPos.y - optionsControl->cameraOffset.y;
+        x                               = optionsControl->startPos.x - optionsControl->cameraOffset.x;
+        y                               = optionsControl->startPos.y - optionsControl->cameraOffset.y;
 
         hitbox.right  = optionsControl->size.x >> 17;
         hitbox.left   = -(optionsControl->size.x >> 17);
@@ -2059,14 +2059,14 @@ void MenuSetup_OptionsVideo_Win_InitVideoOptionsMenu(void)
         int32 options[7];
 
         options[0] = RSDK.GetVideoSetting(VIDEOSETTING_SHADERID); // filter
-        options[1] = optionsRAM->windowSize;                   // window size
+        options[1] = optionsRAM->windowSize;                      // window size
         options[2] = RSDK.GetVideoSetting(VIDEOSETTING_BORDERED); // bordered
 
         options[3] = 0;
         if (!RSDK.GetVideoSetting(VIDEOSETTING_WINDOWED) || optionsRAM->windowSize == 4)
             options[3] = 1;
 
-        options[4] = 0;                                              // fullscreen res
+        options[4] = 0;                                                 // fullscreen res
         options[5] = RSDK.GetVideoSetting(VIDEOSETTING_VSYNC);          // vsync
         options[6] = RSDK.GetVideoSetting(VIDEOSETTING_TRIPLEBUFFERED); // triple buffered
 
@@ -2122,7 +2122,7 @@ void MenuSetup_Options_LaunchManual(void)
 
 void MenuSetup_OptionsLanguage_LanguageButton_ActionCB(void)
 {
-    OptionsRAM *options   = (OptionsRAM *)globals->optionsRAM;
+    OptionsRAM *options      = (OptionsRAM *)globals->optionsRAM;
     EntityUIControl *control = MenuSetup->language;
 
     if (control->buttonID < 0)

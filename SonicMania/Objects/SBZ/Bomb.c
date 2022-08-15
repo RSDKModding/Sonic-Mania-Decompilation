@@ -68,22 +68,22 @@ void Bomb_StageLoad(void)
     if (RSDK.CheckSceneFolder("MMZ"))
         Bomb->aniFrames = RSDK.LoadSpriteAnimation("MMZ/Bomb.bin", SCOPE_STAGE);
 
-    Bomb->hitboxHurt.left       = -12;
-    Bomb->hitboxHurt.top        = -18;
-    Bomb->hitboxHurt.right      = 12;
-    Bomb->hitboxHurt.bottom     = 18;
+    Bomb->hitboxHurt.left   = -12;
+    Bomb->hitboxHurt.top    = -18;
+    Bomb->hitboxHurt.right  = 12;
+    Bomb->hitboxHurt.bottom = 18;
 
-    Bomb->hitboxRange.left      = -96;
-    Bomb->hitboxRange.top       = -96;
-    Bomb->hitboxRange.right     = 96;
-    Bomb->hitboxRange.bottom    = 96;
+    Bomb->hitboxRange.left   = -96;
+    Bomb->hitboxRange.top    = -96;
+    Bomb->hitboxRange.right  = 96;
+    Bomb->hitboxRange.bottom = 96;
 
     Bomb->hitboxShrapnel.left   = -6;
     Bomb->hitboxShrapnel.top    = -6;
     Bomb->hitboxShrapnel.right  = 6;
     Bomb->hitboxShrapnel.bottom = 6;
 
-    Bomb->sfxExplosion          = RSDK.GetSfx("Stage/Explosion.wav");
+    Bomb->sfxExplosion = RSDK.GetSfx("Stage/Explosion.wav");
 
     DEBUGMODE_ADD_OBJ(Bomb);
 }
@@ -253,10 +253,7 @@ void Bomb_State_Shrapnel(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Bomb_EditorDraw(void)
-{
-    Bomb_Draw();
-}
+void Bomb_EditorDraw(void) { Bomb_Draw(); }
 
 void Bomb_EditorLoad(void)
 {

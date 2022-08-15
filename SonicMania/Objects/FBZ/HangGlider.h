@@ -35,7 +35,7 @@ void HangGlider_Update(void);
 void HangGlider_LateUpdate(void);
 void HangGlider_StaticUpdate(void);
 void HangGlider_Draw(void);
-void HangGlider_Create(void* data);
+void HangGlider_Create(void *data);
 void HangGlider_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void HangGlider_EditorDraw(void);
@@ -49,4 +49,4 @@ void HangGlider_State_Glide(void);
 
 #endif
 
-#endif //!OBJ_HANGGLIDER_H
+#endif //! OBJ_HANGGLIDER_H

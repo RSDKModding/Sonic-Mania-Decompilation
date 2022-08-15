@@ -26,7 +26,7 @@ void SPZ2Outro_Update(void);
 void SPZ2Outro_LateUpdate(void);
 void SPZ2Outro_StaticUpdate(void);
 void SPZ2Outro_Draw(void);
-void SPZ2Outro_Create(void* data);
+void SPZ2Outro_Create(void *data);
 void SPZ2Outro_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SPZ2Outro_EditorDraw(void);
@@ -45,4 +45,4 @@ void SPZ2Outro_DrawHook_PrepareWeatherTV(void);
 bool32 SPZ2Outro_Cutscene_AsSeenOnTV(EntityCutsceneSeq *host);
 bool32 SPZ2Outro_Cutscene_FBZFlyAway(EntityCutsceneSeq *host);
 
-#endif //!OBJ_SPZ2OUTRO_H
+#endif //! OBJ_SPZ2OUTRO_H

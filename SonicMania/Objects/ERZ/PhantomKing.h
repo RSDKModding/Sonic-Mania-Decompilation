@@ -33,7 +33,7 @@ struct EntityPhantomKing {
     int32 timer;
     int32 invincibilityTimer;
     int32 health;
-    int32 typeChangeTimer;  // Leftover from ERZKing, never used but the draw code for it is still there
+    int32 typeChangeTimer; // Leftover from ERZKing, never used but the draw code for it is still there
     int32 bodyAngle;
     int32 frameIDs[10];
     Vector2 framePositions[10];
@@ -69,7 +69,7 @@ void PhantomKing_Update(void);
 void PhantomKing_LateUpdate(void);
 void PhantomKing_StaticUpdate(void);
 void PhantomKing_Draw(void);
-void PhantomKing_Create(void* data);
+void PhantomKing_Create(void *data);
 void PhantomKing_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PhantomKing_EditorDraw(void);
@@ -111,4 +111,4 @@ void PhantomKing_DestroyEntity(void);
 void PhantomKing_State_Explode(void);
 void PhantomKing_State_Destroyed(void);
 
-#endif //!OBJ_PHANTOMKING_H
+#endif //! OBJ_PHANTOMKING_H

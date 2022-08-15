@@ -196,11 +196,11 @@ void GameProgress_ClearBSSSave(void)
         return;
     }
 
-    ProgressRAM *progress = GameProgress_GetGameProgress();
-    progress->allGoldMedals      = false;
-    progress->allSilverMedals    = false;
-    progress->goldMedalCount     = 0;
-    progress->silverMedalCount   = 0;
+    ProgressRAM *progress      = GameProgress_GetGameProgress();
+    progress->allGoldMedals    = false;
+    progress->allSilverMedals  = false;
+    progress->goldMedalCount   = 0;
+    progress->silverMedalCount = 0;
     memset(progress->medals, 0, sizeof(progress->medals));
 }
 void GameProgress_UnlockAll(void)
@@ -237,8 +237,8 @@ void GameProgress_LockAllSpecialClear(void)
         LogHelpers_Print("WARNING GameProgress Attempted to lock special clear before loading SaveGame file");
     }
     else {
-        ProgressRAM *progress = GameProgress_GetGameProgress();
-        progress->allSpecialCleared  = false;
+        ProgressRAM *progress       = GameProgress_GetGameProgress();
+        progress->allSpecialCleared = false;
     }
 }
 
@@ -340,8 +340,8 @@ void GameProgress_GiveMedal(uint8 medalID, uint8 type)
     }
 
     ProgressRAM *progress = GameProgress_GetGameProgress();
-    int32 goldCount              = 0;
-    int32 silverCount            = 0;
+    int32 goldCount       = 0;
+    int32 silverCount     = 0;
     for (int32 m = 0; m < GAMEPROGRESS_MEDAL_COUNT; ++m) {
         if (m == medalID && type > progress->medals[m])
             progress->medals[m] = type;
@@ -446,7 +446,7 @@ int32 GameProgress_CountUnreadNotifs(void)
         return 0;
     }
     else {
-        int32 unreadCount            = 0;
+        int32 unreadCount     = 0;
         ProgressRAM *progress = GameProgress_GetGameProgress();
         for (int32 i = 0; i < GAMEPROGRESS_UNLOCK_COUNT; ++i) {
             bool32 unlocked = progress->unreadNotifs[i];

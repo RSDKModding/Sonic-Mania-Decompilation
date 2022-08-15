@@ -76,7 +76,6 @@ void ERZRider_EditorDraw(void)
     RSDK.SetSpriteAnimation(ERZRider->aniFrames, 4, &self->jimmyAnimator, false, 0);
     RSDK.SetSpriteAnimation(ERZRider->aniFrames, 5, &self->wheelAnimator, false, 0);
     RSDK.SetSpriteAnimation(ERZRider->aniFrames, 6, &self->thrustAnimator, false, 0);
-
 }
 
 void ERZRider_EditorLoad(void) { ERZRider->aniFrames = RSDK.LoadSpriteAnimation("Phantom/PhantomRider.bin", SCOPE_STAGE); }

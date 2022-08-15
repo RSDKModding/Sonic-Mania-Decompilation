@@ -63,10 +63,10 @@ void BurningLog_StageLoad(void)
     if (RSDK.CheckSceneFolder("GHZ"))
         BurningLog->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Fireball.bin", SCOPE_STAGE);
 
-    BurningLog->hitboxPlatform.left    = -8;
-    BurningLog->hitboxPlatform.top     = -8;
-    BurningLog->hitboxPlatform.right   = 8;
-    BurningLog->hitboxPlatform.bottom  = 8;
+    BurningLog->hitboxPlatform.left   = -8;
+    BurningLog->hitboxPlatform.top    = -8;
+    BurningLog->hitboxPlatform.right  = 8;
+    BurningLog->hitboxPlatform.bottom = 8;
 
     BurningLog->hitboxFlame.left   = -8;
     BurningLog->hitboxFlame.top    = -16;

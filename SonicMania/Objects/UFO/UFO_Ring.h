@@ -32,7 +32,7 @@ void UFO_Ring_Update(void);
 void UFO_Ring_LateUpdate(void);
 void UFO_Ring_StaticUpdate(void);
 void UFO_Ring_Draw(void);
-void UFO_Ring_Create(void* data);
+void UFO_Ring_Create(void *data);
 void UFO_Ring_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UFO_Ring_EditorDraw(void);
@@ -43,9 +43,9 @@ void UFO_Ring_Serialize(void);
 // Extra Entity Functions
 void UFO_Ring_PlayRingSfx(void);
 void UFO_Ring_LoseRings(EntityUFO_Player *player);
-//States
+// States
 void UFO_Ring_State_NormalRing(void);
 void UFO_Ring_State_Sparkle(void);
 void UFO_Ring_State_LoseRing(void);
 
-#endif //!OBJ_UFO_RING_H
+#endif //! OBJ_UFO_RING_H

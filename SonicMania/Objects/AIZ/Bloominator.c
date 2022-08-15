@@ -106,7 +106,7 @@ void Bloominator_State_Init(void)
     self->active = ACTIVE_NORMAL;
     self->timer  = 0;
 
-    self->state  = Bloominator_State_Idle;
+    self->state = Bloominator_State_Idle;
     Bloominator_State_Idle();
 }
 

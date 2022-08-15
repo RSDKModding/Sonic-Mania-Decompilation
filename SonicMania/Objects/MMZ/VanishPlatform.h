@@ -5,7 +5,7 @@
 
 // Object Class
 struct ObjectVanishPlatform {
-	RSDK_OBJECT
+    RSDK_OBJECT
 };
 
 // Entity Class
@@ -24,7 +24,7 @@ void VanishPlatform_Update(void);
 void VanishPlatform_LateUpdate(void);
 void VanishPlatform_StaticUpdate(void);
 void VanishPlatform_Draw(void);
-void VanishPlatform_Create(void* data);
+void VanishPlatform_Create(void *data);
 void VanishPlatform_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void VanishPlatform_EditorDraw(void);
@@ -36,4 +36,4 @@ void VanishPlatform_Serialize(void);
 void VanishPlatform_State_Appear(void);
 void VanishPlatform_State_Disappear(void);
 
-#endif //!OBJ_VANISHPLATFORM_H
+#endif //! OBJ_VANISHPLATFORM_H

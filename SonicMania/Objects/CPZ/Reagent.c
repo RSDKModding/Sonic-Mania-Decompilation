@@ -40,8 +40,8 @@ void Reagent_Create(void *data)
         self->inkEffect     = INK_ALPHA;
         self->alpha         = 0xC0;
         self->velocity.x    = ZONE_RAND(-0xC000, 0xC000);
-        self->type  = VOID_TO_INT(data);
-        self->state = Reagent_State_CheckPoolCollisions;
+        self->type          = VOID_TO_INT(data);
+        self->state         = Reagent_State_CheckPoolCollisions;
 
         switch (self->type) {
             case CHEMICALPOOL_BLUE:

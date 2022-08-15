@@ -253,8 +253,8 @@ void EggJanken_Explode(void)
     if (!(Zone->timer % 3)) {
         RSDK.PlaySfx(EggJanken->sfxExplosion, false, 255);
         if (Zone->timer & 4) {
-            int32 x                                                               = self->position.x + (RSDK.Rand(-24, 24) << 16);
-            int32 y                                                               = self->position.y + (RSDK.Rand(-24, 24) << 16);
+            int32 x                                                                 = self->position.x + (RSDK.Rand(-24, 24) << 16);
+            int32 y                                                                 = self->position.y + (RSDK.Rand(-24, 24) << 16);
             CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), x, y)->drawGroup = Zone->objectDrawGroup[1];
         }
     }
@@ -502,7 +502,8 @@ void EggJanken_State_InitialArmRaise(void)
     }
 }
 
-void EggJanken_State_None(void) {
+void EggJanken_State_None(void)
+{
     // we just chillin tbh
 }
 
@@ -1010,11 +1011,13 @@ void EggJanken_Eyes_ChangeSlots(void)
     }
 }
 
-void EggJanken_Eyes_None(void) {
+void EggJanken_Eyes_None(void)
+{
     // we are NOT playing Janken rn..
 }
 
-void EggJanken_Arm_None(void) {
+void EggJanken_Arm_None(void)
+{
     // no arm movement
 }
 

@@ -12,7 +12,7 @@ typedef enum {
 
 // Object Class
 struct ObjectPlatformControl {
-	RSDK_OBJECT
+    RSDK_OBJECT
 };
 
 // Entity Class
@@ -36,7 +36,7 @@ void PlatformControl_Update(void);
 void PlatformControl_LateUpdate(void);
 void PlatformControl_StaticUpdate(void);
 void PlatformControl_Draw(void);
-void PlatformControl_Create(void* data);
+void PlatformControl_Create(void *data);
 void PlatformControl_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PlatformControl_EditorDraw(void);
@@ -47,4 +47,4 @@ void PlatformControl_Serialize(void);
 // Extra Entity Functions
 void PlatformControl_ManagePlatformVelocity(EntityPlatform *platform, EntityPlatformNode *node);
 
-#endif //!OBJ_PLATFORMCONTROL_H
+#endif //! OBJ_PLATFORMCONTROL_H

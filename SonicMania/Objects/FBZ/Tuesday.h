@@ -6,7 +6,7 @@
 typedef enum {
     TUESDAY_GONDOLA,
     TUESDAY_NODE,
-}TuesdayTypes;
+} TuesdayTypes;
 
 // Object Class
 struct ObjectTuesday {
@@ -51,7 +51,7 @@ void Tuesday_Update(void);
 void Tuesday_LateUpdate(void);
 void Tuesday_StaticUpdate(void);
 void Tuesday_Draw(void);
-void Tuesday_Create(void* data);
+void Tuesday_Create(void *data);
 void Tuesday_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Tuesday_EditorDraw(void);
@@ -69,4 +69,4 @@ void Tuesday_State_Node(void);
 void Tuesday_State_Destroyed(void);
 void Tuesday_State_Debris(void);
 
-#endif //!OBJ_TUESDAY_H
+#endif //! OBJ_TUESDAY_H

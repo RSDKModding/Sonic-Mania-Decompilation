@@ -216,10 +216,10 @@ void PlatformControl_Create(void *data)
             if ((Button && taggedButton->classID == Button->classID) || (SDashWheel && taggedButton->classID == SDashWheel->classID)
                 || (PullChain && taggedButton->classID == PullChain->classID)) {
                 self->taggedButton = taggedButton;
-                if (self->updateRange.x < TO_FIXED(128) + abs(self->position.x - taggedButton->position.x)) 
+                if (self->updateRange.x < TO_FIXED(128) + abs(self->position.x - taggedButton->position.x))
                     self->updateRange.x = TO_FIXED(128) + abs(self->position.x - taggedButton->position.x);
 
-                if (self->updateRange.y < TO_FIXED(128) + abs(self->position.y - taggedButton->position.y)) 
+                if (self->updateRange.y < TO_FIXED(128) + abs(self->position.y - taggedButton->position.y))
                     self->updateRange.y = TO_FIXED(128) + abs(self->position.y - taggedButton->position.y);
             }
         }
@@ -315,10 +315,10 @@ void PlatformControl_EditorDraw(void)
             if ((Button && taggedButton->classID == Button->classID) || (SDashWheel && taggedButton->classID == SDashWheel->classID)
                 || (PullChain && taggedButton->classID == PullChain->classID)) {
                 self->taggedButton = taggedButton;
-                if (self->updateRange.x < TO_FIXED(128) + abs(self->position.x - taggedButton->position.x)) 
+                if (self->updateRange.x < TO_FIXED(128) + abs(self->position.x - taggedButton->position.x))
                     self->updateRange.x = TO_FIXED(128) + abs(self->position.x - taggedButton->position.x);
 
-                if (self->updateRange.y < TO_FIXED(128) + abs(self->position.y - taggedButton->position.y)) 
+                if (self->updateRange.y < TO_FIXED(128) + abs(self->position.y - taggedButton->position.y))
                     self->updateRange.y = TO_FIXED(128) + abs(self->position.y - taggedButton->position.y);
             }
         }
@@ -348,7 +348,7 @@ void PlatformControl_EditorDraw(void)
             }
         }*/
 
-        int32 platformSlot  = startNodeSlot + self->nodeCount;
+        int32 platformSlot = startNodeSlot + self->nodeCount;
         for (int32 c = 0; c < self->childCount; ++c) {
             EntityPlatform *platform = RSDK_GET_ENTITY(platformSlot, Platform);
             platformSlot++;
@@ -358,7 +358,6 @@ void PlatformControl_EditorDraw(void)
                 DrawHelpers_DrawArrow(self->position.x, self->position.y, platform->position.x, platform->position.y, 0xFFFFFF, INK_NONE, 0xFF);
             }
         }
-
 
         RSDK_DRAWING_OVERLAY(false);
     }

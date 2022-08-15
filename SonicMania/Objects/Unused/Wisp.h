@@ -30,7 +30,7 @@ void Wisp_Update(void);
 void Wisp_LateUpdate(void);
 void Wisp_StaticUpdate(void);
 void Wisp_Draw(void);
-void Wisp_Create(void* data);
+void Wisp_Create(void *data);
 void Wisp_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Wisp_EditorDraw(void);
@@ -50,4 +50,4 @@ void Wisp_State_Idle(void);
 void Wisp_State_FlyTowardTarget(void);
 void Wisp_State_FlyAway(void);
 
-#endif //!OBJ_WISP_H
+#endif //! OBJ_WISP_H

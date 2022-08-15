@@ -74,7 +74,7 @@ void Ice_Create(void *data)
                     self->hitboxPlayerBlockCheck.bottom = 0;
 
                     self->glintTimer = 240;
-                    self->alpha        = 0x80;
+                    self->alpha      = 0x80;
 
                     RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PILLARBLOCK, &self->blockAnimator, true, 0);
                     RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PILLARGLINT, &self->glintAnimator, true, 0);
@@ -251,7 +251,7 @@ void Ice_Create(void *data)
                         switch (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->characterID) {
                             default:
                             case ID_SONIC: break;
-                            
+
                             case ID_TAILS: ++self->altContentsAnimator.frameID; break;
                             case ID_KNUCKLES: self->altContentsAnimator.frameID += 2; break;
 #if MANIA_USE_PLUS
@@ -515,11 +515,11 @@ void Ice_PlayerState_Frozen(void)
                     Ice_ShatterGenerator(64, 24, 20, 0, 0, 2);
                     RSDK.PlaySfx(Ice->sfxWindowShatter, false, 255);
                     Ice->playerTimers[RSDK.GetEntitySlot(self)] = 30;
-                    self->skidding                            = 0;
-                    self->pushing                             = 0;
-                    self->timer                               = 0;
-                    self->abilityTimer                        = 0;
-                    self->spindashCharge                      = 0;
+                    self->skidding                              = 0;
+                    self->pushing                               = 0;
+                    self->timer                                 = 0;
+                    self->abilityTimer                          = 0;
+                    self->spindashCharge                        = 0;
                 }
                 else {
                     Ice_ShatterGenerator(8, 24, 20, 0, 0, false);
@@ -893,7 +893,7 @@ void Ice_State_IceBlock(void)
                         }
                     }
                     break;
-                    
+
                 case C_BOTTOM:
                     if (self->bottomSmash) {
                         Ice_Shatter(self, 0, 0);
@@ -908,7 +908,7 @@ void Ice_State_IceBlock(void)
             player->position.y = playerY;
             self->position.x -= self->playerMoveOffset.x;
             self->position.y -= self->playerMoveOffset.y;
-            
+
 #if MANIA_USE_PLUS
             int32 prevVel = player->velocity.y;
 #endif
@@ -1244,9 +1244,8 @@ void Ice_State_PlayerBlock(void)
 
     foreach_active(Player, player)
     {
-        if (player != self->playerPtr && player->stateInput != Player_Input_P2_AI && player->state != Ice_PlayerState_Frozen
-            && player->velocity.y > 0 && !player->onGround && player->position.y < self->position.y - 0x200000
-            && Player_CheckBadnikTouch(player, self, &self->hitboxBlock)) {
+        if (player != self->playerPtr && player->stateInput != Player_Input_P2_AI && player->state != Ice_PlayerState_Frozen && player->velocity.y > 0
+            && !player->onGround && player->position.y < self->position.y - 0x200000 && Player_CheckBadnikTouch(player, self, &self->hitboxBlock)) {
             if (player->animator.animationID == ANI_JUMP || player->animator.animationID == ANI_DROPDASH) {
                 Ice_BreakPlayerBlock(self->playerPtr);
                 player->velocity.y = -0x30000;

@@ -202,10 +202,10 @@ void DASetup_State_ManageControl(void)
 
     if (!DASetup->returnToMenu && UIControl->anyBackPress) {
         DASetup->returnToMenu = true;
-        
-        EntityFXFade *fade    = DASetup->fxFade;
-        fade->state           = FXFade_State_FadeOut;
-        fade->timer           = 0;
+
+        EntityFXFade *fade = DASetup->fxFade;
+        fade->state        = FXFade_State_FadeOut;
+        fade->timer        = 0;
     }
 }
 

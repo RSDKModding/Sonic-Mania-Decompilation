@@ -116,23 +116,23 @@ void Drillerdroid_StageLoad(void)
     Drillerdroid->hitboxDrillR.right  = 58;
     Drillerdroid->hitboxDrillR.bottom = 53;
 
-    Drillerdroid->pistonPos[0]     = 0;
-    Drillerdroid->pistonPos[1]     = 0;
+    Drillerdroid->pistonPos[0] = 0;
+    Drillerdroid->pistonPos[1] = 0;
 
-    Drillerdroid->drillPos[0]      = 0x100000;
-    Drillerdroid->drillPos[1]      = 0x100000;
+    Drillerdroid->drillPos[0] = 0x100000;
+    Drillerdroid->drillPos[1] = 0x100000;
 
-    Drillerdroid->pistonDelay[0]   = 4;
-    Drillerdroid->pistonDelay[1]   = 0;
+    Drillerdroid->pistonDelay[0] = 4;
+    Drillerdroid->pistonDelay[1] = 0;
 
-    Drillerdroid->drillDelay[0]    = 4;
-    Drillerdroid->drillDelay[1]    = 0;
+    Drillerdroid->drillDelay[0] = 4;
+    Drillerdroid->drillDelay[1] = 0;
 
     Drillerdroid->pistonMoveDir[0] = 0;
     Drillerdroid->pistonMoveDir[1] = 0;
 
-    Drillerdroid->drillMoveDir[0]  = 0;
-    Drillerdroid->drillMoveDir[1]  = 0;
+    Drillerdroid->drillMoveDir[0] = 0;
+    Drillerdroid->drillMoveDir[1] = 0;
 
     Drillerdroid->platformActive[0] = true;
     Drillerdroid->platformActive[1] = true;
@@ -309,9 +309,9 @@ void Drillerdroid_State_AwaitPlayer(void)
         Zone->cameraBoundsL[0]      = (self->position.x >> 16) - 328;
 
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
-        self->health                                                                                        = 6;
+        self->health                                                                                          = 6;
         CREATE_ENTITY(Drillerdroid, INT_TO_VOID(DRILLERDROID_TARGET), self->position.x, self->startY)->target = player1;
-        self->position.x                                                                                    = 0;
+        self->position.x                                                                                      = 0;
         RSDK.PlaySfx(Drillerdroid->sfxTargeting, false, 255);
         self->state = Drillerdroid_State_DecidingDropPos;
     }
@@ -589,8 +589,8 @@ void Drillerdroid_State_Drilling(void)
             debris->updateRange.y   = 0x400000;
         }
         else {
-            int32 x                      = (48 * RSDK.Rand(0, ScreenInfo->size.x / 48) + Drillerdroid->stalatiteOffset + ScreenInfo->position.x) << 16;
-            int32 y                      = (ScreenInfo->position.y + 24) << 16;
+            int32 x = (48 * RSDK.Rand(0, ScreenInfo->size.x / 48) + Drillerdroid->stalatiteOffset + ScreenInfo->position.x) << 16;
+            int32 y = (ScreenInfo->position.y + 24) << 16;
             EntityStalactite *stalactite = CREATE_ENTITY(Stalactite, Stalactite_State_Falling_Boss, x, y);
 
             stalactite->updateRange.x = 0x400000;

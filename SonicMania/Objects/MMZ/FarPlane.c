@@ -90,7 +90,7 @@ void FarPlane_StageLoad(void)
         farPlane->drawGroup[0]     = DRAWGROUP_COUNT;
         farPlane->scanlineCallback = FarPlane_Scanline_FarPlaneView;
 
-        RSDK.GetTileLayer(Zone->fgLayer[0])->drawGroup[0]  = 2;
+        RSDK.GetTileLayer(Zone->fgLayer[0])->drawGroup[0] = 2;
         RSDK.GetTileLayer(Zone->fgLayer[1])->drawGroup[0] = 7;
 
         RSDK.SetDrawGroupProperties(1, false, StateMachine_None);

@@ -45,7 +45,7 @@ void ERZStart_Serialize(void);
 
 // Extra Entity Functions
 void ERZStart_SetupObjects(void);
-void ERZStart_HandlePlayerHover(EntityCutsceneSeq *seq, EntityPlayer *player, int posY);
+void ERZStart_HandlePlayerHover(EntityCutsceneSeq *seq, EntityPlayer *player, int32 posY);
 
 bool32 ERZStart_Cutscene_FadeIn(EntityCutsceneSeq *host);
 bool32 ERZStart_Cutscene_ShrinkRubyWarpFX(EntityCutsceneSeq *host);

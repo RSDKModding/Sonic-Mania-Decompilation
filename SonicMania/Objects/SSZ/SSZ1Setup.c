@@ -35,8 +35,8 @@ void SSZ1Setup_StageLoad(void)
     }
     memcpy(&SSZ1Setup->background2->deformationData[0x200], &SSZ1Setup->background2->deformationData[0], 0x200 * sizeof(int32));
 
-    Animals->animalTypes[0]      = ANIMAL_FLICKY;
-    Animals->animalTypes[1]      = ANIMAL_RICKY;
+    Animals->animalTypes[0] = ANIMAL_FLICKY;
+    Animals->animalTypes[1] = ANIMAL_RICKY;
 
     GenericTrigger->callbacks[GENERICTRIGGER_SSZ1_DESTROYHOTARUMKII] = SSZ1Outro_Trigger_DestroyHotarus;
 

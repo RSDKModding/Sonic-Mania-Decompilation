@@ -51,7 +51,7 @@ void UFO_Setup_Update(void);
 void UFO_Setup_LateUpdate(void);
 void UFO_Setup_StaticUpdate(void);
 void UFO_Setup_Draw(void);
-void UFO_Setup_Create(void* data);
+void UFO_Setup_Create(void *data);
 void UFO_Setup_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UFO_Setup_EditorDraw(void);
@@ -76,4 +76,4 @@ void UFO_Setup_State_FinishFadeout(void);
 void UFO_Setup_State_HandleRingDrain(void);
 void UFO_Setup_State_TimedOver(void);
 
-#endif //!OBJ_UFO_SETUP_H
+#endif //! OBJ_UFO_SETUP_H

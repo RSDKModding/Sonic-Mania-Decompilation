@@ -207,8 +207,8 @@ void UIChoice_TouchedCB_Right(void)
     EntityUIButton *choice = UIButton_GetChoicePtr(parent, selection);
 
     while ((choice && choice->disabled) && selection != parent->selection) {
-        selection              = (selection + 1) % parent->choiceCount;
-        choice = UIButton_GetChoicePtr(parent, selection);
+        selection = (selection + 1) % parent->choiceCount;
+        choice    = UIButton_GetChoicePtr(parent, selection);
     }
 
     if (selection != parent->selection) {

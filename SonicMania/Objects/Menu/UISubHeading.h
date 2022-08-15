@@ -37,7 +37,7 @@ void UISubHeading_Update(void);
 void UISubHeading_LateUpdate(void);
 void UISubHeading_StaticUpdate(void);
 void UISubHeading_Draw(void);
-void UISubHeading_Create(void* data);
+void UISubHeading_Create(void *data);
 void UISubHeading_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UISubHeading_EditorDraw(void);
@@ -61,4 +61,4 @@ void UISubHeading_SaveSel_YPressCB(void);
 void UISubHeading_SaveButton_ActionCB(void);
 #endif
 
-#endif //!OBJ_UISUBHEADING_H
+#endif //! OBJ_UISUBHEADING_H

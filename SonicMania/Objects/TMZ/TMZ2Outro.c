@@ -312,7 +312,7 @@ bool32 TMZ2Outro_Cutscene_StartRubyRampage(EntityCutsceneSeq *host)
     if (host->timer == 60) {
         foreach_active(PhantomRuby, ruby)
         {
-            int pos           = ScreenInfo->position.x + (SaveGame->saveRAM->chaosEmeralds == 0b01111111 ? 64 : 96);
+            int32 pos         = ScreenInfo->position.x + (SaveGame->saveRAM->chaosEmeralds == 0b01111111 ? 64 : 96);
             ruby->startPos.x  = pos << 16;
             ruby->startPos.y  = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
             ruby->velocity.y  = 0;
@@ -349,7 +349,7 @@ bool32 TMZ2Outro_Cutscene_StartRubyRampage(EntityCutsceneSeq *host)
             alert->state = TMZAlert_State_Activating;
         }
 
-        for (int i = 0; i < 7; ++i) RSDK.SetPaletteEntry(2, i - 96, TMZ2Outro->colors[i]);
+        for (int32 i = 0; i < 7; ++i) RSDK.SetPaletteEntry(2, i - 96, TMZ2Outro->colors[i]);
 
         if (SaveGame->saveRAM->chaosEmeralds == 0b01111111) {
             CREATE_ENTITY(RubyPortal, RubyPortal_State_EncoreEnd, (ScreenInfo->position.x + 64) << 16,
@@ -622,8 +622,8 @@ bool32 TMZ2Outro_Cutscene_TeamEscape(EntityCutsceneSeq *host)
         RSDK.ResetEntity(sparkle, SuperSparkle->classID, player1);
 
         Player->playerCount = 6;
-        int offsetX         = 0;
-        for (int i = 0; i < Player->playerCount; ++i) {
+        int32 offsetX       = 0;
+        for (int32 i = 0; i < Player->playerCount; ++i) {
             if (i != 2) {
                 EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
                 player->groundVel    = 0x100000;

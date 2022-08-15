@@ -1607,7 +1607,7 @@ void MetalSonic_State_StartSpikeWallMovement(void)
 
     self->timer++;
     if (self->timer == 90) {
-        int slot = SceneInfo->entitySlot;
+        int32 slot = SceneInfo->entitySlot;
         RSDK_GET_ENTITY(slot + 2, Platform)->state = MetalSonic_StateWall_Move;
         RSDK_GET_ENTITY(slot + 3, Platform)->state = MetalSonic_StateWall_Move;
         RSDK_GET_ENTITY(slot + 4, Platform)->state = MetalSonic_StateWall_Move;
@@ -1634,7 +1634,7 @@ void MetalSonic_State_AccelerateSpikeWall(void)
         Vector2 size;
         RSDK.GetLayerSize(Zone->fgLayer[0], &size, true);
 
-        for (int i = 0; i < PLAYER_COUNT; ++i) {
+        for (int32 i = 0; i < PLAYER_COUNT; ++i) {
             Zone->cameraBoundsL[i] = 0;
             Zone->cameraBoundsR[i] = size.x + 0x400;
             Zone->playerBoundActiveL[i] = false;
@@ -2075,7 +2075,8 @@ void MetalSonic_State_Finish(void)
     }
 }
 
-void MetalSonic_State_None(void) {
+void MetalSonic_State_None(void)
+{
     // common preplus L
 }
 

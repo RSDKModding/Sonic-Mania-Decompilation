@@ -146,7 +146,8 @@ void PuyoAI_PrepareAction(int32 playerID)
     }
 }
 
-int PuyoAI_GetChainComboSize(int32 playerID, EntityPuyoBean *bean, EntityPuyoBean *partner, int32 beanX, int32 beanY, int32 partnerX, int32 partnerY)
+int32 PuyoAI_GetChainComboSize(int32 playerID, EntityPuyoBean *bean, EntityPuyoBean *partner, int32 beanX, int32 beanY, int32 partnerX,
+                               int32 partnerY)
 {
     for (int32 i = 0; i < (PUYO_PLAYFIELD_W * PUYO_PLAYFIELD_H); ++i) PuyoBean->beanLinkTable[i] = false;
 

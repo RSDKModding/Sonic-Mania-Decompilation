@@ -12,7 +12,7 @@ typedef enum {
     HEAVYGUNNER_MISSILE_F,
     HEAVYGUNNER_MISSILE,
     HEAVYGUNNER_ESCAPE_HBH,
-}HeavyGunnerTypes;
+} HeavyGunnerTypes;
 
 // Object Class
 struct ObjectHeavyGunner {
@@ -79,7 +79,7 @@ void HeavyGunner_Update(void);
 void HeavyGunner_LateUpdate(void);
 void HeavyGunner_StaticUpdate(void);
 void HeavyGunner_Draw(void);
-void HeavyGunner_Create(void* data);
+void HeavyGunner_Create(void *data);
 void HeavyGunner_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void HeavyGunner_EditorDraw(void);
@@ -92,7 +92,7 @@ bool32 HeavyGunner_SfxCheck_HeliProp(void);
 bool32 HeavyGunner_SfxCheck_HBHSurprise(void);
 bool32 HeavyGunner_SfxCheck_RocketBurn(void);
 
-void HeavyGunner_HandleBGWrap(int multiplier);
+void HeavyGunner_HandleBGWrap(int32 multiplier);
 void HeavyGunner_DestroyAllMissiles(void);
 
 void HeavyGunner_Draw_Heli(void);
@@ -141,4 +141,4 @@ void HeavyGunner_StateEscapeHBH_FlyAway(void);
 
 void HeavyGunner_StateHeli_FadeOutDestroy(void);
 
-#endif //!OBJ_HEAVYGUNNER_H
+#endif //! OBJ_HEAVYGUNNER_H

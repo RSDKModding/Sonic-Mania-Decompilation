@@ -112,7 +112,7 @@ void UIControl_Update(void);
 void UIControl_LateUpdate(void);
 void UIControl_StaticUpdate(void);
 void UIControl_Draw(void);
-void UIControl_Create(void* data);
+void UIControl_Create(void *data);
 void UIControl_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UIControl_EditorDraw(void);
@@ -147,4 +147,4 @@ void UIControl_HandlePosition(void);
 void UIControl_ProcessInputs(void);
 void UIControl_ProcessButtonInput(void);
 
-#endif //!OBJ_UICONTROL_H
+#endif //! OBJ_UICONTROL_H

@@ -117,7 +117,7 @@ void Wisp_State_Init(void)
     self->velocity.x = 0;
     self->velocity.y = 0;
 
-    self->state      = Wisp_State_Idle;
+    self->state = Wisp_State_Idle;
     Wisp_State_Idle();
 }
 

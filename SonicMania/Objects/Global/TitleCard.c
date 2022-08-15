@@ -32,9 +32,9 @@ void TitleCard_Create(void *data)
     RSDK_THIS(TitleCard);
 
     if (!SceneInfo->inEditor) {
-        self->active      = ACTIVE_ALWAYS;
-        self->visible     = true;
-        self->drawGroup   = Zone->hudDrawGroup;
+        self->active    = ACTIVE_ALWAYS;
+        self->visible   = true;
+        self->drawGroup = Zone->hudDrawGroup;
 #if MANIA_USE_PLUS
         self->enableIntro = globals->enableIntro;
 
@@ -109,7 +109,7 @@ void TitleCard_Create(void *data)
 
             if (player->invincibleTimer > 0 && player->superState != SUPERSTATE_SUPER)
                 RSDK.ResetEntity(RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), InvincibleStars), InvincibleStars->classID,
-                                    player);
+                                 player);
 
             if (player->speedShoesTimer > 0 || player->superState == SUPERSTATE_SUPER)
                 RSDK.ResetEntity(RSDK_GET_ENTITY(2 * Player->playerCount + RSDK.GetEntitySlot(player), ImageTrail), ImageTrail->classID, player);
@@ -649,7 +649,7 @@ void TitleCard_State_Supressed(void)
         destroyEntity(self);
         globals->suppressTitlecard = false;
     }
-#else 
+#else
     if (globals->suppressTitlecard > true || globals->gameMode == MODE_TIMEATTACK) {
         destroyEntity(self);
         globals->suppressTitlecard = false;

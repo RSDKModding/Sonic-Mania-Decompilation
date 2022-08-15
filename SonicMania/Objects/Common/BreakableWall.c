@@ -364,7 +364,7 @@ void BreakableWall_CheckBreak_Floor(void)
 #if MANIA_USE_PLUS
         int32 velY = player->velocity.y;
 #endif
-        
+
         if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP) {
 #if MANIA_USE_PLUS
             if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_HAMMERDROP)) {
@@ -428,7 +428,7 @@ void BreakableWall_CheckBreak_BurrowFloor(void)
     foreach_active(Player, player)
     {
 #if MANIA_USE_PLUS
-        int32 velY      = player->velocity.y;
+        int32 velY = player->velocity.y;
 #endif
         bool32 onGround = player->onGround;
 
@@ -637,7 +637,7 @@ void BreakableWall_Break(EntityBreakableWall *self, uint8 direction)
                 }
 
                 case FLIP_Y: {
-                    int32 angle = RSDK.ATan2(angleX, curY);
+                    int32 angle    = RSDK.ATan2(angleX, curY);
                     int32 velocity = (abs(curX) + 3 * abs(curY)) >> 18;
 
                     tile->velocity.x += 40 * velocity * RSDK.Cos256(angle);

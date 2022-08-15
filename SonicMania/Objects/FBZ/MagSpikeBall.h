@@ -24,7 +24,7 @@ void MagSpikeBall_Update(void);
 void MagSpikeBall_LateUpdate(void);
 void MagSpikeBall_StaticUpdate(void);
 void MagSpikeBall_Draw(void);
-void MagSpikeBall_Create(void* data);
+void MagSpikeBall_Create(void *data);
 void MagSpikeBall_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MagSpikeBall_EditorDraw(void);
@@ -34,5 +34,4 @@ void MagSpikeBall_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_MAGSPIKEBALL_H
+#endif //! OBJ_MAGSPIKEBALL_H

@@ -423,7 +423,7 @@ void Woodrow_EditorDraw(void)
         self->distDown = self->position.y + (self->distDown << 16);
 
         self->inkEffect = INK_BLEND;
-        
+
         if (self->distUp) {
             self->position.y = self->distUp;
             Woodrow_Draw();

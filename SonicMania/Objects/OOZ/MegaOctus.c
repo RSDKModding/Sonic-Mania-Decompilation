@@ -453,8 +453,8 @@ void MegaOctus_State_SetupArena(void)
 
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->origin.x) {
         RSDK.GetTileLayer(Zone->fgLayer[0])->drawGroup[0] = 2;
-        Zone->playerBoundActiveL[0]                  = true;
-        Zone->cameraBoundsL[0]                       = (self->position.x >> 16) - 192;
+        Zone->playerBoundActiveL[0]                       = true;
+        Zone->cameraBoundsL[0]                            = (self->position.x >> 16) - 192;
 
         Music_TransitionTrack(TRACK_EGGMAN1, 0.0075);
 
@@ -475,7 +475,8 @@ void MegaOctus_State_SetupArena(void)
     }
 }
 
-void MegaOctus_State_None(void) {
+void MegaOctus_State_None(void)
+{
     // :3
 }
 
@@ -579,7 +580,7 @@ void MegaOctus_State_SpawnWeapons(void)
         }
     }
     else if (self->timer <= 0) {
-        self->timer                                                                                                   = 480;
+        self->timer                                                                                                     = 480;
         CREATE_ENTITY(MegaOctus, INT_TO_VOID(MEGAOCTUS_CANNON), self->position.x, self->origin.y + 0x400000)->direction = self->direction;
         self->state = MegaOctus_State_CannonThenSpawnOrbs;
     }
@@ -1259,7 +1260,8 @@ void MegaOctus_StateArm_GrabPlatform(void)
 #if MANIA_USE_PLUS
                 self->tilePlatY = platform->position.y;
 #endif
-                RSDK.CopyTileLayer(Zone->fgLayer[0], (platform->position.x >> 20) - 4, (platform->position.y >> 20) - 2, Zone->moveLayer, 10, 1, 8, 5);
+                RSDK.CopyTileLayer(Zone->fgLayer[0], (platform->position.x >> 20) - 4, (platform->position.y >> 20) - 2, Zone->moveLayer, 10, 1, 8,
+                                   5);
             }
         }
 
@@ -1416,7 +1418,7 @@ void MegaOctus_Draw_Arm_WrapAroundPlatformTop(void)
     Vector2 drawPos = self->position;
     int32 count     = (self->shotCount - 1) / 0x6000 + 1;
 
-    int32 angle     = self->angle;
+    int32 angle      = self->angle;
     uint8 checkAngle = self->angle - 0x40;
     for (int32 i = 0; i < count; ++i) {
         pos += 0x6000;

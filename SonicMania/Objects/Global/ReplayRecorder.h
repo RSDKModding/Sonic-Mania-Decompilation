@@ -8,7 +8,7 @@
 // no clue what this is...
 // most signatures are recognisable like "SCN" for scenes
 // but as far as I can tell, this one is just random numbers?
-#define REPLAY_SIGNATURE   (0xF6057BED)
+#define REPLAY_SIGNATURE (0xF6057BED)
 
 #define REPLAY_BUFFER_SIZE (0x100000)
 

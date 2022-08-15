@@ -42,11 +42,11 @@ void CutsceneSeq_LateUpdate(void)
 
     self->visible = false;
     for (int32 p = 0; p < CUTSCENESEQ_POINT_COUNT; ++p) {
-        if (self->points[p].x && self->points[p].y) 
+        if (self->points[p].x && self->points[p].y)
             self->visible = true;
     }
 
-    if (self->fadeWhite > 0 || self->fadeBlack > 0) 
+    if (self->fadeWhite > 0 || self->fadeBlack > 0)
         self->visible = true;
 }
 

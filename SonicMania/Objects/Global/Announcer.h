@@ -61,7 +61,7 @@ void Announcer_Update(void);
 void Announcer_LateUpdate(void);
 void Announcer_StaticUpdate(void);
 void Announcer_Draw(void);
-void Announcer_Create(void* data);
+void Announcer_Create(void *data);
 void Announcer_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Announcer_EditorDraw(void);
@@ -82,4 +82,4 @@ void Announcer_State_AnnounceWinner(void);
 void Announcer_State_AnnounceDraw(void);
 void Announcer_State_AnnounceWinPlayer(void);
 
-#endif //!OBJ_ANNOUNCER_H
+#endif //! OBJ_ANNOUNCER_H

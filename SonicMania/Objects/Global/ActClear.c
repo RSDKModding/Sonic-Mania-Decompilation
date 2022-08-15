@@ -31,7 +31,7 @@ void ActClear_Draw(void)
     int32 seconds      = 0;
     int32 minutes      = 0;
 #endif
-    int32 offset       = 0;
+    int32 offset = 0;
 
     drawPos.x  = self->gotThroughPos.x;
     drawPos.y  = self->gotThroughPos.y;
@@ -325,7 +325,7 @@ void ActClear_Create(void *data)
 
         if (Zone_GetZoneID() > ZONE_INVALID) {
             uint16 time = TimeAttackData_GetPackedTime(SceneInfo->minutes, SceneInfo->seconds, SceneInfo->milliseconds);
-            
+
 #if MANIA_USE_PLUS
             StatInfo stat;
             switch (GET_CHARACTER_ID(1)) {
@@ -511,7 +511,7 @@ void ActClear_DrawNumbers(Vector2 *drawPos, int32 value, int32 digitCount)
 
                 drawPos->x -= TO_FIXED(9);
                 digit *= 10;
-            } 
+            }
         }
     }
     else {
@@ -570,7 +570,8 @@ void ActClear_SetupForceOnScreenP2(void)
                 Player_HandleSidekickRespawn();
                 SceneInfo->entity = entStore;
 
-                if (player2->state == Player_State_FlyToPlayer || player2->state == Player_State_ReturnToPlayer || player2->state == Player_State_HoldRespawn) {
+                if (player2->state == Player_State_FlyToPlayer || player2->state == Player_State_ReturnToPlayer
+                    || player2->state == Player_State_HoldRespawn) {
                     player2->active     = ACTIVE_NORMAL;
                     player2->position.y = TO_FIXED(ScreenInfo->position.y - 16);
                 }

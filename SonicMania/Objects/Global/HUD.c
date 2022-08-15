@@ -274,10 +274,10 @@ void HUD_Draw(void)
 #endif
 
     // Draw Life Icon (aka the Leader Icon if in encore mode)
-    drawPos.x           = lifePos.x;
-    drawPos.y           = lifePos.y;
+    drawPos.x = lifePos.x;
+    drawPos.y = lifePos.y;
 #if MANIA_USE_PLUS
-    int32 lives = self->lives[player->playerID];
+    int32 lives                    = self->lives[player->playerID];
     self->lifeIconAnimator.frameID = HUD_CharacterIndexFromID(player->characterID);
 
     if (self->lifeIconAnimator.frameID < 0) {
@@ -589,7 +589,7 @@ void HUD_GetButtonFrame(Animator *animator, int32 buttonID)
 #if MANIA_USE_PLUS
         int32 id = API_GetInputDeviceID(player->controllerID);
 #else
-        int32 id             = INPUT_NONE;
+        int32 id = INPUT_NONE;
 #endif
         int32 contID = id == INPUT_UNASSIGNED ? CONT_P1 : player->controllerID;
 

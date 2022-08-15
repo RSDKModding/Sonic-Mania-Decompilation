@@ -16,7 +16,7 @@ typedef enum {
     PRINTBLOCK_LETTER_D,
     PRINTBLOCK_LETTER_L,
     PRINTBLOCK_LETTER_U,
-}PrintBlockLetters;
+} PrintBlockLetters;
 
 // Object Class
 struct ObjectPrintBlock {
@@ -43,7 +43,7 @@ void PrintBlock_Update(void);
 void PrintBlock_LateUpdate(void);
 void PrintBlock_StaticUpdate(void);
 void PrintBlock_Draw(void);
-void PrintBlock_Create(void* data);
+void PrintBlock_Create(void *data);
 void PrintBlock_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PrintBlock_EditorDraw(void);
@@ -55,4 +55,4 @@ void PrintBlock_Serialize(void);
 void PrintBlock_State_Appear(void);
 void PrintBlock_State_Disappear(void);
 
-#endif //!OBJ_PRINTBLOCK_H
+#endif //! OBJ_PRINTBLOCK_H

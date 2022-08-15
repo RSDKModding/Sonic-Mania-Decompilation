@@ -38,7 +38,7 @@ void AIZKingClaw_Update(void);
 void AIZKingClaw_LateUpdate(void);
 void AIZKingClaw_StaticUpdate(void);
 void AIZKingClaw_Draw(void);
-void AIZKingClaw_Create(void* data);
+void AIZKingClaw_Create(void *data);
 void AIZKingClaw_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void AIZKingClaw_EditorDraw(void);
@@ -50,4 +50,4 @@ void AIZKingClaw_Serialize(void);
 void AIZKingClaw_HandleClawPositions(void);
 void AIZKingClaw_State_Grab(void);
 
-#endif //!OBJ_AIZKINGCLAW_H
+#endif //! OBJ_AIZKINGCLAW_H

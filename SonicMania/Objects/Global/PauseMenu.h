@@ -46,7 +46,7 @@ struct EntityPauseMenu {
     Animator animator;
     void (*fadeoutCB)(void);
     int32 unused1;
-    int32 unused2; // these may possibly be leftover or editor things 
+    int32 unused2; // these may possibly be leftover or editor things
 };
 
 // Object Struct
@@ -57,7 +57,7 @@ void PauseMenu_Update(void);
 void PauseMenu_LateUpdate(void);
 void PauseMenu_StaticUpdate(void);
 void PauseMenu_Draw(void);
-void PauseMenu_Create(void* data);
+void PauseMenu_Create(void *data);
 void PauseMenu_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PauseMenu_EditorDraw(void);
@@ -97,7 +97,7 @@ void PauseMenu_ExitFadeCB(void);
 
 void PauseMenu_ActionCB_Button(void);
 
-//States
+// States
 void PauseMenu_State_SetupButtons(void);
 
 void PauseMenu_State_StartPause(void);
@@ -121,4 +121,4 @@ void PauseMenu_Draw_RegularPause(void);
 
 void PauseMenu_Draw_ForcePause(void);
 
-#endif //!OBJ_PAUSEMENU_H
+#endif //! OBJ_PAUSEMENU_H

@@ -286,7 +286,7 @@ void DrillerdroidO_Explode(void)
     }
 }
 
-void DrillerdroidO_SpawnDebris(int offset)
+void DrillerdroidO_SpawnDebris(int32 offset)
 {
     RSDK_THIS(DrillerdroidO);
 

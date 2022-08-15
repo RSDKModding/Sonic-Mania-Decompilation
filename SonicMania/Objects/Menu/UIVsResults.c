@@ -288,7 +288,8 @@ void UIVsResults_DrawResults(void)
 #endif
 }
 
-void UIVsResults_State_Blank(void) {
+void UIVsResults_State_Blank(void)
+{
     // Everyone loses
 }
 

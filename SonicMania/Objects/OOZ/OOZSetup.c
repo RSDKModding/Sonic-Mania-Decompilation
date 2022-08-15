@@ -441,7 +441,7 @@ bool32 OOZSetup_StartFire(int32 posX, int32 posY, int32 angle)
             if (i + 1 > OOZSetup->flameCount)
                 OOZSetup->flameCount = i + 1;
 
-            OOZSetup->flameTimers[pos]                                                                                   = 0xF0;
+            OOZSetup->flameTimers[pos]                                                                                     = 0xF0;
             CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), self->position.x, self->position.y - 0x60000)->drawGroup = self->drawGroup;
 
             return true;

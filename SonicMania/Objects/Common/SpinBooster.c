@@ -207,8 +207,7 @@ int32 SpinBooster_GetRollDir(EntityPlayer *player)
                 }
             }
 
-        default: 
-            break;
+        default: break;
     }
 
     return -1;

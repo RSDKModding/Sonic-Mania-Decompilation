@@ -29,7 +29,7 @@ typedef enum {
 
 // Object Class
 struct ObjectMenuParam {
-	RSDK_OBJECT
+    RSDK_OBJECT
 };
 
 // Entity Class
@@ -73,7 +73,7 @@ void MenuParam_Update(void);
 void MenuParam_LateUpdate(void);
 void MenuParam_StaticUpdate(void);
 void MenuParam_Draw(void);
-void MenuParam_Create(void* data);
+void MenuParam_Create(void *data);
 void MenuParam_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MenuParam_EditorDraw(void);
@@ -83,5 +83,4 @@ void MenuParam_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_MENUPARAM_H
+#endif //! OBJ_MENUPARAM_H

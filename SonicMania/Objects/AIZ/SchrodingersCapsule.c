@@ -217,7 +217,7 @@ void SchrodingersCapsule_State_Explode(void)
         RSDK.SetSpriteAnimation(-1, -1, &self->rayAnimator, true, 0);
 
         EntityPlayer *buddy1 = RSDK_GET_ENTITY(SLOT_PLAYER3, Player);
-        buddy1->classID     = Player->classID;
+        buddy1->classID      = Player->classID;
         Player_ChangeCharacter(buddy1, ID_MIGHTY);
         buddy1->position.x      = self->position.x + 0xE0000;
         buddy1->position.y      = self->position.y;
@@ -239,7 +239,7 @@ void SchrodingersCapsule_State_Explode(void)
         RSDK.SetSpriteAnimation(buddy1->aniFrames, ANI_HURT, &buddy1->animator, true, 0);
 
         EntityPlayer *buddy2 = RSDK_GET_ENTITY(SLOT_PLAYER4, Player);
-        buddy2->classID     = Player->classID;
+        buddy2->classID      = Player->classID;
         Player_ChangeCharacter(buddy2, ID_RAY);
         buddy2->position.x      = self->position.x - 0xE0000;
         buddy2->position.y      = self->position.y;

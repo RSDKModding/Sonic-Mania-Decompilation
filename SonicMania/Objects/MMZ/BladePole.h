@@ -29,7 +29,7 @@ void BladePole_Update(void);
 void BladePole_LateUpdate(void);
 void BladePole_StaticUpdate(void);
 void BladePole_Draw(void);
-void BladePole_Create(void* data);
+void BladePole_Create(void *data);
 void BladePole_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void BladePole_EditorDraw(void);
@@ -46,4 +46,4 @@ void BladePole_CheckPlayerCollisions(Hitbox *hitbox);
 void BladePole_State_TopBladeActive(void);
 void BladePole_State_BottomBladeActive(void);
 
-#endif //!OBJ_BLADEPOLE_H
+#endif //! OBJ_BLADEPOLE_H

@@ -55,7 +55,7 @@ void TimeAttackGate_Update(void);
 void TimeAttackGate_LateUpdate(void);
 void TimeAttackGate_StaticUpdate(void);
 void TimeAttackGate_Draw(void);
-void TimeAttackGate_Create(void* data);
+void TimeAttackGate_Create(void *data);
 void TimeAttackGate_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TimeAttackGate_EditorDraw(void);
@@ -81,4 +81,4 @@ void TimeAttackGate_State_Fadeout(void);
 void TimeAttackGate_Draw_Gate(void);
 void TimeAttackGate_Draw_Restarter(void);
 
-#endif //!OBJ_TIMEATTACKGATE_H
+#endif //! OBJ_TIMEATTACKGATE_H

@@ -289,7 +289,7 @@ void HeavyKing_FindTargetEmerald(void)
             foreach_active(HPZEmerald, emerald)
             {
                 if (emerald->type != HPZEMERALD_MASTER) {
-                    int dist = self->position.x - emerald->position.x;
+                    int32 dist = self->position.x - emerald->position.x;
                     if (dist < emeraldDist && dist >= 0 && self->targetEmerald != emerald) {
                         emeraldDist   = dist;
                         targetEmerald = emerald;
@@ -307,7 +307,7 @@ void HeavyKing_FindTargetEmerald(void)
         foreach_active(HPZEmerald, emerald)
         {
             if (emerald->type != HPZEMERALD_MASTER) {
-                int dist = abs(self->position.x - emerald->position.x);
+                int32 dist = abs(self->position.x - emerald->position.x);
                 if (dist < emeraldDist) {
                     emeraldDist   = dist;
                     targetEmerald = emerald;
@@ -1152,13 +1152,13 @@ void HeavyKing_State_Destroyed(void)
 
     if (self->timer == 72) {
         RSDK.PlaySfx(HeavyKing->sfxFreeze, false, 255);
-        int centerX = self->position.x - 0x280000;
+        int32 centerX = self->position.x - 0x280000;
         if (self->direction == FLIP_NONE)
             centerX = self->position.x + 0x280000;
 
-        for (int i = 0; i < 6; ++i) {
-            int y                = (self->position.y - 0x300000) + RSDK.Rand(-0x40000, 0x40000);
-            int x                = centerX + RSDK.Rand(-0x40000, 0x40000);
+        for (int32 i = 0; i < 6; ++i) {
+            int32 y              = (self->position.y - 0x300000) + RSDK.Rand(-0x40000, 0x40000);
+            int32 x              = centerX + RSDK.Rand(-0x40000, 0x40000);
             EntityDebris *debris = CREATE_ENTITY(Debris, NULL, x, y);
 
             debris->state           = Debris_State_Fall;
@@ -1204,13 +1204,13 @@ void HeavyKing_State_Escape(void)
     RSDK_THIS(HeavyKing);
 
     if (!(Zone->timer & 0x1F)) {
-        int x                                                                    = self->position.x + RSDK.Rand(-0x180000, 0x180000);
-        int y                                                                    = self->position.y + RSDK.Rand(-0x180000, 0x180000);
+        int32 x                                                                    = self->position.x + RSDK.Rand(-0x180000, 0x180000);
+        int32 y                                                                    = self->position.y + RSDK.Rand(-0x180000, 0x180000);
         CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), x, y)->drawGroup = Zone->objectDrawGroup[1];
     }
 
     if ((Zone->timer & 0xF) == 4) {
-        int x = self->position.x - 0x2C0000;
+        int32 x = self->position.x - 0x2C0000;
         if (self->direction == FLIP_NONE)
             x = self->position.x + 0x2C0000;
 

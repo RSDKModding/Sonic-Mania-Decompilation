@@ -87,7 +87,7 @@ void TimeAttackData_TrackTAClear(StatInfo *stat, uint8 zone, uint8 actID, uint8 
 void TimeAttackData_TrackEnemyDefeat(StatInfo *stat, uint8 zoneID, uint8 actID, uint8 charID, bool32 encore, int32 x, int32 y);
 #endif
 
-TimeAttackRAM* TimeAttackData_GetTimeAttackRAM(void);
+TimeAttackRAM *TimeAttackData_GetTimeAttackRAM(void);
 void TimeAttackData_Clear(void);
 int32 TimeAttackData_GetManiaListPos(int32 zoneID, int32 act, int32 characterID);
 int32 TimeAttackData_GetEncoreListPos(int32 zoneID, int32 act, int32 characterID);

@@ -194,7 +194,7 @@ void MeterDroid_Hit(void)
             int32 y = RSDK.Rand(MeterDroid->hitboxBoss.top, MeterDroid->hitboxBoss.bottom) << 16;
 
             CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), x + self->wrenchPos.x, y + self->wrenchPos.y)->drawGroup = Zone->objectDrawGroup[1];
-            self->stateDraw                                                                                              = MeterDroid_Draw_Normal;
+            self->stateDraw                                                                                                = MeterDroid_Draw_Normal;
         }
 
         SceneInfo->timeEnabled = false;

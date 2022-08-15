@@ -17,17 +17,17 @@ typedef enum {
     PISTON_SIZE_1,
     PISTON_SIZE_2,
     PISTON_SIZE_3,
-}PistonSizes;
+} PistonSizes;
 
 // Object Class
 struct ObjectPiston {
     RSDK_OBJECT
-	uint16 sfxLand;
-	uint16 sfxLaunch;
+    uint16 sfxLand;
+    uint16 sfxLaunch;
 };
 
 // Entity Class
-struct EntityPiston {                                                                                                
+struct EntityPiston {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateCollide);

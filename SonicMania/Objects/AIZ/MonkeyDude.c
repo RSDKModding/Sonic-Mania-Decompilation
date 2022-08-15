@@ -110,25 +110,25 @@ void MonkeyDude_Create(void *data)
 void MonkeyDude_StageLoad(void)
 {
 #if MANIA_USE_PLUS
-    MonkeyDude->aniFrames            = RSDK.LoadSpriteAnimation("AIZ/MonkeyDude.bin", SCOPE_STAGE);
+    MonkeyDude->aniFrames = RSDK.LoadSpriteAnimation("AIZ/MonkeyDude.bin", SCOPE_STAGE);
 
-    MonkeyDude->hitboxBadnik.left    = -10;
-    MonkeyDude->hitboxBadnik.top     = -21;
-    MonkeyDude->hitboxBadnik.right   = 7;
-    MonkeyDude->hitboxBadnik.bottom  = 4;
+    MonkeyDude->hitboxBadnik.left   = -10;
+    MonkeyDude->hitboxBadnik.top    = -21;
+    MonkeyDude->hitboxBadnik.right  = 7;
+    MonkeyDude->hitboxBadnik.bottom = 4;
 
     MonkeyDude->hitboxCoconut.left   = -4;
     MonkeyDude->hitboxCoconut.top    = -4;
     MonkeyDude->hitboxCoconut.right  = 4;
     MonkeyDude->hitboxCoconut.bottom = 4;
 #else
-    MonkeyDude->aniFrames      = RSDK.LoadSpriteAnimation("Blueprint/MonkeyDude.bin", SCOPE_STAGE);
+    MonkeyDude->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/MonkeyDude.bin", SCOPE_STAGE);
 
     // strange hitbox, doesn't match either one above lol
-    MonkeyDude->hitboxBadnik.left    = -8;
-    MonkeyDude->hitboxBadnik.top     = -8;
-    MonkeyDude->hitboxBadnik.right   = 8;
-    MonkeyDude->hitboxBadnik.bottom  = 8;
+    MonkeyDude->hitboxBadnik.left   = -8;
+    MonkeyDude->hitboxBadnik.top    = -8;
+    MonkeyDude->hitboxBadnik.right  = 8;
+    MonkeyDude->hitboxBadnik.bottom = 8;
 #endif
 
     RSDK.SetSpriteAnimation(MonkeyDude->aniFrames, 2, &MonkeyDude->armAnimator, true, 0);

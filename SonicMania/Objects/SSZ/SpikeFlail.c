@@ -181,7 +181,7 @@ void SpikeFlail_CheckPlayerCollisions(void)
     }
 }
 
-Vector2 SpikeFlail_GetScale(int ballPos, int angle)
+Vector2 SpikeFlail_GetScale(int32 ballPos, int32 angle)
 {
     RSDK_THIS(SpikeFlail);
     Vector2 scale;

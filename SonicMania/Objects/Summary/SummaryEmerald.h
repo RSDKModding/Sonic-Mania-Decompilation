@@ -25,7 +25,7 @@ void SummaryEmerald_Update(void);
 void SummaryEmerald_LateUpdate(void);
 void SummaryEmerald_StaticUpdate(void);
 void SummaryEmerald_Draw(void);
-void SummaryEmerald_Create(void* data);
+void SummaryEmerald_Create(void *data);
 void SummaryEmerald_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SummaryEmerald_EditorDraw(void);
@@ -36,4 +36,4 @@ void SummaryEmerald_Serialize(void);
 // Extra Entity Functions
 #endif
 
-#endif //!OBJ_SUMMARYEMERALD_H
+#endif //! OBJ_SUMMARYEMERALD_H

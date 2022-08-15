@@ -11,7 +11,7 @@ typedef enum {
     PKINGATTACK_LARGEBULLET, // Leftover from LRZ/KingAttack, not used here
     PKINGATTACK_ENERGYLINE,  // Leftover from LRZ/KingAttack, not used here
     PKINGATTACK_SMALLBULLET, // Leftover from LRZ/KingAttack, not used here, though (new) code for it does exist
-}PKingAttackTypes;
+} PKingAttackTypes;
 
 // Object Class
 struct ObjectPKingAttack {
@@ -32,7 +32,7 @@ struct EntityPKingAttack {
     Vector2 targetPos;
     Vector2 targetVelocity;
     Vector2 laserVertPostions[8]; // Leftover from LRZ/KingAttack, not used here
-    int32 *laserColors;          // Leftover from LRZ/KingAttack, not used here
+    int32 *laserColors;           // Leftover from LRZ/KingAttack, not used here
     Hitbox hitbox;
     Animator animator;
 };
@@ -45,7 +45,7 @@ void PKingAttack_Update(void);
 void PKingAttack_LateUpdate(void);
 void PKingAttack_StaticUpdate(void);
 void PKingAttack_Draw(void);
-void PKingAttack_Create(void* data);
+void PKingAttack_Create(void *data);
 void PKingAttack_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PKingAttack_EditorDraw(void);
@@ -62,4 +62,4 @@ void PKingAttack_State_OrbitLaunched(void);
 void PKingAttack_State_Trail(void);
 void PKingAttack_State_SmallBullet(void);
 
-#endif //!OBJ_PKINGATTACK_H
+#endif //! OBJ_PKINGATTACK_H

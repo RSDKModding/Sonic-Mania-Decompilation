@@ -25,7 +25,7 @@ void PBL_TargetBumper_LateUpdate(void)
     int32 y = self->height;
     int32 z = self->position.y;
 
-    Matrix *m     = &PBL_Camera->matWorld;
+    Matrix *m    = &PBL_Camera->matWorld;
     self->zdepth = m->values[2][1] * (y >> 16) + m->values[2][2] * (z >> 16) + m->values[2][0] * (x >> 16) + m->values[2][3];
 
     if (self->zdepth >= 0x4000) {

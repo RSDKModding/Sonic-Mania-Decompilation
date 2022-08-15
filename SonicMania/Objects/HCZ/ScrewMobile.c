@@ -572,7 +572,8 @@ void ScrewMobile_StateDepthCharge_Active(void)
             if (eggman->state == DiveEggman_StateBomb_Idle || eggman->state == DiveEggman_StateBomb_InWhirlpool
                 || eggman->state == DiveEggman_StateBomb_WhirlpoolRise || eggman->state == DiveEggman_StateBomb_Falling) {
                 if (RSDK.CheckObjectCollisionTouchBox(self, &ScrewMobile->hitboxDepthCharge, eggman, &DiveEggman->hitboxBomb)) {
-                    CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), eggman->position.x, eggman->position.y)->drawGroup = Zone->objectDrawGroup[1];
+                    CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), eggman->position.x, eggman->position.y)->drawGroup =
+                        Zone->objectDrawGroup[1];
                     RSDK.PlaySfx(DiveEggman->sfxExplosion, false, 255);
 
                     EntityWater *water = CREATE_ENTITY(Water, INT_TO_VOID(WATER_BUBBLE), eggman->position.x, eggman->position.y);

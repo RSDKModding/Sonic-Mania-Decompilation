@@ -8,7 +8,7 @@ typedef enum {
     SIGNPOST_DROP,
     SIGNPOST_COMP,
     SIGNPOST_DECOR,
-}SignPostTypes;
+} SignPostTypes;
 
 typedef enum {
     SIGNPOSTANI_SONIC,
@@ -20,7 +20,7 @@ typedef enum {
 #endif
     SIGNPOSTANI_EGGMAN,
     SIGNPOSTANI_POST,
-}SignPostAniIDs;
+} SignPostAniIDs;
 
 // Object Class
 struct ObjectSignPost {
@@ -70,7 +70,7 @@ void SignPost_Update(void);
 void SignPost_LateUpdate(void);
 void SignPost_StaticUpdate(void);
 void SignPost_Draw(void);
-void SignPost_Create(void* data);
+void SignPost_Create(void *data);
 void SignPost_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SignPost_EditorDraw(void);
@@ -96,4 +96,4 @@ void SignPost_State_Launched(void);
 void SignPost_State_Falling(void);
 void SignPost_State_Done(void);
 
-#endif //!OBJ_SIGNPOST_H
+#endif //! OBJ_SIGNPOST_H

@@ -6,7 +6,7 @@
 typedef enum {
     MMZWHEEL_MOTION_STIFF,
     MMZWHEEL_MOTION_SMOOTH,
-}MMZWheelMotionTypes;
+} MMZWheelMotionTypes;
 
 // Object Class
 struct ObjectMMZWheel {
@@ -35,7 +35,7 @@ void MMZWheel_Update(void);
 void MMZWheel_LateUpdate(void);
 void MMZWheel_StaticUpdate(void);
 void MMZWheel_Draw(void);
-void MMZWheel_Create(void* data);
+void MMZWheel_Create(void *data);
 void MMZWheel_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MMZWheel_EditorDraw(void);
@@ -45,5 +45,4 @@ void MMZWheel_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_MMZWHEEL_H
+#endif //! OBJ_MMZWHEEL_H

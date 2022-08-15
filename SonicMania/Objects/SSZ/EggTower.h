@@ -30,7 +30,7 @@ void EggTower_Update(void);
 void EggTower_LateUpdate(void);
 void EggTower_StaticUpdate(void);
 void EggTower_Draw(void);
-void EggTower_Create(void* data);
+void EggTower_Create(void *data);
 void EggTower_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void EggTower_EditorDraw(void);
@@ -40,5 +40,4 @@ void EggTower_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_EGGTOWER_H
+#endif //! OBJ_EGGTOWER_H

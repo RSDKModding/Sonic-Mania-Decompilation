@@ -55,7 +55,7 @@ void TransportTube_Update(void);
 void TransportTube_LateUpdate(void);
 void TransportTube_StaticUpdate(void);
 void TransportTube_Draw(void);
-void TransportTube_Create(void* data);
+void TransportTube_Create(void *data);
 void TransportTube_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TransportTube_EditorDraw(void);
@@ -74,4 +74,4 @@ void TransportTube_State_TargetSeqNode(void);
 void TransportTube_State_ChooseDir(void);
 void TransportTube_State_Exit(void);
 
-#endif //!OBJ_TRANSPORTTUBE_H
+#endif //! OBJ_TRANSPORTTUBE_H

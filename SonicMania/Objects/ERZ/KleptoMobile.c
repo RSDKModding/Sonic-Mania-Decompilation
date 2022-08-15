@@ -253,7 +253,7 @@ void KleptoMobile_HandleFrames(void)
 
     int32 angle = self->angle2;
 
-    for (int i = 0; i < 10; i += 2) {
+    for (int32 i = 0; i < 10; i += 2) {
         self->framePositions[i].x = moveX + 2 * RSDK.Cos1024(angle) * RSDK.Cos512(self->rotation);
         self->framePositions[i].y = moveY + 2 * RSDK.Cos1024(angle) * RSDK.Sin512(self->rotation);
         self->frameIDs[i]         = angle & 0x3FF;
@@ -293,7 +293,7 @@ void KleptoMobile_SwitchToKing(void)
             king->velocity.y = 0;
             king->drawRuby   = true;
 
-            for (int i = 0; i < 0x3FC; i += 0xAA) {
+            for (int32 i = 0; i < 0x3FC; i += 0xAA) {
                 EntityPKingAttack *attack = CREATE_ENTITY(PKingAttack, INT_TO_VOID(1), king->rubyPos.x, king->rubyPos.y);
                 attack->angle             = i;
                 attack->target            = (Entity *)king;
@@ -312,7 +312,7 @@ void KleptoMobile_SwitchToKing(void)
             kingArm->position.x = kingPtr->position.x;
             kingArm->position.y = kingPtr->position.y;
 
-            for (int i = 0; i < 10; ++i) kingArm->framePositions[i] = kingPtr->position;
+            for (int32 i = 0; i < 10; ++i) kingArm->framePositions[i] = kingPtr->position;
 
             kingArm->velocity.x = 0;
             kingArm->velocity.y = 0;
@@ -697,7 +697,7 @@ void KleptoMobile_StateHand_Cutscene(void)
     self->position.x += self->velocity.x;
 
     int32 percent = 0x1800;
-    for (int i = 0; i < 7; ++i) {
+    for (int32 i = 0; i < 7; ++i) {
         self->framePositions[i] = MathHelpers_GetBezierPoint(percent, x, y, x2, y2, x2, y2, self->position.x, self->position.y);
         percent += 0x2000;
     }
@@ -731,7 +731,7 @@ void KleptoMobile_StateHand_Boss(void)
     int32 y = ((parentY + self->position.y) >> 1) - 0x300000;
 
     int32 percent = 0x1800;
-    for (int i = 0; i < 7; ++i) {
+    for (int32 i = 0; i < 7; ++i) {
         self->framePositions[i] = MathHelpers_GetBezierPoint(percent, parentX, parentY, x, y, x, y, self->position.x, self->position.y);
         percent += 0x2000;
     }
@@ -804,11 +804,11 @@ void KleptoMobile_StateArm_Cutscene(void)
     RSDK_THIS(KleptoMobile);
     EntityKleptoMobile *parent = self->parent;
 
-    int parentX = parent->position.x;
-    int parentY = parent->position.y;
+    int32 parentX = parent->position.x;
+    int32 parentY = parent->position.y;
 
-    int moveX       = 0;
-    int moveY       = ((RSDK.Sin256((((self->type << 7) - 128) ^ 0x80) + 2 * Zone->timer) + 512) << 12) + parentY;
+    int32 moveX     = 0;
+    int32 moveY     = ((RSDK.Sin256((((self->type << 7) - 128) ^ 0x80) + 2 * Zone->timer) + 512) << 12) + parentY;
     self->direction = parent->direction;
 
     int32 x = 0, y = 0;
@@ -846,8 +846,8 @@ void KleptoMobile_StateArm_Cutscene(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
-    int percent = 0x1800;
-    for (int i = 0; i < 7; ++i) {
+    int32 percent = 0x1800;
+    for (int32 i = 0; i < 7; ++i) {
         self->framePositions[i] = MathHelpers_GetBezierPoint(percent, x, y, x2, y2, x2, y2, self->position.x, self->position.y);
         percent += 0x2000;
     }
@@ -864,8 +864,8 @@ void KleptoMobile_StateArm_Idle(void)
 
     self->direction = parent->direction;
 
-    int x = 0;
-    int y = parent->position.y + 0x60000;
+    int32 x = 0;
+    int32 y = parent->position.y + 0x60000;
     if (self->direction == FLIP_X) {
         x = parent->position.x - 0x90000;
         if (self->type == KLEPTOMOBILE_ARM_R)
@@ -877,8 +877,8 @@ void KleptoMobile_StateArm_Idle(void)
             x -= 0x180000;
     }
 
-    int percent = 0x1800;
-    for (int i = 0; i < 7; ++i) {
+    int32 percent = 0x1800;
+    for (int32 i = 0; i < 7; ++i) {
         self->framePositions[i] = MathHelpers_GetBezierPoint(percent, x, y, self->armBezierPos.x, self->armBezierPos.y, self->armBezierPos.x,
                                                              self->armBezierPos.y, self->position.x, self->position.y);
         percent += 0x2000;
@@ -901,11 +901,11 @@ void KleptoMobile_StateArm_BashAttack(void)
 
     self->direction = parent->direction;
 
-    int x = 0;
-    int y = parent->position.y + 0xD0000;
+    int32 x = 0;
+    int32 y = parent->position.y + 0xD0000;
 
-    int x2 = 0, y2 = 0;
-    int x3 = 0, y3 = 0;
+    int32 x2 = 0, y2 = 0;
+    int32 x3 = 0, y3 = 0;
 
     if (self->direction == FLIP_X) {
         x = parent->position.x - 0x30000;
@@ -933,25 +933,25 @@ void KleptoMobile_StateArm_BashAttack(void)
         self->position.x += self->velocity.x;
         self->position.y += self->velocity.y;
 
-        int distX = self->position.x - x;
-        int distY = self->position.y - y;
+        int32 distX = self->position.x - x;
+        int32 distY = self->position.y - y;
 
-        int distValX = -distX;
-        int distValY = distY;
+        int32 distValX = -distX;
+        int32 distValY = distY;
         if (distX > 0) {
             distValX = distX;
             distValY = -distY;
         }
 
-        int timerVal = 4 - self->timer;
-        x2           = x + ((x + (distX >> 1) + distValY) - x) * timerVal / 4;
-        y2           = y + (((distY >> 1) + distValX) * timerVal) / 4;
-        x3           = self->position.x + ((x + (distX >> 1) + distValY) - self->position.x) * timerVal / 4;
-        y3           = self->position.y + (((distY >> 1) + distValX - self->position.y) * timerVal / 4);
+        int32 timerVal = 4 - self->timer;
+        x2             = x + ((x + (distX >> 1) + distValY) - x) * timerVal / 4;
+        y2             = y + (((distY >> 1) + distValX) * timerVal) / 4;
+        x3             = self->position.x + ((x + (distX >> 1) + distValY) - self->position.x) * timerVal / 4;
+        y3             = self->position.y + (((distY >> 1) + distValX - self->position.y) * timerVal / 4);
     }
 
     int32 percent = 0x1800;
-    for (int i = 0; i < 7; ++i) {
+    for (int32 i = 0; i < 7; ++i) {
         self->framePositions[i] = MathHelpers_GetBezierPoint(percent, x, y, x2, y2, x3, y3, self->position.x, self->position.y);
         percent += 0x2000;
     }
@@ -1032,7 +1032,7 @@ void KleptoMobile_Draw_Arm(void)
 {
     RSDK_THIS(KleptoMobile);
 
-    for (int i = 0; i < 6; ++i) RSDK.DrawSprite(&self->orbAnimator, &self->framePositions[i], false);
+    for (int32 i = 0; i < 6; ++i) RSDK.DrawSprite(&self->orbAnimator, &self->framePositions[i], false);
 
     RSDK.DrawSprite(&self->handAnimator, &self->framePositions[6], false);
 

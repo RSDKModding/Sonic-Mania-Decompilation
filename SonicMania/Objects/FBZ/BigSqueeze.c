@@ -519,7 +519,8 @@ void BigSqueeze_StateBoss_Destroyed(void)
                 foreach_active(FBZTrash, trash)
                 {
                     if (trash->state != FBZTrash_State_LooseTrash) {
-                        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), trash->position.x, trash->position.y)->drawGroup = Zone->objectDrawGroup[1];
+                        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), trash->position.x, trash->position.y)->drawGroup =
+                            Zone->objectDrawGroup[1];
                         RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
                         destroyEntity(trash);
                     }

@@ -24,7 +24,7 @@ void SSZ1Intro_Update(void);
 void SSZ1Intro_LateUpdate(void);
 void SSZ1Intro_StaticUpdate(void);
 void SSZ1Intro_Draw(void);
-void SSZ1Intro_Create(void* data);
+void SSZ1Intro_Create(void *data);
 void SSZ1Intro_StageLoad(void);
 void SSZ1Intro_EditorDraw(void);
 void SSZ1Intro_EditorLoad(void);
@@ -37,4 +37,4 @@ bool32 SSZ1Intro_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host);
 bool32 SSZ1Intro_Cutscene_HandeLanding(EntityCutsceneSeq *host);
 bool32 SSZ1Intro_Cutscene_BeginAct1(EntityCutsceneSeq *host);
 
-#endif //!OBJ_SSZ1INTRO_H
+#endif //! OBJ_SSZ1INTRO_H

@@ -306,11 +306,11 @@ void Hatch_State_Descend(void)
             EntityWarpDoor *warpDoor = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, WarpDoor);
             if (warpDoor->classID == WarpDoor->classID) {
                 Zone->cameraBoundsB[RSDK.GetEntitySlot(player)] = 0x7FFF;
-                warpDoor->hitbox                              = self->hitboxWarpDoor;
-                warpDoor->position.y                          = self->position.y;
+                warpDoor->hitbox                                = self->hitboxWarpDoor;
+                warpDoor->position.y                            = self->position.y;
                 player->tileCollisions                          = TILECOLLISION_DOWN;
-                player->interaction                           = true;
-                player->visible                               = true;
+                player->interaction                             = true;
+                player->visible                                 = true;
             }
 
             RSDK.GetTileLayer(Zone->moveLayer)->scrollPos = 0;

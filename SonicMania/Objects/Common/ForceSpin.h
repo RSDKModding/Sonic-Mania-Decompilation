@@ -25,7 +25,7 @@ void ForceSpin_Update(void);
 void ForceSpin_LateUpdate(void);
 void ForceSpin_StaticUpdate(void);
 void ForceSpin_Draw(void);
-void ForceSpin_Create(void* data);
+void ForceSpin_Create(void *data);
 void ForceSpin_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ForceSpin_EditorDraw(void);
@@ -37,4 +37,4 @@ void ForceSpin_Serialize(void);
 void ForceSpin_DrawSprites(void);
 void ForceSpin_SetPlayerState(EntityPlayer *player);
 
-#endif //!OBJ_FORCESPIN_H
+#endif //! OBJ_FORCESPIN_H

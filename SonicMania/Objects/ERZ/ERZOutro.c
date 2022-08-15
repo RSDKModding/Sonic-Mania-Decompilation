@@ -82,7 +82,7 @@ void ERZOutro_SetEmeraldStates(void)
 {
     EntityPhantomRuby *ruby = ERZOutro->ruby;
 
-    for (int e = 0; e < 7; ++e) {
+    for (int32 e = 0; e < 7; ++e) {
         EntityChaosEmerald *emerald = ERZStart->emeralds[e];
         emerald->originPos.x        = ruby->startPos.x;
         emerald->originPos.y        = ruby->startPos.y;
@@ -98,8 +98,8 @@ void ERZOutro_HandleRubyHover(void)
     EntityFXRuby *fxRuby    = ERZOutro->fxRuby;
 
     ruby->angle += 2;
-    int amplitude = abs(RSDK.Sin256(Zone->timer)) >> 6;
-    int32 offset  = amplitude == 0 ? 0 : RSDK.Rand(-amplitude, amplitude);
+    int32 amplitude = abs(RSDK.Sin256(Zone->timer)) >> 6;
+    int32 offset    = amplitude == 0 ? 0 : RSDK.Rand(-amplitude, amplitude);
 
     ruby->position.x = (offset << 16) + ruby->startPos.x;
     ruby->position.y = (offset << 16) + ruby->startPos.y + (RSDK.Sin256(ruby->angle) << 8);
@@ -226,8 +226,8 @@ bool32 ERZOutro_Cutscene_AttackRecoil(EntityCutsceneSeq *host)
     EntityPhantomRuby *ruby    = ERZOutro->ruby;
 
     fxRuby->position = eggman->rubyPos;
-    int x            = eggman->position.x - 0x400000;
-    int y            = eggman->originPos.y - 0x200000;
+    int32 x          = eggman->position.x - 0x400000;
+    int32 y          = eggman->originPos.y - 0x200000;
 
     if (!host->values[0]) {
         if (player1->position.x >= eggman->position.x - 0x200000) {
@@ -302,8 +302,8 @@ bool32 ERZOutro_Cutscene_LoseEmeralds(EntityCutsceneSeq *host)
     ERZOutro_HandleRubyHover();
 
     if (!host->timer) {
-        int angle = 0;
-        for (int e = 0; e < 7; ++e) {
+        int32 angle = 0;
+        for (int32 e = 0; e < 7; ++e) {
             EntityChaosEmerald *emerald = ERZStart->emeralds[e];
             emerald->angle              = angle;
             emerald->radius             = 0;
@@ -318,13 +318,13 @@ bool32 ERZOutro_Cutscene_LoseEmeralds(EntityCutsceneSeq *host)
     }
 
     if (host->timer >= 30) {
-        for (int e = 0; e < 7; ++e) ERZStart->emeralds[e]->radius = 0x2000;
+        for (int32 e = 0; e < 7; ++e) ERZStart->emeralds[e]->radius = 0x2000;
     }
     else {
-        for (int e = 0; e < 7; ++e) ERZStart->emeralds[e]->radius = (host->timer << 13) / 30;
+        for (int32 e = 0; e < 7; ++e) ERZStart->emeralds[e]->radius = (host->timer << 13) / 30;
     }
 
-    for (int e = 0; e < 7; ++e) ERZStart->emeralds[e]->originPos = ruby->startPos;
+    for (int32 e = 0; e < 7; ++e) ERZStart->emeralds[e]->originPos = ruby->startPos;
 
     return host->timer == 90;
 }

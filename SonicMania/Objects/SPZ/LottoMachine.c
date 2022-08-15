@@ -808,7 +808,7 @@ void LottoMachine_EditorDraw(void)
     RSDK.DrawSprite(&LottoMachine->shineAnimator, NULL, false);
 
     self->inkEffect = INK_NONE;
-    for (int i = 0; i < 3; ++i) {
+    for (int32 i = 0; i < 3; ++i) {
         self->direction               = FLIP_NONE;
         self->machineAnimator.frameID = i + 2;
         RSDK.DrawSprite(&self->machineAnimator, NULL, false);

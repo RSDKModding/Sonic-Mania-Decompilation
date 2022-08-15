@@ -142,8 +142,8 @@ bool32 SPZ2Outro_Cutscene_SetupFBZTV(EntityCutsceneSeq *host)
 
     if (host->timer == 120) {
         Zone->playerBoundActiveR[0] = false;
-        if (!player2->onGround || player2->state == Player_State_FlyToPlayer || player2->state == Player_State_ReturnToPlayer || player2->state == Player_State_Static
-            || player2->state == Player_State_HoldRespawn) {
+        if (!player2->onGround || player2->state == Player_State_FlyToPlayer || player2->state == Player_State_ReturnToPlayer
+            || player2->state == Player_State_Static || player2->state == Player_State_HoldRespawn) {
             SPZ2Outro->ignoreP2 = true;
         }
         else {

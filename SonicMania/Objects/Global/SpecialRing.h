@@ -40,7 +40,7 @@ void SpecialRing_Update(void);
 void SpecialRing_LateUpdate(void);
 void SpecialRing_StaticUpdate(void);
 void SpecialRing_Draw(void);
-void SpecialRing_Create(void* data);
+void SpecialRing_Create(void *data);
 void SpecialRing_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SpecialRing_EditorDraw(void);
@@ -56,4 +56,4 @@ void SpecialRing_State_Idle(void);
 void SpecialRing_State_Flash(void);
 void SpecialRing_State_Warp(void);
 
-#endif //!OBJ_SPECIALRING_H
+#endif //! OBJ_SPECIALRING_H

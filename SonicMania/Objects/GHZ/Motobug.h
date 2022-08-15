@@ -30,7 +30,7 @@ void Motobug_Update(void);
 void Motobug_LateUpdate(void);
 void Motobug_StaticUpdate(void);
 void Motobug_Draw(void);
-void Motobug_Create(void* data);
+void Motobug_Create(void *data);
 void Motobug_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Motobug_EditorDraw(void);
@@ -45,7 +45,7 @@ void Motobug_DebugSpawn(void);
 void Motobug_CheckOffScreen(void);
 void Motobug_CheckPlayerCollisions(void);
 
-//States
+// States
 void Motobug_State_Init(void);
 void Motobug_State_Move(void);
 void Motobug_State_Idle(void);
@@ -53,4 +53,4 @@ void Motobug_State_Fall(void);
 void Motobug_State_Turn(void);
 void Motobug_State_Smoke(void);
 
-#endif //!OBJ_MOTOBUG_H
+#endif //! OBJ_MOTOBUG_H

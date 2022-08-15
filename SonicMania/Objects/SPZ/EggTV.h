@@ -29,7 +29,7 @@ void EggTV_Update(void);
 void EggTV_LateUpdate(void);
 void EggTV_StaticUpdate(void);
 void EggTV_Draw(void);
-void EggTV_Create(void* data);
+void EggTV_Create(void *data);
 void EggTV_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void EggTV_EditorDraw(void);
@@ -41,5 +41,4 @@ void EggTV_Serialize(void);
 void EggTV_DrawScanlines(void);
 void EggTV_DrawTV(void);
 
-
-#endif //!OBJ_EGGTV_H
+#endif //! OBJ_EGGTV_H

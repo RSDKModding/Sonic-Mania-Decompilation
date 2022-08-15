@@ -332,7 +332,8 @@ void CheckerBall_HandleObjectCollisions(void)
 
     foreach_active(PlaneSwitch, planeSwitch)
     {
-        PlaneSwitch_CheckCollisions(planeSwitch, self, planeSwitch->flags, planeSwitch->size, true, Zone->playerDrawGroup[0], Zone->playerDrawGroup[1]);
+        PlaneSwitch_CheckCollisions(planeSwitch, self, planeSwitch->flags, planeSwitch->size, true, Zone->playerDrawGroup[0],
+                                    Zone->playerDrawGroup[1]);
     }
 
     foreach_active(CheckerBall, checkerBall)
@@ -628,7 +629,8 @@ void CheckerBall_HandleObjectCollisions(void)
 
     foreach_active(CollapsingPlatform, collapsingPlatform)
     {
-        if (RSDK.CheckObjectCollisionTouchBox(collapsingPlatform, &collapsingPlatform->hitboxTrigger, self, &CheckerBall->hitboxBall) && self->onGround)
+        if (RSDK.CheckObjectCollisionTouchBox(collapsingPlatform, &collapsingPlatform->hitboxTrigger, self, &CheckerBall->hitboxBall)
+            && self->onGround)
             collapsingPlatform->stoodPos.x = self->position.x;
     }
 

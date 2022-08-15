@@ -21,7 +21,6 @@ void BadnikHelpers_Create(void *data) {}
 
 void BadnikHelpers_StageLoad(void) {}
 
-
 void BadnikHelpers_BadnikBreak(void *badnik, bool32 destroy, bool32 spawnAnimals)
 {
     Entity *badnikEntity = badnik;

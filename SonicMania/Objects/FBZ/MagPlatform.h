@@ -24,7 +24,7 @@ void MagPlatform_Update(void);
 void MagPlatform_LateUpdate(void);
 void MagPlatform_StaticUpdate(void);
 void MagPlatform_Draw(void);
-void MagPlatform_Create(void* data);
+void MagPlatform_Create(void *data);
 void MagPlatform_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MagPlatform_EditorDraw(void);
@@ -38,4 +38,4 @@ void MagPlatform_State_Idle(void);
 void MagPlatform_State_Rise(void);
 void MagPlatform_State_Fall(void);
 
-#endif //!OBJ_MAGPLATFORM_H
+#endif //! OBJ_MAGPLATFORM_H

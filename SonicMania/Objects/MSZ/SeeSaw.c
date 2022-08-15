@@ -300,11 +300,13 @@ void SeeSaw_State_OrbIdle(void)
     self->launchVelocity = 0;
 }
 
-void SeeSaw_State_None(void) {
+void SeeSaw_State_None(void)
+{
     // do absolutely nothing. not a thing.
 }
 
-void SeeSaw_State_NoOrb(void) {
+void SeeSaw_State_NoOrb(void)
+{
     // gone :(
 }
 

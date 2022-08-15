@@ -35,13 +35,13 @@ void SpearBlock_Draw(void)
 void SpearBlock_Create(void *data)
 {
     RSDK_THIS(SpearBlock);
-    self->visible          = true;
-    self->drawGroup        = Zone->objectDrawGroup[0];
-    self->spearPos.x       = self->position.x;
-    self->spearPos.y       = self->position.y;
-    self->active           = ACTIVE_BOUNDS;
-    self->updateRange.x    = 0x400000;
-    self->updateRange.y    = 0x400000;
+    self->visible       = true;
+    self->drawGroup     = Zone->objectDrawGroup[0];
+    self->spearPos.x    = self->position.x;
+    self->spearPos.y    = self->position.y;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x400000;
+    self->updateRange.y = 0x400000;
     RSDK.SetSpriteAnimation(SpearBlock->aniFrames, 1, &self->animator, true, 0);
     RSDK.SetSpriteAnimation(SpearBlock->aniFrames, 0, &SpearBlock->animator, true, 0);
     self->state = SpearBlock_State_SetupSpears;
@@ -51,10 +51,10 @@ void SpearBlock_StageLoad(void)
 {
     SpearBlock->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/SpearBlock.bin", SCOPE_STAGE);
 
-    SpearBlock->blockHitbox.left        = -16;
-    SpearBlock->blockHitbox.top         = -16;
-    SpearBlock->blockHitbox.right       = 16;
-    SpearBlock->blockHitbox.bottom      = 16;
+    SpearBlock->blockHitbox.left   = -16;
+    SpearBlock->blockHitbox.top    = -16;
+    SpearBlock->blockHitbox.right  = 16;
+    SpearBlock->blockHitbox.bottom = 16;
 
     SpearBlock->spearHitboxes[0].left   = -4;
     SpearBlock->spearHitboxes[0].top    = -16;
@@ -94,11 +94,12 @@ void SpearBlock_DebugSpawn(void)
 void SpearBlock_CheckPlayerCollisions(void)
 {
     RSDK_THIS(SpearBlock);
-    foreach_active(Player, player) {
+    foreach_active(Player, player)
+    {
         Player_CheckCollisionBox(player, self, &SpearBlock->blockHitbox);
         Vector2 storePos;
-        storePos.x         = self->position.x;
-        storePos.y         = self->position.y;
+        storePos.x       = self->position.x;
+        storePos.y       = self->position.y;
         self->position.x = self->spearPos.x;
         self->position.y = self->spearPos.y;
 
@@ -120,8 +121,8 @@ void SpearBlock_CheckPlayerCollisions(void)
 void SpearBlock_State_SetupSpears(void)
 {
     RSDK_THIS(SpearBlock);
-    self->active           = ACTIVE_NORMAL;
-    self->state            = SpearBlock_State_SpearRetracted;
+    self->active = ACTIVE_NORMAL;
+    self->state  = SpearBlock_State_SpearRetracted;
     if (!(Zone->timer & 0x7F)) {
         int32 frameTimer       = (Zone->timer >> 7) + self->spearDir;
         self->timer            = 4;

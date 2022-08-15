@@ -15,7 +15,7 @@ typedef enum {
     SHIELDANI_BUBBLEATTACKD,
     SHIELDANI_BUBBLEATTACKUPADD,
     SHIELDANI_INSTA,
-}ShieldAniIDs;
+} ShieldAniIDs;
 
 // Object Class
 struct ObjectShield {
@@ -52,7 +52,7 @@ void Shield_Update(void);
 void Shield_LateUpdate(void);
 void Shield_StaticUpdate(void);
 void Shield_Draw(void);
-void Shield_Create(void* data);
+void Shield_Create(void *data);
 void Shield_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Shield_EditorDraw(void);
@@ -68,4 +68,4 @@ void Shield_State_FireDash(void);
 void Shield_State_LightningSparks(void);
 void Shield_State_Insta(void);
 
-#endif //!OBJ_SHIELD_H
+#endif //! OBJ_SHIELD_H

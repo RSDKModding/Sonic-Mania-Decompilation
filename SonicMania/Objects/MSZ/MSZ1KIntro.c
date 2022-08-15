@@ -22,7 +22,6 @@ void MSZ1KIntro_Update(void)
             CutsceneSeq_StartSequence(self, MSZ1KIntro_Cutscene_SetupPlane, MSZ1KIntro_Cutscene_MagicianMischief, MSZ1KIntro_Cutscene_StartAct,
                                       StateMachine_None);
 
-
 #if MANIA_USE_PLUS
             CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN, StateMachine_None);
 #endif

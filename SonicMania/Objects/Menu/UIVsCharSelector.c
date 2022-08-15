@@ -241,7 +241,7 @@ void UIVsCharSelector_ProcessButtonCB(void)
 #if MANIA_USE_PLUS
         int32 max = UICHARBUTTON_KNUX + (API.CheckDLC(DLC_PLUS) ? 2 : 0);
 #else
-        int32 max = UICHARBUTTON_KNUX;
+    int32 max = UICHARBUTTON_KNUX;
 #endif
         max++;
 
@@ -286,7 +286,7 @@ void UIVsCharSelector_ProcessButtonCB(void)
         else
             pressed = ControllerInfo[CONT_P1 + self->playerID].keyA.press;
 #else
-        pressed   = UIControl->confirmPress[self->playerID];
+    pressed = UIControl->confirmPress[self->playerID];
 #endif
 
         if (pressed) {
@@ -324,7 +324,7 @@ void UIVsCharSelector_ProcessButtonCB_CharSelected(void)
         else
             pressed = ControllerInfo[CONT_P1 + self->playerID].keyA.press;
 #else
-        pressed = UIControl->backPress[self->playerID];
+    pressed = UIControl->backPress[self->playerID];
 #endif
 
         if (pressed) {
@@ -380,7 +380,7 @@ void UIVsCharSelector_State_WaitingForPlayer(void)
     uint32 id = API_GetInputDeviceID(CONT_P1 + self->playerID);
 #if MANIA_USE_PLUS
     EntityUIControl *parent = (EntityUIControl *)self->parent;
-    
+
     self->ready    = false;
     int32 assigned = API_IsInputDeviceAssigned(id);
 

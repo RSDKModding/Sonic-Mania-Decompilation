@@ -13,7 +13,7 @@ void Newspaper_Update(void)
 {
 #if MANIA_USE_PLUS
     RSDK_THIS(Newspaper);
-    
+
     StateMachine_Run(self->state);
 #else
     Platform_Update();

@@ -143,10 +143,7 @@ void CPZBoss_State_SetupArena(void)
         EntityCPZBoss *target = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, CPZBoss);
         Camera_SetupLerp(CAMERA_LERP_SIN1024_2, 0, target->position.x, target->position.y, 8);
 
-        foreach_active(HUD, hud)
-        {
-            CPZBoss->hudSlotID = RSDK.GetEntitySlot(hud);
-        }
+        foreach_active(HUD, hud) { CPZBoss->hudSlotID = RSDK.GetEntitySlot(hud); }
 
         HUD_MoveOut();
 

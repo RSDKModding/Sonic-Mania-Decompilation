@@ -78,7 +78,7 @@ void Projectile_CheckPlayerCollisions(void)
 #if MANIA_USE_PLUS
                     int32 anim = player->animator.animationID;
 #endif
-                    
+
                     if (self->isProjectile
 #if MANIA_USE_PLUS
                         || (player->characterID == ID_MIGHTY

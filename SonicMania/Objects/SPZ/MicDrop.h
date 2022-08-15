@@ -35,7 +35,7 @@ void MicDrop_Update(void);
 void MicDrop_LateUpdate(void);
 void MicDrop_StaticUpdate(void);
 void MicDrop_Draw(void);
-void MicDrop_Create(void* data);
+void MicDrop_Create(void *data);
 void MicDrop_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MicDrop_EditorDraw(void);
@@ -58,4 +58,4 @@ void MicDrop_State_Idle(void);
 void MicDrop_State_Swinging(void);
 void MicDrop_State_Electrify(void);
 
-#endif //!OBJ_MICDROP_H
+#endif //! OBJ_MICDROP_H

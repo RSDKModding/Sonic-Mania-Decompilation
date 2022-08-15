@@ -219,7 +219,7 @@ void Cylinder_State_TubeV(void)
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, true,
                                         (24 * self->playerAngles[player->playerID] / 1024 + 12) % 24);
                 player->animator.rotationStyle = ROTSTYLE_FULL;
-                player->direction             = player->velocity.y < 0;
+                player->direction              = player->velocity.y < 0;
             }
             else {
                 if (player->collisionMode == CMODE_LWALL)
@@ -317,8 +317,8 @@ void Cylinder_State_Spiral(void)
                         player->direction = FLIP_X;
                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, true, 17 - 6 * distance / right);
                         player->animator.rotationStyle = ROTSTYLE_FULL;
-                        player->onGround              = true;
-                        player->velocity.y            = 0;
+                        player->onGround               = true;
+                        player->velocity.y             = 0;
                     }
 
                     player->onGround   = true;
@@ -353,8 +353,8 @@ void Cylinder_State_Spiral(void)
                 else {
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, true, frame % 24);
                     player->animator.rotationStyle = ROTSTYLE_FULL;
-                    player->onGround              = true;
-                    player->velocity.y            = 0;
+                    player->onGround               = true;
+                    player->velocity.y             = 0;
 
                     if (player->groundVel <= 0) {
                         if (player->groundVel >= -0x30000) {
@@ -483,7 +483,7 @@ void Cylinder_State_InkRoller(void)
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_STAND_CS, &player->animator, true, frame);
 
                         player->animator.rotationStyle = ROTSTYLE_FULL;
-                        player->rotation              = 0x100;
+                        player->rotation               = 0x100;
 
                         if (player->velocity.x)
                             player->direction = player->velocity.x > 0;
@@ -509,7 +509,8 @@ void Cylinder_State_InkRoller(void)
                 }
             }
             else {
-                if (player->state != Player_State_FlyToPlayer && player->state != Player_State_ReturnToPlayer && player->state != Player_State_HoldRespawn) {
+                if (player->state != Player_State_FlyToPlayer && player->state != Player_State_ReturnToPlayer
+                    && player->state != Player_State_HoldRespawn) {
                     if (player->onGround || player->velocity.y < 0 || player->state == Player_State_FlyCarried
                         || player->animator.animationID == ANI_SKID) {
                         if (player->onGround) {

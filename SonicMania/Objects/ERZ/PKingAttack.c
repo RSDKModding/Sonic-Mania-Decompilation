@@ -105,7 +105,7 @@ void PKingAttack_CheckPlayerCollisions(void)
         if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
             if (player->superState == SUPERSTATE_SUPER) {
                 if (!player->blinkTimer) {
-                    int angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
+                    int32 angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
 
                     if (self->state == PKingAttack_State_OrbitLaunched) {
                         player->blinkTimer = 120;
@@ -198,7 +198,7 @@ void PKingAttack_State_Orbiting(void)
     self->targetPos.y = self->target->position.y;
 
     self->angle = (self->angle + 12) & 0x3FF;
-    int inc     = (384 - self->scale.x - (RSDK.Sin1024(self->angle) >> 3)) >> 3;
+    int32 inc   = (384 - self->scale.x - (RSDK.Sin1024(self->angle) >> 3)) >> 3;
 
     self->scale.x += inc;
     self->scale.y = self->scale.x;

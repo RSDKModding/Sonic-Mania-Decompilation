@@ -106,7 +106,7 @@ void BSS_Message_State_GetBSWait(void)
 
     if (!setup->speedupLevel) {
         if (player->up) {
-            setup->speedupLevel      = 16;
+            setup->speedupLevel  = 16;
             setup->globeSpeed    = 16;
             setup->globeSpeedInc = 2;
 
@@ -128,7 +128,7 @@ void BSS_Message_State_GetBSWait(void)
     if (++self->timer >= 180) {
         self->timer = 0;
 
-        setup->speedupLevel      = 16;
+        setup->speedupLevel  = 16;
         setup->globeSpeed    = 16;
         setup->globeSpeedInc = 2;
 

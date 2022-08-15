@@ -334,7 +334,7 @@ void LoveTester_State_SetupTopDisplay(void)
             case ID_TAILS: self->tvDisplayTop = LOVETESTER_LIST_TAILS; break;
             case ID_KNUCKLES: self->tvDisplayTop = LOVETESTER_LIST_KNUX; break;
         }
-        
+
         self->nextDisplayBottom = self->tvDisplayTop;
         while (self->nextDisplayBottom == self->tvDisplayTop) {
             self->nextDisplayBottom = RSDK.Rand(LOVETESTER_LIST_SONIC, LOVETESTER_LIST_HEART);

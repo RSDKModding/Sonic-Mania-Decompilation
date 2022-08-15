@@ -34,7 +34,7 @@ void Clucker_Update(void);
 void Clucker_LateUpdate(void);
 void Clucker_StaticUpdate(void);
 void Clucker_Draw(void);
-void Clucker_Create(void* data);
+void Clucker_Create(void *data);
 void Clucker_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Clucker_EditorDraw(void);
@@ -59,4 +59,4 @@ void Clucker_State_Destroyed(void);
 
 void Clucker_State_Egg(void);
 
-#endif //!OBJ_CLUCKER_H
+#endif //! OBJ_CLUCKER_H

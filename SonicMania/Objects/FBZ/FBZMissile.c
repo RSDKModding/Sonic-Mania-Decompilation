@@ -242,7 +242,8 @@ void FBZMissile_StateVertical_Fall(void)
         }
 
         if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xC0000, false)) {
-            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), self->position.x, self->position.y + 0x30000)->drawGroup = Zone->objectDrawGroup[1];
+            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), self->position.x, self->position.y + 0x30000)->drawGroup =
+                Zone->objectDrawGroup[1];
             RSDK.PlaySfx(FBZMissile->sfxExplosion, false, 255);
             destroyEntity(self);
         }

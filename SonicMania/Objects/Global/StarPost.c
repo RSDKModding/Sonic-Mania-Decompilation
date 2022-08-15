@@ -77,7 +77,7 @@ void StarPost_Create(void *data)
 
 void StarPost_StageLoad(void)
 {
-    StarPost->aniFrames     = RSDK.LoadSpriteAnimation("Global/StarPost.bin", SCOPE_STAGE);
+    StarPost->aniFrames = RSDK.LoadSpriteAnimation("Global/StarPost.bin", SCOPE_STAGE);
 
     StarPost->hitbox.left   = -8;
     StarPost->hitbox.top    = -44;
@@ -197,10 +197,10 @@ void StarPost_CheckBonusStageEntry(void)
 
     self->starAnimator.frameID = (self->starAngleY >> 3) & 3;
 
-    self->hitboxStars.left      = -(self->starRadius >> 2);
-    self->hitboxStars.top       = -48;
-    self->hitboxStars.right     = self->starRadius >> 2;
-    self->hitboxStars.bottom    = -40;
+    self->hitboxStars.left   = -(self->starRadius >> 2);
+    self->hitboxStars.top    = -48;
+    self->hitboxStars.right  = self->starRadius >> 2;
+    self->hitboxStars.bottom = -40;
 
     if (self->starTimer >= 60) {
         if (!globals->recallEntities) {
@@ -300,10 +300,10 @@ void StarPost_CheckCollisions(void)
 #endif
 
                     if (player->rings >= quota) {
-                        self->starTimer    = 0;
-                        self->starAngleY   = 0;
-                        self->starAngleX   = 0;
-                        self->starRadius   = 0;
+                        self->starTimer  = 0;
+                        self->starAngleY = 0;
+                        self->starAngleX = 0;
+                        self->starRadius = 0;
                         // This is the calculation for the bonus stages from sonic 3
                         // I mean it works, sure but it's just more proof this was prolly based off S3 '14
                         self->bonusStageID = (player->rings - 20) % 3 + 1;

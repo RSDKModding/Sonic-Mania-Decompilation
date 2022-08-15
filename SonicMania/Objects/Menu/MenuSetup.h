@@ -87,7 +87,7 @@ void MenuSetup_Update(void);
 void MenuSetup_LateUpdate(void);
 void MenuSetup_StaticUpdate(void);
 void MenuSetup_Draw(void);
-void MenuSetup_Create(void* data);
+void MenuSetup_Create(void *data);
 void MenuSetup_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MenuSetup_EditorDraw(void);
@@ -99,7 +99,7 @@ void MenuSetup_Serialize(void);
 void MenuSetup_StartTransition(void (*callback)(void), int32 delay);
 
 #if !MANIA_USE_PLUS
-//Setup
+// Setup
 void MenuSetup_Initialize(void);
 bool32 MenuSetup_InitAPI(void);
 void MenuSetup_SetupActions(void);
@@ -111,7 +111,7 @@ void MenuSetup_SetBGColors(void);
 void MenuSetup_MenuButton_ActionCB(void);
 void MenuSetup_StartTransitionLB(void (*callback)(void), int32 delay);
 
-//Main Menu
+// Main Menu
 bool32 MenuSetup_BackPressCB_ReturnToTitle(void);
 void MenuSetup_StartReturnToTitle(void);
 void MenuSetup_ReturnToTitle(void);
@@ -120,7 +120,7 @@ void MenuSetup_ExitGame_ActionCB(void);
 void MenuSetup_ExitGame_CB(void);
 void MenuSetup_State_HandleTransition(void);
 
-//Save Select
+// Save Select
 int32 MenuSetup_GetMedalMods(void);
 void MenuSetup_OpenSaveSelectMenu(void);
 #if MANIA_USE_PLUS
@@ -133,7 +133,7 @@ void MenuSetup_SaveSel_MenuUpdateCB(void);
 void MenuSetup_OpenSecretsMenu(void);
 void MenuSetup_SaveSel_YPressCB(void);
 
-//Time Attack
+// Time Attack
 void MenuSetup_TA_OpenZoneList_Sonic(void);
 void MenuSetup_TA_OpenZoneList_Tails(void);
 void MenuSetup_TA_OpenZoneList_Knux(void);
@@ -144,7 +144,7 @@ bool32 MenuSetup_TA_Leaderboards_BackPressCB(void);
 void MenuSetup_TA_Leaderboards_YPressCB(void);
 void MenuSetup_State_SetupLeaderboards(void);
 
-//Comptetition
+// Comptetition
 void MenuSetup_VS_OpenCompRules(void);
 void MenuSetup_VS_OpenCompZones(void);
 void MenuSetup_VS_ProcessButtonCB(void);
@@ -189,7 +189,7 @@ void MenuSetup_OptionsVideo_VSyncButton_ActionCB(void);
 void MenuSetup_OptionsVideo_TripleBufferButton_ActionCB(void);
 void MenuSetup_OptionsVideo_UISlider_ChangedCB(void);
 
-//Extras
+// Extras
 void MenuSetup_OpenExtrasMenu_ActionCB(void);
 void MenuSetup_Extras_ProcessButtonCB(void);
 void MenuSetup_Extras_Start_Puyo_vsAI(void);
@@ -206,4 +206,4 @@ void MenuSetup_Extras_Start_BSS_Mania(void);
 void MenuSetup_Extras_BSS_Mania_ActionCB(void);
 #endif
 
-#endif //!OBJ_MENUSETUP_H
+#endif //! OBJ_MENUSETUP_H

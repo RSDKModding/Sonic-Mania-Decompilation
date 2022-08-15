@@ -199,7 +199,8 @@ void PuyoGame_State_Init(void)
     self->state = PuyoGame_State_Wait;
 }
 
-void PuyoGame_State_Wait(void) {
+void PuyoGame_State_Wait(void)
+{
     // Gaming(?)
 }
 

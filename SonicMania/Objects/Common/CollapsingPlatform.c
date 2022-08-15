@@ -199,7 +199,7 @@ void CollapsingPlatform_State_Left(void)
     for (int32 y = 0; y < sy; ++y) {
         for (int32 x = 0; x < sx; ++x) {
             EntityBreakableWall *tile = CREATE_ENTITY(BreakableWall, INT_TO_VOID(BREAKWALL_TILE_DYNAMIC), tx, ty);
-            tile->targetLayer             = self->targetLayer;
+            tile->targetLayer         = self->targetLayer;
             tile->tileInfo            = *tiles;
             tile->drawGroup           = self->drawGroup;
             tile->tilePos.x           = x + startTX;
@@ -234,7 +234,7 @@ void CollapsingPlatform_State_Right(void)
     for (int32 y = 0; y < sy; ++y) {
         for (int32 x = 0; x < sx; ++x) {
             EntityBreakableWall *tile = CREATE_ENTITY(BreakableWall, INT_TO_VOID(BREAKWALL_TILE_DYNAMIC), tx, ty);
-            tile->targetLayer             = self->targetLayer;
+            tile->targetLayer         = self->targetLayer;
             tile->tileInfo            = *tiles;
             tile->drawGroup           = self->drawGroup;
             tile->tilePos.x           = x + startTX;
@@ -270,7 +270,7 @@ void CollapsingPlatform_State_Center(void)
     for (int32 y = 0; y < sy; ++y) {
         for (int32 x = 0; x < sx; ++x) {
             EntityBreakableWall *tile = CREATE_ENTITY(BreakableWall, INT_TO_VOID(BREAKWALL_TILE_DYNAMIC), tx, ty);
-            tile->targetLayer             = self->targetLayer;
+            tile->targetLayer         = self->targetLayer;
             tile->tileInfo            = *tiles;
             tile->drawGroup           = self->drawGroup;
             tile->tilePos.x           = x + startTX;

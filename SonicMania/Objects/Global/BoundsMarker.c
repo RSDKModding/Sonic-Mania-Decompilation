@@ -69,14 +69,14 @@ void BoundsMarker_ApplyBounds(EntityPlayer *player, EntityBoundsMarker *marker, 
                     }
                     break;
 
-                case BOUNDSMARKER_BELOW_Y: 
+                case BOUNDSMARKER_BELOW_Y:
                     if (player->position.y > marker->position.y + (marker->offset << 16)) {
                         Zone->playerBoundsT[playerID] = marker->position.y;
                         Zone->cameraBoundsT[playerID] = FROM_FIXED(Zone->playerBoundsT[playerID]);
                     }
                     break;
 
-                case BOUNDSMARKER_BELOW_Y_ANY: 
+                case BOUNDSMARKER_BELOW_Y_ANY:
                     Zone->playerBoundsT[playerID] = marker->position.y;
                     Zone->cameraBoundsT[playerID] = FROM_FIXED(Zone->playerBoundsT[playerID]);
                     break;

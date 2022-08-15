@@ -86,8 +86,8 @@ void HangGlider_State_CheckGrab(void)
 
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_DIAGONAL, &self->playerAnimator, true, 0);
             self->playerAnimator.rotationStyle = ROTSTYLE_FULL;
-            self->rotation                    = 0x80;
-            self->drawFX                      = FX_ROTATE;
+            self->rotation                     = 0x80;
+            self->drawFX                       = FX_ROTATE;
             RSDK.PlaySfx(Player->sfxGrab, false, 255);
             self->state = HangGlider_State_Glide;
         }

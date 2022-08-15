@@ -212,7 +212,7 @@ void HCZSetup_StageLoad(void)
     }
     else if (isMainGameMode() && CutsceneRules_IsAct1()) {
         Zone->shouldRecoverPlayers = true;
-        Zone->stageFinishCallback = HCZSetup_StageFinish_EndAct1;
+        Zone->stageFinishCallback  = HCZSetup_StageFinish_EndAct1;
     }
 
 #if MANIA_USE_PLUS

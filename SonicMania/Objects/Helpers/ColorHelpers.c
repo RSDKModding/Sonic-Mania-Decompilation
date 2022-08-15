@@ -65,7 +65,7 @@ void ColorHelpers_RGBToHSL(uint32 r, uint32 g, uint32 b, uint32 *hue, uint32 *sa
                     h = 60 * (int32)(b - r) / chroma + 120;
                 else
                     h = 60 * (int32)(r - g) / chroma + 240;
-    
+
                 if (h < 0)
                     h += 360;
 

@@ -225,8 +225,8 @@ void GameOver_State_WaitComp(void)
     EntityCompetition *manager        = Competition->sessionManager;
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
 
-    int32 gameOverCount               = 0;
-    int32 deathCount                  = 0;
+    int32 gameOverCount = 0;
+    int32 deathCount    = 0;
     for (int32 i = 0; i < session->playerCount; ++i) {
         EntityGameOver *gameOver = RSDK_GET_ENTITY(i + Player->playerCount, GameOver);
 

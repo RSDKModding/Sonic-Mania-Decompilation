@@ -326,7 +326,7 @@ void UISaveSlot_DrawPlayerIcon_Encore(uint8 playerID, bool32 isSilhouette, uint8
     self->drawFX |= FX_FLIP;
     self->direction = FLIP_NONE;
     switch (buddyID) {
-        default: 
+        default:
         case ID_SONIC: animator->frameID = 0; break;
         case ID_TAILS: animator->frameID = 1; break;
         case ID_KNUCKLES: animator->frameID = 2; break;
@@ -344,7 +344,7 @@ void UISaveSlot_DrawPlayerIcon_Encore(uint8 playerID, bool32 isSilhouette, uint8
     RSDK.DrawSprite(animator, &drawPos, false);
 
     switch (playerID) {
-        default: 
+        default:
         case ID_SONIC: animator->frameID = 0; break;
         case ID_TAILS: animator->frameID = 1; break;
         case ID_KNUCKLES: animator->frameID = 2; break;
@@ -377,7 +377,7 @@ void UISaveSlot_DrawPlayerIcon_Encore(uint8 playerID, bool32 isSilhouette, uint8
 
         for (int32 f = friendCount - 1; f >= 0; --f) {
             switch (friendIDs[f]) {
-                default: 
+                default:
                 case ID_SONIC: animator->frameID = 0; break;
                 case ID_TAILS: animator->frameID = 1; break;
                 case ID_KNUCKLES: animator->frameID = 2; break;
@@ -429,7 +429,7 @@ void UISaveSlot_DrawPlayerIcons(int32 drawX, int32 drawY)
 
             if (!buddyID) {
                 switch (playerID) {
-                    default: 
+                    default:
                     case ID_SONIC: playerID = 0; break;
                     case ID_TAILS: playerID = 1; break;
                     case ID_KNUCKLES: playerID = 2; break;
@@ -471,7 +471,7 @@ void UISaveSlot_DrawPlayerIcons(int32 drawX, int32 drawY)
 
         if (!buddyID) {
             switch (playerID) {
-                default: 
+                default:
                 case ID_SONIC: playerID = 0; break;
                 case ID_TAILS: playerID = 1; break;
                 case ID_KNUCKLES: playerID = 2; break;
@@ -528,7 +528,7 @@ void UISaveSlot_DrawPlayerInfo(int32 drawX, int32 drawY)
 
         if (self->debugEncoreDraw && SceneInfo->inEditor) {
             switch (UISaveSlot_GetPlayerIDFromID(self->dCharPoint)) {
-                default: 
+                default:
                 case ID_SONIC: playerID = 0; break;
                 case ID_TAILS: playerID = 1; break;
                 case ID_KNUCKLES: playerID = 2; break;
@@ -538,7 +538,7 @@ void UISaveSlot_DrawPlayerInfo(int32 drawX, int32 drawY)
         }
         else {
             switch (self->saveEncorePlayer) {
-                default: 
+                default:
                 case ID_SONIC: playerID = 0; break;
                 case ID_TAILS: playerID = 1; break;
                 case ID_KNUCKLES: playerID = 2; break;

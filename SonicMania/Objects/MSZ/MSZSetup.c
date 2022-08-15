@@ -232,7 +232,7 @@ void MSZSetup_StageLoad(void)
 
                     if (CutsceneRules_IsAct1Regular()) {
                         Zone->shouldRecoverPlayers = true;
-                        Zone->stageFinishCallback = MSZSetup_StageFinish_EndAct1K;
+                        Zone->stageFinishCallback  = MSZSetup_StageFinish_EndAct1K;
                     }
                 }
                 else {
@@ -253,7 +253,7 @@ void MSZSetup_StageLoad(void)
 
                 if (CutsceneRules_IsAct1Regular()) {
                     Zone->shouldRecoverPlayers = true;
-                    Zone->stageFinishCallback = MSZSetup_StageFinish_EndAct1K;
+                    Zone->stageFinishCallback  = MSZSetup_StageFinish_EndAct1K;
                 }
             }
             else {
@@ -690,13 +690,13 @@ void MSZSetup_PlayerState_Pilot(void)
 {
     RSDK_THIS(Player);
 
-    self->position.x    = 0;
-    self->position.y    = 0;
-    self->active        = ACTIVE_NEVER;
-    self->visible       = false;
-    self->stateInput    = StateMachine_None;
-    self->position.x    = ScreenInfo->position.x << 16;
-    self->position.y    = ScreenInfo->position.y << 16;
+    self->position.x     = 0;
+    self->position.y     = 0;
+    self->active         = ACTIVE_NEVER;
+    self->visible        = false;
+    self->stateInput     = StateMachine_None;
+    self->position.x     = ScreenInfo->position.x << 16;
+    self->position.y     = ScreenInfo->position.y << 16;
     Player->respawnTimer = 0;
 }
 
@@ -704,9 +704,9 @@ void MSZSetup_PlayerState_PostCrashJumpIn(void)
 {
     RSDK_THIS(Player);
 
-    self->active        = ACTIVE_NORMAL;
-    self->visible       = true;
-    self->stateInput    = Player_Input_P2_AI;
+    self->active         = ACTIVE_NORMAL;
+    self->visible        = true;
+    self->stateInput     = Player_Input_P2_AI;
     Player->respawnTimer = 240;
 
     Player_HandleSidekickRespawn();

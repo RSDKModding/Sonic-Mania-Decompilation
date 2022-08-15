@@ -29,7 +29,7 @@ void PhantomShield_Update(void);
 void PhantomShield_LateUpdate(void);
 void PhantomShield_StaticUpdate(void);
 void PhantomShield_Draw(void);
-void PhantomShield_Create(void* data);
+void PhantomShield_Create(void *data);
 void PhantomShield_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PhantomShield_EditorDraw(void);
@@ -42,4 +42,4 @@ void PhantomShield_State_Appear(void);
 void PhantomShield_State_Active(void);
 void PhantomShield_State_Disappear(void);
 
-#endif //!OBJ_PHANTOMSHIELD_H
+#endif //! OBJ_PHANTOMSHIELD_H

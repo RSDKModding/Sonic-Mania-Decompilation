@@ -28,7 +28,7 @@ void Debris_Update(void);
 void Debris_LateUpdate(void);
 void Debris_StaticUpdate(void);
 void Debris_Draw(void);
-void Debris_Create(void* data);
+void Debris_Create(void *data);
 void Debris_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Debris_EditorDraw(void);
@@ -44,4 +44,4 @@ void Debris_State_Move(void);
 void Debris_State_Fall(void);
 void Debris_State_FallAndFlicker(void);
 
-#endif //!OBJ_DEBRIS_H
+#endif //! OBJ_DEBRIS_H

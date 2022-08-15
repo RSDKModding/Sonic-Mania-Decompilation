@@ -43,14 +43,14 @@ void Pinata_Create(void *data)
 
 void Pinata_StageLoad(void)
 {
-    Pinata->aniFrames     = RSDK.LoadSpriteAnimation("MSZ/Pinata.bin", SCOPE_STAGE);
+    Pinata->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Pinata.bin", SCOPE_STAGE);
 
     Pinata->hitboxPinata.left   = -12;
     Pinata->hitboxPinata.top    = -16;
     Pinata->hitboxPinata.right  = 12;
     Pinata->hitboxPinata.bottom = 16;
 
-    Pinata->sfxPinata     = RSDK.GetSfx("MSZ/Pinata.wav");
+    Pinata->sfxPinata = RSDK.GetSfx("MSZ/Pinata.wav");
 
     DEBUGMODE_ADD_OBJ(Pinata);
 }
@@ -113,13 +113,13 @@ void Pinata_State_CheckPlayerCollisions(void)
                 Zone->objectDrawGroup[1];
 
             for (int32 i = 0; i < 6; ++i) {
-                int32 x                = self->position.x + RSDK.Rand(-0x80000, 0x80000);
-                int32 y                = self->position.y + RSDK.Rand(-0x80000, 0x80000);
+                int32 x              = self->position.x + RSDK.Rand(-0x80000, 0x80000);
+                int32 y              = self->position.y + RSDK.Rand(-0x80000, 0x80000);
                 EntityDebris *debris = CREATE_ENTITY(Debris, NULL, x, y);
 
-                debris->state        = Debris_State_Fall;
-                debris->gravityStrength      = 0x4000;
-                debris->velocity.x   = RSDK.Rand(0, 0x20000);
+                debris->state           = Debris_State_Fall;
+                debris->gravityStrength = 0x4000;
+                debris->velocity.x      = RSDK.Rand(0, 0x20000);
                 if (debris->position.x < self->position.x)
                     debris->velocity.x = -debris->velocity.x;
 

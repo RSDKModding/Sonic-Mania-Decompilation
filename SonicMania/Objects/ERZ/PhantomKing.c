@@ -173,7 +173,7 @@ void PhantomKing_HandleFrames(void)
     RSDK.ProcessAnimation(&self->bodyAnimator);
 
     if (self->state != PhantomKing_State_WrestleEggman) {
-        int max = self->velocity.x >> 15;
+        int32 max = self->velocity.x >> 15;
 
         if (self->rotation >= max) {
             if (self->rotation > max) {
@@ -189,15 +189,15 @@ void PhantomKing_HandleFrames(void)
         }
     }
 
-    int negAng      = -self->rotation;
+    int32 negAng    = -self->rotation;
     self->bodyAngle = (self->bodyAngle + 12) & 0x3FF;
 
-    int x = 0x1C00 * RSDK.Sin512(negAng) + self->position.x;
-    int y = 0x1C00 * RSDK.Cos512(negAng) + self->position.y;
+    int32 x = 0x1C00 * RSDK.Sin512(negAng) + self->position.x;
+    int32 y = 0x1C00 * RSDK.Cos512(negAng) + self->position.y;
 
-    int angle = self->bodyAngle;
+    int32 angle = self->bodyAngle;
 
-    for (int i = 0; i < 10; i += 2) {
+    for (int32 i = 0; i < 10; i += 2) {
         self->framePositions[i].x = x + 2 * RSDK.Cos512(self->rotation) * RSDK.Cos1024(angle);
         self->framePositions[i].y = y + 2 * RSDK.Sin512(self->rotation) * RSDK.Cos1024(angle);
         self->frameIDs[i]         = angle & 0x3FF;
@@ -292,7 +292,7 @@ void PhantomKing_SwitchToEggman(void)
             eggmanArm->position.x = eggmanPtr->position.x;
             eggmanArm->position.y = eggmanPtr->position.y;
 
-            for (int i = 0; i < 10; ++i) eggmanArm->framePositions[i] = eggmanPtr->position;
+            for (int32 i = 0; i < 10; ++i) eggmanArm->framePositions[i] = eggmanPtr->position;
 
             eggmanArm->velocity.x = 0;
             eggmanArm->velocity.y = 0;
@@ -334,7 +334,7 @@ void PhantomKing_Draw_Body(void)
     RSDK.DrawSprite(&self->headAnimator, NULL, false);
     RSDK.DrawSprite(&self->bodyAnimator, NULL, false);
 
-    for (int i = 0; i < 10; ++i) {
+    for (int32 i = 0; i < 10; ++i) {
         if (self->frameIDs[i] < 0x200) {
             self->particleAnimator.frameID = self->frameIDs[i] / 42 % 6;
             RSDK.DrawSprite(&self->particleAnimator, &self->framePositions[i], false);
@@ -345,7 +345,7 @@ void PhantomKing_Draw_Body(void)
     RSDK.DrawSprite(&self->beltAnimator, NULL, false);
     self->drawFX = self->storeDrawFX | FX_ROTATE | FX_FLIP;
 
-    for (int i = 0; i < 10; ++i) {
+    for (int32 i = 0; i < 10; ++i) {
         if (self->frameIDs[i] >= 0x200) {
             self->particleAnimator.frameID = self->frameIDs[i] / 42 % 6;
             RSDK.DrawSprite(&self->particleAnimator, &self->framePositions[i], false);
@@ -376,7 +376,7 @@ void PhantomKing_Draw_Arm(void)
         RSDK.SetLimitedFade(0, 1, 4, parent->typeChangeTimer, 128, 256);
     }
 
-    for (int i = 0; i < 6; ++i) RSDK.DrawSprite(&self->armAnimator, &self->framePositions[i], false);
+    for (int32 i = 0; i < 6; ++i) RSDK.DrawSprite(&self->armAnimator, &self->framePositions[i], false);
 
     RSDK.DrawSprite(&self->cuffAnimator, &self->framePositions[6], false);
     RSDK.DrawSprite(&self->handAnimator, &self->framePositions[6], false);
@@ -664,8 +664,8 @@ void PhantomKing_StateArm_Idle(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
-    int percent = 0x1800;
-    for (int i = 0; i < 7; ++i) {
+    int32 percent = 0x1800;
+    for (int32 i = 0; i < 7; ++i) {
         self->framePositions[i] = MathHelpers_GetBezierPoint(percent, x, y, x2, y2, x2, y2, self->position.x, self->position.y);
         percent += 0x2000;
     }
@@ -681,10 +681,10 @@ void PhantomKing_StateArm_WrestleEggman(void)
     EntityPhantomKing *parent = self->parent;
 
     self->direction = parent->direction;
-    int negAngle    = -parent->rotation;
+    int32 negAngle  = -parent->rotation;
 
-    int x = 0;
-    int y = 0;
+    int32 x = 0;
+    int32 y = 0;
 
     if (self->direction) {
         x = parent->position.x + 0xD00 * RSDK.Cos512(negAngle) + 0x300 * RSDK.Sin512(negAngle);
@@ -705,8 +705,8 @@ void PhantomKing_StateArm_WrestleEggman(void)
         }
     }
 
-    int percent = 0x1800;
-    for (int i = 0; i < 7; ++i) {
+    int32 percent = 0x1800;
+    for (int32 i = 0; i < 7; ++i) {
         self->framePositions[i] = MathHelpers_GetBezierPoint(percent, x, y, self->armBezierPos.x, self->armBezierPos.y, self->armBezierPos.x,
                                                              self->armBezierPos.y, self->position.x, self->position.y);
         percent += 0x2000;
@@ -725,16 +725,16 @@ void PhantomKing_HandleArmMovement(void)
     RSDK.Sin256(2 * (Zone->timer + (self->type << 6)) - 128);
     ++self->timer;
     self->direction = parent->direction;
-    int negAngle    = -parent->rotation;
+    int32 negAngle  = -parent->rotation;
 
-    int x = 0;
-    int y = 0;
+    int32 x = 0;
+    int32 y = 0;
 
-    int x2 = 0;
-    int y2 = 0;
+    int32 x2 = 0;
+    int32 y2 = 0;
 
-    int x3 = 0;
-    int y3 = 0;
+    int32 x3 = 0;
+    int32 y3 = 0;
 
     if (self->direction) {
         x = parent->position.x + 0xD00 * RSDK.Cos512(negAngle) + 0x300 * RSDK.Sin512(negAngle);
@@ -770,8 +770,8 @@ void PhantomKing_HandleArmMovement(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
-    int percent = 0x1800;
-    for (int i = 0; i < 7; ++i) {
+    int32 percent = 0x1800;
+    for (int32 i = 0; i < 7; ++i) {
         self->framePositions[i] = MathHelpers_GetBezierPoint(percent, x, y, x2, y2, x2, y2, x3, y3);
         percent += 0x2000;
     }

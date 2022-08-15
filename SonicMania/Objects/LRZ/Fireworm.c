@@ -241,7 +241,7 @@ void Fireworm_State_BodyAppear(void)
 
     ++self->timer;
 
-    for (int i = 0; i < FIREWORM_SEGMENT_COUNT; ++i) {
+    for (int32 i = 0; i < FIREWORM_SEGMENT_COUNT; ++i) {
         if (self->timer == (i * 10) + 4) {
             self->bodyVelocities[i].x = self->bodyDirections[i] ? 0x10000 : -0x10000;
 
@@ -343,7 +343,7 @@ void Fireworm_EditorDraw(void)
 {
     RSDK_THIS(Fireworm);
 
-    for (int i = 0; i < FIREWORM_SEGMENT_COUNT; ++i) {
+    for (int32 i = 0; i < FIREWORM_SEGMENT_COUNT; ++i) {
         self->bodyPositions[i].x = self->position.x + (self->direction ? 0x100000 : -0x100000) * i;
         self->bodyPositions[i].y = self->position.y;
         self->bodyOriginY[i]     = self->position.y;

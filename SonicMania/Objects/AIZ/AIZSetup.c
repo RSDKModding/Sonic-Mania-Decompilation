@@ -124,8 +124,8 @@ void AIZSetup_StageLoad(void)
 
     AIZSetup->hasSetupCutscene = false;
 
-    AIZSetup->aniTiles     = RSDK.LoadSpriteSheet("AIZ/AniTiles.gif", SCOPE_STAGE);
-    AIZSetup->knuxFrames   = RSDK.LoadSpriteAnimation("Players/KnuxCutsceneAIZ.bin", SCOPE_STAGE);
+    AIZSetup->aniTiles   = RSDK.LoadSpriteSheet("AIZ/AniTiles.gif", SCOPE_STAGE);
+    AIZSetup->knuxFrames = RSDK.LoadSpriteAnimation("Players/KnuxCutsceneAIZ.bin", SCOPE_STAGE);
 
 #if MANIA_USE_PLUS
     if (RSDK.GetTileLayerID("Background 4") >= DRAWGROUP_COUNT) {
@@ -158,8 +158,8 @@ void AIZSetup_StageLoad(void)
             else
                 pos = 0;
 
-            int32 angle = 0;
-            int32 deform  = RSDK.Rand(0, 4);
+            int32 angle  = 0;
+            int32 deform = RSDK.Rand(0, 4);
             for (int32 i = 0; i < 16; ++i) {
                 deformData[pos + i]           = (deform * RSDK.Sin1024(angle)) >> 10;
                 deformData[(pos + 0x200) + i] = (deform * RSDK.Sin1024(angle)) >> 10;
@@ -207,10 +207,10 @@ void AIZSetup_StageLoad(void)
     BGSwitch->switchCallback[AIZ_BG_JUNGLE] = AIZSetup_BGSwitch_Jungle;
     BGSwitch->switchCallback[AIZ_BG_SKY]    = AIZSetup_BGSwitch_Sky;
 
-    BGSwitch->layerIDs[0]                   = AIZ_BG_JUNGLE;
-    BGSwitch->layerIDs[1]                   = AIZ_BG_JUNGLE;
-    BGSwitch->layerIDs[2]                   = AIZ_BG_JUNGLE;
-    BGSwitch->layerIDs[3]                   = AIZ_BG_JUNGLE;
+    BGSwitch->layerIDs[0] = AIZ_BG_JUNGLE;
+    BGSwitch->layerIDs[1] = AIZ_BG_JUNGLE;
+    BGSwitch->layerIDs[2] = AIZ_BG_JUNGLE;
+    BGSwitch->layerIDs[3] = AIZ_BG_JUNGLE;
 
     RSDK.SetDrawGroupProperties(0, false, Water_DrawHook_ApplyWaterPalette);
     RSDK.SetDrawGroupProperties(Zone->hudDrawGroup, false, Water_DrawHook_RemoveWaterPalette);
@@ -245,9 +245,9 @@ void AIZSetup_PlayerState_Static(void)
 void AIZSetup_PlayerState_P2Enter(void)
 {
     RSDK_THIS(Player);
-    self->active        = ACTIVE_NORMAL;
-    self->visible       = true;
-    self->stateInput    = Player_Input_P2_AI;
+    self->active         = ACTIVE_NORMAL;
+    self->visible        = true;
+    self->stateInput     = Player_Input_P2_AI;
     Player->respawnTimer = 240;
     Player_HandleSidekickRespawn();
 }
@@ -256,7 +256,7 @@ void AIZSetup_HandleHeavyMovement(void)
 {
     EntityAIZKingClaw *claw = AIZSetup->claw;
 
-    int32 x                 = -0x10000;
+    int32 x = -0x10000;
     foreach_all(AIZEggRobo, robo)
     {
         if (robo->forKnux && x >= robo->position.x)
@@ -558,10 +558,10 @@ bool32 AIZSetup_CutsceneSonic_RubyGrabbed(EntityCutsceneSeq *host)
             }
         }
         else {
-            AIZSetup->playDrillSfx             = false;
+            AIZSetup->playDrillSfx = false;
 
-            host->storedTimer                  = host->timer;
-            host->storedValue                  = claw->position.y;
+            host->storedTimer = host->timer;
+            host->storedValue = claw->position.y;
 
             AIZSetup->decorations[0]->rotSpeed = 0;
             AIZSetup->decorations[1]->rotSpeed = 0;

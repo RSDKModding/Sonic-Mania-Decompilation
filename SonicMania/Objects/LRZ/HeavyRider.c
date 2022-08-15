@@ -1055,8 +1055,8 @@ void HeavyRider_Draw_Boss(void)
         case HEAVYRIDER_SPIKEBALL_UNUSED3:
             if (HeavyRider->spikeBallAngle < 0x80) {
                 self->spikeBallAnimator.frameID = 1;
-                int angle                       = 0x400;
-                for (int i = 0; i < 8; ++i) {
+                int32 angle                     = 0x400;
+                for (int32 i = 0; i < 8; ++i) {
                     angle += 0x800;
                     drawPos.x = drawX + angle * RSDK.Cos256(HeavyRider->spikeBallAngle);
                     drawPos.y = drawY + (angle >> 3) * RSDK.Sin256(2 * HeavyRider->spikeBallAngle);
@@ -1251,7 +1251,7 @@ void HeavyRider_StateJimmy_RevUp(void)
 
     if (--self->timer > 0) {
         if (!(self->timer & 7)) {
-            int channel = RSDK.PlaySfx(HeavyRider->sfxCharge, false, 255);
+            int32 channel = RSDK.PlaySfx(HeavyRider->sfxCharge, false, 255);
             RSDK.SetChannelAttributes(channel, 1.0, 0.0, chargeSpeeds[HeavyRider->chargeTimer]);
             ++HeavyRider->chargeTimer;
         }

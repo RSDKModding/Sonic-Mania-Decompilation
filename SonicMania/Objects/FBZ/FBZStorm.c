@@ -68,7 +68,6 @@ void FBZStorm_Update(void)
             RSDK.SetLimitedFade(0, FBZStorm->outsideBank, 2, self->blendAmount, 0x80, 0x100);
         }
     }
-
 }
 
 void FBZStorm_LateUpdate(void) {}
@@ -160,8 +159,8 @@ void FBZStorm_State_StormStart(void)
     self->visible = true;
     if (self->alpha >= 0x80) {
         FBZStorm->outsideBank = 4;
-        self->inkEffect  = INK_BLEND;
-        self->state      = FBZStorm_State_Storming;
+        self->inkEffect       = INK_BLEND;
+        self->state           = FBZStorm_State_Storming;
     }
     else {
         self->alpha += 4;

@@ -6,7 +6,7 @@
 typedef enum {
     BUZZSAW_ATTACHED,
     BUZZSAW_STRAY,
-}BuzzsawTypes;
+} BuzzsawTypes;
 
 // Object Class
 struct ObjectBuzzSaw {
@@ -37,7 +37,7 @@ void BuzzSaw_Update(void);
 void BuzzSaw_LateUpdate(void);
 void BuzzSaw_StaticUpdate(void);
 void BuzzSaw_Draw(void);
-void BuzzSaw_Create(void* data);
+void BuzzSaw_Create(void *data);
 void BuzzSaw_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void BuzzSaw_EditorDraw(void);
@@ -57,4 +57,4 @@ void BuzzSaw_State_Stray_Waiting(void);
 void BuzzSaw_State_Stray_Released(void);
 void BuzzSaw_State_FreeMove_Reset(void);
 
-#endif //!OBJ_BUZZSAW_H
+#endif //! OBJ_BUZZSAW_H

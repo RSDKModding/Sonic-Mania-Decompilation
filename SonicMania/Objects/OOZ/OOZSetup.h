@@ -15,9 +15,9 @@ struct ObjectOOZSetup {
     RSDK_OBJECT
     int32 palTimer;
     uint16 aniTiles;
-    TileLayer* background1;
+    TileLayer *background1;
     TABLE(int32 deformData[64], { 1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3,
-                                1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3 });
+                                  1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3 });
     int32 oilAniTimer;
     int32 glowLightAniFrame;
     STATIC(int32 glowLightAniTimer, 60);
@@ -57,7 +57,7 @@ void OOZSetup_Update(void);
 void OOZSetup_LateUpdate(void);
 void OOZSetup_StaticUpdate(void);
 void OOZSetup_Draw(void);
-void OOZSetup_Create(void* data);
+void OOZSetup_Create(void *data);
 void OOZSetup_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void OOZSetup_EditorDraw(void);
@@ -81,4 +81,4 @@ void OOZSetup_PlayerState_OilStrip(void);
 void OOZSetup_PlayerState_OilSlide(void);
 void OOZSetup_PlayerState_OilFall(void);
 
-#endif //!OBJ_OOZSETUP_H
+#endif //! OBJ_OOZSETUP_H

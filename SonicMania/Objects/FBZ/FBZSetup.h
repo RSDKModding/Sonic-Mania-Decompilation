@@ -38,7 +38,7 @@ struct ObjectFBZSetup {
 
 // Entity Class
 struct EntityFBZSetup {
-	RSDK_ENTITY
+    RSDK_ENTITY
 };
 
 // Object Struct
@@ -49,7 +49,7 @@ void FBZSetup_Update(void);
 void FBZSetup_LateUpdate(void);
 void FBZSetup_StaticUpdate(void);
 void FBZSetup_Draw(void);
-void FBZSetup_Create(void* data);
+void FBZSetup_Create(void *data);
 void FBZSetup_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void FBZSetup_EditorDraw(void);
@@ -75,4 +75,4 @@ void FBZSetup_StageFinish_EndAct1(void);
 void FBZSetup_StageFinish_EndAct2(void);
 #endif
 
-#endif //!OBJ_FBZSETUP_H
+#endif //! OBJ_FBZSETUP_H

@@ -67,8 +67,8 @@ void LEDPanel_EditorLoad(void);
 void LEDPanel_Serialize(void);
 
 // Extra Entity Functions
-void LEDPanel_SetupActiveText(int index, String *src);
-void LEDPanel_SetupTextPos(int index, int x, int y);
+void LEDPanel_SetupActiveText(int32 index, String *src);
+void LEDPanel_SetupTextPos(int32 index, int32 x, int32 y);
 void LEDPanel_HandleCharacters(void);
 
 void LEDPanel_StateText_Move(void);

@@ -251,7 +251,7 @@ void Shutterbug_State_FlyAway(void)
     Shutterbug_CheckOffScreen();
 }
 
-int Shutterbug_BounceX(void)
+int32 Shutterbug_BounceX(void)
 {
     RSDK_THIS(Shutterbug);
 
@@ -266,7 +266,7 @@ int Shutterbug_BounceX(void)
 
     return collided;
 }
-int Shutterbug_BounceY(void)
+int32 Shutterbug_BounceY(void)
 {
     RSDK_THIS(Shutterbug);
 
@@ -308,7 +308,7 @@ void Shutterbug_TryTakePicture(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &Shutterbug->hitboxAchievement) && ++Shutterbug->pictureCount == 10) 
+        if (Player_CheckCollisionTouch(player, self, &Shutterbug->hitboxAchievement) && ++Shutterbug->pictureCount == 10)
             API_UnlockAchievement(&achievementList[ACH_SPZ]);
     }
 }

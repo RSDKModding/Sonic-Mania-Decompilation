@@ -83,7 +83,7 @@ void DrillerdroidO_Serialize(void);
 // Extra Entity Functions
 void DrillerdroidO_CheckPlayerCollisions(void);
 void DrillerdroidO_Explode(void);
-void DrillerdroidO_SpawnDebris(int offset);
+void DrillerdroidO_SpawnDebris(int32 offset);
 
 void DrillerdroidO_State_SetupArena(void);
 void DrillerdroidO_State_AwaitPlayer(void);

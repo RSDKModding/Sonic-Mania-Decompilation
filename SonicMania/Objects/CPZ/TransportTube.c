@@ -52,8 +52,8 @@ void TransportTube_StageLoad(void) { TransportTube->sfxTravel = RSDK.GetSfx("Tub
 
 void TransportTube_SetupDirections(EntityTransportTube *entity)
 {
-    int32 velocityX[] = {   0,  0, -16, 16,  12, -12, 12, -12 };
-    int32 velocityY[] = { -16, 16,   0,  0, -12, -12, 12,  12 };
+    int32 velocityX[] = { 0, 0, -16, 16, 12, -12, 12, -12 };
+    int32 velocityY[] = { -16, 16, 0, 0, -12, -12, 12, 12 };
 
     entity->directionCount = 0;
     for (int32 i = 0; i < 8; ++i) {

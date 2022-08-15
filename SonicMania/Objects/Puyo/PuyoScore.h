@@ -37,6 +37,6 @@ void PuyoScore_EditorLoad(void);
 void PuyoScore_Serialize(void);
 
 // Extra Entity Functions
-void PuyoScore_DrawScore(int score);
+void PuyoScore_DrawScore(int32 score);
 
 #endif //! OBJ_PUYOSCORE_H

@@ -118,7 +118,7 @@ void Technosqueek_CheckOffScreen(void)
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
         self->distance >>= 1;
         self->position  = self->startPos;
-        self->direction  = self->startDir;
+        self->direction = self->startDir;
         Technosqueek_Create(NULL);
     }
 }

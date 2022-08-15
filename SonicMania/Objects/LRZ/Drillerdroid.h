@@ -84,7 +84,7 @@ void Drillerdroid_Serialize(void);
 void Drillerdroid_Hit(void);
 void Drillerdroid_CheckPlayerCollisions(void);
 void Drillerdroid_Explode(void);
-void Drillerdroid_SpawnDebris(int offset);
+void Drillerdroid_SpawnDebris(int32 offset);
 
 void Drillerdroid_State_SetupArena(void);
 void Drillerdroid_State_AwaitPlayer(void);

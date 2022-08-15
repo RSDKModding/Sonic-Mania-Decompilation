@@ -8,7 +8,7 @@ typedef enum {
     CAMERA_LERP_SIN1024,
     CAMERA_LERP_SIN1024_2,
     CAMERA_LERP_SIN512,
-}CameraLerpType;
+} CameraLerpType;
 
 // Object Class
 struct ObjectCamera {

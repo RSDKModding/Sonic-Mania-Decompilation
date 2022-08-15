@@ -227,7 +227,7 @@ void SaveGame_SaveLoadedCB(bool32 success)
         foreach_all(UISaveSlot, entity)
         {
             if (!entity->type) {
-                Entity *store     = SceneInfo->entity;
+                Entity *store = SceneInfo->entity;
 
                 SceneInfo->entity = (Entity *)entity;
                 UISaveSlot_LoadSaveInfo();
@@ -249,7 +249,7 @@ void SaveGame_SaveLoadedCB(bool32 success)
 
 void SaveGame_SaveGameState(void)
 {
-    SaveRAM *saveRAM = SaveGame->saveRAM;
+    SaveRAM *saveRAM        = SaveGame->saveRAM;
     globals->recallEntities = true;
 
     for (int32 p = 0; p < PLAYER_COUNT; ++p) {
@@ -337,8 +337,8 @@ void SaveGame_ClearRestartData(void)
 }
 void SaveGame_SavePlayerState(void)
 {
-    SaveRAM *saveRAM    = SaveGame->saveRAM;
-    EntityPlayer *player    = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+    SaveRAM *saveRAM     = SaveGame->saveRAM;
+    EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     globals->restartSlot[0] = 0;
     globals->restartSlot[1] = 0;

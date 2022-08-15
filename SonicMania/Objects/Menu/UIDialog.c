@@ -215,7 +215,7 @@ void UIDialog_Setup(EntityUIDialog *dialog)
 
         control = RSDK_GET_ENTITY(SLOT_DIALOG_UICONTROL, UIControl);
 #if MANIA_USE_PLUS
-        control->menuWasSetup      = true;
+        control->menuWasSetup = true;
 #endif
         control->position.x        = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
         control->position.y        = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;

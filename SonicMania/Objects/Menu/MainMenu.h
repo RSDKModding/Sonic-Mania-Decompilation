@@ -14,7 +14,7 @@ struct ObjectMainMenu {
 
 // Entity Class
 struct EntityMainMenu {
-	RSDK_ENTITY
+    RSDK_ENTITY
 };
 
 // Object Struct
@@ -25,7 +25,7 @@ void MainMenu_Update(void);
 void MainMenu_LateUpdate(void);
 void MainMenu_StaticUpdate(void);
 void MainMenu_Draw(void);
-void MainMenu_Create(void* data);
+void MainMenu_Create(void *data);
 void MainMenu_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MainMenu_EditorDraw(void);
@@ -50,4 +50,4 @@ void MainMenu_SetupActions(void);
 void MainMenu_MenuSetupCB(void);
 #endif
 
-#endif //!OBJ_MAINMENU_H
+#endif //! OBJ_MAINMENU_H

@@ -259,7 +259,7 @@ void PhantomEgg_SetupWarpFX(void)
         PhantomEgg->startScanline = ScreenInfo->center.y;
         PhantomEgg->endScanline   = ScreenInfo->size.y;
 
-        RSDK.GetTileLayer(Zone->fgLayer[0])->scanlineCallback  = PhantomEgg_Scanline_WarpFX;
+        RSDK.GetTileLayer(Zone->fgLayer[0])->scanlineCallback = PhantomEgg_Scanline_WarpFX;
         RSDK.GetTileLayer(Zone->fgLayer[1])->scanlineCallback = PhantomEgg_Scanline_WarpFX;
 
         PhantomRuby_PlaySfx(RUBYSFX_ATTACK1);
@@ -388,7 +388,7 @@ void PhantomEgg_HandlePhantomWarp(uint8 phantomID)
 
 void PhantomEgg_HandleReturnWarp(void)
 {
-    for (int p = 0; p < Player->playerCount; ++p) {
+    for (int32 p = 0; p < Player->playerCount; ++p) {
         Zone->cameraBoundsL[p] = PhantomEgg->boundsStoreL1;
         Zone->cameraBoundsR[p] = PhantomEgg->boundsStoreR1;
         Zone->cameraBoundsT[p] = PhantomEgg->boundsStoreT1;
@@ -676,7 +676,7 @@ void PhantomEgg_State_MoveAround(void)
 
     PhantomEgg_HandleAnimations();
 
-    int startX = self->position.x;
+    int32 startX = self->position.x;
     if (self->position.x >= self->targetPos.x - 0x100000) {
         if (self->position.x > self->targetPos.x + 0x100000)
             self->velocity.x -= 0x1800;
@@ -951,7 +951,7 @@ void PhantomEgg_State_Attack_WarpAway(void)
     RSDK_THIS(PhantomEgg);
 
     if (PhantomEgg->endScanline >= ScreenInfo->size.y) {
-        RSDK.GetTileLayer(Zone->fgLayer[0])->scanlineCallback  = StateMachine_None;
+        RSDK.GetTileLayer(Zone->fgLayer[0])->scanlineCallback = StateMachine_None;
         RSDK.GetTileLayer(Zone->fgLayer[1])->scanlineCallback = StateMachine_None;
 
         self->timer   = 0;
@@ -974,7 +974,7 @@ void PhantomEgg_State_Attack_WarpReturn(void)
     RSDK_THIS(PhantomEgg);
 
     if (PhantomEgg->endScanline >= ScreenInfo->size.y) {
-        RSDK.GetTileLayer(Zone->fgLayer[0])->scanlineCallback  = StateMachine_None;
+        RSDK.GetTileLayer(Zone->fgLayer[0])->scanlineCallback = StateMachine_None;
         RSDK.GetTileLayer(Zone->fgLayer[1])->scanlineCallback = StateMachine_None;
 
         CREATE_ENTITY(PhantomShield, self, self->position.x, self->position.y);
@@ -1000,7 +1000,7 @@ void PhantomEgg_State_Destroyed(void)
     self->position.y = self->targetPos.y + RSDK.Rand(-0x20000, 0x20000);
 
     if (!RSDK.GetEntityCount(TMZCable->classID, true)) {
-        int id = 0;
+        int32 id = 0;
         foreach_active(PhantomMissile, missile)
         {
             switch (id++) {
@@ -1043,7 +1043,7 @@ void PhantomEgg_State_Destroyed(void)
         CREATE_ENTITY(TMZ2Outro, NULL, self->position.x, self->position.y);
         RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 8, &self->legAnimator, true, 1);
 
-        for (int i = 0; i < 0x100; ++i) RSDK.SetPaletteEntry(7, i, RSDK.GetPaletteEntry(1, i) & 0xFF0000);
+        for (int32 i = 0; i < 0x100; ++i) RSDK.SetPaletteEntry(7, i, RSDK.GetPaletteEntry(1, i) & 0xFF0000);
 
         self->state = PhantomEgg_State_Exploding;
     }

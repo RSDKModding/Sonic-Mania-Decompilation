@@ -130,7 +130,7 @@ void StickyPlatform_StageLoad(void)
 {
     StickyPlatform->aniFrames = RSDK.LoadSpriteAnimation("CPZ/StickyPlatform.bin", SCOPE_STAGE);
 
-    StickyPlatform->sfxLand  = RSDK.GetSfx("Puyo/Land.wav");
+    StickyPlatform->sfxLand = RSDK.GetSfx("Puyo/Land.wav");
 }
 
 void StickyPlatform_Interact(void)
@@ -158,7 +158,7 @@ void StickyPlatform_Interact(void)
                         else {
                             Hitbox *playerHitbox = Player_GetHitbox(player);
 
-                            uint16 animID     = 0;
+                            uint16 animID = 0;
                             switch (self->type) {
                                 case STICKYPLATFORM_UP:
                                     player->position.x = self->position.x;
@@ -205,11 +205,11 @@ void StickyPlatform_Interact(void)
                     self->activePlayers |= 1 << i;
                     RSDK.SetSpriteAnimation(StickyPlatform->aniFrames, 3 * (self->type >> 1), &self->animator, true, 0);
                     self->animator.speed = 1;
-                    player->state                   = Player_State_Static;
-                    player->velocity.x              = 0;
-                    player->velocity.y              = 0;
-                    player->groundVel               = 0;
-                    player->rotation                = 0;
+                    player->state        = Player_State_Static;
+                    player->velocity.x   = 0;
+                    player->velocity.y   = 0;
+                    player->groundVel    = 0;
+                    player->rotation     = 0;
 
                     RSDK.PlaySfx(StickyPlatform->sfxLand, false, 255);
                 }

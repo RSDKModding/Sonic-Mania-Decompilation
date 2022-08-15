@@ -8,7 +8,7 @@ typedef enum {
     CRATE_FRAME_ORANGE_BROKEN,
     CRATE_FRAME_ORANGE,
     CRATE_FRAME_BLUE_BG,
-}CrateFrameIDs;
+} CrateFrameIDs;
 
 // Object Class
 struct ObjectCrate {
@@ -32,7 +32,7 @@ void Crate_Update(void);
 void Crate_LateUpdate(void);
 void Crate_StaticUpdate(void);
 void Crate_Draw(void);
-void Crate_Create(void* data);
+void Crate_Create(void *data);
 void Crate_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Crate_EditorDraw(void);
@@ -50,4 +50,4 @@ void Crate_State_ApplyGravity(void);
 void Crate_State_WaitToFall(void);
 void Crate_State_Fall(void);
 
-#endif //!OBJ_CRATE_H
+#endif //! OBJ_CRATE_H

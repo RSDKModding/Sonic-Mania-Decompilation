@@ -5,7 +5,7 @@
 
 // Object Class
 struct ObjectCutsceneRules {
-	RSDK_OBJECT
+    RSDK_OBJECT
 };
 
 // Entity Class
@@ -21,7 +21,7 @@ void CutsceneRules_Update(void);
 void CutsceneRules_LateUpdate(void);
 void CutsceneRules_StaticUpdate(void);
 void CutsceneRules_Draw(void);
-void CutsceneRules_Create(void* data);
+void CutsceneRules_Create(void *data);
 void CutsceneRules_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void CutsceneRules_EditorDraw(void);
@@ -41,4 +41,4 @@ bool32 CutsceneRules_CheckPlayerPos(int32 x1, int32 y1, int32 x2, int32 y2);
 void CutsceneRules_SetupEntity(void *e, Vector2 *size, Hitbox *hitbox);
 void CutsceneRules_DrawCutsceneBounds(void *e, Vector2 *size);
 
-#endif //!OBJ_CUTSCENERULES_H
+#endif //! OBJ_CUTSCENERULES_H

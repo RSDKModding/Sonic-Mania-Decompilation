@@ -40,7 +40,7 @@ void SpikeCorridor_Update(void);
 void SpikeCorridor_LateUpdate(void);
 void SpikeCorridor_StaticUpdate(void);
 void SpikeCorridor_Draw(void);
-void SpikeCorridor_Create(void* data);
+void SpikeCorridor_Create(void *data);
 void SpikeCorridor_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SpikeCorridor_EditorDraw(void);
@@ -67,4 +67,4 @@ void SpikeCorridor_StateSpikes_Land(void);
 void SpikeCorridor_Draw_DropWarn(void);
 void SpikeCorridor_Draw_Spikes(void);
 
-#endif //!OBJ_SPIKECORRIDOR_H
+#endif //! OBJ_SPIKECORRIDOR_H

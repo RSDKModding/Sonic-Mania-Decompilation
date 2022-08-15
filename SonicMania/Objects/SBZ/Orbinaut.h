@@ -35,7 +35,7 @@ void Orbinaut_Update(void);
 void Orbinaut_LateUpdate(void);
 void Orbinaut_StaticUpdate(void);
 void Orbinaut_Draw(void);
-void Orbinaut_Create(void* data);
+void Orbinaut_Create(void *data);
 void Orbinaut_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Orbinaut_EditorDraw(void);
@@ -59,4 +59,4 @@ void Orbinaut_State_Orbless(void);
 void Orbinaut_State_Orb(void);
 void Orbinaut_State_OrbDebris(void);
 
-#endif //!OBJ_ORBINAUT_H
+#endif //! OBJ_ORBINAUT_H

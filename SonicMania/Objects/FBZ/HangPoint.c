@@ -466,7 +466,7 @@ void HangPoint_EditorDraw(void)
         self->pullPos     = self->direction == FLIP_X ? 0 : self->length;
         HangPoint_Draw();
 
-            DrawHelpers_DrawArrow(self->position.x, self->position.y + prevPullPos, self->position.x, self->position.y + self->pullPos, 0x00FF00,
+        DrawHelpers_DrawArrow(self->position.x, self->position.y + prevPullPos, self->position.x, self->position.y + self->pullPos, 0x00FF00,
                               INK_NONE, 0xFF);
 
         RSDK_DRAWING_OVERLAY(false);

@@ -343,7 +343,7 @@ void UIResPicker_EditorDraw(void)
 {
     RSDK_THIS(UIResPicker);
 
-    int sizeY = self->size.y;
+    int32 sizeY = self->size.y;
 
     self->selection     = -2;
     self->drawGroup     = 2;

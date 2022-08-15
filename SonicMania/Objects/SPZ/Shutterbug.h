@@ -59,8 +59,8 @@ void Shutterbug_State_FlyAround(void);
 void Shutterbug_State_ShakeFly(void);
 void Shutterbug_State_FlyAway(void);
 
-int Shutterbug_BounceX(void);
-int Shutterbug_BounceY(void);
+int32 Shutterbug_BounceX(void);
+int32 Shutterbug_BounceY(void);
 
 void Shutterbug_CheckFocus(void);
 void Shutterbug_TryTakePicture(void);

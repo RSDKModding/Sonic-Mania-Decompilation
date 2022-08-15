@@ -198,7 +198,7 @@ void PhantomMystic_Draw_CupSwap(void)
         RSDK.DrawSprite(&self->mysticAnimator, &self->mysticPos, false);
     }
 
-    for (int i = 0; i < 3; ++i) {
+    for (int32 i = 0; i < 3; ++i) {
         drawPos.x       = self->position.x + self->cupPos[i];
         self->direction = FLIP_X;
         RSDK.DrawSprite(&self->cupAnimator, &drawPos, false);

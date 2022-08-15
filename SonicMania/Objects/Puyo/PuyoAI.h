@@ -40,7 +40,8 @@ void PuyoAI_Serialize(void);
 // Extra Entity Functions
 Vector2 PuyoAI_GetBeanPos(int32 playerID);
 void PuyoAI_PrepareAction(int32 playerID);
-int PuyoAI_GetChainComboSize(int32 playerID, EntityPuyoBean *bean, EntityPuyoBean *partner, int32 beanX, int32 beanY, int32 partnerX, int32 partnerY);
+int32 PuyoAI_GetChainComboSize(int32 playerID, EntityPuyoBean *bean, EntityPuyoBean *partner, int32 beanX, int32 beanY, int32 partnerX,
+                               int32 partnerY);
 void PuyoAI_SetupInputs(EntityPuyoBean *bean, bool32 rotationDisabled);
 void PuyoAI_Input_AI(void);
 
