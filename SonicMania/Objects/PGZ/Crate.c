@@ -144,7 +144,7 @@ bool32 Crate_Collide(void)
 
         int32 shieldAnim = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield)->shieldAnimator.animationID;
 
-        switch (RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, playerHitbox, false)) {
+        switch (MathHelpers_CheckBoxCollision(self, &self->hitbox, player, playerHitbox)) {
             default:
             case C_NONE:
                 player->velocity.x = storeXVel;

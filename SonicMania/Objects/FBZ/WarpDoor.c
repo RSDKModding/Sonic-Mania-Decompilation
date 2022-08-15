@@ -137,10 +137,7 @@ void WarpDoor_Update(void)
                 }
             }
 
-            if (warped)
-                return;
-
-            if (self->hasWarped)
+            if (!warped && self->hasWarped)
                 self->hasWarped = false;
         }
     }

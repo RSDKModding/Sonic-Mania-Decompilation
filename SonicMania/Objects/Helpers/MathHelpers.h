@@ -56,4 +56,7 @@ int32 MathHelpers_CheckPositionOverlap(int32 otherX1, int32 otherY1, int32 other
 int32 MathHelpers_GetEdgeDistance(int32 distance, int32 radius);
 bool32 MathHelpers_ConstrainToBox(Vector2 *pos, int32 x, int32 y, Vector2 boxPos, Hitbox hitbox);
 
+// RSDKv5U changed how the setPos param works, so this is added for compatibility
+uint8 MathHelpers_CheckBoxCollision(void *thisEntity, Hitbox *thisHitbox, void *otherEntity, Hitbox *otherHitbox);
+
 #endif //! OBJ_MATHHELPERS_H

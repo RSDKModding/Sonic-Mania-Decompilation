@@ -184,32 +184,7 @@ int LRZConveyor_HandlePlayerCollisions(EntityLRZConveyor *conveyor, void *p, Hit
             playerHitbox.bottom = 8;
         }
 
-#if RETRO_REV0U
-        Vector2 storePos     = player->position;
-        Vector2 storeVel     = player->velocity;
-        int32 storeGroundVel = player->groundVel;
-        bool32 storeOnGround = player->onGround;
-        int32 storeAngle     = player->angle;
-
-        side               = RSDK.CheckObjectCollisionBox(conveyor, &hitbox, player, &playerHitbox, true);
-        Vector2 collidePos = player->position;
-
-        player->position  = storePos;
-        player->velocity  = storeVel;
-        player->groundVel = storeGroundVel;
-        player->onGround  = storeOnGround;
-        player->angle     = storeAngle;
-        switch (side) {
-            default:
-            case C_NONE: break;
-            case C_TOP: player->position.y = collidePos.y; break;
-            case C_LEFT: player->position.x = collidePos.x; break;
-            case C_RIGHT: player->position.x = collidePos.x; break;
-            case C_BOTTOM: player->position.y = collidePos.y; break;
-        }
-#else
-        side = RSDK.CheckObjectCollisionBox(conveyor, &hitbox, player, &playerHitbox, false);
-#endif
+        side = MathHelpers_CheckBoxCollision(conveyor, &hitbox, player, &playerHitbox);
         conveyor->direction = storeDir;
     }
 

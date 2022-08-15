@@ -273,18 +273,15 @@ void HUD_Draw(void)
     drawPos.x           = lifePos.x;
     drawPos.y           = lifePos.y;
 #if MANIA_USE_PLUS
-    int32 lifeIconFrame = -1;
-    int32 charID        = player->characterID;
     int32 lives = self->lives[player->playerID];
-    for (; charID > 0; ++lifeIconFrame) charID >>= 1;
-    self->lifeIconAnimator.frameID = lifeIconFrame;
+    self->lifeIconAnimator.frameID = HUD_CharacterIndexFromID(player->characterID);
 
-    if (lifeIconFrame < 0) {
+    if (self->lifeIconAnimator.frameID < 0) {
         self->lifeIconAnimator.frameID = self->lifeFrameIDs[player->playerID];
         lives--;
     }
     else {
-        self->lifeFrameIDs[player->playerID] = lifeIconFrame;
+        self->lifeFrameIDs[player->playerID] = self->lifeIconAnimator.frameID;
         self->lives[player->playerID]        = player->lives;
     }
 #else

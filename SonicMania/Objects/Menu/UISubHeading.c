@@ -395,8 +395,8 @@ void UISubHeading_SaveButton_ActionCB(void)
     if (self->type == UISAVESLOT_NOSAVE || self->isNewSave) {
         if (self->encoreMode) {
             globals->playerID          = ID_SONIC;
-            globals->stock             = 0;
-            globals->characterFlags    = 0;
+            globals->stock             = ID_NONE;
+            globals->characterFlags    = ID_NONE;
             globals->enableIntro       = true;
             globals->suppressTitlecard = true;
             RSDK.SetScene("Cutscenes", "Angel Island Zone Encore");

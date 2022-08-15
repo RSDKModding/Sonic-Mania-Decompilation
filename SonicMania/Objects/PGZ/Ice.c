@@ -740,7 +740,7 @@ void Ice_State_IceBlock(void)
         int32 playerY      = player->position.y;
 
         if (player->state == Ice_PlayerState_Frozen) {
-            switch (RSDK.CheckObjectCollisionBox(self, &self->hitboxPlayerBlockCheck, player, &Ice->hitboxPlayerBlockOuter, false)) {
+            switch (MathHelpers_CheckBoxCollision(self, &self->hitboxPlayerBlockCheck, player, &Ice->hitboxPlayerBlockOuter)) {
                 default:
                 case C_NONE:
                     player->position.x = playerX;
@@ -860,7 +860,7 @@ void Ice_State_IceBlock(void)
         }
 
         if (noCollision) {
-            switch (RSDK.CheckObjectCollisionBox(self, &self->hitboxBlock, player, &Ice->hitboxPlayerBlockOuter, false)) {
+            switch (MathHelpers_CheckBoxCollision(self, &self->hitboxBlock, player, &Ice->hitboxPlayerBlockOuter)) {
                 default:
                 case C_NONE:
                 case C_TOP: break;

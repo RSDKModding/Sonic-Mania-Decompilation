@@ -417,6 +417,44 @@ bool32 MathHelpers_ConstrainToBox(Vector2 *pos, int32 x, int32 y, Vector2 boxPos
     return false;
 }
 
+// RSDKv5U changed how the setPos param works, so this is added for compatibility
+#if RETRO_REV0U
+uint8 MathHelpers_CheckBoxCollision(void *thisEntity, Hitbox *thisHitbox, void *otherEntity, Hitbox *otherHitbox)
+{
+    Entity *other = (Entity *)otherEntity;
+
+    Vector2 storePos     = other->position;
+    Vector2 storeVel     = other->velocity;
+    int32 storeGroundVel = other->groundVel;
+    bool32 storeOnGround = other->onGround;
+    int32 storeAngle     = other->angle;
+
+    uint8 side         = RSDK.CheckObjectCollisionBox(thisEntity, thisHitbox, otherEntity, otherHitbox, true);
+    Vector2 collidePos = other->position;
+
+    other->position  = storePos;
+    other->velocity  = storeVel;
+    other->groundVel = storeGroundVel;
+    other->onGround  = storeOnGround;
+    other->angle     = storeAngle;
+    switch (side) {
+        default:
+        case C_NONE: break;
+        case C_TOP: other->position.y = collidePos.y; break;
+        case C_LEFT: other->position.x = collidePos.x; break;
+        case C_RIGHT: other->position.x = collidePos.x; break;
+        case C_BOTTOM: other->position.y = collidePos.y; break;
+    }
+
+    return side;
+}
+#else
+uint8 MathHelpers_CheckBoxCollision(void *thisEntity, Hitbox *thisHitbox, void *otherEntity, Hitbox *otherHitbox)
+{
+    return RSDK.CheckObjectCollisionBox(thisEntity, thisHitbox, otherEntity, otherHitbox, false);
+}
+#endif
+
 #if RETRO_INCLUDE_EDITOR
 void MathHelpers_EditorDraw(void) {}
 

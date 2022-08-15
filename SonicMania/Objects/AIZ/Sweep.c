@@ -155,7 +155,7 @@ void Sweep_CheckPlayerCollisions(void)
             playerHitbox  = &hitbox;
         }
 
-        int32 side = RSDK.CheckObjectCollisionBox(self, &Sweep->hitboxBadnik, player, playerHitbox, false);
+        int32 side = MathHelpers_CheckBoxCollision(self, &Sweep->hitboxBadnik, player, playerHitbox);
         if (side) {
             if (self->state != Sweep_State_Turn
                 && ((self->direction == FLIP_NONE && side == C_LEFT) || (self->direction == FLIP_X && side == C_RIGHT)))

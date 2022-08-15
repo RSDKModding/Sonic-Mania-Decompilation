@@ -944,10 +944,10 @@ bool32 ItemBox_HandlePlatformCollision(void *plat)
 
         switch (platform->collision) {
             case PLATFORM_C_PLATFORM:
-                collided = RSDK.CheckObjectCollisionPlatform(platform, RSDK.GetHitbox(&platform->animator, 0), self, &ItemBox->hitboxItemBox, 1);
+                collided = RSDK.CheckObjectCollisionPlatform(platform, RSDK.GetHitbox(&platform->animator, 0), self, &ItemBox->hitboxItemBox, true);
                 break;
             case PLATFORM_C_SOLID:
-                collided = RSDK.CheckObjectCollisionBox(platform, RSDK.GetHitbox(&platform->animator, 1), self, &ItemBox->hitboxItemBox, 1);
+                collided = RSDK.CheckObjectCollisionBox(platform, RSDK.GetHitbox(&platform->animator, 1), self, &ItemBox->hitboxItemBox, true);
                 break;
 
             case PLATFORM_C_TILED:
@@ -1069,7 +1069,7 @@ void ItemBox_HandleObjectCollisions(void)
             if (crate->classID == Crate->classID) {
                 crate->stood       = true;
                 self->position.x   = self->scale.x + crate->drawPos.x;
-                self->position.y   = (self->scale.y + crate->drawPos.x) & 0xFFFF0000;
+                self->position.y   = (self->scale.y + crate->drawPos.y) & 0xFFFF0000;
                 self->moveOffset.x = crate->collisionOffset.x & 0xFFFF0000;
                 self->moveOffset.y = crate->collisionOffset.y & 0xFFFF0000;
                 self->contentsPos.x += crate->collisionOffset.x;
@@ -1112,11 +1112,11 @@ void ItemBox_HandleObjectCollisions(void)
                 if (RSDK.CheckObjectCollisionBox(ice, &ice->hitboxBlock, self, &ItemBox->hitboxItemBox, true) == C_TOP) {
                     self->position.x += ice->playerMoveOffset.x;
                     self->position.y += ice->playerMoveOffset.y;
-                    self->position.y = TO_FIXED(self->position.y >> 16);
+                    self->position.y = TO_FIXED(self->position.y);
 
                     self->contentsPos.x += ice->playerMoveOffset.x;
                     self->contentsPos.y += ice->playerMoveOffset.y;
-                    self->contentsPos.y = TO_FIXED(self->contentsPos.y >> 16);
+                    self->contentsPos.y = TO_FIXED(self->contentsPos.y);
 
                     self->moveOffset.x = ice->playerMoveOffset.x;
                     self->moveOffset.y = ice->playerMoveOffset.y;

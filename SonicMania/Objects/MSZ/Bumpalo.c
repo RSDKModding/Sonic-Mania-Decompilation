@@ -207,7 +207,7 @@ void Bumpalo_CheckPlayerCollisions(void)
             }
             else if (Player_CheckCollisionTouch(player, self, &Bumpalo->hitboxCharge)) {
 #if MANIA_USE_PLUS
-                if (Player_CheckMightyUnspin(player, 1024, 2, &player->uncurlTimer)) {
+                if (Player_CheckMightyUnspin(player, 0x400, 2, &player->uncurlTimer)) {
                     RSDK.PlaySfx(Bumpalo->sfxImpact, false, 255);
                     RSDK.SetSpriteAnimation(Bumpalo->aniFrames, 4, &self->badnikAnimator, true, 0);
                     self->state      = Bumpalo_State_Bumped;
@@ -242,7 +242,7 @@ void Bumpalo_CheckPlayerCollisions(void)
                 else {
                     if (Player_CheckCollisionTouch(player, self, &Bumpalo->hitboxCharge)) {
 #if MANIA_USE_PLUS
-                        if (Player_CheckMightyUnspin(player, 1024, 2, &player->uncurlTimer)) {
+                        if (Player_CheckMightyUnspin(player, 0x400, 2, &player->uncurlTimer)) {
                             RSDK.PlaySfx(Bumpalo->sfxImpact, false, 255);
                             RSDK.SetSpriteAnimation(Bumpalo->aniFrames, 4, &self->badnikAnimator, true, 0);
                             self->state      = Bumpalo_State_Bumped;
@@ -523,7 +523,7 @@ void Bumpalo_State_Bumped(void)
     RSDK.ProcessAnimation(&self->badnikAnimator);
 
     self->position.x += self->velocity.x;
-    self->position.y += self->velocity.x;
+    self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
 
     self->onGround     = false;

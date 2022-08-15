@@ -156,8 +156,8 @@ void Player_LateUpdate(void)
         Player_TryTransform(self, 0x7F);
 
     if (self->state == Player_State_FlyCarried) {
-        self->flyCarryLeaderPos.x = TO_FIXED(self->position.x >> 16);
-        self->flyCarryLeaderPos.y = TO_FIXED(self->position.y >> 16);
+        self->flyCarryLeaderPos.x = TO_FIXED(self->position.x);
+        self->flyCarryLeaderPos.y = TO_FIXED(self->position.y);
     }
 
     if (self->deathType) {
@@ -1790,9 +1790,10 @@ void Player_RemoveEncoreLeader(void)
     EntityPlayer *sidekick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
 
     if (globals->stock != ID_NONE) {
-        Player_ChangeCharacter(sidekick, globals->stock);
+        int32 newCharacter = GET_STOCK_ID(1);
+        Player_ChangeCharacter(sidekick, newCharacter);
         globals->playerID &= 0xFF;
-        globals->playerID |= globals->stock << 8;
+        globals->playerID |= newCharacter << 8;
         globals->stock >>= 8;
     }
     else {
@@ -2098,7 +2099,7 @@ void Player_HandleDeath(EntityPlayer *player)
                     Player_SwapMainPlayer(true);
 
                     if (globals->stock) {
-                        Player_ChangeCharacter(player2, globals->stock);
+                        Player_ChangeCharacter(player2, GET_STOCK_ID(1));
                         globals->stock >>= 8;
                     }
                     else {

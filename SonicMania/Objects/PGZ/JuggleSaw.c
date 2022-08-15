@@ -25,6 +25,7 @@ void JuggleSaw_StaticUpdate(void) {}
 void JuggleSaw_Draw(void)
 {
     RSDK_THIS(JuggleSaw);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
