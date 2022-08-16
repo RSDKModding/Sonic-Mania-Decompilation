@@ -864,7 +864,7 @@ void DERobot_State_SetupBoss(void)
         if (self->timer == 60) {
             CREATE_ENTITY(DERobot, INT_TO_VOID(DEROBOT_TARGET_EDGE), self->position.x, 0x3080000);
             RSDK.PlaySfx(DERobot->sfxTargeting, false, 255);
-            Music_TransitionTrack(TRACK_EGGMAN1, 0.125);
+            Music_TransitionTrack(TRACK_EGGMAN1, 0.0125);
         }
 
         if (self->timer == 160) {
