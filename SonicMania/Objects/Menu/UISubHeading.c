@@ -178,20 +178,20 @@ void UISubHeading_HandleMenuReturn(int32 slot)
     EntityUIControl *control = ManiaModeMenu->secretsMenu;
     SaveRAM *saveGame        = (SaveRAM *)SaveGame_GetDataPtr(slot, false);
 
-    UIButton_SetChoiceSelection(control->buttons[0], (saveGame->medalMods & GET_MEDAL_MOD(MEDAL_NOTIMEOVER)) != 0);
-    UIButton_SetChoiceSelection(control->buttons[1], (saveGame->medalMods & GET_MEDAL_MOD(MEDAL_ANDKNUCKLES)) != 0);
+    UIButton_SetChoiceSelection(control->buttons[0], (saveGame->medalMods & MEDAL_NOTIMEOVER) != 0);
+    UIButton_SetChoiceSelection(control->buttons[1], (saveGame->medalMods & MEDAL_ANDKNUCKLES) != 0);
 
-    if (saveGame->medalMods & GET_MEDAL_MOD(MEDAL_NODROPDASH)) {
-        if (saveGame->medalMods & GET_MEDAL_MOD(MEDAL_PEELOUT))
+    if (saveGame->medalMods & MEDAL_NODROPDASH) {
+        if (saveGame->medalMods & MEDAL_PEELOUT)
             UIButton_SetChoiceSelection(control->buttons[2], 1);
-        else if (saveGame->medalMods & GET_MEDAL_MOD(MEDAL_INSTASHIELD))
+        else if (saveGame->medalMods & MEDAL_INSTASHIELD)
             UIButton_SetChoiceSelection(control->buttons[2], 2);
     }
     else {
         UIButton_SetChoiceSelection(control->buttons[2], 0);
     }
 
-    if (saveGame->medalMods & GET_MEDAL_MOD(MEDAL_ANDKNUCKLES))
+    if (saveGame->medalMods & MEDAL_ANDKNUCKLES)
         UIButton_SetChoiceSelection(control->buttons[3], 1);
     else
         UIButton_SetChoiceSelection(control->buttons[3], 0);
@@ -203,22 +203,22 @@ int32 UISubHeading_GetMedalMods(void)
 
     int32 mods = 0;
     if (control->buttons[0]->selection == 1)
-        mods |= GET_MEDAL_MOD(MEDAL_NOTIMEOVER);
+        mods |= MEDAL_NOTIMEOVER;
 
     if (control->buttons[1]->selection == 1)
-        mods |= GET_MEDAL_MOD(MEDAL_DEBUGMODE);
+        mods |= MEDAL_DEBUGMODE;
 
     if (control->buttons[2]->selection == 1) {
-        mods |= GET_MEDAL_MOD(MEDAL_NODROPDASH);
-        mods |= GET_MEDAL_MOD(MEDAL_PEELOUT);
+        mods |= MEDAL_NODROPDASH;
+        mods |= MEDAL_PEELOUT;
     }
     else if (control->buttons[2]->selection == 2) {
-        mods |= GET_MEDAL_MOD(MEDAL_NODROPDASH);
-        mods |= GET_MEDAL_MOD(MEDAL_INSTASHIELD);
+        mods |= MEDAL_NODROPDASH;
+        mods |= MEDAL_INSTASHIELD;
     }
 
     if (control->buttons[3]->selection == 1)
-        mods |= GET_MEDAL_MOD(MEDAL_ANDKNUCKLES);
+        mods |= MEDAL_ANDKNUCKLES;
 
     return mods;
 }
@@ -369,7 +369,7 @@ void UISubHeading_SaveButton_ActionCB(void)
     }
 
     if (self->encoreMode) {
-        globals->medalMods = GET_MEDAL_MOD(MEDAL_NOTIMEOVER);
+        globals->medalMods = MEDAL_NOTIMEOVER;
         saveRAM->medalMods = globals->medalMods;
     }
     else {
@@ -386,7 +386,7 @@ void UISubHeading_SaveButton_ActionCB(void)
             default: break;
         }
 
-        if ((globals->medalMods & GET_MEDAL_MOD(MEDAL_ANDKNUCKLES)))
+        if ((globals->medalMods & MEDAL_ANDKNUCKLES))
             globals->playerID |= ID_KNUCKLES_ASSIST;
         else if (!self->frameID)
             globals->playerID |= ID_TAILS_ASSIST;
@@ -401,7 +401,7 @@ void UISubHeading_SaveButton_ActionCB(void)
             globals->suppressTitlecard = true;
             RSDK.SetScene("Cutscenes", "Angel Island Zone Encore");
         }
-        else if (((globals->medalMods & GET_MEDAL_MOD(MEDAL_DEBUGMODE)) && (ControllerInfo->keyC.down || ControllerInfo->keyX.down))
+        else if (((globals->medalMods & MEDAL_DEBUGMODE) && (ControllerInfo->keyC.down || ControllerInfo->keyX.down))
                  && self->type == UISAVESLOT_NOSAVE) {
             RSDK.SetScene("Presentation", "Level Select");
         }

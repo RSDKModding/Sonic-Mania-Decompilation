@@ -47,7 +47,7 @@ void Animals_Create(void *data)
 
     int32 type = ANIMAL_POCKY;
 #if MANIA_USE_PLUS
-    if (!(globals->secrets & GET_MEDAL_MOD(SECRET_RICKYMODE)))
+    if (!(globals->secrets & SECRET_RICKYMODE))
 #endif
         type = VOID_TO_INT(data);
 

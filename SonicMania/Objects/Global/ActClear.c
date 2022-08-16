@@ -372,7 +372,7 @@ void ActClear_Create(void *data)
                 case 9:
                     if (!SceneInfo->debugMode && globals->gameMode < MODE_TIMEATTACK && SceneInfo->seconds == 59) {
 #if MANIA_USE_PLUS
-                        if (globals->gameMode != MODE_ENCORE && !(globals->medalMods & GET_MEDAL_MOD(MEDAL_NOTIMEOVER)))
+                        if (globals->gameMode != MODE_ENCORE && !(globals->medalMods & MEDAL_NOTIMEOVER))
 #endif
                             self->timeBonus = 100000;
                     }

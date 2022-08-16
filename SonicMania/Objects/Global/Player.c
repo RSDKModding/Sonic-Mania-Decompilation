@@ -556,7 +556,7 @@ void Player_Create(void *data)
                 self->stateAbility = Player_JumpAbility_Sonic;
                 self->sensorY      = TO_FIXED(20);
 
-                if (globals->medalMods & GET_MEDAL_MOD(MEDAL_PEELOUT)) {
+                if (globals->medalMods & MEDAL_PEELOUT) {
                     self->statePeelout = Player_Action_Peelout;
                     for (int32 f = 0; f < 4; ++f) {
                         SpriteFrame *dst = RSDK.GetFrame(self->aniFrames, ANI_DASH, f + 1);
@@ -691,12 +691,12 @@ void Player_StageLoad(void)
     if (!globals->playerID)
         globals->playerID = RSDK.CheckSceneFolder("MSZCutscene") ? ID_KNUCKLES : ID_DEFAULT_PLAYER;
 
-    SceneInfo->debugMode = globals->medalMods & GET_MEDAL_MOD(MEDAL_DEBUGMODE);
+    SceneInfo->debugMode = globals->medalMods & MEDAL_DEBUGMODE;
 #if MANIA_USE_PLUS
     RSDK.AddViewableVariable("Debug Mode", &SceneInfo->debugMode, VIEWVAR_BOOL, false, true);
 #endif
 
-    if (globals->medalMods & GET_MEDAL_MOD(MEDAL_ANDKNUCKLES)) {
+    if (globals->medalMods & MEDAL_ANDKNUCKLES) {
         globals->playerID &= 0xFF;
         globals->playerID |= ID_KNUCKLES_ASSIST;
     }
@@ -991,7 +991,7 @@ void Player_ChangeCharacter(EntityPlayer *entity, int32 character)
             entity->stateAbility = Player_JumpAbility_Sonic;
             entity->sensorY      = TO_FIXED(20);
 
-            if (globals->medalMods & GET_MEDAL_MOD(MEDAL_PEELOUT)) {
+            if (globals->medalMods & MEDAL_PEELOUT) {
                 entity->statePeelout = Player_Action_Peelout;
                 for (int32 f = 0; f < 4; ++f) {
                     SpriteFrame *dst = RSDK.GetFrame(entity->aniFrames, ANI_DASH, f);
@@ -1182,7 +1182,7 @@ bool32 Player_TryTransform(EntityPlayer *player, uint8 emeraldMasks)
 
 #if MANIA_USE_PLUS
     RSDK.StopSfx(Player->sfxSwapFail);
-    if (globals->medalMods & GET_MEDAL_MOD(SECRET_SUPERDASH))
+    if (globals->secrets & SECRET_SUPERDASH)
         player->stateAbility = ERZStart_Player_StartSuperFly;
 #endif
 
@@ -6015,14 +6015,14 @@ void Player_JumpAbility_Sonic(void)
                 EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(self), Shield);
                 if (self->invincibleTimer) {
                     if (shield->classID != Shield->classID || shield->shieldAnimator.animationID != SHIELDANI_INSTA) {
-                        if (!(globals->medalMods & GET_MEDAL_MOD(MEDAL_NODROPDASH)))
+                        if (!(globals->medalMods & MEDAL_NODROPDASH))
                             ++self->jumpAbilityState;
                     }
                 }
                 else {
                     switch (self->shield) {
                         case SHIELD_NONE:
-                            if (globals->medalMods & GET_MEDAL_MOD(MEDAL_INSTASHIELD)) {
+                            if (globals->medalMods & MEDAL_INSTASHIELD) {
                                 self->invincibleTimer  = -8;
                                 self->jumpAbilityState = 0;
                                 RSDK.PlaySfx(Shield->sfxInstaShield, false, 255);
@@ -6037,8 +6037,8 @@ void Player_JumpAbility_Sonic(void)
                             // returns 0 if dropdash (bit 4) is disabled
                             // returns 1 if dropdash is enabled and instashield (bit 3) is disabled
                             // returns 2 if dropdash AND instashield are enabled
-                            if (!(globals->medalMods & GET_MEDAL_MOD(MEDAL_NODROPDASH)))
-                                self->jumpAbilityState = ((~(globals->medalMods & 0xFF) >> 3) & 2);
+                            if (!(globals->medalMods & MEDAL_NODROPDASH))
+                                self->jumpAbilityState = (~(globals->medalMods & 0xFF) >> 3) & 2;
                             break;
 
                         case SHIELD_BUBBLE:

@@ -129,7 +129,7 @@ void HUD_Draw(void)
 #if GAME_VERSION != VER_100
 #if MANIA_USE_PLUS
     self->timeFlashFrame = 0;
-    if ((SceneInfo->minutes == 9 && isMainGameMode() && !(globals->medalMods & GET_MEDAL_MOD(MEDAL_NOTIMEOVER))) && ActClear->disableTimeBonus)
+    if ((SceneInfo->minutes == 9 && isMainGameMode() && !(globals->medalMods & MEDAL_NOTIMEOVER)) && ActClear->disableTimeBonus)
         self->timeFlashFrame = (Zone->persistentTimer >> 3) & 1;
 #else
     if (SceneInfo->minutes == 9 && globals->gameMode < MODE_TIMEATTACK)
@@ -173,7 +173,7 @@ void HUD_Draw(void)
         // Draw Minutes
         drawPos.x -= TO_FIXED(9);
 #if MANIA_USE_PLUS
-        if (SceneInfo->minutes > 9 && globals->medalMods & GET_MEDAL_MOD(MEDAL_NOTIMEOVER))
+        if (SceneInfo->minutes > 9 && globals->medalMods & MEDAL_NOTIMEOVER)
             HUD_DrawNumbersBase10(&drawPos, SceneInfo->minutes, 2);
         else
 #endif

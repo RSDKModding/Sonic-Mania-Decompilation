@@ -141,9 +141,9 @@ void LevelSelect_Cheat_MaxContinues(void)
 void LevelSelect_Cheat_MaxControl(void)
 {
     RSDK.PlaySfx(LevelSelect->sfxRing, false, 255);
-    globals->medalMods &= ~GET_MEDAL_MOD(MEDAL_NODROPDASH);
-    globals->medalMods |= GET_MEDAL_MOD(MEDAL_INSTASHIELD);
-    globals->medalMods |= GET_MEDAL_MOD(MEDAL_PEELOUT);
+    globals->medalMods &= ~MEDAL_NODROPDASH;
+    globals->medalMods |= MEDAL_INSTASHIELD;
+    globals->medalMods |= MEDAL_PEELOUT;
 }
 
 void LevelSelect_Cheat_RickyMode(void)
@@ -167,16 +167,15 @@ void LevelSelect_Cheat_SwapGameMode(void)
         }
         else {
             globals->gameMode = MODE_ENCORE;
-            if ((globals->medalMods & GET_MEDAL_MOD(MEDAL_ANDKNUCKLES))) {
-                globals->medalMods &= -GET_MEDAL_MOD(MEDAL_ANDKNUCKLES);
-            }
+            if (globals->medalMods & MEDAL_ANDKNUCKLES) 
+                globals->medalMods &= ~MEDAL_ANDKNUCKLES;
         }
     }
 }
 
 void LevelSelect_Cheat_UnlockAllMedals(void)
 {
-    if (globals->superSecret && (globals->secrets & GET_MEDAL_MOD(SECRET_RICKYMODE))) {
+    if (globals->superSecret && (globals->secrets & SECRET_RICKYMODE)) {
         RSDK.PlaySfx(LevelSelect->sfxMedalGot, false, 255);
         GameProgress_UnlockAll();
         GameProgress_LockAllSpecialClear();

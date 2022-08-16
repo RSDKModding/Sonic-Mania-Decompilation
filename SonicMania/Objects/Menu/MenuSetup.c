@@ -883,19 +883,19 @@ void MenuSetup_HandleMenuReturn(void)
         if (control == MenuSetup->secrets) {
             EntityUIControl *control = MenuSetup->secrets;
 
-            UIButton_SetChoiceSelection(control->buttons[0], (globals->medalMods & GET_MEDAL_MOD(MEDAL_ANDKNUCKLES)) != 0);
+            UIButton_SetChoiceSelection(control->buttons[0], (globals->medalMods & MEDAL_ANDKNUCKLES) != 0);
 
             int32 medals = globals->medalMods;
-            if (medals & GET_MEDAL_MOD(MEDAL_NODROPDASH)) {
-                if (medals & GET_MEDAL_MOD(MEDAL_PEELOUT))
+            if (medals & MEDAL_NODROPDASH) {
+                if (medals & MEDAL_PEELOUT)
                     UIButton_SetChoiceSelection(control->buttons[1], 1);
-                else if (medals & GET_MEDAL_MOD(MEDAL_INSTASHIELD))
+                else if (medals & MEDAL_INSTASHIELD)
                     UIButton_SetChoiceSelection(control->buttons[1], 2);
             }
             else
                 UIButton_SetChoiceSelection(control->buttons[1], 0);
 
-            UIButton_SetChoiceSelection(control->buttons[2], (globals->medalMods & GET_MEDAL_MOD(MEDAL_ANDKNUCKLES)) != 0);
+            UIButton_SetChoiceSelection(control->buttons[2], (globals->medalMods & MEDAL_ANDKNUCKLES) != 0);
         }
 
         if (control == MenuSetup->video) {
@@ -1109,19 +1109,19 @@ int32 MenuSetup_GetMedalMods(void)
 
     int32 mods = 0;
     if (control->buttons[0]->selection == 1)
-        mods |= GET_MEDAL_MOD(MEDAL_DEBUGMODE);
+        mods |= MEDAL_DEBUGMODE;
 
     if (control->buttons[1]->selection == 1) {
-        mods |= GET_MEDAL_MOD(MEDAL_NODROPDASH);
-        mods |= GET_MEDAL_MOD(MEDAL_PEELOUT);
+        mods |= MEDAL_NODROPDASH;
+        mods |= MEDAL_PEELOUT;
     }
     else if (control->buttons[1]->selection == 2) {
-        mods |= GET_MEDAL_MOD(MEDAL_NODROPDASH);
-        mods |= GET_MEDAL_MOD(MEDAL_INSTASHIELD);
+        mods |= MEDAL_NODROPDASH;
+        mods |= MEDAL_INSTASHIELD;
     }
 
     if (control->buttons[2]->selection == 1)
-        mods |= GET_MEDAL_MOD(MEDAL_ANDKNUCKLES);
+        mods |= MEDAL_ANDKNUCKLES;
 
     return mods;
 }
@@ -1213,13 +1213,13 @@ void MenuSetup_SaveSlot_ActionCB(void)
         default: break;
     }
 
-    if ((globals->medalMods & GET_MEDAL_MOD(MEDAL_ANDKNUCKLES)))
+    if ((globals->medalMods & MEDAL_ANDKNUCKLES))
         globals->playerID |= ID_KNUCKLES_ASSIST;
     else if (!self->frameID)
         globals->playerID |= ID_TAILS_ASSIST;
 
     if (self->type == UISAVESLOT_NOSAVE || self->isNewSave) {
-        if (((globals->medalMods & GET_MEDAL_MOD(MEDAL_DEBUGMODE)) && (ControllerInfo->keyC.down || ControllerInfo->keyX.down))
+        if (((globals->medalMods & MEDAL_DEBUGMODE) && (ControllerInfo->keyC.down || ControllerInfo->keyX.down))
             && self->type == UISAVESLOT_NOSAVE)
             RSDK.SetScene("Presentation", "Level Select");
         else

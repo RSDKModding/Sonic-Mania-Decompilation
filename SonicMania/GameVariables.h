@@ -44,16 +44,15 @@ typedef enum {
 typedef enum { ITEMS_FIXED, ITEMS_RANDOM, ITEMS_TELEPORT } ItemModes;
 
 typedef enum {
-    MEDAL_DEBUGMODE,
-    MEDAL_ANDKNUCKLES,
-    MEDAL_PEELOUT,
-    MEDAL_INSTASHIELD,
-    MEDAL_NODROPDASH,
+    MEDAL_DEBUGMODE   = 1 << 0,
+    MEDAL_ANDKNUCKLES = 1 << 1,
+    MEDAL_PEELOUT     = 1 << 2,
+    MEDAL_INSTASHIELD = 1 << 3,
+    MEDAL_NODROPDASH  = 1 << 4,
 #if MANIA_USE_PLUS
-    MEDAL_NOTIMEOVER,
+    MEDAL_NOTIMEOVER = 1 << 5,
 #endif
 } MedalMods;
-#define GET_MEDAL_MOD(medal) (1 << medal)
 
 typedef enum { FORCE_SPLIT = 2 } ScreenSplit;
 
@@ -164,8 +163,8 @@ typedef enum {
 
 #if MANIA_USE_PLUS
 typedef enum {
-    SECRET_RICKYMODE = 0,
-    SECRET_SUPERDASH = 1,
+    SECRET_RICKYMODE = 1 << 0,
+    SECRET_SUPERDASH = 1 << 1,
 } GameCheats;
 #endif
 
