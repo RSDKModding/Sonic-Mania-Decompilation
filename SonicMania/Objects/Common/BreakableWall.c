@@ -312,10 +312,7 @@ void BreakableWall_CheckBreak_Wall(void)
                 switch (player->characterID) {
                     default: break;
 
-                    case ID_SONIC:
-                        canBreak |= player->animator.animationID == ANI_DROPDASH;
-                        canBreak |= player->superState == SUPERSTATE_SUPER;
-                        break;
+                    case ID_SONIC: canBreak |= player->superState == SUPERSTATE_SUPER; break;
 
                     case ID_KNUCKLES: canBreak = true; break;
                 }
