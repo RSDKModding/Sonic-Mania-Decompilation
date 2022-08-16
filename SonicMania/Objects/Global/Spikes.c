@@ -392,7 +392,7 @@ void Spikes_StageLoad(void)
     if (RSDK.CheckSceneFolder("FBZ")) {
         Spikes->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Spikes.bin", SCOPE_STAGE);
     }
-    if (RSDK.CheckSceneFolder("PSZ2")) {
+    else if (RSDK.CheckSceneFolder("PSZ2")) {
         Spikes->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Spikes.bin", SCOPE_STAGE);
     }
     else {
