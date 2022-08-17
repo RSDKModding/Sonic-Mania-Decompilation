@@ -2892,9 +2892,9 @@ void Player_HandleGroundAnimation(void)
                 }
                 else if (velocity < self->minDashVelocity) {
                     if (self->animator.animationID == ANI_DASH || self->animator.animationID == ANI_RUN)
-                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_RUN, &self->animator, false, 1);
-                    else
                         RSDK.SetSpriteAnimation(self->aniFrames, ANI_RUN, &self->animator, false, 0);
+                    else
+                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_RUN, &self->animator, false, 1);
 
                     self->animator.speed  = MIN((velocity >> 12) + 0x60, 0x200);
                     self->minRunVelocity  = 0x58000;
@@ -2902,9 +2902,9 @@ void Player_HandleGroundAnimation(void)
                 }
                 else {
                     if (self->animator.animationID == ANI_DASH || self->animator.animationID == ANI_RUN)
-                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_DASH, &self->animator, false, 1);
-                    else
                         RSDK.SetSpriteAnimation(self->aniFrames, ANI_DASH, &self->animator, false, 0);
+                    else
+                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_DASH, &self->animator, false, 1);
                     self->minDashVelocity = 0xB8000;
                 }
             }
