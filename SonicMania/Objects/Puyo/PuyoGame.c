@@ -128,7 +128,7 @@ void PuyoGame_SetLoser(uint8 loser)
     PuyoGame_CheckMatchFinish();
 
     self->timer = 0;
-    self->state = self->finishedMatch ? PuyoGame_State_ShowRoundResults : PuyoGame_State_ShowMatchResults;
+    self->state = self->finishedMatch ? PuyoGame_State_ShowMatchResults : PuyoGame_State_ShowRoundResults;
 }
 
 void PuyoGame_DestroyPuyoBeans(void)
