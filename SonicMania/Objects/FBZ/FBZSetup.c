@@ -64,7 +64,7 @@ void FBZSetup_StageLoad(void)
 
     BGSwitch->switchCallback[FBZ_BG_INSIDE1]     = FBZSetup_BGSwitch_ShowInside1;
     BGSwitch->switchCallback[FBZ_BG_INSIDE2]     = FBZSetup_BGSwitch_ShowInside2;
-    BGSwitch->switchCallback[FBZ_BG_INSIDE1_DUP] = FBZSetup_BGSwitch_ShowInside1_Dup;
+    BGSwitch->switchCallback[FBZ_BG_INSIDE1_NOSTORM] = FBZSetup_BGSwitch_ShowInside1_NoStorm;
 
     TileLayer *backgroundInside    = RSDK.GetTileLayer(0);
     backgroundInside->drawGroup[0] = 0;
@@ -231,7 +231,7 @@ void FBZSetup_BGSwitch_ShowInside2(void)
     }
 }
 
-void FBZSetup_BGSwitch_ShowInside1_Dup(void)
+void FBZSetup_BGSwitch_ShowInside1_NoStorm(void)
 {
     RSDK.GetTileLayer(0)->drawGroup[BGSwitch->screenID] = DRAWGROUP_COUNT;
 
@@ -285,7 +285,7 @@ void FBZSetup_EditorLoad(void)
     RSDK_ACTIVE_VAR(BGSwitch, bgID);
     RSDK_ENUM_VAR("Show Inside 1", FBZ_BG_INSIDE1);
     RSDK_ENUM_VAR("Show Inside 2", FBZ_BG_INSIDE2);
-    RSDK_ENUM_VAR("Show Inside 1 (Duplicate)", FBZ_BG_INSIDE1_DUP);
+    RSDK_ENUM_VAR("Show Inside 1 (No Storm)", FBZ_BG_INSIDE1_NOSTORM);
 
     RSDK_ACTIVE_VAR(Decoration, type);
     RSDK_ENUM_VAR("Blueprint 1", FBZ_DECORATION_BLUEPRINT1);

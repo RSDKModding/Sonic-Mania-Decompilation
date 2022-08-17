@@ -1207,7 +1207,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(FBZSetup_Scanline_BGInside);
     ADD_PUBLIC_FUNC(FBZSetup_BGSwitch_ShowInside1);
     ADD_PUBLIC_FUNC(FBZSetup_BGSwitch_ShowInside2);
-    ADD_PUBLIC_FUNC(FBZSetup_BGSwitch_ShowInside1_Dup);
+    ADD_PUBLIC_FUNC(FBZSetup_BGSwitch_ShowInside1_NoStorm);
     ADD_PUBLIC_FUNC(FBZSetup_Trigger_ShowExterior);
     ADD_PUBLIC_FUNC(FBZSetup_Trigger_ShowInterior);
     ADD_PUBLIC_FUNC(FBZSetup_StageFinish_EndAct1);

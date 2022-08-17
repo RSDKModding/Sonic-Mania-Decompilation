@@ -8,7 +8,7 @@ typedef enum { FBZ_GENERICTRIGGER_EXTERIOR, FBZ_GENERICTRIGGER_INTERIOR } Generi
 typedef enum {
     FBZ_BG_INSIDE1,
     FBZ_BG_INSIDE2,
-    FBZ_BG_INSIDE1_DUP,
+    FBZ_BG_INSIDE1_NOSTORM,
 } BGSwitchIDsFBZ;
 
 typedef enum {
@@ -65,7 +65,7 @@ void FBZSetup_Scanline_BGInside(ScanlineInfo *scanlines);
 
 void FBZSetup_BGSwitch_ShowInside1(void);
 void FBZSetup_BGSwitch_ShowInside2(void);
-void FBZSetup_BGSwitch_ShowInside1_Dup(void);
+void FBZSetup_BGSwitch_ShowInside1_NoStorm(void);
 
 void FBZSetup_Trigger_ShowExterior(void);
 void FBZSetup_Trigger_ShowInterior(void);
