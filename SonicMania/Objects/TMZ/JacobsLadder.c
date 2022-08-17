@@ -13,6 +13,8 @@ void JacobsLadder_Update(void)
 {
     RSDK_THIS(JacobsLadder);
 
+    bool32 showElectricity = self->showElectricity;
+
     self->electricFadeOut = false;
     self->showElectricity = false;
     self->direction       = self->flip ? FLIP_Y : FLIP_NONE;
@@ -20,7 +22,7 @@ void JacobsLadder_Update(void)
     int32 timer = (self->intervalOffset + Zone->timer) % self->interval;
 
     if (timer < self->duration) {
-        if (!self->showElectricity && self->onScreen == 1)
+        if (!showElectricity && self->onScreen == 1)
             RSDK.PlaySfx(JacobsLadder->sfxLadder, false, 255);
 
         self->showElectricity = true;
