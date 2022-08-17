@@ -80,8 +80,8 @@ void PopOut_Update(void)
 
     self->active = (self->appearTimer <= 0) ? ACTIVE_BOUNDS : ACTIVE_NORMAL;
 
-    self->position.x = -32 * self->appearVelocity.x + self->position.x + 4 * self->appearTimer * self->appearVelocity.x;
-    self->position.y = -32 * self->appearVelocity.y + self->position.y + 4 * self->appearTimer * self->appearVelocity.y;
+    self->position.x += -32 * self->appearVelocity.x + 4 * self->appearTimer * self->appearVelocity.x;
+    self->position.y += -32 * self->appearVelocity.y + 4 * self->appearTimer * self->appearVelocity.y;
     foreach_active(Player, playerLoop) { Player_CheckCollisionBox(playerLoop, self, &self->hitboxSolid); }
     self->direction  = storeDir;
     self->position.x = storeX;
@@ -213,7 +213,7 @@ void PopOut_SetupHitboxes(void)
             self->hitboxRange.top    = -64;
             self->hitboxRange.bottom = 32;
 
-            self->hitboxSolid.left = -20;
+            self->hitboxSolid.left = -32;
             self->hitboxSolid.top  = -32;
             break;
 
@@ -250,7 +250,7 @@ void PopOut_SetupHitboxes(void)
             self->hitboxRange.bottom = 32;
 
             self->hitboxSolid.top    = -32;
-            self->hitboxSolid.bottom = 32;
+            self->hitboxSolid.right = 32;
             break;
 
         case 5:
@@ -277,7 +277,7 @@ void PopOut_SetupHitboxes(void)
             self->hitboxRange.bottom = 32;
             self->hitboxRange.left   = -64;
 
-            self->hitboxSolid.left = -20;
+            self->hitboxSolid.left = -32;
             self->hitboxSolid.top  = -32;
             break;
     }

@@ -262,8 +262,8 @@ void LevelSelect_State_Init(void)
 
     for (int32 i = 0; i < self->labelCount; ++i) {
         if (!self->zoneNameLabels[i]) {
-            for (int32 v = i; i >= 0; --i) {
-                if (self->stageIDLabels[v]) {
+            for (int32 v = i; v >= 0; --v) {
+                if (self->zoneNameLabels[v]) {
                     self->zoneNameLabels[i] = self->zoneNameLabels[v];
                     break;
                 }

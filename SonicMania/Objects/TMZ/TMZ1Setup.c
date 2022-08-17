@@ -42,7 +42,7 @@ void TMZ1Setup_StaticUpdate(void)
 
     if (TMZ1Setup->aniTileDuration <= 0) {
         TMZ1Setup->angle += 32;
-        TMZ1Setup->angle = TMZ1Setup->angle;
+        TMZ1Setup->angle &= 0xFF;
 
         RSDK.SetLimitedFade(0, 1, 2, (RSDK.Sin256(TMZ1Setup->angle) >> 1) + 0x80, 184, 190);
 
