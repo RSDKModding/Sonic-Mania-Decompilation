@@ -295,7 +295,7 @@ void DCEvent_StateEggmanBomber_PlacedAllBombs(void)
 
         Water->targetWaterLevel = 0x8DC0000;
         Water->waterMoveSpeed   = 0x8000;
-        Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
+        Music_TransitionTrack(TRACK_STAGE, 0.0125);
         self->state = DCEvent_State_Collapse;
     }
 }
