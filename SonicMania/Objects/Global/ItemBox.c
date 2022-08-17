@@ -1112,11 +1112,11 @@ void ItemBox_HandleObjectCollisions(void)
                 if (RSDK.CheckObjectCollisionBox(ice, &ice->hitboxBlock, self, &ItemBox->hitboxItemBox, true) == C_TOP) {
                     self->position.x += ice->playerMoveOffset.x;
                     self->position.y += ice->playerMoveOffset.y;
-                    self->position.y = TO_FIXED(self->position.y);
+                    self->position.y &= 0xFFFF0000;
 
                     self->contentsPos.x += ice->playerMoveOffset.x;
                     self->contentsPos.y += ice->playerMoveOffset.y;
-                    self->contentsPos.y = TO_FIXED(self->contentsPos.y);
+                    self->contentsPos.y &= 0xFFFF0000;
 
                     self->moveOffset.x = ice->playerMoveOffset.x;
                     self->moveOffset.y = ice->playerMoveOffset.y;

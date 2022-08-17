@@ -6091,7 +6091,7 @@ void Player_JumpAbility_Sonic(void)
     }
 
     if ((self->jumpAbilityState >= 2 || dropdashAllowed) && self->jumpHold) {
-        if (++self->jumpAbilityState > 22) {
+        if (++self->jumpAbilityState >= 22) {
             self->state           = Player_State_DropDash;
             self->nextGroundState = StateMachine_None;
             self->nextAirState    = StateMachine_None;
