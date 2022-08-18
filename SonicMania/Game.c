@@ -885,3 +885,10 @@ int32 RSDK_main(int32 argc, char **argv, void *linkLogicPtr); // make sure other
 
 int32 GAME_MAIN(int32 argc, char *argv[]) { return RSDK_main(argc, argv, LinkGameLogicDLL); }
 #endif
+
+
+#ifdef __vita__
+void main() __attribute__ ((weak, alias ("module_start")));
+int module_start(int argc, const void *args) {};
+int module_stop(int argc, const void *args) {};
+#endif

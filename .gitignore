@@ -247,3 +247,4 @@ Ignored/
 android/local.properties
 
 *.res
+export.yml
