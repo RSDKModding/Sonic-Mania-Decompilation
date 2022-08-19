@@ -3913,16 +3913,16 @@ void Player_State_LookUp(void)
     if (self->invertGravity)
         self->rotation = 0x80;
 
-    self->left  = false;
-    self->right = false;
-
-    Player_HandleGroundMovement();
-
     Player_Gravity_False();
 
     self->nextAirState = Player_State_Air;
 
     if (self->up) {
+        self->left  = false;
+        self->right = false;
+
+        Player_HandleGroundMovement();
+
         RSDK.SetSpriteAnimation(self->aniFrames, ANI_LOOK_UP, &self->animator, false, 1);
         if (self->animator.frameID == 5)
             self->animator.speed = 0;
