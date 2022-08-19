@@ -4111,16 +4111,16 @@ void Player_State_Peelout(void)
     }
     else if (self->abilityTimer < self->minRunVelocity) {
         if (self->animator.animationID != ANI_WALK || self->animator.frameID == 3)
-            RSDK.SetSpriteAnimation(self->aniFrames, ANI_RUN, &self->animator, false, 0);
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_JOG, &self->animator, false, 0);
         self->animator.speed = (self->abilityTimer >> 12) + 64;
         self->minJogVelocity = 0x38000;
         self->minRunVelocity = 0x60000;
     }
     else if (self->abilityTimer < self->minDashVelocity) {
         if (self->animator.animationID == ANI_DASH || self->animator.animationID == ANI_RUN)
-            RSDK.SetSpriteAnimation(self->aniFrames, ANI_JOG, &self->animator, false, 1);
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_RUN, &self->animator, false, 1);
         else
-            RSDK.SetSpriteAnimation(self->aniFrames, ANI_JOG, &self->animator, false, 0);
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_RUN, &self->animator, false, 0);
 
         self->animator.speed = (self->abilityTimer >> 12) + 96;
         if (self->animator.speed > 0x200)
