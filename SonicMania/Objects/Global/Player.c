@@ -6001,7 +6001,12 @@ void Player_JumpAbility_Sonic(void)
 
     if (self->jumpAbilityState == 1) {
 #if MANIA_USE_PLUS
-        if (self->stateInput != Player_Input_P2_AI || (self->up && globals->gameMode != MODE_ENCORE)) {
+        if (self->stateInput != Player_Input_P2_AI
+            || (self->up
+#if MANIA_USE_PLUS
+                && globals->gameMode != MODE_ENCORE
+#endif
+                )) {
 #else
         if (self->stateInput != Player_Input_P2_AI) {
 #endif
