@@ -547,8 +547,6 @@ void Water_State_Water(void)
                             case 960:
                                 if (!player->sidekick)
                                     RSDK.PlaySfx(Water->sfxWarning, false, 0xFF);
-
-                                playAlertSfx = true;
                                 break;
 
                             case 1080:
