@@ -162,11 +162,11 @@ void AIZSetup_StageLoad(void)
             int32 deform = RSDK.Rand(0, 4);
             for (int32 i = 0; i < 16; ++i) {
                 deformData[pos + i]           = (deform * RSDK.Sin1024(angle)) >> 10;
-                deformData[(pos + 0x200) + i] = (deform * RSDK.Sin1024(angle)) >> 10;
                 angle += 64;
             }
             id += 16;
         }
+        memcpy(&deformData[0x200], deformData, (0x200 * sizeof(int32)));
     }
     else {
 #endif

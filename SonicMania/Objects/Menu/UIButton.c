@@ -733,6 +733,7 @@ void UIButton_ButtonEnterCB(void)
                     UIVsRoundPicker_SetChoiceActive((EntityUIVsRoundPicker *)choicePtr);
                 }
 
+#if GAME_VERSION != VER_100
                 if (choicePtr->classID == UIResPicker->classID) {
                     UIResPicker_SetChoiceActive((EntityUIResPicker *)choicePtr);
                 }
@@ -740,6 +741,7 @@ void UIButton_ButtonEnterCB(void)
                 if (choicePtr->classID == UIWinSize->classID) {
                     UIWinSize_SetChoiceActive((EntityUIWinSize *)choicePtr);
                 }
+#endif
             }
         }
     }

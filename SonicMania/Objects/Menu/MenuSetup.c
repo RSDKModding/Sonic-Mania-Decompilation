@@ -1082,7 +1082,11 @@ void MenuSetup_ExitGame_ActionCB(void)
     String string;
     INIT_STRING(string);
 
+#if GAME_VERSION != VER_100
     Localization_GetString(&string, STR_QUITWARNING);
+#else
+    Localization_GetString(&string, STR_QUITWARNINGLOSEPROGRESS);
+#endif
     UIDialog_CreateDialogYesNo(&string, MenuSetup_ExitGame_CB, NULL, true, true);
 }
 

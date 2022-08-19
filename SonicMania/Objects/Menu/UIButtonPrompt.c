@@ -171,6 +171,7 @@ void UIButtonPrompt_StageLoad(void)
 
 int32 UIButtonPrompt_GetButtonMappings(int32 input, int32 button)
 {
+#if MANIA_USE_PLUS
     switch (button) {
         case UIBUTTONPROMPT_BUTTON_A: return ControllerInfo[input].keyA.keyMap;
         case UIBUTTONPROMPT_BUTTON_B: return ControllerInfo[input].keyB.keyMap;
@@ -180,6 +181,17 @@ int32 UIButtonPrompt_GetButtonMappings(int32 input, int32 button)
         case UIBUTTONPROMPT_BUTTON_SELECT: return ControllerInfo[input].keySelect.keyMap;
         default: break;
     }
+#else
+    switch (button) {
+        case UIBUTTONPROMPT_BUTTON_A: return ControllerInfo[CONT_P1].keyA.keyMap;
+        case UIBUTTONPROMPT_BUTTON_B: return ControllerInfo[CONT_P1].keyB.keyMap;
+        case UIBUTTONPROMPT_BUTTON_X: return ControllerInfo[CONT_P1].keyX.keyMap;
+        case UIBUTTONPROMPT_BUTTON_Y: return ControllerInfo[CONT_P1].keyY.keyMap;
+        case UIBUTTONPROMPT_BUTTON_START: return ControllerInfo[CONT_P1].keyStart.keyMap;
+        case UIBUTTONPROMPT_BUTTON_SELECT: return ControllerInfo[CONT_P1].keySelect.keyMap;
+        default: break;
+    }
+#endif
 
     return 0;
 }
@@ -223,103 +235,196 @@ int32 UIButtonPrompt_GetGamepadType(void)
 
 uint8 UIButtonPrompt_MappingsToFrame(int32 mappings)
 {
-    // case values: https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
+#if MANIA_USE_PLUS
     switch (mappings) {
-        case 8: return 14;
-        case 9: return 15;
-        case 13: return 41;
-        case 16:
-        case 160: return 42;
-        case 17:
-        case 162: return 54;
-        case 18:
-        case 164: return 55;
-        case 20: return 29;
-        case 32: return 56;
-        case 33: return 91;
-        case 34: return 92;
-        case 35: return 93;
-        case 36: return 94;
-        case 37: return 61;
-        case 38: return 59;
-        case 39: return 62;
-        case 40: return 60;
-        case 45: return 95;
-        case 46: return 96;
-        case 48: return 11;
-        case 49: return 2;
-        case 50: return 3;
-        case 51: return 4;
-        case 52: return 5;
-        case 53: return 6;
-        case 54: return 7;
-        case 55: return 8;
-        case 56: return 9;
-        case 57: return 10;
-        case 65: return 30;
-        case 66: return 47;
-        case 67: return 45;
-        case 68: return 32;
-        case 69: return 18;
-        case 70: return 33;
-        case 71: return 34;
-        case 72: return 35;
-        case 73: return 23;
-        case 74: return 36;
-        case 75: return 37;
-        case 76: return 38;
-        case 77: return 49;
-        case 78: return 48;
-        case 79: return 24;
-        case 80: return 25;
-        case 81: return 16;
-        case 82: return 19;
-        case 83: return 31;
-        case 84: return 20;
-        case 85: return 22;
-        case 86: return 46;
-        case 87: return 17;
-        case 88: return 44;
-        case 89: return 21;
-        case 90: return 43;
-        case 96: return 77;
-        case 97: return 73;
-        case 98: return 74;
-        case 99: return 75;
-        case 100: return 70;
-        case 101: return 71;
-        case 102: return 72;
-        case 103: return 66;
-        case 104: return 67;
-        case 105: return 68;
-        case 106: return 64;
-        case 107: return 69;
-        case 109: return 65;
-        case 110: return 78;
-        case 111: return 63;
-        case 161: return 53;
-        case 163: return 58;
-        case 165: return 57;
-        case 186: return 79;
-        case 187: return 87;
-        case 188: return 88;
-        case 189: return 89;
-        case 190: return 90;
-        case 191: return 80;
-        case 192: return 81;
-        case 219: return 82;
-        case 220: return 83;
-        case 221: return 84;
-        case 222: return 85;
-        case 223: return 86;
-        default: break;
+        case KEYMAP_BACK: return 14;
+        case KEYMAP_TAB: return 15;
+        case KEYMAP_RETURN: return 41;
+        case KEYMAP_SHIFT:
+        case KEYMAP_LSHIFT: return 42;
+        case KEYMAP_CONTROL:
+        case KEYMAP_LCONTROL: return 54;
+        case KEYMAP_MENU:
+        case KEYMAP_LMENU: return 55;
+        case KEYMAP_CAPITAL: return 29;
+        case KEYMAP_SPACE: return 56;
+        case KEYMAP_PRIOR: return 91;
+        case KEYMAP_NEXT: return 92;
+        case KEYMAP_END: return 93;
+        case KEYMAP_HOME: return 94;
+        case KEYMAP_LEFT: return 61;
+        case KEYMAP_UP: return 59;
+        case KEYMAP_RIGHT: return 62;
+        case KEYMAP_DOWN: return 60;
+        case KEYMAP_INSERT: return 95;
+        case KEYMAP_DELETE: return 96;
+        case KEYMAP_0: return 11;
+        case KEYMAP_1: return 2;
+        case KEYMAP_2: return 3;
+        case KEYMAP_3: return 4;
+        case KEYMAP_4: return 5;
+        case KEYMAP_5: return 6;
+        case KEYMAP_6: return 7;
+        case KEYMAP_7: return 8;
+        case KEYMAP_8: return 9;
+        case KEYMAP_9: return 10;
+        case KEYMAP_A: return 30;
+        case KEYMAP_B: return 47;
+        case KEYMAP_C: return 45;
+        case KEYMAP_D: return 32;
+        case KEYMAP_E: return 18;
+        case KEYMAP_F: return 33;
+        case KEYMAP_G: return 34;
+        case KEYMAP_H: return 35;
+        case KEYMAP_I: return 23;
+        case KEYMAP_J: return 36;
+        case KEYMAP_K: return 37;
+        case KEYMAP_L: return 38;
+        case KEYMAP_M: return 49;
+        case KEYMAP_N: return 48;
+        case KEYMAP_O: return 24;
+        case KEYMAP_P: return 25;
+        case KEYMAP_Q: return 16;
+        case KEYMAP_R: return 19;
+        case KEYMAP_S: return 31;
+        case KEYMAP_T: return 20;
+        case KEYMAP_U: return 22;
+        case KEYMAP_V: return 46;
+        case KEYMAP_W: return 17;
+        case KEYMAP_X: return 44;
+        case KEYMAP_Y: return 21;
+        case KEYMAP_Z: return 43;
+        case KEYMAP_NUMPAD0: return 77;
+        case KEYMAP_NUMPAD1: return 73;
+        case KEYMAP_NUMPAD2: return 74;
+        case KEYMAP_NUMPAD3: return 75;
+        case KEYMAP_NUMPAD4: return 70;
+        case KEYMAP_NUMPAD5: return 71;
+        case KEYMAP_NUMPAD6: return 72;
+        case KEYMAP_NUMPAD7: return 66;
+        case KEYMAP_NUMPAD8: return 67;
+        case KEYMAP_NUMPAD9: return 68;
+        case KEYMAP_MULTIPLY: return 64;
+        case KEYMAP_ADD: return 69;
+        case KEYMAP_SUBTRACT: return 65;
+        case KEYMAP_DECIMAL: return 78;
+        case KEYMAP_DIVIDE: return 63;
+        case KEYMAP_RSHIFT: return 53;
+        case KEYMAP_RCONTROL: return 58;
+        case KEYMAP_RMENU: return 57;
+        case KEYMAP_OEM_1: return 79;
+        case KEYMAP_OEM_PLUS: return 87;
+        case KEYMAP_OEM_COMMA: return 88;
+        case KEYMAP_OEM_MINUS: return 89;
+        case KEYMAP_OEM_PERIOD: return 90;
+        case KEYMAP_OEM_2: return 80;
+        case KEYMAP_OEM_3: return 81;
+        case KEYMAP_OEM_4: return 82;
+        case KEYMAP_OEM_5: return 83;
+        case KEYMAP_OEM_6: return 84;
+        case KEYMAP_OEM_7: return 85;
+        case KEYMAP_OEM_8: return 86;
+        default: return 0;
     }
+#else
+    switch (mappings) {
+        case KEYMAP_BACK: return 14;
+        case KEYMAP_TAB: return 15;
+        case KEYMAP_RETURN: return 41;
+        case KEYMAP_SHIFT:
+        case KEYMAP_LSHIFT: return 42;
+        case KEYMAP_CONTROL:
+        case KEYMAP_LCONTROL: return 54;
+        case KEYMAP_MENU:
+        case KEYMAP_LMENU: return 55;
+        case KEYMAP_CAPITAL: return 29;
+        case KEYMAP_SPACE: return 56;
+        case KEYMAP_PRIOR: return 91;
+        case KEYMAP_NEXT: return 92;
+        case KEYMAP_END: return 93;
+        case KEYMAP_HOME: return 94;
+        case KEYMAP_LEFT: return 61;
+        case KEYMAP_UP: return 59;
+        case KEYMAP_RIGHT: return 62;
+        case KEYMAP_DOWN: return 60;
+        case KEYMAP_INSERT: return 95;
+        case KEYMAP_DELETE: return 96;
+        case KEYMAP_0: return 11;
+        case KEYMAP_1: return 2;
+        case KEYMAP_2: return 3;
+        case KEYMAP_3: return 4;
+        case KEYMAP_4: return 5;
+        case KEYMAP_5: return 6;
+        case KEYMAP_6: return 7;
+        case KEYMAP_7: return 8;
+        case KEYMAP_8: return 9;
+        case KEYMAP_9: return 10;
+        case KEYMAP_A: return 30;
+        case KEYMAP_B: return 47;
+        case KEYMAP_C: return 45;
+        case KEYMAP_D: return 32;
+        case KEYMAP_E: return 18;
+        case KEYMAP_F: return 33;
+        case KEYMAP_G: return 34;
+        case KEYMAP_H: return 35;
+        case KEYMAP_I: return 23;
+        case KEYMAP_J: return 36;
+        case KEYMAP_K: return 37;
+        case KEYMAP_L: return 38;
+        case KEYMAP_M: return 49;
+        case KEYMAP_N: return 48;
+        case KEYMAP_O: return 24;
+        case KEYMAP_P: return 25;
+        case KEYMAP_Q: return 16;
+        case KEYMAP_R: return 19;
+        case KEYMAP_S: return 31;
+        case KEYMAP_T: return 20;
+        case KEYMAP_U: return 22;
+        case KEYMAP_V: return 46;
+        case KEYMAP_W: return 17;
+        case KEYMAP_X: return 44;
+        case KEYMAP_Y: return 21;
+        case KEYMAP_Z: return 43;
+        case KEYMAP_NUMPAD0: return 77;
+        case KEYMAP_NUMPAD1: return 73;
+        case KEYMAP_NUMPAD2: return 74;
+        case KEYMAP_NUMPAD3: return 75;
+        case KEYMAP_NUMPAD4: return 70;
+        case KEYMAP_NUMPAD5: return 71;
+        case KEYMAP_NUMPAD6: return 72;
+        case KEYMAP_NUMPAD7: return 66;
+        case KEYMAP_NUMPAD8: return 67;
+        case KEYMAP_NUMPAD9: return 68;
+        case KEYMAP_MULTIPLY: return 64;
+        case KEYMAP_ADD: return 69;
+        case KEYMAP_SUBTRACT: return 65;
+        case KEYMAP_DECIMAL: return 78;
+        case KEYMAP_DIVIDE: return 63;
+        case KEYMAP_RSHIFT: return 53;
+        case KEYMAP_RCONTROL: return 58;
+        case KEYMAP_RMENU: return 57;
+        case KEYMAP_OEM_1: return 79;
+        case KEYMAP_OEM_PLUS: return 87;
+        case KEYMAP_OEM_COMMA: return 88;
+        case KEYMAP_OEM_MINUS: return 89;
+        case KEYMAP_OEM_PERIOD: return 90;
+        case KEYMAP_OEM_2: return 80;
+        case KEYMAP_OEM_3: return 81;
+        case KEYMAP_OEM_4: return 82;
+        case KEYMAP_OEM_5: return 83;
+        case KEYMAP_OEM_6: return 84;
+        case KEYMAP_OEM_7: return 85;
+        case KEYMAP_OEM_8: return 86;
+        default: return 0;
+    }
+#endif
     return 0;
 }
 
 void UIButtonPrompt_SetButtonSprites(void)
 {
     RSDK_THIS(UIButtonPrompt);
+
     if (SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, UIBUTTONPROMPT_XBOX, &self->buttonAnimator, true, self->buttonID);
     }
@@ -328,6 +433,7 @@ void UIButtonPrompt_SetButtonSprites(void)
         if (API_GetConfirmButtonFlip() && buttonID <= 1)
             buttonID ^= 1;
 
+#if MANIA_USE_PLUS
         if (UIButtonPrompt->type != UIBUTTONPROMPT_KEYBOARD
             && (UIButtonPrompt->type < UIBUTTONPROMPT_KEYBOARD_FR || UIButtonPrompt->type > UIBUTTONPROMPT_KEYBOARD_SP)) {
             RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, UIButtonPrompt->type, &self->buttonAnimator, true, buttonID);
@@ -338,6 +444,22 @@ void UIButtonPrompt_SetButtonSprites(void)
             int32 frame    = UIButtonPrompt_MappingsToFrame(mappings);
             RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, UIBUTTONPROMPT_KEYBOARD, &self->buttonAnimator, true, frame);
         }
+#else
+
+        if (sku_platform != PLATFORM_PC && sku_platform != PLATFORM_DEV) {
+            RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, UIButtonPrompt->type, &self->buttonAnimator, true, buttonID);
+        }
+        else {
+            int32 mappings = UIButtonPrompt_GetButtonMappings(UIButtonPrompt->inputSlot, buttonID);
+            if (UIButtonPrompt->type == UIBUTTONPROMPT_XBOX) {
+                RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, UIBUTTONPROMPT_XBOX, &self->buttonAnimator, true, buttonID);
+            }
+            else {
+                int32 frame = UIButtonPrompt_MappingsToFrame(mappings);
+                RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, UIBUTTONPROMPT_KEYBOARD, &self->buttonAnimator, true, frame);
+            }
+        }
+#endif
     }
 }
 
@@ -366,7 +488,6 @@ bool32 UIButtonPrompt_CheckTouch(void)
             }
 
             self->touched = wasTouched;
-            return true;
         }
         else {
             if (self->touched) {
@@ -377,7 +498,7 @@ bool32 UIButtonPrompt_CheckTouch(void)
         }
     }
 
-    return false;
+    return self->touched;
 }
 
 void UIButtonPrompt_State_CheckIfSelected(void)
