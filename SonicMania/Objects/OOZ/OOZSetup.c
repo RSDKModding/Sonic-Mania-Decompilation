@@ -66,28 +66,32 @@ void OOZSetup_StaticUpdate(void)
             if (tileFlags != OOZ_TFLAGS_NORMAL) {
                 if (player->shield == SHIELD_FIRE && player->superState != SUPERSTATE_SUPER && tileFlags != OOZ_TFLAGS_OILFALL) {
                     int32 tx = (player->position.x & 0xFFF00000) + 0x70000;
-                    int32 ty = ((playerHitbox->bottom + 8) << 16) + player->position.y;
+                    int32 ty = player->position.y + ((playerHitbox->bottom + 8) << 16);
                     if (tileFlags == OOZ_TFLAGS_OILPOOL) {
-                        if (OOZSetup_StartFire(tx, (ty & 0xFFF00000) - 0xC0000, player->angle)) {
-                            EntitySol *sol  = CREATE_ENTITY(Sol, INT_TO_VOID(true), tx - 0x10000, (ty & 0xFFF00000) - 0xC0000);
+                        ty &= 0xFFF00000;
+                        ty -= 0xC0000;
+                        if (OOZSetup_StartFire(tx, ty, player->angle)) {
+                            EntitySol *sol  = CREATE_ENTITY(Sol, INT_TO_VOID(true), tx - 0x10000, ty);
                             sol->velocity.x = -0x40000;
                             RSDK.SetSpriteAnimation(Sol->aniFrames, 3, &sol->mainAnimator, true, 0);
                             sol->state = Sol_State_OilFlame;
 
-                            sol             = CREATE_ENTITY(Sol, INT_TO_VOID(true), tx + 0x10000, (ty & 0xFFF00000) - 0xC0000);
+                            sol             = CREATE_ENTITY(Sol, INT_TO_VOID(true), tx + 0x10000, ty);
                             sol->velocity.x = 0x40000;
                             RSDK.SetSpriteAnimation(Sol->aniFrames, 3, &sol->mainAnimator, true, 0);
                             sol->state = Sol_State_OilFlame;
                         }
                     }
                     else if (player->onGround) {
-                        if (OOZSetup_StartFire(tx, ty & 0xFFFF0000, player->angle)) {
-                            EntitySol *sol  = CREATE_ENTITY(Sol, INT_TO_VOID(true), tx - 0x10000, (ty & 0xFFFF0000) - 0x80000);
+                        ty &= 0xFFFF0000;
+                        if (OOZSetup_StartFire(tx, ty, player->angle)) {
+                            ty -= 0x80000;
+                            EntitySol *sol  = CREATE_ENTITY(Sol, INT_TO_VOID(true), tx - 0x10000, ty);
                             sol->velocity.x = -0x40000;
                             RSDK.SetSpriteAnimation(Sol->aniFrames, 3, &sol->mainAnimator, true, 0);
                             sol->state = Sol_State_FireballOilFlame;
 
-                            sol             = CREATE_ENTITY(Sol, INT_TO_VOID(true), tx + 0x10000, (ty & 0xFFFF0000) - 0x80000);
+                            sol             = CREATE_ENTITY(Sol, INT_TO_VOID(true), tx + 0x10000, ty);
                             sol->velocity.x = 0x40000;
                             RSDK.SetSpriteAnimation(Sol->aniFrames, 3, &sol->mainAnimator, true, 0);
                             sol->state = Sol_State_FireballOilFlame;
@@ -379,7 +383,7 @@ void OOZSetup_HandleActiveFlames(void)
 
             if (!*OOZSetup->flameTimerPtrs[i]) {
                 OOZSetup->flameTimerPtrs[i] = NULL;
-                EntitySol *sol              = CREATE_ENTITY(Sol, INT_TO_VOID(1), OOZSetup->flamePositions[i].x, OOZSetup->flamePositions[i].y);
+                EntitySol *sol              = CREATE_ENTITY(Sol, INT_TO_VOID(true), OOZSetup->flamePositions[i].x, OOZSetup->flamePositions[i].y);
                 sol->isFlameFX              = true;
                 sol->rotation               = 2 * (OOZSetup->flamePositions[i].x & 0xFF);
                 RSDK.SetSpriteAnimation(Sol->aniFrames, 2, &sol->mainAnimator, true, 0);
@@ -389,14 +393,10 @@ void OOZSetup_HandleActiveFlames(void)
                 int32 frame      = OOZSetup->flamePositions[i].y & 0xFF;
                 int32 frameTimer = (OOZSetup->flamePositions[i].y >> 8) & 0xFF;
 
-                if (frameTimer >= 3) {
-                    frame++;
+                if (++frameTimer >= 3) {
                     frameTimer = 0;
-                    if (frame > 10)
+                    if (++frame > 10)
                         frame = 1;
-                }
-                else {
-                    ++frameTimer;
                 }
 
                 // likewise, this too is evil, using the lower 2 bytes to store frame info
@@ -412,6 +412,7 @@ void OOZSetup_HandleActiveFlames(void)
                     Player_ElementHurt(player, self, SHIELD_FIRE);
                 }
             }
+            self->position = storePos;
         }
     }
 }
@@ -422,13 +423,14 @@ bool32 OOZSetup_StartFire(int32 posX, int32 posY, int32 angle)
 
     int32 pos = (posX >> 20) + (posY >> 20 << 10);
 
-    if (pos <= 0x1FFFF) {
+    if (pos < 0x20000) {
         if (!OOZSetup->flameTimers[pos]) {
             int32 i = 0;
             for (; i < 399; ++i) {
                 if (!OOZSetup->flameTimerPtrs[i])
                     break;
             }
+            // if we get to 399 active flames just use that slot over and over 
 
             OOZSetup->flameTimerPtrs[i]   = &OOZSetup->flameTimers[pos];
             OOZSetup->flamePositions[i].x = posX;
