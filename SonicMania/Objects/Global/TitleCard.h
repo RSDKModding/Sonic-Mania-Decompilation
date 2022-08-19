@@ -24,8 +24,8 @@ struct EntityTitleCard {
     int32 stripPos[4];
     Vector2 vertMovePos[2];
     Vector2 vertTargetPos[2];
-    Vector2 word2DecorVerts[4];
     Vector2 word1DecorVerts[4];
+    Vector2 word2DecorVerts[4];
     Vector2 zoneDecorVerts[4];
     Vector2 stripVertsBlue[4];   // Using Mania Mode colour names since its better than anything else we did
     Vector2 stripVertsRed[4];    // Using Mania Mode colour names since its better than anything else we did
