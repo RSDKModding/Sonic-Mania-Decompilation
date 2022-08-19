@@ -1147,7 +1147,7 @@ void UISaveSlot_HandleSaveIconChange(void)
         }
     }
 
-    if (self->type == UISAVESLOT_NOSAVE && saveRAM->saveState == SAVEGAME_COMPLETE) {
+    if (self->type == UISAVESLOT_REGULAR && saveRAM->saveState == SAVEGAME_COMPLETE) {
         self->saveZoneID = NO_SAVE_SLOT;
         UISaveSlot_HandleSaveIcons();
     }

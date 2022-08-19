@@ -146,8 +146,10 @@ void Dragonfly_CheckPlayerCollisions(void)
             Vector2 storePos = self->position;
             for (int32 i = 0; i < DRAGONFLY_SPINE_COUNT; ++i) {
                 self->position = self->positions[i];
-                if (Player_CheckCollisionTouch(player, self, &Dragonfly->hitboxSpine))
+                if (Player_CheckCollisionTouch(player, self, &Dragonfly->hitboxSpine)) {
+                    self->position = storePos;
                     Player_Hurt(player, self);
+                }
             }
 
             self->position = storePos;
