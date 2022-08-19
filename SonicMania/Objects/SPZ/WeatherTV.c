@@ -589,20 +589,11 @@ void WeatherTV_State_ExitEggTVLogo(void)
 {
     RSDK_THIS(WeatherTV);
 
-    int32 x = self->position.x;
-    int32 y = self->position.y;
+    int32 targetX = self->position.x + TO_FIXED(60);
+    int32 targetY = self->position.y - TO_FIXED(26);
 
-    // Lerp the position
-    if (self->timer > 0) {
-        if (self->timer < 256) {
-            self->logoPos.x = x + self->timer * ((self->logoPos.x - x) >> 8);
-            self->logoPos.y = y + self->timer * ((self->logoPos.y - y) >> 8);
-        }
-    }
-    else {
-        self->logoPos.x = x;
-        self->logoPos.y = y;
-    }
+    // Move into place
+    MathHelpers_Lerp(&self->logoPos, self->timer, self->position.x, self->position.y, targetX, targetY);
 
     self->timer += 6;
 
