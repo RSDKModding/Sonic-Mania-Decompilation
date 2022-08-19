@@ -292,7 +292,7 @@ void DialogRunner_GetUserAuthStatus(void)
         DialogRunner->authForbidden      = true;
     }
 
-    if (API.CheckDLC(DLC_PLUS) != globals->lastHasPlus && !DialogRunner->authForbidden) {
+    if (API.CheckDLC(DLC_PLUS) != (bool32)globals->lastHasPlus && !DialogRunner->authForbidden) {
         EntityDialogRunner *dialogRunner = CREATE_ENTITY(DialogRunner, DialogRunner_CheckUserAuth_CB, 0, 0);
         dialogRunner->active             = ACTIVE_ALWAYS;
         dialogRunner->useGenericText     = true;

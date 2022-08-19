@@ -182,7 +182,7 @@ bool32 SSZ3Cutscene_CutsceneOutro_FollowRuby(EntityCutsceneSeq *host)
     SSZ3Cutscene_HandleRubyFX();
 
     if (abs(player->position.x - ruby->position.x) < 0x900000) {
-        foreach_active(Player, player) { player->right = false; }
+        foreach_active(Player, playerPtr) { playerPtr->right = false; }
 
         foreach_active(EggTower, tower) { destroyEntity(tower); }
 

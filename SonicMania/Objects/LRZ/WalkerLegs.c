@@ -206,9 +206,9 @@ void WalkerLegs_CheckObjectCrush(void)
             self->position.y = legPos[l]->y;
 
             if (RSDK.CheckObjectCollisionTouchBox(self, &WalkerLegs->hitbox, spikes, &spikeHitbox)) {
-                for (int32 l = 0; l < 2; ++l) {
-                    int32 x              = spikes->position.x + (((2 * (l != 0) - 1) * (spikes->type == SPIKES_UP)) << 19);
-                    int32 y              = spikes->position.y + (((2 * (l != 0) - 1) * (spikes->type != SPIKES_UP)) << 19);
+                for (int32 i = 0; i < 2; ++i) {
+                    int32 x              = spikes->position.x + (((2 * (i != 0) - 1) * (spikes->type == SPIKES_UP)) << 19);
+                    int32 y              = spikes->position.y + (((2 * (i != 0) - 1) * (spikes->type != SPIKES_UP)) << 19);
                     EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, x, y);
 
                     RSDK.SetSpriteAnimation(BuckwildBall->particleFrames, 4, &debris->animator, true, spikes->type >> 1);

@@ -284,6 +284,7 @@ void UFO_Circuit_State_UFO(void)
     if (!UFO_Circuit_CheckNodeChange()) {
         EntityUFO_Circuit *curNode = self->curNode;
         int32 rx                   = (self->position.x - curNode->startPos.x) >> 16;
+        int32 ry                   = 0;
         int32 rz                   = (self->position.y - curNode->startPos.y) >> 16;
 
         if (rx * rx + rz * rz < self->groundVel >> 5) {
@@ -295,9 +296,9 @@ void UFO_Circuit_State_UFO(void)
         if (!UFO_Setup->timedOut) {
             foreach_active(UFO_Player, player)
             {
-                int32 rx = (self->position.x - player->position.x) >> 16;
-                int32 ry = (self->height - player->height - 0xA0000) >> 16;
-                int32 rz = (self->position.y - player->position.y) >> 16;
+                rx = (self->position.x - player->position.x) >> 16;
+                ry = (self->height - player->height - 0xA0000) >> 16;
+                rz = (self->position.y - player->position.y) >> 16;
 
                 int32 dist = rx * rx + ry * ry + rz * rz;
                 if (!UFO_Setup->machLevel && dist < 0xC000)

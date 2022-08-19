@@ -1955,7 +1955,6 @@ void Player_HandleDeath(EntityPlayer *player)
                         SaveRAM *saveRAM = SaveGame->saveRAM;
                         if (globals->gameMode == MODE_COMPETITION) {
                             int32 playerID                    = RSDK.GetEntitySlot(player);
-                            EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
                             if (!session->finishState[playerID]) {
                                 CompSession_DeriveWinner(playerID, FINISHTYPE_GAMEOVER);
                             }
@@ -2037,7 +2036,6 @@ void Player_HandleDeath(EntityPlayer *player)
                     if (globals->gameMode == MODE_COMPETITION) {
                         showGameOver                      = false;
                         int32 playerID                    = RSDK.GetEntitySlot(player);
-                        EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
                         if (!session->finishState[playerID]) {
                             CompSession_DeriveWinner(playerID, FINISHTYPE_GAMEOVER);
                             showGameOver = !MANIA_USE_PLUS;
@@ -5010,21 +5008,21 @@ void Player_State_KnuxWallClimb(void)
             bool32 collidedHigh = false, collidedLow = false;
             if (self->direction) {
                 collidedHigh = RSDK.ObjectTileGrip(self, self->collisionLayers, CMODE_RWALL, self->collisionPlane, hitbox->left << 16, highY, 8);
-                int32 highX  = self->position.x;
+                int32 targetX  = self->position.x;
 
                 self->position.x = storeX;
                 collidedLow      = RSDK.ObjectTileGrip(self, self->collisionLayers, CMODE_RWALL, self->collisionPlane, hitbox->left << 16, lowY, 8);
-                if (self->velocity.y < 0 && self->position.x < highX)
+                if (self->velocity.y < 0 && self->position.x < targetX)
                     self->velocity.y = 0;
                 roofX = -0x40000;
             }
             else {
                 collidedHigh = RSDK.ObjectTileGrip(self, self->collisionLayers, CMODE_LWALL, self->collisionPlane, hitbox->right << 16, highY, 8);
-                int32 highY  = self->position.x;
+                int32 targetX  = self->position.x;
 
                 self->position.x = storeX;
                 collidedLow      = RSDK.ObjectTileGrip(self, self->collisionLayers, CMODE_LWALL, self->collisionPlane, hitbox->right << 16, lowY, 8);
-                if (self->velocity.y < 0 && self->position.x > highY)
+                if (self->velocity.y < 0 && self->position.x > targetX)
                     self->velocity.y = 0;
                 roofX = 0x40000;
             }

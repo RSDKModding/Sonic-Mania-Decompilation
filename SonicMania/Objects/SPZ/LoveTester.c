@@ -361,7 +361,7 @@ void LoveTester_State_SetupMatching(void)
 
         bool32 shouldChangeDisplay = !timer;
         if (timer < 0)
-            shouldChangeDisplay = ((timer - 1) | 0xFFFFFFFC) == -1;
+            shouldChangeDisplay = (int32)((timer - 1) | 0xFFFFFFFC) == -1;
 
         if (shouldChangeDisplay) {
             int32 displayBottom = self->tvDisplayBottom;

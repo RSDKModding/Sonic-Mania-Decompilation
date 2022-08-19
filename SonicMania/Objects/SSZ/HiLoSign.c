@@ -136,7 +136,7 @@ void HiLoSign_State_FinishSpinAdjust(void)
 {
     RSDK_THIS(HiLoSign);
 
-    int32 prevAng = self->angle & 0xFFFF0000;
+    uint32 prevAng = self->angle & 0xFFFF0000;
     if (self->direction)
         self->angle -= self->spinSpeed;
     else

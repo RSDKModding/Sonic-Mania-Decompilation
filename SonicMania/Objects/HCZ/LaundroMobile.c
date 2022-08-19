@@ -480,9 +480,9 @@ void LaundroMobile_HandleStageWrap(void)
                         trail->position.y -= offsetY;
                         trail->currentPos.x -= offsetX;
                         trail->currentPos.y -= offsetY;
-                        for (int32 i = 0; i < IMAGETRAIL_TRACK_COUNT; ++i) {
-                            trail->statePos[i].x -= offsetX;
-                            trail->statePos[i].y -= offsetY;
+                        for (int32 t = 0; t < IMAGETRAIL_TRACK_COUNT; ++t) {
+                            trail->statePos[t].x -= offsetX;
+                            trail->statePos[t].y -= offsetY;
                         }
                     }
                     else if (entPtr->classID == Current->classID) {

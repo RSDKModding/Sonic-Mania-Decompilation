@@ -260,9 +260,7 @@ void UIVsZoneButton_DrawButton(void)
     UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, width, self->size.y >> 16, self->bgEdgeSize, 0x00, 0x00, 0x00);
 
     if (!SceneInfo->inEditor) {
-        int32 width = RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->nameText, 0, self->nameText.length, 0);
-
-        drawPos.x -= width << 15;
+        drawPos.x -= RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->nameText, 0, self->nameText.length, 0) << 15;
         drawPos.y -= 0x10000;
         RSDK.DrawText(&self->textAnimator, &drawPos, &self->nameText, 0, self->nameText.length, ALIGN_LEFT, 0, NULL, NULL, false);
     }

@@ -264,10 +264,10 @@ void AIZSetup_HandleHeavyMovement(void)
     }
 
     if (x < (ScreenInfo->position.x + ScreenInfo->size.x + 32) << 16) {
-        foreach_all(AIZEggRobo, robo)
+        foreach_all(AIZEggRobo, eggRobo)
         {
-            if (robo->forKnux)
-                robo->position.x += 0x40000;
+            if (eggRobo->forKnux)
+                eggRobo->position.x += 0x40000;
         }
         claw->position.x += 0x40000;
         claw->position.y -= 0x4000;

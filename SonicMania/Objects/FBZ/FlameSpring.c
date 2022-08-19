@@ -91,9 +91,9 @@ void FlameSpring_State_Spring(void)
     RSDK_THIS(FlameSpring);
 
     self->spittingFire = false;
-    foreach_active(Player, player)
+    foreach_active(Player, playerPtr)
     {
-        if (Player_CheckCollisionBox(player, self, &FlameSpring->hitboxSpring) == C_TOP && player->velocity.y >= 0) {
+        if (Player_CheckCollisionBox(playerPtr, self, &FlameSpring->hitboxSpring) == C_TOP && playerPtr->velocity.y >= 0) {
             if (!self->mainAnimator.frameID) {
                 self->timer                = 0;
                 self->mainAnimator.frameID = 1;

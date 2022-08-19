@@ -203,13 +203,13 @@ void SeeSaw_Update(void)
         int32 storeY   = self->position.y;
         self->position = self->orbPos;
 
-        foreach_active(Player, player)
+        foreach_active(Player, playerPtr)
         {
-            if (Player_CheckCollisionTouch(player, self, &SeeSaw->hitboxCactinaut)) {
+            if (Player_CheckCollisionTouch(playerPtr, self, &SeeSaw->hitboxCactinaut)) {
 #if MANIA_USE_PLUS
-                if (!Player_CheckMightyUnspin(player, 0x300, 2, &player->uncurlTimer))
+                if (!Player_CheckMightyUnspin(playerPtr, 0x300, 2, &player->uncurlTimer))
 #endif
-                    Player_Hurt(player, self);
+                    Player_Hurt(playerPtr, self);
             }
         }
 

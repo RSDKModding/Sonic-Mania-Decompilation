@@ -13,7 +13,7 @@ void UIText_Update(void)
 {
     RSDK_THIS(UIText);
 
-    if (self->animator.animationID != self->highlighted + self->listID) {
+    if (self->animator.animationID != (int32)self->highlighted + self->listID) {
         if (!UIWidgets || UIText->aniFrames)
             RSDK.SetSpriteAnimation(UIText->aniFrames, self->highlighted + self->listID, &self->animator, true, 0);
         else

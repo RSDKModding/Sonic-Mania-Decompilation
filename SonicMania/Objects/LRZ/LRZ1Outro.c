@@ -160,11 +160,11 @@ bool32 LRZ1Outro_CutsceneAct1_GoToDashLift(EntityCutsceneSeq *host)
         self->timer++;
 
     if (self->timer >= 60) {
-        foreach_active(Player, player)
+        foreach_active(Player, playerPtr)
         {
-            player->jumpHold  = false;
-            player->jumpPress = false;
-            player->down      = true;
+            playerPtr->jumpHold  = false;
+            playerPtr->jumpPress = false;
+            playerPtr->down      = true;
         }
 
         RSDK.CopyPalette(0, 128, 1, 128, 128);
@@ -215,11 +215,11 @@ bool32 LRZ1Outro_CutsceneAct2_UsingDashLift(EntityCutsceneSeq *host)
 
     EntityDashLift *lift = self->lift;
 
-    foreach_active(Player, player)
+    foreach_active(Player, playerPtr)
     {
-        player->jumpPress = false;
+        playerPtr->jumpPress = false;
         if (!(Zone->timer & 0xF) && host->timer < 60)
-            player->jumpPress = true;
+            playerPtr->jumpPress = true;
     }
 
     if (lift->drawPos.y < lift->amplitude.y) {
@@ -268,12 +268,12 @@ bool32 LRZ1Outro_CutsceneAct2_ExitDashLift(EntityCutsceneSeq *host)
     }
 
     if (landedOnGround) {
-        foreach_active(Player, player)
+        foreach_active(Player, playerPtr)
         {
-            if (!player->sidekick)
-                player->stateInput = Player_Input_P1;
+            if (!playerPtr->sidekick)
+                playerPtr->stateInput = Player_Input_P1;
             else
-                player->stateInput = Player_Input_P2_AI;
+                playerPtr->stateInput = Player_Input_P2_AI;
         }
 
         foreach_all(TitleCard, titleCard)

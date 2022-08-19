@@ -319,15 +319,15 @@ void DNARiser_State_HelixRise(void)
     }
 
     if (popped) {
-        foreach_active(Player, player)
+        foreach_active(Player, playerPtr)
         {
-            int32 playerID = RSDK.GetEntitySlot(player);
+            int32 playerID = RSDK.GetEntitySlot(playerPtr);
             if (((1 << playerID) & self->activePlayers)) {
-                player->drawGroup      = Zone->playerDrawGroup[0];
-                player->tileCollisions = TILECOLLISION_DOWN;
-                player->state          = Player_State_Air;
-                player->velocity.x     = self->speed.x;
-                player->velocity.y     = self->speed.y;
+                playerPtr->drawGroup      = Zone->playerDrawGroup[0];
+                playerPtr->tileCollisions = TILECOLLISION_DOWN;
+                playerPtr->state          = Player_State_Air;
+                playerPtr->velocity.x     = self->speed.x;
+                playerPtr->velocity.y     = self->speed.y;
                 self->activePlayers &= ~(1 << playerID);
             }
         }

@@ -347,9 +347,8 @@ void DirectorChair_EditorDraw(void)
         self->angle         = self->rotation << 8;
         self->initExtendVel = MAX(32 - 2 * self->size, 1);
 
-        int32 sin       = RSDK.Sin512(self->rotation);
         self->drawPos.x = self->centerPos.x;
-        self->drawPos.y = self->centerPos.y + (sin << 8) + (sin << 12) * (self->size + 1);
+        self->drawPos.y = self->centerPos.y + (RSDK.Sin512(self->rotation) << 8) + (RSDK.Sin512(self->rotation) << 12) * (self->size + 1);
 
         self->inkEffect = INK_BLEND;
         DirectorChair_Draw();

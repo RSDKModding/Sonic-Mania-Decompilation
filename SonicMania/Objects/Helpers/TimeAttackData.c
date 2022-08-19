@@ -559,8 +559,7 @@ int32 TimeAttackData_AddTADBEntry(uint8 zoneID, uint8 act, uint8 characterID, bo
     TimeAttackData_ConfigureTableView(zoneID, act, characterID, encore);
 
     if (API.GetSortedUserDBRowCount(globals->taTableID) > 3) {
-        int32 row = API.GetSortedUserDBRowID(globals->taTableID, 3);
-        API.RemoveDBRow(globals->taTableID, row);
+        API.RemoveDBRow(globals->taTableID, API.GetSortedUserDBRowID(globals->taTableID, 3));
 
         TimeAttackData_ConfigureTableView(zoneID, act, characterID, encore);
     }
@@ -705,9 +704,9 @@ void TimeAttackData_AddLeaderboardEntry(uint8 zoneID, uint8 act, uint8 character
     TimeAttackData_TrackTAClear(&stat, zoneID, act, characterID, isEncore, score);
     API.TryTrackStat(&stat);
 
-    LeaderboardID *leaderboardInfo = TimeAttackData_GetLeaderboardInfo(zoneID, act, characterID, isEncore);
+    LeaderboardID *curLeaderboard = TimeAttackData_GetLeaderboardInfo(zoneID, act, characterID, isEncore);
 
-    API.TrackScore(leaderboardInfo, score, TimeAttackData_Leaderboard_GetRank);
+    API.TrackScore(curLeaderboard, score, TimeAttackData_Leaderboard_GetRank);
 }
 
 LeaderboardID *TimeAttackData_GetLeaderboardInfo(uint8 zoneID, uint8 act, uint8 characterID, bool32 isEncore)

@@ -55,7 +55,7 @@ void Press_Draw(void)
     SpriteFrame *frame = RSDK.GetFrame(Press->aniFrames, 1, self->threadAnimator.frameID);
     frame->height      = 56;
     frame->sprY        = (self->threadSprY >> 8) + 182;
-    for (int32 i = 0; i < self->threads; ++i) {
+    for (uint32 i = 0; i < self->threads; ++i) {
         RSDK.DrawSprite(&self->threadAnimator, &drawPos, false);
         drawPos.y += 0x380000;
     }

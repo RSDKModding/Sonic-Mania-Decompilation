@@ -251,9 +251,9 @@ void PhantomKing_HandleAttacks(void)
     if (!launchedAttack) {
         // No More Attacks, lets make more
         for (int32 i = 0; i < 0x3FC; i += 0xAA) {
-            EntityPKingAttack *attack = CREATE_ENTITY(PKingAttack, INT_TO_VOID(PKINGATTACK_ORBIT), self->position.x, self->position.y);
-            attack->angle             = i;
-            attack->target            = (Entity *)self;
+            EntityPKingAttack *attackOrb = CREATE_ENTITY(PKingAttack, INT_TO_VOID(PKINGATTACK_ORBIT), self->position.x, self->position.y);
+            attackOrb->angle             = i;
+            attackOrb->target            = (Entity *)self;
         }
         self->timer = -90;
     }

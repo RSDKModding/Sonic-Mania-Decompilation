@@ -362,7 +362,7 @@ void UIVsCharSelector_State_CharSelect(void)
     RSDK_THIS(UIVsCharSelector);
 
     uint32 id = API_GetInputDeviceID(CONT_P1 + self->playerID);
-    if (id == INPUT_NONE || id == INPUT_AUTOASSIGN) {
+    if (id == INPUT_NONE || id == (uint32)INPUT_AUTOASSIGN) {
         self->state = UIVsCharSelector_State_WaitingForPlayer;
 #if MANIA_USE_PLUS
         UIVsCharSelector_State_WaitingForPlayer();
@@ -385,10 +385,10 @@ void UIVsCharSelector_State_WaitingForPlayer(void)
     int32 assigned = API_IsInputDeviceAssigned(id);
 
     if (parent->active == ACTIVE_ALWAYS) {
-        if (!id || (!assigned && id != INPUT_AUTOASSIGN)) {
+        if (!id || (!assigned && id != (uint32)INPUT_AUTOASSIGN)) {
             API_AssignInputSlotToDevice(CONT_P1 + self->playerID, INPUT_AUTOASSIGN);
         }
-        else if (id != INPUT_AUTOASSIGN) {
+        else if (id != (uint32)INPUT_AUTOASSIGN) {
             self->playerBounceOffset   = 0;
             self->playerBounceVelocity = 0x8000;
             self->timer                = 4;

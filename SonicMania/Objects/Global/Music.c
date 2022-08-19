@@ -636,7 +636,7 @@ void Music_State_Jingle(void)
 {
     RSDK_THIS(Music);
 
-    if (Music->activeTrack == self->trackID && RSDK.GetChannelPos(Music->channelID) > self->trackStartPos) {
+    if (Music->activeTrack == self->trackID && RSDK.GetChannelPos(Music->channelID) > (uint32)self->trackStartPos) {
         self->trackStartPos = 0;
         if (self->volume < 1.0) {
             self->volume += self->fadeSpeed;
@@ -672,7 +672,7 @@ void Music_State_FadeTrackIn(void)
     RSDK_THIS(Music);
 
 #if MANIA_USE_PLUS
-    if (RSDK.GetChannelPos(Music->channelID) > Music->trackStartPos) {
+    if (RSDK.GetChannelPos(Music->channelID) > (uint32)Music->trackStartPos) {
         Music->trackStartPos = 0;
         self->volume += self->fadeSpeed;
 

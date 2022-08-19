@@ -458,13 +458,13 @@ void TimeAttackMenu_WatchReplay(int32 row, bool32 showGhost)
     int32 replayID = 0;
     if (!showGhost) {
         if (!TimeAttackData->loaded || characterID != TimeAttackData->characterID || zoneID != TimeAttackData->zoneID || act != TimeAttackData->act
-            || encore != TimeAttackData->encore) {
+            || encore != (int32)TimeAttackData->encore) {
             TimeAttackData_ConfigureTableView(zoneID, act, characterID, encore);
         }
 
         int32 entryCount = API.GetSortedUserDBRowCount(globals->taTableID);
         for (int32 rank = 1; rank < entryCount; ++rank) {
-            if (uuid == TimeAttackData_GetReplayID(zoneID, act, characterID, encore, rank))
+            if (uuid == (uint32)TimeAttackData_GetReplayID(zoneID, act, characterID, encore, rank))
                 break;
 
             ++replayID;

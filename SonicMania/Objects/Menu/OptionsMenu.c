@@ -95,28 +95,28 @@ void OptionsMenu_Initialize(void)
     Hitbox hitbox;
     foreach_all(UIButtonPrompt, prompt)
     {
-        EntityUIControl *control = OptionsMenu->optionsControl;
-        int32 x                  = control->startPos.x - control->cameraOffset.x;
-        int32 y                  = control->startPos.y - control->cameraOffset.y;
+        EntityUIControl *controller = OptionsMenu->optionsControl;
+        int32 x                  = controller->startPos.x - controller->cameraOffset.x;
+        int32 y                  = controller->startPos.y - controller->cameraOffset.y;
 
-        hitbox.right  = control->size.x >> 17;
-        hitbox.left   = -(control->size.x >> 17);
-        hitbox.bottom = control->size.y >> 17;
-        hitbox.top    = -(control->size.y >> 17);
+        hitbox.right  = controller->size.x >> 17;
+        hitbox.left   = -(controller->size.x >> 17);
+        hitbox.bottom = controller->size.y >> 17;
+        hitbox.top    = -(controller->size.y >> 17);
         if (MathHelpers_PointInHitbox(x, y, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox) && prompt->buttonID == 3)
             OptionsMenu->helpPrompt = prompt;
     }
 
     foreach_all(UIDiorama, diorama)
     {
-        EntityUIControl *control = OptionsMenu->videoControl;
-        int32 x                  = control->startPos.x - control->cameraOffset.x;
-        int32 y                  = control->startPos.y - control->cameraOffset.y;
+        EntityUIControl *controller = OptionsMenu->videoControl;
+        int32 x                  = controller->startPos.x - controller->cameraOffset.x;
+        int32 y                  = controller->startPos.y - controller->cameraOffset.y;
 
-        hitbox.right  = control->size.x >> 17;
-        hitbox.left   = -(control->size.x >> 17);
-        hitbox.bottom = control->size.y >> 17;
-        hitbox.top    = -(control->size.y >> 17);
+        hitbox.right  = controller->size.x >> 17;
+        hitbox.left   = -(controller->size.x >> 17);
+        hitbox.bottom = controller->size.y >> 17;
+        hitbox.top    = -(controller->size.y >> 17);
         if (MathHelpers_PointInHitbox(x, y, diorama->position.x, diorama->position.y, FLIP_NONE, &hitbox)) {
             OptionsMenu->diorama = diorama;
             diorama->parent      = OptionsMenu->videoControl;
@@ -125,14 +125,14 @@ void OptionsMenu_Initialize(void)
 
     foreach_all(UIInfoLabel, label)
     {
-        EntityUIControl *control = OptionsMenu->dataOptionsControl;
-        int32 x                  = control->startPos.x - control->cameraOffset.x;
-        int32 y                  = control->startPos.y - control->cameraOffset.y;
+        EntityUIControl *controller = OptionsMenu->dataOptionsControl;
+        int32 x                  = controller->startPos.x - controller->cameraOffset.x;
+        int32 y                  = controller->startPos.y - controller->cameraOffset.y;
 
-        hitbox.right  = control->size.x >> 17;
-        hitbox.left   = -(control->size.x >> 17);
-        hitbox.bottom = control->size.y >> 17;
-        hitbox.top    = -(control->size.y >> 17);
+        hitbox.right  = controller->size.x >> 17;
+        hitbox.left   = -(controller->size.x >> 17);
+        hitbox.bottom = controller->size.y >> 17;
+        hitbox.top    = -(controller->size.y >> 17);
         if (MathHelpers_PointInHitbox(x, y, label->position.x, label->position.y, FLIP_NONE, &hitbox))
             OptionsMenu->selectDataToEraseLabel = label;
     }

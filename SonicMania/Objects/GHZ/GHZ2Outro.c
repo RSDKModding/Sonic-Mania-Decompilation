@@ -123,7 +123,7 @@ bool32 GHZ2Outro_Cutscene_JumpIntoHole(EntityCutsceneSeq *host)
     }
 
     if (player->position.y > (ScreenInfo->position.y + 0x200) << 16) {
-        foreach_active(Player, player) { player->active = ACTIVE_NEVER; }
+        foreach_active(Player, playerPtr) { playerPtr->active = ACTIVE_NEVER; }
         RSDK.SetScene("Cutscenes", "Green Hill Zone 2");
 
         Zone_StartFadeOut(0x10, 0x000000);
@@ -228,10 +228,10 @@ bool32 GHZ2Outro_Cutscene_SpyOnEggman(EntityCutsceneSeq *host)
         Camera_SetupLerp(CAMERA_LERP_SIN512, 0, self->position.x, self->position.y, 4);
 
     if (host->timer >= 208) {
-        foreach_active(Player, player)
+        foreach_active(Player, playerPtr)
         {
-            player->down   = true;
-            player->camera = NULL;
+            playerPtr->down   = true;
+            playerPtr->camera = NULL;
         }
         return true;
     }

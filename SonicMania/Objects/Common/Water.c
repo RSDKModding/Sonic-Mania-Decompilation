@@ -741,12 +741,12 @@ void Water_State_Bubble(void)
 {
     RSDK_THIS(Water);
 
-    EntityPlayer *player = (EntityPlayer *)self->childPtr;
+    EntityPlayer *playerPtr = (EntityPlayer *)self->childPtr;
 
     if (self->animator.animationID == 6 && self->animator.frameID == self->animator.frameCount - 1)
         destroyEntity(self);
 
-    if (player && player->state == Player_State_Bubble && self->animator.frameID < 3)
+    if (playerPtr && playerPtr->state == Player_State_Bubble && self->animator.frameID < 3)
         self->bubbleX += 0x40000;
 
     if (self->speed != -1) {

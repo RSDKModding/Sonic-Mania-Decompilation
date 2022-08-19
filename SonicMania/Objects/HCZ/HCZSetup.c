@@ -234,8 +234,7 @@ void HCZSetup_Scanline_WaterLine(ScanlineInfo *scanlines)
     int32 screenY          = 0x210 - (screen->position.y >> 2);
     int32 waterLevel       = FROM_FIXED(Water->waterLevel) - screen->position.y;
 
-    int32 distance       = MAX(1, abs(screenY - waterLevel));
-    int32 scanlineHeight = MAX(0x10000, 0x640000 / distance);
+    int32 scanlineHeight = MAX(0x10000, 0x640000 / MAX(1, abs(screenY - waterLevel)));
 
     screenY    = CLAMP(screenY, 0, screen->size.y);
     waterLevel = CLAMP(waterLevel, 0, screen->size.y);

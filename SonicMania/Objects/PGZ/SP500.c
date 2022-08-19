@@ -189,9 +189,9 @@ void SP500_CheckPlayerCollisions(void)
 
     for (int32 p = 0; p < Player->playerCount; ++p) {
         if ((1 << p) & self->activePlayers) {
-            EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
-            player->position.x   = self->position.x;
-            player->position.y   = self->position.y;
+            EntityPlayer *playerPtr = RSDK_GET_ENTITY(p, Player);
+            playerPtr->position.x   = self->position.x;
+            playerPtr->position.y   = self->position.y;
         }
     }
 
