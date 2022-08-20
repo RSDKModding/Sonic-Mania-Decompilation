@@ -394,7 +394,7 @@ void SpecialClear_GiveScoreBonus(int32 score)
         Music_PlayJingle(TRACK_1UP);
 
         Music->nextTrack = TRACK_NONE;
-        while (self->score <= self->score1UP) self->score1UP += 50000;
+        while (self->score1UP <= self->score) self->score1UP += 50000;
     }
 }
 

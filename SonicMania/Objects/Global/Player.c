@@ -672,8 +672,7 @@ void Player_Create(void *data)
         }
 
         // Setup the target score
-        int32 target = self->score1UP;
-        while (self->score1UP <= target) self->score1UP += 50000;
+        while (self->score1UP <= self->score) self->score1UP += 50000;
 
         self->collisionLayers = Zone->collisionLayers;
         self->drawFX          = FX_ROTATE | FX_FLIP;

@@ -229,7 +229,7 @@ void PBL_Setup_GiveScore(int32 score)
         if (saveRAM->continues < 20)
             saveRAM->continues++;
 
-        while (PBL_Setup->score1UP < PBL_Setup->score) PBL_Setup->score1UP += 10000;
+        while (PBL_Setup->score1UP <= PBL_Setup->score) PBL_Setup->score1UP += 10000;
 
         foreach_active(PBL_HUD, hud) { PBL_HUD_DisplayMessage(hud, "!CONTINUE!", PBL_HUD_MSG_SCROLL_LEFT); }
     }
