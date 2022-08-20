@@ -237,6 +237,9 @@ void SchrodingersCapsule_State_Explode(void)
         buddy1->velocity.y      = -0x40000;
         buddy1->direction       = FLIP_X;
         RSDK.SetSpriteAnimation(buddy1->aniFrames, ANI_HURT, &buddy1->animator, true, 0);
+        // These 2 lines aren't in the original, but it prevents a crash with instashield if its's enabled
+        buddy1->nextGroundState = StateMachine_None;
+        buddy1->nextAirState    = StateMachine_None;
 
         EntityPlayer *buddy2 = RSDK_GET_ENTITY(SLOT_PLAYER4, Player);
         buddy2->classID      = Player->classID;
@@ -258,6 +261,9 @@ void SchrodingersCapsule_State_Explode(void)
         buddy2->velocity.x      = -0x24000;
         buddy2->velocity.y      = -0x40000;
         RSDK.SetSpriteAnimation(buddy2->aniFrames, ANI_HURT, &buddy2->animator, true, 0);
+        // Like above, but just to be safe :]
+        buddy1->nextGroundState = StateMachine_None;
+        buddy1->nextAirState    = StateMachine_None;
 
         Music_FadeOut(0.025);
         RSDK.PlaySfx(SchrodingersCapsule->sfxExplosion3, false, 0xFF);

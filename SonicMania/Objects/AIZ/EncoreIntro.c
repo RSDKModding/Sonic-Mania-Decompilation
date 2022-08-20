@@ -446,7 +446,7 @@ bool32 EncoreIntro_Cutscene_BuddySelect(EntityCutsceneSeq *host)
     }
     else {
         RSDK.SetSpriteAnimation(EncoreIntro->aniFrames, 3, &buddy->animator, true, 0);
-        buddy->velocity.x = 0x8000;
+        buddy->velocity.x = -0x8000;
     }
     buddy->velocity.y = -0x30000;
     globals->playerID = (buddy->characterID << 8) + ID_SONIC;
