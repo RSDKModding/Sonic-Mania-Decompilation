@@ -538,6 +538,7 @@ void Player_HandleIdleAnimation(void);
 void Player_HandleGroundAnimation(void);
 void Player_HandleGroundMovement(void);
 void Player_HandleGroundRotation(void);
+void Player_HandleAirRotation(void);
 void Player_HandleAirMovement(void);
 void Player_HandleAirFriction(void);
 void Player_Action_Jump(EntityPlayer *entity);

@@ -3134,6 +3134,23 @@ void Player_HandleGroundRotation(void)
         self->rotation &= 0x1FF;
     }
 }
+void Player_HandleAirRotation(void)
+{
+    RSDK_THIS(Player);
+
+    if (self->rotation >= 0x100) {
+        if (self->rotation < 0x200)
+            self->rotation += 4;
+        else
+            self->rotation = 0;
+    }
+    else {
+        if (self->rotation > 0)
+            self->rotation -= 4;
+        else
+            self->rotation = 0;
+    }
+}
 void Player_HandleAirMovement(void)
 {
     RSDK_THIS(Player);
@@ -3150,14 +3167,7 @@ void Player_HandleAirMovement(void)
     self->collisionMode = CMODE_FLOOR;
     self->pushing       = 0;
 
-    if (self->rotation >= 0x100) {
-        if (self->rotation < 0x200)
-            self->rotation += 4;
-    }
-    else if (self->rotation > 0)
-        self->rotation -= 4;
-    else
-        self->rotation = 0;
+    Player_HandleAirRotation();
 }
 void Player_HandleAirFriction(void)
 {

@@ -500,7 +500,8 @@ void OOZSetup_PlayerState_OilStrip(void)
     int32 skid = self->skidSpeed;
     int32 dec  = self->deceleration;
 
-    Animator *animator = &self->animator;
+    Animator animator;
+    memcpy(&animator, &self->animator, sizeof(Animator));
 
     self->position.y += 0x10000;
 
@@ -517,12 +518,12 @@ void OOZSetup_PlayerState_OilStrip(void)
     Player_State_Ground();
 
 #if MANIA_USE_PLUS
-    if ((animator->animationID == ANI_HURT || animator->animationID == ANI_FLUME) && (self->groundedStore == true) & self->onGround) {
+    if ((animator.animationID == ANI_HURT || animator.animationID == ANI_FLUME) && self->groundedStore && self->onGround) {
 #else
-    if (animator->animationID == ANI_HURT && (self->groundedStore == true) & self->onGround) {
+    if (animator.animationID == ANI_HURT && self->groundedStore && self->onGround) {
 #endif
         if (abs(self->groundVel) >= 0x20000) {
-            memcpy(&self->animator, animator, sizeof(Animator));
+            memcpy(&self->animator, &animator, sizeof(Animator));
             if (self->animator.timer >= 3)
                 self->animator.timer = 256;
 
@@ -548,10 +549,7 @@ void OOZSetup_PlayerState_OilSlide(void)
         Player_HandleAirMovement();
     }
     else {
-        if (self->camera)
-            self->camera->disableYOffset = false;
-
-        self->jumpAbilityState = 0;
+        Player_Gravity_False();
 
         if (self->angle) {
             if (self->angle <= 0x80) {

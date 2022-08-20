@@ -1919,6 +1919,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Player_UpdatePhysicsState);
     ADD_PUBLIC_FUNC(Player_HandleGroundMovement);
     ADD_PUBLIC_FUNC(Player_HandleGroundRotation);
+    ADD_PUBLIC_FUNC(Player_HandleAirRotation);
     ADD_PUBLIC_FUNC(Player_HandleAirMovement);
     ADD_PUBLIC_FUNC(Player_HandleAirFriction);
     ADD_PUBLIC_FUNC(Player_Action_Jump);
