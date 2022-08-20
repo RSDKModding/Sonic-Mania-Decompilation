@@ -6,11 +6,11 @@
 // Object Class
 struct ObjectUFO_Plasma {
     RSDK_OBJECT
-    int32 unused1;
+    bool32 forceEnabled; // unused, this was prolly copied from OOZ/Smog lol
     ScanlineInfo *scanlines;
-    uint8 scanlineData[0x100 * sizeof(ScanlineInfo)];
+    ScanlineInfo scanlineList[0x100];
     uint16 aniFrames;
-    int32 unused2;
+    int32 starPostID; // unused, this was prolly copied from OOZ/Smog lol
 };
 
 // Entity Class

@@ -22,16 +22,16 @@ void UFO_Plasma_Draw(void)
     int32 y          = (UFO_Setup->timer + 2 * ScreenInfo->position.y) << 14;
     uint8 scanlineID = ((ScreenInfo->position.y >> 1) + 2 * UFO_Setup->timer);
 
+    ScanlineInfo *scanline = UFO_Plasma->scanlines;
     for (int32 i = 0; i < ScreenInfo->size.y; ++i) {
-        ScanlineInfo *scanline  = (ScanlineInfo *)&UFO_Plasma->scanlineData[scanlineID++ * sizeof(ScanlineInfo)];
-        scanlinePtr->position.x = scanline->position.x + (ScreenInfo->position.x << 16);
-        scanlinePtr->position.y = y;
-        scanlinePtr->deform.x   = scanline->deform.x;
-        scanlinePtr->deform.y   = 0;
-
-        ScanlineInfo *nextScanline = (ScanlineInfo *)&UFO_Plasma->scanlineData[scanlineID * sizeof(ScanlineInfo)];
-        y += nextScanline->deform.y;
-        ++scanlinePtr;
+        scanline->position.x = TO_FIXED(ScreenInfo->position.x) + UFO_Plasma->scanlineList[scanlineID].position.x;
+        scanline->position.y = y;
+        scanline->deform.x   = UFO_Plasma->scanlineList[scanlineID].deform.x;
+        scanline->deform.y   = 0;
+    
+        y += UFO_Plasma->scanlineList[(scanlineID + 1) & 0xFF].deform.y;
+        scanline++;
+        scanlineID++;
     }
 
     RSDK.DrawDeformedSprite(UFO_Plasma->aniFrames, INK_MASKED, 0x100);
@@ -56,12 +56,11 @@ void UFO_Plasma_StageLoad(void)
     UFO_Plasma->scanlines = RSDK.GetScanlines();
 
     int32 angle            = 0;
-    ScanlineInfo *scanline = (ScanlineInfo *)UFO_Plasma->scanlineData;
+    ScanlineInfo *scanline = (ScanlineInfo *)UFO_Plasma->scanlineList;
     for (int32 i = 0; i < 0x100; ++i) {
-        scanline[i].deform.x = (RSDK.Sin256(angle >> 1) + 0x400) << 6;
-        scanline[i].deform.y = (RSDK.Sin256(angle >> 1) + 0x800) << 5;
-
-        scanline[i].position.x = (RSDK.Sin256(angle) << 10) - scanline->deform.x * ScreenInfo->center.x;
+        scanline[i].deform.x   = (RSDK.Sin256(angle >> 1) << 6) + 0x10000;
+        scanline[i].deform.y   = (RSDK.Sin256(angle >> 1) << 5) + 0x10000;
+        scanline[i].position.x = (RSDK.Sin256(angle) << 10) - scanline[i].deform.x * ScreenInfo->center.x;
         scanline[i].position.y = 0;
 
         angle += 2;

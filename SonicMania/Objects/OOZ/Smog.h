@@ -8,7 +8,7 @@ struct ObjectSmog {
     RSDK_OBJECT
     bool32 forceEnabled;
     ScanlineInfo *scanlines;
-    uint8 scanlineData[0x100 * sizeof(ScanlineInfo)];
+    ScanlineInfo scanlineList[0x100];
     uint16 aniFrames;
     int32 starPostID;
 };

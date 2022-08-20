@@ -69,22 +69,19 @@ void Smog_Draw(void)
 {
     RSDK_THIS(Smog);
 
-    ScanlineInfo *scanlinePtr = Smog->scanlines;
+    int32 y          = (Zone->timer + (ScreenInfo->position.y << 1)) << 14;
+    uint8 scanlineID = ((ScreenInfo->position.y >> 1) + 2 * Zone->timer);
 
-    int32 y      = (Zone->timer + 2 * ScreenInfo->position.y) << 14;
-    uint8 defPos = ((ScreenInfo->position.y >> 1) + 2 * Zone->timer);
-
-    ScanlineInfo *scanline = NULL;
+    ScanlineInfo *scanline = Smog->scanlines;
     for (int32 i = 0; i < ScreenInfo->size.y; ++i) {
-        scanline                = (ScanlineInfo *)&Smog->scanlineData[defPos++ * sizeof(ScanlineInfo)];
-        scanlinePtr->position.x = scanline->position.x + (ScreenInfo->position.x << 16);
-        scanlinePtr->position.y = y;
-        scanlinePtr->deform.x   = scanline->deform.x;
-        scanlinePtr->deform.y   = 0;
-
-        ScanlineInfo *data = (ScanlineInfo *)&Smog->scanlineData[defPos * sizeof(ScanlineInfo)];
-        y += data->deform.y;
-        scanlinePtr++;
+        scanline->position.x = TO_FIXED(ScreenInfo->position.x) + Smog->scanlineList[scanlineID].position.x;
+        scanline->position.y = y;
+        scanline->deform.x   = Smog->scanlineList[scanlineID].deform.x;
+        scanline->deform.y   = 0;
+    
+        y += Smog->scanlineList[(scanlineID + 1) & 0xFF].deform.y;
+        scanline++;
+        scanlineID++;
     }
 
     if (self->alpha >= 0x80)
@@ -161,13 +158,14 @@ void Smog_StageLoad(void)
     Smog->aniFrames = RSDK.LoadSpriteSheet("OOZ/Smog.gif", SCOPE_STAGE);
     Smog->scanlines = RSDK.GetScanlines();
 
-    ScanlineInfo *scanline = (ScanlineInfo *)Smog->scanlineData;
+    ScanlineInfo *scanline = (ScanlineInfo *)Smog->scanlineList;
     int32 angle            = 0;
     for (int32 i = 0; i < 0x100; ++i) {
         scanline[i].deform.x   = (RSDK.Sin256(angle >> 1) << 6) + 0x10000;
         scanline[i].deform.y   = (RSDK.Sin256(angle >> 1) << 5) + 0x10000;
-        scanline[i].position.x = (RSDK.Sin256(angle) << 10) - scanline->deform.x * ScreenInfo->center.x;
+        scanline[i].position.x = (RSDK.Sin256(angle) << 10) - scanline[i].deform.x * ScreenInfo->center.x;
         scanline[i].position.y = 0;
+
         angle += 2;
     }
 
