@@ -144,7 +144,7 @@ void UFO_Setup_StageLoad(void)
 
         int32 angle = 0;
         for (int32 i = 0; i < 0x200; ++i) {
-            background->deformationData[i] = 8 * RSDK.Sin1024(angle) >> 10;
+            background->deformationData[i] = (8 * RSDK.Sin1024(angle)) >> 10;
             angle += 8;
         }
 
@@ -197,7 +197,9 @@ void UFO_Setup_Scanline_Playfield(ScanlineInfo *scanlines)
     int32 cosVal = -SCREEN_YCENTER * cosX;
 
     for (int32 i = -SCREEN_YCENTER; i < SCREEN_YCENTER; ++i) {
-        int32 div = MAX(sinX + (cosVal >> 8), 1);
+        int32 div = sinX + (cosVal >> 8);
+        if (!div)
+            div = 1;
 
         int32 h             = camera->height / div;
         scanlines->deform.x = (-cos * h) >> 8;
@@ -228,7 +230,9 @@ void UFO_Setup_Scanline_3DFloor(ScanlineInfo *scanlines)
     int32 cosVal = -SCREEN_YCENTER * cosX;
 
     for (int32 i = -SCREEN_YCENTER; i < SCREEN_YCENTER; ++i) {
-        int32 div = MAX(sinX + (cosVal >> 8), 1);
+        int32 div = sinX + (cosVal >> 8);
+        if (!div)
+            div = 1;
 
         int32 h             = (camera->height + 0x1000000) / div;
         scanlines->deform.x = -(cos * h) >> 8;
@@ -259,7 +263,9 @@ void UFO_Setup_Scanline_3DRoof(ScanlineInfo *scanlines)
     int32 height = (camera->height >> 2) - 0x600000;
 
     for (int32 i = -SCREEN_YCENTER; i < SCREEN_YCENTER; ++i) {
-        int32 div = MAX(sinX + (cosVal >> 8), 1);
+        int32 div = sinX + (cosVal >> 8);
+        if (!div)
+            div = 1;
 
         int32 h             = height / div;
         scanlines->deform.x = -(cos * h) >> 8;
