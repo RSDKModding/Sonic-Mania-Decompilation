@@ -246,7 +246,7 @@ void DialogRunner_GetNextNotif(void)
         return;
     }
     else {
-        ProgressRAM *progress = GameProgress_GetGameProgress();
+        ProgressRAM *progress = GameProgress_GetProgressRAM();
         int32 id              = GameProgress_GetNextNotif();
         if (id >= 0)
             progress->unreadNotifs[id] = true;

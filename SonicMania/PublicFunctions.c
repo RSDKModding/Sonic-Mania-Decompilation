@@ -2511,7 +2511,7 @@ void InitPublicFunctions()
     // Helpers/GameProgress
     ADD_PUBLIC_FUNC(GameProgress_GetNotifStringID);
     ADD_PUBLIC_FUNC(GameProgress_ShuffleBSSID);
-    ADD_PUBLIC_FUNC(GameProgress_GetGameProgress);
+    ADD_PUBLIC_FUNC(GameProgress_GetProgressRAM);
     ADD_PUBLIC_FUNC(GameProgress_GetZoneUnlocked);
     ADD_PUBLIC_FUNC(GameProgress_GetCompletionPercent);
     ADD_PUBLIC_FUNC(GameProgress_TrackGameProgress);

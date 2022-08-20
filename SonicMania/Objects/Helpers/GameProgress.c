@@ -44,7 +44,7 @@ void GameProgress_Create(void *data) {}
 
 void GameProgress_StageLoad(void) {}
 
-ProgressRAM *GameProgress_GetGameProgress(void) { return (ProgressRAM *)&globals->saveRAM[0x900]; }
+ProgressRAM *GameProgress_GetProgressRAM(void) { return (ProgressRAM *)&globals->saveRAM[0x900]; }
 
 int32 GameProgress_GetNotifStringID(int32 type)
 {
@@ -73,7 +73,7 @@ int32 GameProgress_GetNotifStringID(int32 type)
 
 void GameProgress_ShuffleBSSID(void)
 {
-    ProgressRAM *progress = GameProgress_GetGameProgress();
+    ProgressRAM *progress = GameProgress_GetProgressRAM();
 
     int32 startID = globals->blueSpheresID;
     if (progress) {
@@ -124,7 +124,7 @@ bool32 GameProgress_GetZoneUnlocked(int32 zoneID)
         return false;
     }
     else {
-        ProgressRAM *progress = GameProgress_GetGameProgress();
+        ProgressRAM *progress = GameProgress_GetProgressRAM();
         return progress->zoneCleared[zoneID];
     }
 }
@@ -166,7 +166,7 @@ void GameProgress_TrackGameProgress(void (*callback)(void))
         LogHelpers_Print("WARNING GameProgress Attempted to track progress before loading SaveGame file");
     }
     else {
-        ProgressRAM *progress = GameProgress_GetGameProgress();
+        ProgressRAM *progress = GameProgress_GetProgressRAM();
         if (!progress->allSpecialCleared) {
             float percent = GameProgress_GetCompletionPercent(progress);
 #if MANIA_USE_PLUS
@@ -196,7 +196,7 @@ void GameProgress_ClearBSSSave(void)
         return;
     }
 
-    ProgressRAM *progress      = GameProgress_GetGameProgress();
+    ProgressRAM *progress      = GameProgress_GetProgressRAM();
     progress->allGoldMedals    = false;
     progress->allSilverMedals  = false;
     progress->goldMedalCount   = 0;
@@ -210,7 +210,7 @@ void GameProgress_UnlockAll(void)
         return;
     }
 
-    ProgressRAM *progress = GameProgress_GetGameProgress();
+    ProgressRAM *progress = GameProgress_GetProgressRAM();
 
     progress->allSpecialCleared   = true;
     progress->allEmeraldsObtained = true;
@@ -237,7 +237,7 @@ void GameProgress_LockAllSpecialClear(void)
         LogHelpers_Print("WARNING GameProgress Attempted to lock special clear before loading SaveGame file");
     }
     else {
-        ProgressRAM *progress       = GameProgress_GetGameProgress();
+        ProgressRAM *progress       = GameProgress_GetProgressRAM();
         progress->allSpecialCleared = false;
     }
 }
@@ -249,7 +249,7 @@ void GameProgress_ClearProgress(void)
         return;
     }
 
-    ProgressRAM *progress = GameProgress_GetGameProgress();
+    ProgressRAM *progress = GameProgress_GetProgressRAM();
 
     progress->allSpecialCleared   = false;
     progress->allEmeraldsObtained = false;
@@ -284,7 +284,7 @@ void GameProgress_MarkZoneCompleted(int32 zoneID)
     }
 
     if (zoneID > ZONE_INVALID) {
-        ProgressRAM *progress = GameProgress_GetGameProgress();
+        ProgressRAM *progress = GameProgress_GetProgressRAM();
         for (int32 z = 0; z <= zoneID; ++z) {
             if (!progress->zoneCleared[z]) {
                 LogHelpers_Print("PROGRESS Cleared zone %d", z);
@@ -301,7 +301,7 @@ bool32 GameProgress_CheckZoneClear(void)
         return false;
     }
 
-    ProgressRAM *progress = GameProgress_GetGameProgress();
+    ProgressRAM *progress = GameProgress_GetProgressRAM();
 
     for (int32 z = 0; z < ZONE_COUNT_SAVEFILE; ++z) {
         if (!progress->zoneCleared[z]) {
@@ -320,7 +320,7 @@ void GameProgress_GiveEmerald(int32 emeraldID)
         return;
     }
 
-    ProgressRAM *progress = GameProgress_GetGameProgress();
+    ProgressRAM *progress = GameProgress_GetProgressRAM();
 
     progress->emeraldObtained[emeraldID] = true;
     bool32 allEmeralds                   = true;
@@ -339,7 +339,7 @@ void GameProgress_GiveMedal(uint8 medalID, uint8 type)
         return;
     }
 
-    ProgressRAM *progress = GameProgress_GetGameProgress();
+    ProgressRAM *progress = GameProgress_GetProgressRAM();
     int32 goldCount       = 0;
     int32 silverCount     = 0;
     for (int32 m = 0; m < GAMEPROGRESS_MEDAL_COUNT; ++m) {
@@ -373,7 +373,7 @@ void GameProgress_GiveEnding(uint8 ending)
         LogHelpers_Print("WARNING GameProgress Attempted to get game ending before loading SaveGame file");
     }
 
-    ProgressRAM *progress = GameProgress_GetGameProgress();
+    ProgressRAM *progress = GameProgress_GetProgressRAM();
     if (ending > progress->unlockedEndingID)
         progress->unlockedEndingID = ending;
 }
@@ -385,7 +385,7 @@ void GameProgress_PrintSaveProgress(void)
         return;
     }
 
-    ProgressRAM *progress = GameProgress_GetGameProgress();
+    ProgressRAM *progress = GameProgress_GetProgressRAM();
 
     LogHelpers_Print("=========================");
     LogHelpers_Print("Game Progress:\n");
@@ -447,7 +447,7 @@ int32 GameProgress_CountUnreadNotifs(void)
     }
     else {
         int32 unreadCount     = 0;
-        ProgressRAM *progress = GameProgress_GetGameProgress();
+        ProgressRAM *progress = GameProgress_GetProgressRAM();
         for (int32 i = 0; i < GAMEPROGRESS_UNLOCK_COUNT; ++i) {
             bool32 unlocked = progress->unreadNotifs[i];
             bool32 notif    = GameProgress_CheckUnlock(i);
@@ -466,7 +466,7 @@ int32 GameProgress_GetNextNotif(void)
         return -1;
     }
     else {
-        ProgressRAM *progress = GameProgress_GetGameProgress();
+        ProgressRAM *progress = GameProgress_GetProgressRAM();
         for (int32 i = 0; i < GAMEPROGRESS_UNLOCK_COUNT; ++i) {
             bool32 unlocked = progress->unreadNotifs[i];
             bool32 notif    = GameProgress_CheckUnlock(i);
@@ -485,7 +485,7 @@ bool32 GameProgress_CheckUnlock(uint8 id)
         return false;
     }
     else {
-        ProgressRAM *progress = GameProgress_GetGameProgress();
+        ProgressRAM *progress = GameProgress_GetProgressRAM();
         switch (id) {
             case GAMEPROGRESS_UNLOCK_TIMEATTACK:
             case GAMEPROGRESS_UNLOCK_COMPETITION: return progress->zoneCleared[0];

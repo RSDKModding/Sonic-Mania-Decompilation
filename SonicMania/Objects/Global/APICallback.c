@@ -815,7 +815,7 @@ void APICallback_GetNextNotif(void)
         return;
     }
     else {
-        ProgressRAM *progress                               = GameProgress_GetGameProgress();
+        ProgressRAM *progress                               = GameProgress_GetProgressRAM();
         progress->unreadNotifs[GameProgress_GetNextNotif()] = true;
     }
 }

@@ -29,8 +29,8 @@ void UIMedallionPanel_Create(void *data)
     self->drawGroup     = 2;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
-    self->updateRange.x = 0x800000;
-    self->updateRange.y = 0x800000;
+    self->updateRange.x = TO_FIXED(128);
+    self->updateRange.y = TO_FIXED(128);
 }
 
 void UIMedallionPanel_StageLoad(void) { UIMedallionPanel->aniFrames = RSDK.LoadSpriteAnimation("UI/MedallionPanel.bin", SCOPE_STAGE); }
@@ -40,22 +40,22 @@ void UIMedallionPanel_DrawPanel(void)
     RSDK_THIS(UIMedallionPanel);
     Vector2 drawPos;
 
-    ProgressRAM *progress = GameProgress_GetGameProgress();
+    ProgressRAM *progressRAM = GameProgress_GetProgressRAM();
     for (int32 m = 0; m < GAMEPROGRESS_MEDAL_COUNT; ++m) {
-        drawPos.x = (self->position.x - 0x310000) + 0xE0000 * (m % 8);
-        drawPos.y = (self->position.y - 0x150000) + 0xE0000 * (m / 8);
+        drawPos.x = (self->position.x - TO_FIXED(49)) + TO_FIXED(14) * (m % 8);
+        drawPos.y = (self->position.y - TO_FIXED(21)) + TO_FIXED(14) * (m / 8);
 
         if (SceneInfo->inEditor)
-            RSDK.SetSpriteAnimation(UIMedallionPanel->aniFrames, 0, &self->animator, true, (m & 1) + 1);
-        else if (progress)
-            RSDK.SetSpriteAnimation(UIMedallionPanel->aniFrames, 0, &self->animator, true, progress->medals[m]);
+            RSDK.SetSpriteAnimation(UIMedallionPanel->aniFrames, 0, &self->animator, true, 1 + (m & 1));
+        else if (progressRAM)
+            RSDK.SetSpriteAnimation(UIMedallionPanel->aniFrames, 0, &self->animator, true, m < progressRAM->goldMedalCount ? 2 : m < progressRAM->silverMedalCount ? 1 : 0);
         else
             RSDK.SetSpriteAnimation(UIMedallionPanel->aniFrames, 0, &self->animator, true, 0);
 
         if (!SceneInfo->inEditor && !self->animator.frameID)
             RSDK.DrawCircleOutline(drawPos.x, drawPos.y, 5, 6, 0x000000, 0xFF, INK_BLEND, false);
 
-        drawPos.x += 0x10000;
+        drawPos.x += TO_FIXED(1);
         RSDK.DrawSprite(&self->animator, &drawPos, false);
     }
 }

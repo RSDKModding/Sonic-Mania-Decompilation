@@ -112,7 +112,7 @@ void GameProgress_Serialize(void);
 // Extra Entity Events
 int32 GameProgress_GetNotifStringID(int32 type);
 void GameProgress_ShuffleBSSID(void);
-ProgressRAM *GameProgress_GetGameProgress(void);
+ProgressRAM *GameProgress_GetProgressRAM(void);
 bool32 GameProgress_GetZoneUnlocked(int32 zoneID);
 float GameProgress_GetCompletionPercent(ProgressRAM *progress);
 #if MANIA_USE_PLUS

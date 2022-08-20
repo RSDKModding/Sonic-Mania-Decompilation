@@ -92,7 +92,7 @@ void DASetup_DisplayTrack(int32 trackID)
 
 bool32 DASetup_HandleMedallionDebug(void)
 {
-    ProgressRAM *progress = GameProgress_GetGameProgress();
+    ProgressRAM *progress = GameProgress_GetProgressRAM();
 
     if (!globals->medallionDebug || !progress)
         return false;
