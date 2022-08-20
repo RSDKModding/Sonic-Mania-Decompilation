@@ -163,7 +163,7 @@ void SpinSign_State_SlowDown(void)
 {
     RSDK_THIS(SpinSign);
 
-    int32 ang = self->angle & 0xFFFF0000;
+    uint32 ang = self->angle & 0xFFFF0000;
     if (self->direction)
         self->angle -= self->timer;
     else

@@ -227,8 +227,7 @@ void UIRankButton_DrawSprites(void)
                 RSDK.DrawSprite(&self->rankingAnimator, &drawPos, false);
             }
 
-            int32 width = RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->rankText, 0, self->rankText.length, 0);
-            drawPos.x -= width << 15;
+            drawPos.x -= RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->rankText, 0, self->rankText.length, 0) << 15;
             RSDK.DrawText(&self->fontAnimator, &drawPos, &self->rankText, 0, self->rankText.length, ALIGN_LEFT, 0, INT_TO_VOID(2), NULL, false);
         }
 

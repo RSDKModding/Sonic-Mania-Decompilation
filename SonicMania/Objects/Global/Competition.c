@@ -212,17 +212,17 @@ void Competition_DeriveWinner(int32 playerID, uint8 finishType)
     if (allPlayersFinished) {
         if (!session->matchWinner[session->matchID]) {
             uint32 winnerTime       = 0xFFFFFFFF;
-            uint32 winnerRings      = 0;
-            uint32 winnerScore      = 0;
-            uint32 winnerItems      = 0;
-            uint32 winnerTotalRings = 0;
+            int32 winnerRings      = 0;
+            int32 winnerScore      = 0;
+            int32 winnerItems      = 0;
+            int32 winnerTotalRings = 0;
 
-            int32 times[PLAYER_COUNT];
+            uint32 times[PLAYER_COUNT];
             for (int32 p = 0; p < session->playerCount; ++p) {
                 int32 mins = session->time[p].minutes;
                 int32 secs = session->time[p].seconds;
                 int32 ms   = session->time[p].milliseconds;
-                int32 time = ms + 100 * (secs + 60 * mins);
+                uint32 time = ms + 100 * (secs + 60 * mins);
                 times[p]   = time;
 
                 if (session->rings[p] > winnerRings)

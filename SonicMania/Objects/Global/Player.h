@@ -292,7 +292,9 @@ struct ObjectPlayer {
     int32 autoJumpTimer;
     int32 respawnTimer;
     int32 aiInputSwapTimer;
+#if GAME_VERSION != VER_100 // may not work with building static var files, but who's building 1.00 static var files anyways lol
     bool32 disableP2KeyCheck;
+#endif
     int32 rings;
     STATIC(int32 ringExtraLife, 100);
     int32 powerups;

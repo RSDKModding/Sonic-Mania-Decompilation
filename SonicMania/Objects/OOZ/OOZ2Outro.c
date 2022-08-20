@@ -172,17 +172,17 @@ void OOZ2Outro_State_BoardSub(void)
         self->timer = 0;
         self->state = OOZ2Outro_State_SubActivate;
 
-        foreach_active(Player, player)
+        foreach_active(Player, playerPtr)
         {
-            player->groundVel  = 0;
-            player->velocity.x = 0;
-            player->right      = false;
-            player->state      = Player_State_Static;
+            playerPtr->groundVel  = 0;
+            playerPtr->velocity.x = 0;
+            playerPtr->right      = false;
+            playerPtr->state      = Player_State_Static;
 
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE_1, &player->animator, false, 0);
-            Zone->playerBoundActiveR[player->playerID] = 0;
+            RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_BALANCE_1, &playerPtr->animator, false, 0);
+            Zone->playerBoundActiveR[playerPtr->playerID] = 0;
 
-            EntityCamera *camera = player->camera;
+            EntityCamera *camera = playerPtr->camera;
             if (camera)
                 camera->state = StateMachine_None;
         }
@@ -231,7 +231,7 @@ void OOZ2Outro_State_SubLaunch(void)
         self->timer = 0;
         self->state = 0;
         Zone_StartFadeOut(10, 0x000000);
-        foreach_active(Player, player) { player->active = ACTIVE_NEVER; }
+        foreach_active(Player, playerPtr) { playerPtr->active = ACTIVE_NEVER; }
     }
 }
 

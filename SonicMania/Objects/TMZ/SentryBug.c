@@ -351,8 +351,8 @@ void SentryBug_State_NetShrink(void)
 
     if (rx * rx + ry * ry <= 0x40000) {
         if (self->netScale <= 0x1800) {
-            int32 rx = (self->netPos.x - player->position.x) >> 16;
-            int32 ry = (self->netPos.y - player->position.y) >> 16;
+            rx = (self->netPos.x - player->position.x) >> 16;
+            ry = (self->netPos.y - player->position.y) >> 16;
 
             if (rx * rx + ry * ry < 0x200 && Player_CheckValidState(player)) {
                 self->showNet     = true;

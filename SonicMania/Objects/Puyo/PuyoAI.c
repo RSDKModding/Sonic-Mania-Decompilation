@@ -50,23 +50,23 @@ void PuyoAI_PrepareAction(int32 playerID)
     }
 
     int32 lastBeanY             = PuyoAI->lastBeanY[playerID];
-    int32 beanY                 = MIN(bean->stillPos.y, partner->stillPos.y);
-    PuyoAI->lastBeanY[playerID] = beanY;
+    int32 beanPos                 = MIN(bean->stillPos.y, partner->stillPos.y);
+    PuyoAI->lastBeanY[playerID] = beanPos;
 
-    if (lastBeanY > beanY) {
+    if (lastBeanY > beanPos) {
         uint8 columnHeights[PUYO_PLAYFIELD_W];
         memset(columnHeights, 0, sizeof(columnHeights));
 
         for (int32 x = 0; x < PUYO_PLAYFIELD_W; ++x) columnHeights[x] = (PUYO_PLAYFIELD_H - 1) - PuyoBean_GetColumnHeight(playerID, x, bean, partner);
 
-        beanY = MAX(bean->stillPos.y, partner->stillPos.y);
+        beanPos = MAX(bean->stillPos.y, partner->stillPos.y);
 
         int32 startX = MIN(bean->stillPos.x, partner->stillPos.x);
         int32 endX   = MAX(bean->stillPos.x, partner->stillPos.x);
 
-        while ((bean->stillPos.x == startX || partner->stillPos.x == startX || columnHeights[startX] > beanY) && startX > 0) startX--;
+        while ((bean->stillPos.x == startX || partner->stillPos.x == startX || columnHeights[startX] > beanPos) && startX > 0) startX--;
 
-        while ((bean->stillPos.x == endX || partner->stillPos.x == endX || columnHeights[endX] > beanY) && endX < PUYO_PLAYFIELD_W) endX++;
+        while ((bean->stillPos.x == endX || partner->stillPos.x == endX || columnHeights[endX] > beanPos) && endX < PUYO_PLAYFIELD_W) endX++;
 
         int32 lastY    = 0;
         int32 beanX    = 0;

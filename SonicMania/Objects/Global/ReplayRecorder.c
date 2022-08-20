@@ -484,7 +484,7 @@ void ReplayRecorder_Buffer_Unpack(int32 *readBuffer, int32 *tempReadBuffer)
     Replay *tempReplayPtr = (Replay *)tempReadBuffer;
 
     uint8 *compressedFrames = (uint8 *)tempReplayPtr->frames;
-    if (*tempReadBuffer == REPLAY_SIGNATURE) {
+    if ((uint32)*tempReadBuffer == REPLAY_SIGNATURE) {
         if (tempReplayPtr->header.isPacked) {
             int32 compressedSize            = tempReplayPtr->header.bufferSize;
             replayPtr->header.signature     = tempReplayPtr->header.signature;
@@ -836,15 +836,15 @@ void ReplayRecorder_Seek(EntityReplayRecorder *recorder, uint32 frame)
     while (framePtr->info != REPLAY_INFO_STATECHANGE) {
         if (framePtr->info == REPLAY_INFO_PASSEDGATE)
             break;
-        if (newFrame > frame)
+        if (newFrame > (int32)frame)
             break;
         framePtr--;
         --newFrame;
     }
 
-    if (newFrame <= frame) {
+    if (newFrame <= (int32)frame) {
         ReplayRecorder_ForceApplyFramePtr(recorder, framePtr);
-        if (newFrame < frame) {
+        if (newFrame < (int32)frame) {
             int32 count      = frame - newFrame;
             ReplayFrame *ptr = &frameBuffer[frame];
             for (int32 i = 0; i < count; ++i) {

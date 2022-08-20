@@ -446,7 +446,7 @@ bool32 EncoreIntro_Cutscene_BuddySelect(EntityCutsceneSeq *host)
     }
     else {
         RSDK.SetSpriteAnimation(EncoreIntro->aniFrames, 3, &buddy->animator, true, 0);
-        buddy->velocity.x = 0x8000;
+        buddy->velocity.x = -0x8000;
     }
     buddy->velocity.y = -0x30000;
     globals->playerID = (buddy->characterID << 8) + ID_SONIC;
@@ -537,11 +537,11 @@ bool32 EncoreIntro_Cutscene_ViewEncoreTutorial(EntityCutsceneSeq *host)
             Music_PlayTrack(TRACK_HBHMISCHIEF);
 
             for (int32 i = 0; i < 2; ++i) {
-                EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
-                player->state        = Player_State_Air;
-                player->onGround     = false;
-                player->velocity.y   = -0x38000;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
+                EntityPlayer *playerPtr = RSDK_GET_ENTITY(i, Player);
+                playerPtr->state        = Player_State_Air;
+                playerPtr->onGround     = false;
+                playerPtr->velocity.y   = -0x38000;
+                RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_HURT, &playerPtr->animator, false, 0);
             }
         }
     }

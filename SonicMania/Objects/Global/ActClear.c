@@ -77,7 +77,7 @@ void ActClear_Draw(void)
         offset = center - TO_FIXED(10);
     }
     else {
-        int32 center = TO_FIXED(ScreenInfo->center.x + 16);
+        int32 center = TO_FIXED(ScreenInfo->center.x);
 
         drawPos.x  = 2 * self->gotThroughPos.x + center;
         verts[0].x = drawPos.x - TO_FIXED(109);

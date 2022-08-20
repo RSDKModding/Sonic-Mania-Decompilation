@@ -682,10 +682,10 @@ void CompetitionMenu_Round_MenuSetupCB(void)
     RSDK.GetCString(roundLabel, &roundLabelStr);
     UIInfoLabel_SetText(CompetitionMenu->resultsLabel_Round, roundLabel);
 
-    uint32 bestRings      = 0;
-    uint32 bestTotalRings = 0;
-    uint32 bestScore      = 0;
-    uint32 bestItems      = 0;
+    int32 bestRings      = 0;
+    int32 bestTotalRings = 0;
+    int32 bestScore      = 0;
+    int32 bestItems      = 0;
     uint32 bestTime       = 0xFFFFFFFF;
     uint32 times[PLAYER_COUNT];
 

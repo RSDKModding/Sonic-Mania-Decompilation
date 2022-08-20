@@ -206,7 +206,7 @@ bool32 UIVsRoundPicker_ProcessTouchCB(void)
     touchEnd[1].y = self->touchPosOffsetS.y;
 
     bool32 pressed = false;
-    for (int32 i = 0; i < 2; ++i) {
+    for (uint32 i = 0; i < 2; ++i) {
         if (TouchInfo->count) {
             int32 sizeX = touchStart[i].x >> 1;
             int32 sizeY = touchStart[i].y >> 1;

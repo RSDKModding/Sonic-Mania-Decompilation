@@ -131,9 +131,9 @@ void StarPost_StageLoad(void)
                         else
                             sidekick->position.x -= TO_FIXED(16);
 
-                        for (int32 p = 0; p < 0x10; ++p) {
-                            Player->leaderPositionBuffer[p].x = player->position.x;
-                            Player->leaderPositionBuffer[p].y = player->position.y;
+                        for (int32 i = 0; i < 0x10; ++i) {
+                            Player->leaderPositionBuffer[i].x = player->position.x;
+                            Player->leaderPositionBuffer[i].y = player->position.y;
                         }
                     }
                 }

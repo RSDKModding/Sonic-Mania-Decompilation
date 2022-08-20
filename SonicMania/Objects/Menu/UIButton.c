@@ -427,7 +427,7 @@ bool32 UIButton_ProcessTouchCB_Multi(void)
                 if (x < x1 && y < y1) {
                     touched = true;
 
-                    if ((touchPosSize.x >> 16) * (touchPosSize.y >> 16) < lastTouchDist) {
+                    if ((uint32)((touchPosSize.x >> 16) * (touchPosSize.y >> 16)) < lastTouchDist) {
                         lastTouchDist = (touchPosSize.x >> 16) * (touchPosSize.y >> 16);
                         lastTouchID   = i;
                     }
@@ -578,7 +578,7 @@ void UIButton_ProcessButtonCB(void)
                 if (--selection < 0) {
                     while (selection < 0) selection += self->choiceCount;
                 }
-                EntityUIButton *choice = UIButton_GetChoicePtr(self, selection);
+                choice = UIButton_GetChoicePtr(self, selection);
 
                 while ((choice && choice->disabled) && selection != self->selection) {
                     if (--selection < 0) {
@@ -603,7 +603,7 @@ void UIButton_ProcessButtonCB(void)
             }
             else {
                 selection              = (selection + 1) % self->choiceCount;
-                EntityUIButton *choice = UIButton_GetChoicePtr(self, selection);
+                choice = UIButton_GetChoicePtr(self, selection);
 
                 while ((choice && choice->disabled) && selection != self->selection) {
                     selection = (selection + 1) % self->choiceCount;
@@ -733,6 +733,7 @@ void UIButton_ButtonEnterCB(void)
                     UIVsRoundPicker_SetChoiceActive((EntityUIVsRoundPicker *)choicePtr);
                 }
 
+#if GAME_VERSION != VER_100
                 if (choicePtr->classID == UIResPicker->classID) {
                     UIResPicker_SetChoiceActive((EntityUIResPicker *)choicePtr);
                 }
@@ -740,6 +741,7 @@ void UIButton_ButtonEnterCB(void)
                 if (choicePtr->classID == UIWinSize->classID) {
                     UIWinSize_SetChoiceActive((EntityUIWinSize *)choicePtr);
                 }
+#endif
             }
         }
     }

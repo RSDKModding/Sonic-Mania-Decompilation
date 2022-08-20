@@ -142,13 +142,13 @@ void GiantPistol_State_CloseChamber(void)
         self->velocity.y               = -0x20000;
         self->rotationVel              = 6;
 
-        foreach_active(Player, player)
+        foreach_active(Player, playerPtr)
         {
-            if (((1 << (player->playerID)) & self->activePlayers) > 0) {
-                player->blinkTimer = 0;
-                player->visible    = false;
-                if (player->camera)
-                    player->camera->state = StateMachine_None;
+            if (((1 << (playerPtr->playerID)) & self->activePlayers) > 0) {
+                playerPtr->blinkTimer = 0;
+                playerPtr->visible    = false;
+                if (playerPtr->camera)
+                    playerPtr->camera->state = StateMachine_None;
             }
         }
     }
@@ -195,11 +195,11 @@ void GiantPistol_State_SpinGun(void)
         self->state  = GiantPistol_State_Aiming;
         self->active = ACTIVE_NORMAL;
 
-        foreach_active(Player, player)
+        foreach_active(Player, playerPtr)
         {
-            if (((1 << (player->playerID)) & self->activePlayers) > 0) {
-                if (player->camera)
-                    player->camera->state = Camera_State_FollowXY;
+            if (((1 << (playerPtr->playerID)) & self->activePlayers) > 0) {
+                if (playerPtr->camera)
+                    playerPtr->camera->state = Camera_State_FollowXY;
             }
         }
     }

@@ -36,18 +36,18 @@ void FernParallax_Draw(void)
     thisHitbox.top    = -screen->center.y;
     thisHitbox.bottom = screen->center.y;
 
-    Entity *buffer     = (Entity *)&FernParallax->entityBuffer[0 * ENTITY_SIZE];
-    buffer->position.x = screenX;
-    buffer->position.y = screenY;
+    Entity *screenBuffer     = (Entity *)&FernParallax->entityBuffer[0 * ENTITY_SIZE];
+    screenBuffer->position.x = screenX;
+    screenBuffer->position.y = screenY;
 
-    buffer             = (Entity *)&FernParallax->entityBuffer[1 * ENTITY_SIZE];
-    buffer->position.x = drawPos.x;
-    buffer->position.y = drawPos.y;
+    Entity *entityBuffer     = (Entity *)&FernParallax->entityBuffer[1 * ENTITY_SIZE];
+    entityBuffer->position.x = drawPos.x;
+    entityBuffer->position.y = drawPos.y;
 
-    int32 bottom = ((screen->size.y + screen->position.y) << 16) - (otherHitbox->bottom << 16);
-    if (RSDK.CheckObjectCollisionTouchBox(&FernParallax->entityBuffer[0], &thisHitbox, &FernParallax->entityBuffer[1], otherHitbox)
-        && bottom - drawPos.y > 0) {
-        drawPos.y = bottom - ((bottom - drawPos.y) >> 3);
+    if (RSDK.CheckObjectCollisionTouchBox(screenBuffer, &thisHitbox, entityBuffer, otherHitbox)) {
+        int32 bottom = ((screen->size.y + screen->position.y) << 16) - (otherHitbox->bottom << 16) - drawPos.y;
+        if (bottom > 0)
+            drawPos.y += bottom - (bottom >> 3);
     }
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 }

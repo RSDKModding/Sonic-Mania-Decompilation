@@ -75,7 +75,7 @@ void PauseMenu_StaticUpdate(void)
                 pauseMenu->triggerPlayer = 0;
             }
 #if MANIA_USE_PLUS
-            else if (API.CheckDLC(DLC_PLUS) != globals->lastHasPlus) {
+            else if (API.CheckDLC(DLC_PLUS) != (bool32)globals->lastHasPlus) {
                 PauseMenu->plusChanged = true;
                 globals->lastHasPlus   = API.CheckDLC(DLC_PLUS);
                 RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
@@ -582,7 +582,7 @@ void PauseMenu_State_SetupButtons(void)
         self->stateDraw = PauseMenu_Draw_RegularPause;
 
 #if MANIA_USE_PLUS
-        if (globals->gameMode < MODE_TIMEATTACK && API_GetInputDeviceID(CONT_P2) == INPUT_AUTOASSIGN)
+        if (globals->gameMode < MODE_TIMEATTACK && API_GetInputDeviceID(CONT_P2) == (uint32)INPUT_AUTOASSIGN)
             API_AssignInputSlotToDevice(CONT_P2, INPUT_NONE);
 #endif
     }
@@ -702,7 +702,7 @@ void PauseMenu_State_ForcedPause(void)
             UIDialog_AddButton(DIALOG_CONTINUE, dialog, PauseMenu_CheckAndReassignControllers, 0);
             UIDialog_Setup(dialog);
 
-            if (globals->gameMode < MODE_TIMEATTACK && API_GetInputDeviceID(2) == INPUT_AUTOASSIGN)
+            if (globals->gameMode < MODE_TIMEATTACK && API_GetInputDeviceID(2) == (uint32)INPUT_AUTOASSIGN)
                 API_AssignInputSlotToDevice(CONT_P2, INPUT_NONE);
         }
 #if MANIA_USE_PLUS

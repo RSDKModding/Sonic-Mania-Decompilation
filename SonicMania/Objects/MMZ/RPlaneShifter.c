@@ -74,7 +74,7 @@ void RPlaneShifter_DrawSprites(void)
     poleAngles[1] = self->angle + 106;
     poleAngles[2] = self->angle - 64;
 
-    for (int32 i = 0; i < self->height; ++i) {
+    for (uint32 i = 0; i < self->height; ++i) {
         drawPos.y -= 0x100000;
         for (int32 p = 0; p < 3; ++p) {
             drawPos.x = self->position.x;

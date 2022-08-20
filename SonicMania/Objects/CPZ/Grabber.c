@@ -136,9 +136,9 @@ void Grabber_CheckPlayerCollisions(void)
 
             if (player != self->grabbedPlayer && !self->grabDelay && Player_CheckBadnikTouch(player, self, &Grabber->hitboxBadnik)
                 && Player_CheckBadnikBreak(player, self, false)) {
-                EntityPlayer *player = self->grabbedPlayer;
-                if (player)
-                    player->state = Player_State_Air;
+                EntityPlayer *playerPtr = self->grabbedPlayer;
+                if (playerPtr)
+                    playerPtr->state = Player_State_Air;
                 destroyEntity(self);
             }
         }

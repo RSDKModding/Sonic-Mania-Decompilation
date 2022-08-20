@@ -10397,6 +10397,7 @@
 		C9CDD71028A3BE8B00E4C97E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -10406,6 +10407,8 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				GCC_WARN_SHADOW = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
 				HEADER_SEARCH_PATHS = (
 					"\"$(PROJECT_DIR)/SonicMania/Objects/\"",
 					"\"$(PROJECT_DIR)/SonicMania/\"",
@@ -10419,11 +10422,14 @@
 		C9CDD71128A3BE8B00E4C97E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = "";
 				GCC_PREPROCESSOR_DEFINITIONS = "RETRO_REVISION=3 ";
+				GCC_WARN_SHADOW = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
 				HEADER_SEARCH_PATHS = (
 					"\"$(PROJECT_DIR)/SonicMania/Objects/\"",
 					"\"$(PROJECT_DIR)/SonicMania/\"",

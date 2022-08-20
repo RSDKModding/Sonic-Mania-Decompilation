@@ -20,7 +20,7 @@ void MainMenu_StaticUpdate(void)
 
     if (control && control->active) {
         EntityUIDiorama *diorama         = MainMenu->diorama;
-        MainMenu->confirmPrompt->visible = (control->shifter->shiftOffset.y & 0xFFFF0000) > -0x700000;
+        MainMenu->confirmPrompt->visible = ((int32)(control->shifter->shiftOffset.y & 0xFFFF0000)) > -0x700000;
         EntityUIButton *button           = control->buttons[control->lastButtonID];
 
         if (button) {

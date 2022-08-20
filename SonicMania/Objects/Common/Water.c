@@ -547,8 +547,6 @@ void Water_State_Water(void)
                             case 960:
                                 if (!player->sidekick)
                                     RSDK.PlaySfx(Water->sfxWarning, false, 0xFF);
-
-                                playAlertSfx = true;
                                 break;
 
                             case 1080:
@@ -741,12 +739,12 @@ void Water_State_Bubble(void)
 {
     RSDK_THIS(Water);
 
-    EntityPlayer *player = (EntityPlayer *)self->childPtr;
+    EntityPlayer *playerPtr = (EntityPlayer *)self->childPtr;
 
     if (self->animator.animationID == 6 && self->animator.frameID == self->animator.frameCount - 1)
         destroyEntity(self);
 
-    if (player && player->state == Player_State_Bubble && self->animator.frameID < 3)
+    if (playerPtr && playerPtr->state == Player_State_Bubble && self->animator.frameID < 3)
         self->bubbleX += 0x40000;
 
     if (self->speed != -1) {

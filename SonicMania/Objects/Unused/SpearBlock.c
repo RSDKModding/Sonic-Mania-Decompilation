@@ -94,33 +94,26 @@ void SpearBlock_DebugSpawn(void)
 void SpearBlock_CheckPlayerCollisions(void)
 {
     RSDK_THIS(SpearBlock);
+
     foreach_active(Player, player)
     {
         Player_CheckCollisionBox(player, self, &SpearBlock->blockHitbox);
-        Vector2 storePos;
-        storePos.x       = self->position.x;
-        storePos.y       = self->position.y;
+        Vector2 storePos = self->position;
         self->position.x = self->spearPos.x;
         self->position.y = self->spearPos.y;
 
         if (Player_CheckCollisionTouch(player, self, &SpearBlock->spearHitboxes[self->animator.frameID])) {
-            if (player->state != Player_State_Hurt && player->state != Player_State_Death && player->state != Player_State_Drown
-                && !player->invincibleTimer && player->blinkTimer <= 0) {
-                if (player->position.x > self->position.x)
-                    player->velocity.x = 0x20000;
-                else
-                    player->velocity.x = -0x20000;
-                Player_Hit(player);
-            }
+            self->position = storePos;
+            Player_HurtFlip(player);
         }
-        self->position.x = storePos.x;
-        self->position.y = storePos.y;
+        self->position = storePos;
     }
 }
 
 void SpearBlock_State_SetupSpears(void)
 {
     RSDK_THIS(SpearBlock);
+
     self->active = ACTIVE_NORMAL;
     self->state  = SpearBlock_State_SpearRetracted;
     if (!(Zone->timer & 0x7F)) {

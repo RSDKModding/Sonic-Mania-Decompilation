@@ -1955,7 +1955,6 @@ void Player_HandleDeath(EntityPlayer *player)
                         SaveRAM *saveRAM = SaveGame->saveRAM;
                         if (globals->gameMode == MODE_COMPETITION) {
                             int32 playerID                    = RSDK.GetEntitySlot(player);
-                            EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
                             if (!session->finishState[playerID]) {
                                 CompSession_DeriveWinner(playerID, FINISHTYPE_GAMEOVER);
                             }
@@ -2037,7 +2036,6 @@ void Player_HandleDeath(EntityPlayer *player)
                     if (globals->gameMode == MODE_COMPETITION) {
                         showGameOver                      = false;
                         int32 playerID                    = RSDK.GetEntitySlot(player);
-                        EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
                         if (!session->finishState[playerID]) {
                             CompSession_DeriveWinner(playerID, FINISHTYPE_GAMEOVER);
                             showGameOver = !MANIA_USE_PLUS;
@@ -3915,16 +3913,16 @@ void Player_State_LookUp(void)
     if (self->invertGravity)
         self->rotation = 0x80;
 
-    self->left  = false;
-    self->right = false;
-
-    Player_HandleGroundMovement();
-
     Player_Gravity_False();
 
     self->nextAirState = Player_State_Air;
 
     if (self->up) {
+        self->left  = false;
+        self->right = false;
+
+        Player_HandleGroundMovement();
+
         RSDK.SetSpriteAnimation(self->aniFrames, ANI_LOOK_UP, &self->animator, false, 1);
         if (self->animator.frameID == 5)
             self->animator.speed = 0;
@@ -4113,16 +4111,16 @@ void Player_State_Peelout(void)
     }
     else if (self->abilityTimer < self->minRunVelocity) {
         if (self->animator.animationID != ANI_WALK || self->animator.frameID == 3)
-            RSDK.SetSpriteAnimation(self->aniFrames, ANI_RUN, &self->animator, false, 0);
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_JOG, &self->animator, false, 0);
         self->animator.speed = (self->abilityTimer >> 12) + 64;
         self->minJogVelocity = 0x38000;
         self->minRunVelocity = 0x60000;
     }
     else if (self->abilityTimer < self->minDashVelocity) {
         if (self->animator.animationID == ANI_DASH || self->animator.animationID == ANI_RUN)
-            RSDK.SetSpriteAnimation(self->aniFrames, ANI_JOG, &self->animator, false, 1);
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_RUN, &self->animator, false, 1);
         else
-            RSDK.SetSpriteAnimation(self->aniFrames, ANI_JOG, &self->animator, false, 0);
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_RUN, &self->animator, false, 0);
 
         self->animator.speed = (self->abilityTimer >> 12) + 96;
         if (self->animator.speed > 0x200)
@@ -5010,21 +5008,21 @@ void Player_State_KnuxWallClimb(void)
             bool32 collidedHigh = false, collidedLow = false;
             if (self->direction) {
                 collidedHigh = RSDK.ObjectTileGrip(self, self->collisionLayers, CMODE_RWALL, self->collisionPlane, hitbox->left << 16, highY, 8);
-                int32 highX  = self->position.x;
+                int32 targetX  = self->position.x;
 
                 self->position.x = storeX;
                 collidedLow      = RSDK.ObjectTileGrip(self, self->collisionLayers, CMODE_RWALL, self->collisionPlane, hitbox->left << 16, lowY, 8);
-                if (self->velocity.y < 0 && self->position.x < highX)
+                if (self->velocity.y < 0 && self->position.x < targetX)
                     self->velocity.y = 0;
                 roofX = -0x40000;
             }
             else {
                 collidedHigh = RSDK.ObjectTileGrip(self, self->collisionLayers, CMODE_LWALL, self->collisionPlane, hitbox->right << 16, highY, 8);
-                int32 highY  = self->position.x;
+                int32 targetX  = self->position.x;
 
                 self->position.x = storeX;
                 collidedLow      = RSDK.ObjectTileGrip(self, self->collisionLayers, CMODE_LWALL, self->collisionPlane, hitbox->right << 16, lowY, 8);
-                if (self->velocity.y < 0 && self->position.x > highY)
+                if (self->velocity.y < 0 && self->position.x > targetX)
                     self->velocity.y = 0;
                 roofX = 0x40000;
             }
@@ -6003,7 +6001,12 @@ void Player_JumpAbility_Sonic(void)
 
     if (self->jumpAbilityState == 1) {
 #if MANIA_USE_PLUS
-        if (self->stateInput != Player_Input_P2_AI || (self->up && globals->gameMode != MODE_ENCORE)) {
+        if (self->stateInput != Player_Input_P2_AI
+            || (self->up
+#if MANIA_USE_PLUS
+                && globals->gameMode != MODE_ENCORE
+#endif
+                )) {
 #else
         if (self->stateInput != Player_Input_P2_AI) {
 #endif
