@@ -234,23 +234,22 @@ void TVVan_HandleVanTilt(void)
         if (self->stoodAngle > 0)
             self->stoodAngle -= 4;
 
-        if (self->angle <= 0) {
-            if (self->angle < 0)
-                self->angle++;
-        }
-        else {
+        if (self->angle < 0)
+            self->angle++;
+        else if (self->angle > 0)
             self->angle--;
-        }
     }
-    else if (self->stoodAngle < 64)
-        self->stoodAngle += 4;
+    else {
+        if (self->stoodAngle < 64)
+            self->stoodAngle += 4;
 
-    self->angle = CLAMP(self->angle + self->stoodPos, -8, 8);
+        self->angle = CLAMP(self->angle + self->stoodPos, -8, 8);
+    }
 
     self->position.x  = self->movePos.x;
     self->position.y  = self->movePos.y;
     self->movePos.x   = self->vanPos.x;
-    self->movePos.y   = (RSDK.Sin256(self->stoodAngle) + self->vanPos.y) & 0xFFFF0000;
+    self->movePos.y   = ((RSDK.Sin256(self->stoodAngle) << 9) + self->vanPos.y) & 0xFFFF0000;
     self->moveOffsetY = self->movePos.y - self->position.y;
 }
 
@@ -279,7 +278,7 @@ void TVVan_Draw_Van_Low(void)
     RSDK.DrawSprite(&self->satelliteAnimator, &self->vanPos, false);
 
     self->drawFX |= FX_ROTATE;
-    RSDK.DrawSprite(&self->leftDoorAnimator, 0, false);
+    RSDK.DrawSprite(&self->leftDoorAnimator, NULL, false);
     RSDK.AddDrawListRef(Zone->objectDrawGroup[1], SceneInfo->entitySlot);
 }
 
