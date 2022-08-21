@@ -76,6 +76,8 @@ void TubeSpring_State_Pullback(void)
 {
     RSDK_THIS(TubeSpring);
 
+    TubeSpring_HandleInteractions(false);
+
     if (self->animator.frameID == self->animator.frameCount - 1) {
         RSDK.SetSpriteAnimation(TubeSpring->aniFrames, 0, &self->animator, true, 0);
         self->state = TubeSpring_State_Idle;
