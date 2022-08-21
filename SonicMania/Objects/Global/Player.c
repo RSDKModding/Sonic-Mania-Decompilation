@@ -5215,14 +5215,16 @@ void Player_SpawnMightyHammerdropDust(int32 speed, Hitbox *hitbox)
         dust->scale.y = 256;
     }
 
-    if (!self->angle)
+    if (!self->angle) {
         RSDK.ObjectTileGrip(dust, dust->collisionLayers, CMODE_FLOOR, dust->collisionPlane, 0, 0, 4);
+    }
+    else {
+        for (int32 i = 0; i < 0x10; ++i) {
+            if (RSDK.ObjectTileGrip(dust, dust->collisionLayers, CMODE_FLOOR, dust->collisionPlane, 0, 0, 8))
+                break;
 
-    for (int32 i = 0; i < 0x10; ++i) {
-        if (RSDK.ObjectTileGrip(dust, dust->collisionLayers, CMODE_FLOOR, dust->collisionPlane, 0, 0, 8))
-            break;
-
-        dust->position.y += 0x80000;
+            dust->position.y += 0x80000;
+        }
     }
 }
 bool32 Player_CheckMightyUnspin(EntityPlayer *player, int32 bounceDistance, bool32 checkHammerDrop, int32 *uncurlTimer)
