@@ -18,8 +18,8 @@ void SpinSign_Update(void)
         if (Player_CheckCollisionTouch(player, self, &SpinSign->hitboxes[self->type])) {
             int32 vel = (self->type & 1) ? player->velocity.x : player->velocity.y;
 
-            int32 speed = (vel >> 7) + (vel >> 6);
-            if (abs(speed) > self->timer && speed >= 0xC00) {
+            int32 speed = abs((vel >> 7) + (vel >> 6));
+            if (speed > self->timer && speed >= 0xC00) {
                 self->timer     = speed & -0x80;
                 self->active    = ACTIVE_NORMAL;
                 self->state     = SpinSign_State_Spinning;

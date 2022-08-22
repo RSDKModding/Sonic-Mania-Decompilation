@@ -701,16 +701,16 @@ void SpiderMobile_StateBody_AwaitPlayer(void)
 
             Zone->playerBoundActiveL[0] = true;
             Zone->playerBoundActiveR[0] = true;
-            Zone->cameraBoundsL[0]      = (self->position.x >> 16) - WIDE_SCR_XCENTER;
-            Zone->cameraBoundsR[0]      = (self->position.x >> 16) + WIDE_SCR_XCENTER;
-            Zone->cameraBoundsT[0]      = (self->position.y >> 16) - ScreenInfo->size.y;
-            Zone->cameraBoundsB[0]      = (self->position.y >> 16);
+            Zone->cameraBoundsL[0]      = FROM_FIXED(self->position.x) - WIDE_SCR_XCENTER;
+            Zone->cameraBoundsR[0]      = FROM_FIXED(self->position.x) + WIDE_SCR_XCENTER;
+            Zone->cameraBoundsT[0]      = FROM_FIXED(self->position.y) - ScreenInfo->size.y;
+            Zone->cameraBoundsB[0]      = FROM_FIXED(self->position.y);
 
-            SpiderMobile->boundsL = (Zone->cameraBoundsL[0] + 64) << 16;
-            SpiderMobile->boundsR = (Zone->cameraBoundsR[0] - 64) << 16;
+            SpiderMobile->boundsL = TO_FIXED(Zone->cameraBoundsL[0] + 64);
+            SpiderMobile->boundsR = TO_FIXED(Zone->cameraBoundsR[0] - 64);
             SpiderMobile->boundsM = self->position.x;
-            SpiderMobile->boundsT = (Zone->cameraBoundsT[0] + 48) << 16;
-            SpiderMobile->boundsB = (Zone->cameraBoundsB[0] - 8) << 16;
+            SpiderMobile->boundsT = TO_FIXED(Zone->cameraBoundsT[0] + 48);
+            SpiderMobile->boundsB = TO_FIXED(Zone->cameraBoundsB[0] - 8);
 
             self->state = SpiderMobile_StateBody_SetupArena;
             FBZSetup_Trigger_ShowInterior();
