@@ -165,14 +165,14 @@ void PhantomShinobi_HandleTileCollisions(void)
 
     int32 size = self->finRadius / 88;
 
-    self->outerBox.right  = size;
-    self->outerBox.bottom = size;
     self->outerBox.left   = -size;
     self->outerBox.top    = -size;
+    self->outerBox.right  = size;
+    self->outerBox.bottom = size;
 
     self->innerBox.left   = 2 - size;
-    self->innerBox.right  = size - 2;
     self->innerBox.top    = -size;
+    self->innerBox.right  = size - 2;
     self->innerBox.bottom = size;
 
     self->prevOnGround = self->onGround;
@@ -225,16 +225,16 @@ void PhantomShinobi_State_SetupAttack(void)
     RSDK_THIS(PhantomShinobi);
 
     if (self->direction) {
-        if (self->rotSpeed > -0x600) {
-            self->rotSpeed -= 12;
-        }
-        else {
+        if (self->rotSpeed <= -0x600) {
             self->velocity.x -= 0x20000;
             self->rotSpeed   = -0x600;
             self->state      = PhantomShinobi_State_Moving;
             self->onGround   = false;
             self->numBounces = 1;
             self->velocity.y = -0x30000;
+        }
+        else {
+            self->rotSpeed -= 12;
         }
     }
     else {

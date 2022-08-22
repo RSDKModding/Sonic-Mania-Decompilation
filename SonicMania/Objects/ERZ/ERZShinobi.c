@@ -151,14 +151,14 @@ void ERZShinobi_HandleTileCollisions(void)
 
     int32 size = self->finRadius / 88;
 
-    self->outerBox.right  = size;
-    self->outerBox.bottom = size;
     self->outerBox.left   = -size;
     self->outerBox.top    = -size;
+    self->outerBox.right  = size;
+    self->outerBox.bottom = size;
 
     self->innerBox.left   = 2 - size;
-    self->innerBox.right  = size - 2;
     self->innerBox.top    = -size;
+    self->innerBox.right  = size - 2;
     self->innerBox.bottom = size;
 
     self->prevOnGround = self->onGround;

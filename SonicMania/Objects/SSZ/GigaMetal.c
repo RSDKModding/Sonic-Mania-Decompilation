@@ -459,10 +459,11 @@ void GigaMetal_StateBody_AwaitPlayer(void)
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
 
-        Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->center.x + 32;
-        Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->center.x + 32;
-        Zone->cameraBoundsB[0] = (self->position.y >> 16) + 16;
-        Zone->deathBoundary[0] = (self->position.y >> 16) + 16;
+        Zone->cameraBoundsL[0] = FROM_FIXED(self->position.x) - ScreenInfo->center.x + 32;
+        Zone->cameraBoundsR[0] = FROM_FIXED(self->position.x) + ScreenInfo->center.x + 32;
+        Zone->cameraBoundsT[0] = FROM_FIXED(self->position.y) - ScreenInfo->size.y + 16;
+        Zone->cameraBoundsB[0] = FROM_FIXED(self->position.y) + 16;
+        Zone->deathBoundary[0] = FROM_FIXED(self->position.y) + 16;
 
         EntityMetalSonic *metal = self->metalSonic;
         if (metal) {
@@ -1229,7 +1230,7 @@ void GigaMetal_EditorDraw(void)
             if (showGizmos()) {
                 RSDK_DRAWING_OVERLAY(true);
 
-                DrawHelpers_DrawArenaBounds(-WIDE_SCR_XCENTER + 32, -SCREEN_YSIZE, WIDE_SCR_XCENTER + 32, 16, 1 | 0 | 4 | 8, 0x00C0F0);
+                DrawHelpers_DrawArenaBounds(-WIDE_SCR_XCENTER + 32, -SCREEN_YSIZE + 16, WIDE_SCR_XCENTER + 32, 16, 1 | 2 | 4 | 8, 0x00C0F0);
 
                 RSDK_DRAWING_OVERLAY(false);
             }
