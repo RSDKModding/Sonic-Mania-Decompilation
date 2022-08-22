@@ -925,8 +925,7 @@ void HeavyGunner_StateMissile_Malfunction(void)
 
     RSDK.ProcessAnimation(&self->mainAnimator);
 
-    self->position.x += self->velocity.x + Zone->autoScrollSpeed;
-    self->position.x += RSDK.Cos512(self->rotation) << 8;
+    self->position.x += self->velocity.x + Zone->autoScrollSpeed + (RSDK.Cos512(self->rotation) << 8);
     self->position.y += (RSDK.Sin512(self->rotation) - 0x200) << 8;
 
     self->rotation += 0x20;
@@ -953,8 +952,8 @@ void HeavyGunner_StateMissile_Malfunction(void)
             RSDK.PlaySfx(HeavyGunner->sfxExplosion3, false, 255);
         }
         else {
-            self->rotation   = 0;
             self->state      = HeavyGunner_StateMissile_ReturnToSender;
+            self->rotation   = 0;
             self->velocity.x = 0;
             RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 3, &parent->gunnerAnimator, true, 0);
             RSDK.PlaySfx(HeavyGunner->sfxJet, false, 255);
@@ -969,28 +968,40 @@ void HeavyGunner_StateMissile_ReturnToSender(void)
 
     RSDK.ProcessAnimation(&self->mainAnimator);
 
-    self->position.y += self->velocity.y;
     self->position.x += self->velocity.x + Zone->autoScrollSpeed;
+    self->position.y += self->velocity.y;
+
     self->velocity.y += ((parent->position.y - self->position.y) >> 8) - (self->velocity.y >> 4);
 
-    if (self->velocity.x >= -0x20000) {
-        if (self->velocity.x > 0x70000)
-            self->velocity.x = 0x70000;
-    }
-    else {
-        self->velocity.x = -0x20000;
-    }
+    self->velocity.x = CLAMP(self->velocity.x, -0x20000, 0x70000);
 
-    if (self->rotation <= -0x200 || self->direction) {
+    if (self->rotation <= -0x100 || self->direction) {
         self->rotation  = 0;
         self->direction = FLIP_X;
-        self->velocity.x -= RSDK.Cos512(0) << 6;
+        self->velocity.x -= RSDK.Cos512(self->rotation) << 6;
 
-        if (Zone->timer & 3) {
-            if ((Zone->timer & 3) == 2) {
-                int32 x              = 0x600 * RSDK.Cos512(self->rotation);
-                int32 y              = 0x600 * RSDK.Sin512(self->rotation);
-                EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, self->position.x - x, self->position.y - y);
+        int32 x = 0, y = 0;
+        EntityDebris *debris = NULL;
+        switch (Zone->timer & 3) {
+            default: break;
+
+            case 0:
+                x              = RSDK.Cos512(self->rotation) << 11;
+                y              = RSDK.Sin512(self->rotation) << 11;
+                debris = CREATE_ENTITY(Debris, Debris_State_Move, self->position.x + x, self->position.y + y);
+
+                RSDK.SetSpriteAnimation(Explosion->aniFrames, EXPLOSION_BOSSPUFF, &debris->animator, true, 0);
+                debris->velocity.x = (RSDK.Cos512(self->rotation) << 8) + Zone->autoScrollSpeed;
+                debris->velocity.y = 16 * RSDK.Cos512(self->rotation);
+                debris->drawGroup  = Zone->objectDrawGroup[0];
+                debris->timer      = 41;
+                break;
+
+            case 2:
+                x              = 0x600 * RSDK.Cos512(self->rotation);
+                y              = 0x600 * RSDK.Sin512(self->rotation);
+                debris = CREATE_ENTITY(Debris, Debris_State_Move, self->position.x - x, self->position.y - y);
+
                 RSDK.SetSpriteAnimation(Explosion->aniFrames, 2, &debris->animator, true, 0);
                 debris->velocity.x = Zone->autoScrollSpeed;
                 debris->drawGroup  = Zone->objectDrawGroup[1];
@@ -998,20 +1009,10 @@ void HeavyGunner_StateMissile_ReturnToSender(void)
                 debris->scale.x    = RSDK.Rand(0x80, 0x180);
                 debris->scale.y    = debris->scale.x;
                 debris->timer      = 52;
-            }
-        }
-        else {
-            int32 x              = RSDK.Cos512(self->rotation) << 11;
-            int32 y              = RSDK.Sin512(self->rotation) << 11;
-            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x + self->position.x, y + self->position.y);
-            RSDK.SetSpriteAnimation(Explosion->aniFrames, EXPLOSION_BOSSPUFF, &debris->animator, true, 0);
-            debris->velocity.x = (RSDK.Cos512(self->rotation) << 8) + Zone->autoScrollSpeed;
-            debris->velocity.y = 16 * RSDK.Cos512(self->rotation);
-            debris->drawGroup  = Zone->objectDrawGroup[0];
-            debris->timer      = 41;
+                break;
         }
 
-        if (self->position.x - parent->position.x < 0xA00000) {
+        if (self->position.x - parent->position.x < TO_FIXED(160)) {
             if (parent->nextRoboID >= 3) {
                 parent->velocity.y = 0;
                 parent->timer      = 0;
@@ -1033,11 +1034,28 @@ void HeavyGunner_StateMissile_ReturnToSender(void)
         self->rotation -= 4;
         self->velocity.x += RSDK.Cos512(self->rotation) << 6;
 
-        if (Zone->timer & 3) {
-            if ((Zone->timer & 3) == 2) {
-                int32 x              = 0x600 * RSDK.Cos512(self->rotation);
-                int32 y              = 0x600 * RSDK.Sin512(self->rotation);
-                EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, self->position.x - x, self->position.y - y);
+        int32 x = 0, y = 0;
+        EntityDebris *debris = NULL;
+        switch (Zone->timer & 3) {
+            default: break;
+
+            case 0:
+                x              = RSDK.Cos512(self->rotation) << 11;
+                y              = RSDK.Sin512(self->rotation) << 11;
+                debris = CREATE_ENTITY(Debris, Debris_State_Move, self->position.x - x, self->position.y - y);
+
+                RSDK.SetSpriteAnimation(Explosion->aniFrames, EXPLOSION_BOSSPUFF, &debris->animator, true, 0);
+                debris->velocity.x = Zone->autoScrollSpeed - (RSDK.Cos512(self->rotation) << 8);
+                debris->velocity.y = -16 * RSDK.Cos512(self->rotation);
+                debris->drawGroup  = Zone->objectDrawGroup[0];
+                debris->timer      = 41;
+                break;
+
+            case 2:
+                x              = 0x600 * RSDK.Cos512(self->rotation);
+                y              = 0x600 * RSDK.Sin512(self->rotation);
+                debris = CREATE_ENTITY(Debris, Debris_State_Move, self->position.x - x, self->position.y - y);
+
                 RSDK.SetSpriteAnimation(Explosion->aniFrames, EXPLOSION_BOSS, &debris->animator, true, 0);
                 debris->velocity.x = Zone->autoScrollSpeed;
                 debris->drawGroup  = Zone->objectDrawGroup[1];
@@ -1045,17 +1063,7 @@ void HeavyGunner_StateMissile_ReturnToSender(void)
                 debris->scale.x    = RSDK.Rand(0x80, 0x180);
                 debris->scale.y    = debris->scale.x;
                 debris->timer      = 52;
-            }
-        }
-        else {
-            int32 x              = RSDK.Cos512(self->rotation) << 11;
-            int32 y              = RSDK.Sin512(self->rotation) << 11;
-            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, self->position.x - (x << 11), self->position.y - y);
-            RSDK.SetSpriteAnimation(Explosion->aniFrames, EXPLOSION_BOSSPUFF, &debris->animator, true, 0);
-            debris->velocity.x = Zone->autoScrollSpeed - (RSDK.Cos512(self->rotation) << 8);
-            debris->velocity.y = -16 * RSDK.Cos512(self->rotation);
-            debris->drawGroup  = Zone->objectDrawGroup[0];
-            debris->timer      = 41;
+                break;
         }
     }
 }
