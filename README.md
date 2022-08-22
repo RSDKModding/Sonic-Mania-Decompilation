@@ -35,6 +35,9 @@ Open SonicMania.sln and build the project you wish to build.
 The makefile is a trimmed down version of the RSDKv5 makefile that only supports game compilation.
 By default, unlike the RSDK makefile, this will look for the default game name of `SonicMania` and use it as source and compile as such. Pass `GAME_NAME` to the makefile to change it/
 
+## Wii U
+See [here](dependencies/RSDKv5/dependencies/wiiu/README.md).
+
 ### Other platforms
 The only directly supported platforms are those listed above. Since Mania is very easy to build, requiring no dependencies, virtually any platform that can run RSDKv5 can compile Mania easily.
 

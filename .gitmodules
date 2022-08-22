@@ -6,4 +6,4 @@
 	url = https://github.com/nothings/stb
 [submodule "dependencies/RSDKv5"]
 	path = dependencies/RSDKv5
-	url = https://github.com/Rubberduckycooly/RSDKv5-Decompilation
+	url = https://github.com/Clownacy/RSDKv5-Decompilation
