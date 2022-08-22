@@ -3182,7 +3182,7 @@ void InitPublicFunctions()
 #if MANIA_USE_PLUS
     // Menu/LevelSelect
     ADD_PUBLIC_FUNC(LevelSelect_Cheat_AllEmeralds);
-    ADD_PUBLIC_FUNC(LevelSelect_Cheat_ChangeSuperMusicFlag);
+    ADD_PUBLIC_FUNC(LevelSelect_Cheat_ToggleSuperMusic);
     ADD_PUBLIC_FUNC(LevelSelect_Cheat_MaxContinues);
     ADD_PUBLIC_FUNC(LevelSelect_Cheat_MaxControl);
     ADD_PUBLIC_FUNC(LevelSelect_Cheat_RickyMode);

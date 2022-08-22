@@ -26,12 +26,8 @@ struct ObjectLevelSelect {
     TABLE(int32 cheat_SwapGameMode[9], { 2, 0, 1, 8, 0, 6, 2, 3, 255 });
     TABLE(int32 cheat_UnlockAllMedals[9], { 1, 9, 8, 9, 0, 5, 0, 1, 255 });
     TABLE(int32 cheat_SuperDash[9], { 2, 0, 1, 7, 0, 8, 1, 5, 255 });
-    TABLE(int32 cheat_MaxControl[5], { 9, 0, 0, 1, 255 });
-    TABLE(int32 cheat_DisableSuperMusic[5], { 6, 2, 1, 4, 255 });
-    int32 unused1;
-    int32 unused2;
-    int32 unused3;
-    int32 unused4;
+    TABLE(int32 cheat_MaxControl[5], { 9, 0, 0, 1, 255 }); // says there's 9 values here in static obj & IDA but only 5 are loaded so it is what it is ig
+    TABLE(int32 cheat_ToggleSuperMusic[9], { 6, 2, 1, 4, 255 });
     int32 bgAniFrame;
     int32 startMusicID;
     int32 soundTestMax;
@@ -102,7 +98,7 @@ void LevelSelect_Serialize(void);
 // Extra Entity Functions
 #if MANIA_USE_PLUS
 void LevelSelect_Cheat_AllEmeralds(void);
-void LevelSelect_Cheat_ChangeSuperMusicFlag(void);
+void LevelSelect_Cheat_ToggleSuperMusic(void);
 void LevelSelect_Cheat_MaxContinues(void);
 void LevelSelect_Cheat_MaxControl(void);
 void LevelSelect_Cheat_RickyMode(void);

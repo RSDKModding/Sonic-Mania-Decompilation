@@ -96,7 +96,7 @@ void LevelSelect_StageLoad(void)
     LevelSelect->cheatCodePtrs[4] = LevelSelect->cheat_UnlockAllMedals;
     LevelSelect->cheatCodePtrs[5] = LevelSelect->cheat_SuperDash;
     LevelSelect->cheatCodePtrs[6] = LevelSelect->cheat_MaxControl;
-    LevelSelect->cheatCodePtrs[7] = &LevelSelect->cheat_DisableSuperMusic[4];
+    LevelSelect->cheatCodePtrs[7] = LevelSelect->cheat_ToggleSuperMusic;
 
     LevelSelect->checkCheatActivated[0] = LevelSelect_Cheat_RickyMode;
     LevelSelect->checkCheatActivated[1] = LevelSelect_Cheat_AllEmeralds;
@@ -105,7 +105,7 @@ void LevelSelect_StageLoad(void)
     LevelSelect->checkCheatActivated[4] = LevelSelect_Cheat_UnlockAllMedals;
     LevelSelect->checkCheatActivated[5] = LevelSelect_Cheat_SuperDash;
     LevelSelect->checkCheatActivated[6] = LevelSelect_Cheat_MaxControl;
-    LevelSelect->checkCheatActivated[7] = LevelSelect_Cheat_ChangeSuperMusicFlag;
+    LevelSelect->checkCheatActivated[7] = LevelSelect_Cheat_ToggleSuperMusic;
 
     LevelSelect->cheatCodePos[0] = 0;
     LevelSelect->cheatCodePos[1] = 0;
@@ -126,7 +126,7 @@ void LevelSelect_Cheat_AllEmeralds(void)
     SaveGame->saveRAM->chaosEmeralds = 0b01111111;
 }
 
-void LevelSelect_Cheat_ChangeSuperMusicFlag(void)
+void LevelSelect_Cheat_ToggleSuperMusic(void)
 {
     RSDK.PlaySfx(LevelSelect->sfxRing, false, 255);
     globals->superMusicEnabled ^= 1;

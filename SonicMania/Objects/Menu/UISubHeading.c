@@ -113,7 +113,7 @@ void UISubHeading_HandleUnlocks(void)
 {
     EntityUIControl *control  = ManiaModeMenu->secretsMenu;
     EntityUIButton *debugMode = control->buttons[1];
-    debugMode->disabled       = !GameProgress_CheckUnlock(GAMEPROGRESS_UNLOCK_DEBUGMODE) && globals->superSecret;
+    debugMode->disabled       = !GameProgress_CheckUnlock(GAMEPROGRESS_UNLOCK_DEBUGMODE) && !globals->superSecret;
     if (debugMode->disabled)
         UIButton_ManageChoices(debugMode);
 
