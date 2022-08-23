@@ -13,6 +13,7 @@ ObjectEncoreIntro *EncoreIntro;
 void EncoreIntro_Update(void)
 {
     RSDK_THIS(EncoreIntro);
+
     if (!self->activated) {
         foreach_active(Player, player)
         {
@@ -52,10 +53,12 @@ void EncoreIntro_Draw(void) {}
 void EncoreIntro_Create(void *data)
 {
     RSDK_THIS(EncoreIntro);
+
     if (!SceneInfo->inEditor) {
         INIT_ENTITY(self);
         CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
         EncoreIntro_SetupEntities();
+        self->active = ACTIVE_NORMAL;
 
         if (globals->enableIntro) {
             foreach_all(HUD, hud)

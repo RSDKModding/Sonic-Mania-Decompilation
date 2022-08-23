@@ -101,12 +101,12 @@ void CutsceneRules_SetupEntity(void *e, Vector2 *size, Hitbox *hitbox)
     if (!size->y)
         size->y = SCREEN_YSIZE << 16;
 
-    entity->updateRange.x = 0x800000 + size->x;
-    entity->updateRange.y = 0x800000 + size->y;
+    entity->updateRange.x = TO_FIXED(128) + size->x;
+    entity->updateRange.y = TO_FIXED(128) + size->y;
 
     hitbox->left   = -size->x >> 17;
-    hitbox->right  = size->x >> 17;
     hitbox->top    = -size->y >> 17;
+    hitbox->right  = size->x >> 17;
     hitbox->bottom = size->y >> 17;
 }
 

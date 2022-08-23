@@ -217,9 +217,10 @@ void SchrodingersCapsule_State_Explode(void)
         RSDK.SetSpriteAnimation(-1, -1, &self->rayAnimator, true, 0);
 
         EntityPlayer *buddy1 = RSDK_GET_ENTITY(SLOT_PLAYER3, Player);
-        buddy1->classID      = Player->classID;
+        memset(buddy1, 0, ENTITY_SIZE); // not in the original, clears the entity slot incase of something like a shield is still active
+        buddy1->classID = Player->classID;
         Player_ChangeCharacter(buddy1, ID_MIGHTY);
-        buddy1->position.x      = self->position.x + 0xE0000;
+        buddy1->position.x      = self->position.x + TO_FIXED(14);
         buddy1->position.y      = self->position.y;
         buddy1->playerID        = RSDK.GetEntitySlot(buddy1);
         buddy1->active          = ACTIVE_NORMAL;
@@ -237,14 +238,12 @@ void SchrodingersCapsule_State_Explode(void)
         buddy1->velocity.y      = -0x40000;
         buddy1->direction       = FLIP_X;
         RSDK.SetSpriteAnimation(buddy1->aniFrames, ANI_HURT, &buddy1->animator, true, 0);
-        // These 2 lines aren't in the original, but it prevents a crash with instashield if its's enabled
-        buddy1->nextGroundState = StateMachine_None;
-        buddy1->nextAirState    = StateMachine_None;
 
         EntityPlayer *buddy2 = RSDK_GET_ENTITY(SLOT_PLAYER4, Player);
+        memset(buddy2, 0, ENTITY_SIZE); // like above, but for safety :]
         buddy2->classID      = Player->classID;
         Player_ChangeCharacter(buddy2, ID_RAY);
-        buddy2->position.x      = self->position.x - 0xE0000;
+        buddy2->position.x      = self->position.x - TO_FIXED(14);
         buddy2->position.y      = self->position.y;
         buddy2->playerID        = RSDK.GetEntitySlot(buddy2);
         buddy2->active          = ACTIVE_NORMAL;
@@ -261,9 +260,6 @@ void SchrodingersCapsule_State_Explode(void)
         buddy2->velocity.x      = -0x24000;
         buddy2->velocity.y      = -0x40000;
         RSDK.SetSpriteAnimation(buddy2->aniFrames, ANI_HURT, &buddy2->animator, true, 0);
-        // Like above, but just to be safe :]
-        buddy1->nextGroundState = StateMachine_None;
-        buddy1->nextAirState    = StateMachine_None;
 
         Music_FadeOut(0.025);
         RSDK.PlaySfx(SchrodingersCapsule->sfxExplosion3, false, 0xFF);
