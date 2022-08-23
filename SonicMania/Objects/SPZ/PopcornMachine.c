@@ -435,6 +435,7 @@ void PopcornMachine_StateController_HandleFinish(void)
         if (player->position.y < parent->position.y - 0xA00000 * parent->height + 0xD00000) {
             player->tileCollisions = TILECOLLISION_DOWN;
             Player_UpdatePhysicsState(player);
+            destroyEntity(self);
         }
     }
     else {
