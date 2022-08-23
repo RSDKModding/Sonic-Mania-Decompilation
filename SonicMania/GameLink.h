@@ -1528,12 +1528,12 @@ typedef struct {
     void (*ProcessAnimation)(Animator *animator);
 
     // Tile Layers
-    int32 (*GetTileLayerID)(const char *name);
-    TileLayer *(*GetTileLayer)(int32 layerID);
+    uint16 (*GetTileLayerID)(const char *name);
+    TileLayer *(*GetTileLayer)(uint16 layerID);
     void (*GetLayerSize)(uint16 layer, Vector2 *size, bool32 usePixelUnits);
     uint16 (*GetTile)(uint16 layer, int32 x, int32 y);
     void (*SetTile)(uint16 layer, int32 x, int32 y, uint16 tile);
-    int32 (*CopyTileLayer)(uint16 dstLayerID, int32 dstStartX, int32 dstStartY, uint16 srcLayerID, int32 srcStartX, int32 srcStartY, int32 countX,
+    void (*CopyTileLayer)(uint16 dstLayerID, int32 dstStartX, int32 dstStartY, uint16 srcLayerID, int32 srcStartX, int32 srcStartY, int32 countX,
                            int32 countY);
     void (*ProcessParallax)(TileLayer *tileLayer);
     ScanlineInfo *(*GetScanlines)(void);
