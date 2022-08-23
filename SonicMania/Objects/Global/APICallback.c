@@ -436,7 +436,7 @@ int32 APICallback_GetStorageStatus(void)
     if (APICallback->GetStorageStatus) {
         status = APICallback->GetStorageStatus(0);
     }
-    else if (sku_platform >= PLATFORM_PS4) {
+    else { // normally this is "if sku_platform != PLATFORM_PC" but we don't have a get storage status so lets pretend that check doesn't exist
         if (APICallback->activeEntity) {
             status = STATUS_CONTINUE;
         }
@@ -649,7 +649,7 @@ void APICallback_TryAuth_CB(void)
 {
     RSDK_THIS(APICallback);
 
-    if (APICallback->authStatus == 100) {
+    if (APICallback->authStatus == STATUS_CONTINUE) {
         if (!UIDialog->activeDialog) {
             String string;
             switch (sku_platform) {

@@ -27,7 +27,7 @@ struct ObjectLevelSelect {
     TABLE(int32 cheat_UnlockAllMedals[9], { 1, 9, 8, 9, 0, 5, 0, 1, 255 });
     TABLE(int32 cheat_SuperDash[9], { 2, 0, 1, 7, 0, 8, 1, 5, 255 });
     TABLE(int32 cheat_MaxControl[5], { 9, 0, 0, 1, 255 }); // says there's 9 values here in static obj & IDA but only 5 are loaded so it is what it is ig
-    TABLE(int32 cheat_ToggleSuperMusic[9], { 6, 2, 1, 4, 255 });
+    TABLE(int32 cheat_ToggleSuperMusic[9], { 6, 2, 1, 4, 255, 0, 0, 0, 0 });
     int32 bgAniFrame;
     int32 startMusicID;
     int32 soundTestMax;

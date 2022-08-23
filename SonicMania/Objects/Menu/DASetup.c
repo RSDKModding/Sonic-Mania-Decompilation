@@ -94,52 +94,52 @@ bool32 DASetup_HandleMedallionDebug(void)
 {
     ProgressRAM *progress = GameProgress_GetProgressRAM();
 
-    if (!globals->medallionDebug || !progress)
-        return false;
+    if (globals->medallionDebug && progress) {
+        switch (DASetup->trackID) {
+            case 8: // Act Clear/1UP - unlock all zones
+                if (GameProgress_CheckZoneClear()) {
+                    RSDK.PlaySfx(DASetup->sfxScoreTotal, false, 255);
+                    return true;
+                }
+                break;
 
-    switch (DASetup->trackID) {
-        case 8:
-            if (GameProgress_CheckZoneClear()) {
-                RSDK.PlaySfx(DASetup->sfxScoreTotal, false, 255);
-                return true;
-            }
-            break;
+            case 44: // Blue Spheres/ERZ Pinch Mode - unlock all medals (silver first if not all unlocked, if all unlocked then gold)
+                if (progress->silverMedalCount < 32) {
+                    GameProgress_GiveMedal(globals->blueSpheresID, 1);
+                    GameProgress_ShuffleBSSID();
+                    RSDK.PlaySfx(DASetup->sfxMedal, false, 255);
+                    return true;
+                }
+                else if (progress->goldMedalCount < 32) {
+                    GameProgress_GiveMedal(globals->blueSpheresID, 2);
+                    GameProgress_ShuffleBSSID();
+                    RSDK.PlaySfx(DASetup->sfxMedal, false, 255);
+                    return true;
+                }
+                break;
 
-        case 44:
-            if (progress->silverMedalCount < 32) {
-                GameProgress_GiveMedal(globals->blueSpheresID, 1);
-                GameProgress_ShuffleBSSID();
-                RSDK.PlaySfx(DASetup->sfxMedal, false, 255);
-                return true;
-            }
-            else if (progress->goldMedalCount < 32) {
-                GameProgress_GiveMedal(globals->blueSpheresID, 2);
-                GameProgress_ShuffleBSSID();
-                RSDK.PlaySfx(DASetup->sfxMedal, false, 255);
-                return true;
-            }
-            break;
+            case 46: // Super/Blue Spheres - unlock all
+                if (!progress->allGoldMedals) {
+                    GameProgress_UnlockAll();
+                    GameProgress_LockAllSpecialClear();
+                    RSDK.PlaySfx(DASetup->sfxEmerald, false, 255);
+                    return true;
+                }
+                break;
 
-        case 46:
-            if (!progress->allGoldMedals) {
-                GameProgress_UnlockAll();
-                GameProgress_LockAllSpecialClear();
-                RSDK.PlaySfx(DASetup->sfxEmerald, false, 255);
-                return true;
-            }
-            break;
+            case 48: // Game Over/Credits - reset progress
+                if (progress->silverMedalCount > 0 || progress->zoneCleared[0]) {
+                    GameProgress_ClearProgress();
+                    progress->allSpecialCleared = false;
+                    RSDK.PlaySfx(DASetup->sfxSSExit, false, 255);
+                    return true;
+                }
+                break;
 
-        case 48:
-            if (progress->silverMedalCount > 0 || progress->zoneCleared[0]) {
-                GameProgress_ClearProgress();
-                progress->allSpecialCleared = false;
-                RSDK.PlaySfx(DASetup->sfxSSExit, false, 255);
-                return true;
-            }
-            break;
-
-        default: break;
+            default: break;
+        }
     }
+
     return false;
 }
 

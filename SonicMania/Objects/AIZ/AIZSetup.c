@@ -140,33 +140,28 @@ void AIZSetup_StageLoad(void)
         for (int32 i = Zone->fgLayer[0]; i <= Zone->fgLayer[1]; ++i) {
             int32 *deformData = RSDK.GetTileLayer(i)->deformationDataW;
 
-            int32 id = 0;
+            int32 angle = 0;
             for (int32 d = 0; d < 0x200; ++d) {
-                deformData[d]         = (2 * RSDK.Sin1024(id)) >> 10;
-                deformData[d + 0x200] = (2 * RSDK.Sin1024(id)) >> 10;
-                id += 16;
+                deformData[d] = (2 * RSDK.Sin1024(angle)) >> 10;
+                angle += 16;
             }
+
+            memcpy(&deformData[0x200], &deformData[0], (0x200 * sizeof(int32)));
         }
 
         int32 *deformData = RSDK.GetTileLayer(0)->deformationDataW;
-
         int32 id = 0;
         for (int32 d = 0; d < 0x200; d += 16) {
-            int32 pos = 0;
-            if (id >= 0)
-                pos = id;
-            else
-                pos = 0;
+            int32 id = MAX(d, 0);
 
             int32 angle  = 0;
             int32 deform = RSDK.Rand(0, 4);
             for (int32 i = 0; i < 16; ++i) {
-                deformData[pos + i]           = (deform * RSDK.Sin1024(angle)) >> 10;
+                deformData[id + i] = (deform * RSDK.Sin1024(angle)) >> 10;
                 angle += 64;
             }
-            id += 16;
         }
-        memcpy(&deformData[0x200], deformData, (0x200 * sizeof(int32)));
+        memcpy(&deformData[0x200], &deformData[0], (0x200 * sizeof(int32)));
     }
     else {
 #endif
@@ -177,12 +172,12 @@ void AIZSetup_StageLoad(void)
 
         for (int32 i = 0; i < AIZSetup->background2->scrollInfoCount; ++i) {
             int32 parallaxFactor                           = AIZSetup->background2->scrollInfo[i].parallaxFactor;
-            AIZSetup->background2->scrollInfo[i].scrollPos = -0x7000000 - (0x220000 * parallaxFactor);
+            AIZSetup->background2->scrollInfo[i].scrollPos = -TO_FIXED(0x700) - (TO_FIXED(34) * parallaxFactor);
         }
 
         for (int32 i = 0; i < AIZSetup->background3->scrollInfoCount; ++i) {
             int32 parallaxFactor                           = AIZSetup->background3->scrollInfo[i].parallaxFactor;
-            AIZSetup->background3->scrollInfo[i].scrollPos = -0x7000000 - (0x220000 * parallaxFactor);
+            AIZSetup->background3->scrollInfo[i].scrollPos = -TO_FIXED(0x700) - (TO_FIXED(34) * parallaxFactor);
         }
 #if MANIA_USE_PLUS
     }

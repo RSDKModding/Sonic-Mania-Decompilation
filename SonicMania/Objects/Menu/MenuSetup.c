@@ -42,20 +42,23 @@ void MenuSetup_StaticUpdate(void)
 
         String tag;
         INIT_STRING(tag);
+        RSDK.SetString(&tag, "Main Menu");
 
+        EntityUIControl *mainMenu = NULL; // this will crash if no entities have "Main Menu" as the tag, make sure one does!!!
         foreach_all(UIControl, control)
         {
-            if (!RSDK.CompareStrings(&tag, &control->tag, false)) {
-                RSDK.SetString(&tag, "Main Menu");
+            if (RSDK.CompareStrings(&tag, &control->tag, false)) {
+                mainMenu = control;
+                foreach_break;
             }
         }
 
         if (!ManiaModeMenu_InitAPI()) {
-            control->selectionDisabled = true;
+            mainMenu->selectionDisabled = true;
             return;
         }
         else {
-            control->selectionDisabled = false;
+            mainMenu->selectionDisabled = false;
             MenuSetup->initializedAPI  = true;
 
             String message;
@@ -86,20 +89,23 @@ void MenuSetup_StaticUpdate(void)
     if (!MenuSetup->initializedAPI) {
         String tag;
         INIT_STRING(tag);
+        RSDK.SetString(&tag, "Main Menu");
 
+        EntityUIControl *mainMenu = NULL; // this will crash if no entities have "Main Menu" as the tag, make sure one does!!!
         foreach_all(UIControl, control)
         {
-            if (!RSDK.CompareStrings(&tag, &control->tag, false)) {
-                RSDK.SetString(&tag, "Main Menu");
+            if (RSDK.CompareStrings(&tag, &control->tag, false)) {
+                mainMenu = control;
+                foreach_break;
             }
         }
 
         if (!MenuSetup_InitAPI()) {
-            control->selectionDisabled = true;
+            mainMenu->selectionDisabled = true;
             return;
         }
         else {
-            control->selectionDisabled = false;
+            mainMenu->selectionDisabled = false;
             MenuSetup->initializedAPI  = true;
 
             String message;
