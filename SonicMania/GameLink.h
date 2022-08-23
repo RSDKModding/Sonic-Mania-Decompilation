@@ -1314,30 +1314,30 @@ typedef struct {
     bool32 (*GetNoSave)(void);
 
     // User File Management
-    void (*LoadUserFile)(const char *name, void *buffer, int32 size, void (*callback)(int32 status)); // load user file from game dir
-    void (*SaveUserFile)(const char *name, void *buffer, int32 size, void (*callback)(int32 status), bool32 compressed); // save user file to game dir
+    void (*LoadUserFile)(const char *name, void *buffer, uint32 size, void (*callback)(int32 status)); // load user file from game dir
+    void (*SaveUserFile)(const char *name, void *buffer, uint32 size, void (*callback)(int32 status), bool32 compressed); // save user file to game dir
     void (*DeleteUserFile)(const char *name, void (*callback)(int32 status)); // delete user file from game dir
 
     // User DBs
     uint16 (*InitUserDB)(const char *name, ...);
     uint16 (*LoadUserDB)(const char *filename, void (*callback)(int32 status));
-    void (*SaveUserDB)(uint16 tableID, void (*callback)(int32 status));
+    bool32 (*SaveUserDB)(uint16 tableID, void (*callback)(int32 status));
     void (*ClearUserDB)(uint16 tableID);
     void (*ClearAllUserDBs)(void);
-    void (*SetupUserDBRowSorting)(uint16 tableID);
+    uint16 (*SetupUserDBRowSorting)(uint16 tableID);
     bool32 (*GetUserDBRowsChanged)(uint16 tableID);
-    void (*AddRowSortFilter)(uint16 tableID, int32 type, const char *name, void *value);
-    void (*SortDBRows)(uint16 tableID, int32 type, const char *name, bool32 sortAscending);
+    int32 (*AddRowSortFilter)(uint16 tableID, int32 type, const char *name, void *value);
+    int32 (*SortDBRows)(uint16 tableID, int32 type, const char *name, bool32 sortAscending);
     int32 (*GetSortedUserDBRowCount)(uint16 tableID);
     int32 (*GetSortedUserDBRowID)(uint16 tableID, uint16 row);
     int32 (*AddUserDBRow)(uint16 tableID);
-    void (*SetUserDBValue)(uint16 tableID, int32 row, int32 type, const char *name, void *value);
-    void (*GetUserDBValue)(uint16 tableID, int32 row, int32 type, const char *name, void *value);
+    bool32 (*SetUserDBValue)(uint16 tableID, uint32 row, int32 type, const char *name, void *value);
+    bool32 (*GetUserDBValue)(uint16 tableID, uint32 row, int32 type, const char *name, void *value);
     uint32 (*GetUserDBRowUUID)(uint16 tableID, uint16 row);
-    int32 (*GetUserDBRowByID)(uint16 tableID, uint32 uuid);
-    void (*GetUserDBRowCreationTime)(uint16 tableID, uint16 row, char *buffer, uint32 bufferSize, const char *format);
-    void (*RemoveDBRow)(uint16 tableID, uint16 row);
-    void (*RemoveAllDBRows)(uint16 tableID);
+    uint16 (*GetUserDBRowByID)(uint16 tableID, uint32 uuid);
+    void (*GetUserDBRowCreationTime)(uint16 tableID, uint16 row, char *buffer, size_t bufferSize, const char *format);
+    bool32 (*RemoveDBRow)(uint16 tableID, uint16 row);
+    bool32 (*RemoveAllDBRows)(uint16 tableID);
 } APIFunctionTable;
 #endif
 
@@ -1363,7 +1363,7 @@ typedef struct {
     bool32 (*GetActiveEntities)(uint16 group, Entity **entity);
     bool32 (*GetAllEntities)(uint16 classID, Entity **entity);
     void (*BreakForeachLoop)(void);
-    void (*SetEditableVar)(uint8 type, const char *name, uint8 classID, int32 storeOffset);
+    void (*SetEditableVar)(uint8 type, const char *name, uint8 classID, int32 offset);
     void *(*GetEntity)(uint16 slot);
     int32 (*GetEntitySlot)(void *entity);
     int32 (*GetEntityCount)(uint16 classID, bool32 isActive);
@@ -1386,7 +1386,7 @@ typedef struct {
     void (*ForceHardReset)(bool32 shouldHardReset);
 #endif
     bool32 (*CheckValidScene)(void);
-    int32 (*CheckSceneFolder)(const char *folderName);
+    bool32 (*CheckSceneFolder)(const char *folderName);
     void (*LoadScene)(void);
     int32 (*FindObject)(const char *name);
 
@@ -1430,10 +1430,10 @@ typedef struct {
     void (*MatrixMultiply)(Matrix *dest, Matrix *matrixA, Matrix *matrixB);
     void (*MatrixTranslateXYZ)(Matrix *matrix, int32 x, int32 y, int32 z, bool32 setIdentity);
     void (*MatrixScaleXYZ)(Matrix *matrix, int32 x, int32 y, int32 z);
-    void (*MatrixRotateX)(Matrix *matrix, int32 angle);
-    void (*MatrixRotateY)(Matrix *matrix, int32 angle);
-    void (*MatrixRotateZ)(Matrix *matrix, int32 angle);
-    void (*MatrixRotateXYZ)(Matrix *matrix, int32 x, int32 y, int32 z);
+    void (*MatrixRotateX)(Matrix *matrix, int16 angle);
+    void (*MatrixRotateY)(Matrix *matrix, int16 angle);
+    void (*MatrixRotateZ)(Matrix *matrix, int16 angle);
+    void (*MatrixRotateXYZ)(Matrix *matrix, int16 x, int16 y, int16 z);
     void (*MatrixInverse)(Matrix *dest, Matrix *matrix);
     void (*MatrixCopy)(Matrix *matDest, Matrix *matSrc);
 
@@ -1458,7 +1458,7 @@ typedef struct {
 #endif
 
     // Spritesheets
-    uint16 (*LoadSpriteSheet)(const char *filePath, Scopes scope);
+    uint16 (*LoadSpriteSheet)(const char *filePath, int32 scope);
 
     // Palettes & Colors
 #if RETRO_REV02
@@ -1466,9 +1466,9 @@ typedef struct {
 #else
     uint16 *(*GetTintLookupTable)(void);
 #endif
-    void (*SetPaletteMask)(uint32 maskColor);
+    void (*SetPaletteMask)(color maskColor);
     void (*SetPaletteEntry)(uint8 bankID, uint8 index, uint32 color);
-    uint32 (*GetPaletteEntry)(uint8 bankID, uint8 index);
+    color (*GetPaletteEntry)(uint8 bankID, uint8 index);
     void (*SetActivePalette)(uint8 newActiveBank, int32 startLine, int32 endLine);
     void (*CopyPalette)(uint8 sourceBank, uint8 srcBankStart, uint8 destinationBank, uint8 destBankStart, uint16 count);
 #if RETRO_REV02
@@ -1481,15 +1481,15 @@ typedef struct {
 #endif
 
     // Drawing
-    void (*DrawRect)(int32 x, int32 y, int32 width, int32 height, uint32 color, int32 alpha, InkEffects inkEffect, bool32 screenRelative);
-    void (*DrawLine)(int32 x1, int32 y1, int32 x2, int32 y2, uint32 color, int32 alpha, InkEffects inkEffect, bool32 screenRelative);
-    void (*DrawCircle)(int32 x, int32 y, int32 radius, uint32 color, int32 alpha, InkEffects inkEffect, bool32 screenRelative);
-    void (*DrawCircleOutline)(int32 x, int32 y, int32 innerRadius, int32 outerRadius, uint32 color, int32 alpha, InkEffects inkEffect,
+    void (*DrawRect)(int32 x, int32 y, int32 width, int32 height, uint32 color, int32 alpha, int32 inkEffect, bool32 screenRelative);
+    void (*DrawLine)(int32 x1, int32 y1, int32 x2, int32 y2, uint32 color, int32 alpha, int32 inkEffect, bool32 screenRelative);
+    void (*DrawCircle)(int32 x, int32 y, int32 radius, uint32 color, int32 alpha, int32 inkEffect, bool32 screenRelative);
+    void (*DrawCircleOutline)(int32 x, int32 y, int32 innerRadius, int32 outerRadius, uint32 color, int32 alpha, int32 inkEffect,
                               bool32 screenRelative);
-    void (*DrawFace)(Vector2 *vertices, int32 vertCount, int32 r, int32 g, int32 b, int32 alpha, InkEffects inkEffect);
-    void (*DrawBlendedFace)(Vector2 *vertices, color *vertColors, int32 vertCount, int32 alpha, InkEffects inkEffect);
+    void (*DrawFace)(Vector2 *vertices, int32 vertCount, int32 r, int32 g, int32 b, int32 alpha, int32 inkEffect);
+    void (*DrawBlendedFace)(Vector2 *vertices, color *vertColors, int32 vertCount, int32 alpha, int32 inkEffect);
     void (*DrawSprite)(Animator *animator, Vector2 *position, bool32 screenRelative);
-    void (*DrawDeformedSprite)(uint16 sheetID, InkEffects inkEffect, bool32 screenRelative);
+    void (*DrawDeformedSprite)(uint16 sheetID, int32 inkEffect, bool32 screenRelative);
     void (*DrawText)(Animator *animator, Vector2 *position, String *string, int32 startFrame, int32 endFrame, int32 align, int32 spacing, void *unused,
                      Vector2 *charOffsets, bool32 screenRelative);
     void (*DrawTile)(uint16 *tiles, int32 countX, int32 countY, Vector2 *position, Vector2 *offset, bool32 screenRelative);
@@ -1504,18 +1504,18 @@ typedef struct {
     uint16 (*LoadMesh)(const char *filename, uint8 scope);
     uint16 (*Create3DScene)(const char *identifier, uint16 faceCount, uint8 scope);
     void (*Prepare3DScene)(uint16 sceneIndex);
-    void (*SetDiffuseColor)(uint16 sceneIndex, int32 x, int32 y, int32 z);
-    void (*SetDiffuseIntensity)(uint16 sceneIndex, int32 x, int32 y, int32 z);
-    void (*SetSpecularIntensity)(uint16 sceneIndex, int32 x, int32 y, int32 z);
+    void (*SetDiffuseColor)(uint16 sceneIndex, uint8 x, uint8 y, uint8 z);
+    void (*SetDiffuseIntensity)(uint16 sceneIndex, uint8 x, uint8 y, uint8 z);
+    void (*SetSpecularIntensity)(uint16 sceneIndex, uint8 x, uint8 y, uint8 z);
     void (*AddModelTo3DScene)(uint16 modelFrames, uint16 sceneIndex, uint8 drawMode, Matrix *matWorld, Matrix *matNormal, color color);
-    void (*SetModelAnimation)(uint16 modelFrames, Animator *animator, int16 speed, uint8 loopIndex, bool32 forceApply, uint16 frameID);
+    void (*SetModelAnimation)(uint16 modelFrames, Animator *animator, int16 speed, uint8 loopIndex, bool32 forceApply, int16 frameID);
     void (*AddMeshFrameTo3DScene)(uint16 modelFrames, uint16 sceneIndex, Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matNormal,
                                   color color);
     void (*Draw3DScene)(uint16 sceneIndex);
 
     // Sprite Animations & Frames
-    uint16 (*LoadSpriteAnimation)(const char *filePath, Scopes scope);
-    uint16 (*CreateSpriteAnimation)(const char *filePath, uint32 frameCount, uint32 listCount, Scopes scope);
+    uint16 (*LoadSpriteAnimation)(const char *filePath, int32 scope);
+    uint16 (*CreateSpriteAnimation)(const char *filePath, uint32 frameCount, uint32 listCount, int32 scope);
     void (*SetSpriteAnimation)(uint16 aniFrames, uint16 listID, Animator *animator, bool32 forceApply, int16 frameID);
     void (*EditSpriteAnimation)(uint16 aniFrames, uint16 listID, const char *name, int32 frameOffset, uint16 frameCount, int16 speed, uint8 loopIndex,
                                 uint8 rotationStyle);
@@ -1571,7 +1571,7 @@ typedef struct {
 #endif
 
     // Audio
-    int32 (*GetSfx)(const char *path);
+    uint16 (*GetSfx)(const char *path);
     int32 (*PlaySfx)(uint16 sfx, int32 loopPoint, int32 priority);
     void (*StopSfx)(uint16 sfx);
 #if RETRO_REV0U
@@ -1616,14 +1616,14 @@ typedef struct {
 
     // Printing (Rev02)
 #if RETRO_REV02
-    void (*PrintLog)(PrintModes mode, const char *message, ...);
-    void (*PrintText)(PrintModes mode, const char *message);
-    void (*PrintString)(PrintModes mode, String *message);
-    void (*PrintUInt32)(PrintModes mode, const char *message, uint32 i);
-    void (*PrintInt32)(PrintModes mode, const char *message, int32 i);
-    void (*PrintFloat)(PrintModes mode, const char *message, float f);
-    void (*PrintVector2)(PrintModes mode, const char *message, Vector2 vec);
-    void (*PrintHitbox)(PrintModes mode, const char *message, Hitbox hitbox);
+    void (*PrintLog)(int32 mode, const char *message, ...);
+    void (*PrintText)(int32 mode, const char *message);
+    void (*PrintString)(int32 mode, String *message);
+    void (*PrintUInt32)(int32 mode, const char *message, uint32 i);
+    void (*PrintInt32)(int32 mode, const char *message, int32 i);
+    void (*PrintFloat)(int32 mode, const char *message, float f);
+    void (*PrintVector2)(int32 mode, const char *message, Vector2 vec);
+    void (*PrintHitbox)(int32 mode, const char *message, Hitbox hitbox);
 #endif
 
     // Editor
@@ -1638,7 +1638,7 @@ typedef struct {
     // Debugging
 #if RETRO_REV02
     void (*ClearViewableVariables)(void);
-    void (*AddViewableVariable)(const char *name, void *value, ViewableVarTypes type, int32 min, int32 max);
+    void (*AddViewableVariable)(const char *name, void *value, int32 type, int32 min, int32 max);
 #endif
 
 #if RETRO_REV0U
