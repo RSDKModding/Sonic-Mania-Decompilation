@@ -43,7 +43,7 @@ void Ink_Update(void)
                         break;
 
                         // This is an unused object that was scrapped before plus was created, so there's no mighty/ray code
-                        // I've created a mock-up of what mighty/ray code could've looked like, had it been implimented:
+                        // I've created a mock-up of what mighty/ray code could've looked like, had it been implemented:
                         // case ID_MIGHTY: RSDK.CopyPalette(self->type + 3, 96, 0, 96, 6); break;
                         // case ID_RAY: RSDK.CopyPalette(self->type + 3, 113, 0, 113, 6); break;
                 }

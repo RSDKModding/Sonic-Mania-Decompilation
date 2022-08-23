@@ -1255,12 +1255,12 @@ void MenuSetup_SaveSel_MenuUpdateCB(void)
 
         // buttonID == 8: No Save Slot Button
         if (control->lastButtonID == 8) {
-            prompt->promptID      = 6;
-            prompt->headingAnchor = 3;
+            prompt->promptID = 6;
+            prompt->buttonID = 3;
         }
         else {
-            prompt->promptID      = 3;
-            prompt->headingAnchor = 2;
+            prompt->promptID = 3;
+            prompt->buttonID = 2;
         }
     }
 }
