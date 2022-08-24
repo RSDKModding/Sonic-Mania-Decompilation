@@ -126,8 +126,8 @@ void Current_Create(void *data)
             self->active        = ACTIVE_NORMAL;
             self->inkEffect     = INK_ADD;
             self->visible       = true;
-            self->updateRange.x = 0x2000000;
-            self->updateRange.y = 0x1000000;
+            self->updateRange.x = TO_FIXED(512);
+            self->updateRange.y = TO_FIXED(256);
 
             if (VOID_TO_INT(data) == CURRENT_CHILD_WIND) {
                 self->drawFX  = FX_SCALE | FX_FLIP;
@@ -215,8 +215,8 @@ void Current_SetupTagLink(void)
 
     if (taggedButton) {
         if ((Button && taggedButton->classID == Button->classID) || (PullChain && taggedButton->classID == PullChain->classID)) {
-            int32 distX = abs(self->position.x - taggedButton->position.x) + 0x800000;
-            int32 distY = abs(self->position.y - taggedButton->position.y) + 0x800000;
+            int32 distX = abs(self->position.x - taggedButton->position.x) + TO_FIXED(128);
+            int32 distY = abs(self->position.y - taggedButton->position.y) + TO_FIXED(128);
 
             if (self->updateRange.x < distX)
                 self->updateRange.x = distX;
