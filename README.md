@@ -38,6 +38,8 @@ By default, unlike the RSDK makefile, this will look for the default game name o
 ### Other platforms
 The only directly supported platforms are those listed above. Since Mania is very easy to build, requiring no dependencies, virtually any platform that can run RSDKv5 can compile Mania easily.
 
+However, there are a multitude of ports listed in the **[RSDKv5 repository.](https://github.com/Rubberduckycooly/RSDKv5-Decompilation)**
+
 # FAQ
 ### Q: I found a bug/I have a feature request!
 A: Submit an issue in the issues tab and we _might_ fix it in the main branch. Don't expect any major future releases, however.
