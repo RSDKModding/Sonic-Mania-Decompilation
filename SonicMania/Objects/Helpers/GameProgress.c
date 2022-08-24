@@ -224,7 +224,7 @@ void GameProgress_UnlockAll(void)
         if (m < GAMEPROGRESS_EMERALD_COUNT)
             progress->emeraldObtained[m] = true;
 
-        if (m < ZONE_COUNT_SAVEFILE)
+        if (m < GAMEPROGRESS_ZONE_COUNT)
             progress->zoneCleared[m] = true;
 
         progress->medals[m] = GAMEPROGRESS_MEDAL_GOLD;
@@ -263,7 +263,7 @@ void GameProgress_ClearProgress(void)
         if (m < GAMEPROGRESS_EMERALD_COUNT)
             progress->emeraldObtained[m] = false;
 
-        if (m < ZONE_COUNT_SAVEFILE)
+        if (m < GAMEPROGRESS_ZONE_COUNT)
             progress->zoneCleared[m] = false;
 
         if (m < GAMEPROGRESS_EMERALD_COUNT)
@@ -303,7 +303,7 @@ bool32 GameProgress_CheckZoneClear(void)
 
     ProgressRAM *progress = GameProgress_GetProgressRAM();
 
-    for (int32 z = 0; z < ZONE_COUNT_SAVEFILE; ++z) {
+    for (int32 z = 0; z < GAMEPROGRESS_ZONE_COUNT; ++z) {
         if (!progress->zoneCleared[z]) {
             GameProgress_MarkZoneCompleted(z);
             return true;
@@ -402,7 +402,7 @@ void GameProgress_PrintSaveProgress(void)
     else
         LogHelpers_Print("YOU'VE NOT ENOUGH EMERALDS!\n");
 
-    for (int32 z = 0; z < ZONE_COUNT_SAVEFILE; ++z) {
+    for (int32 z = 0; z < GAMEPROGRESS_ZONE_COUNT; ++z) {
         if (progress->zoneCleared[z])
             LogHelpers_Print("Zone %d clear => TRUE", z);
         else

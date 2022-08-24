@@ -437,6 +437,9 @@ void UIDiorama_State_Competition(void)
         info->scrollPos[6] += 0x20;
         info->scrollPos[7] += 0x30;
         info->scrollPos[8] += 0x40;
+        // These 2 don't scroll
+        // info->scrollPos[9] += 0x00;
+        // info->scrollPos[10] += 0x00;
 
         info->terrainPos.y = (RSDK.Sin512(UIWidgets->timer) + 512) << 10;
 
@@ -846,13 +849,13 @@ void UIDiorama_Draw_Competition(void)
         RSDK.DrawSprite(&info->dioramaAnimator, &drawPos, false);
 
         drawPos.y += info->terrainPos.y;
-        for (int32 i = 1; i <= 11; ++i) {
+        for (int32 i = 0; i < 11; ++i) {
             drawPos.x                     = self->position.x;
-            info->dioramaAnimator.frameID = i;
+            info->dioramaAnimator.frameID = i + 1;
 
-            int32 scrollPos = -(info->scrollPos[i - 1] << 8);
+            int32 scrollPos = -(info->scrollPos[i] << 8);
             if (scrollPos < -0x2000000)
-                scrollPos += ((-0x2000001 - scrollPos) & 0xFE000000) + 0x2000000;
+                scrollPos += ((-0x2000000 - scrollPos) & 0xFE000000) + 0x2000000;
             drawPos.x += scrollPos;
             RSDK.DrawSprite(&info->dioramaAnimator, &drawPos, false);
 

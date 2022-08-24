@@ -101,8 +101,8 @@ typedef struct {
 typedef struct {
     int32 tailsAngle;
     int32 rayAngle;
-    int32 scrollPos[9];
-    int32 valuesPadding[5];
+    int32 scrollPos[11];
+    int32 valuesPadding[3];
 
     Vector2 terrainPos;
     Vector2 platformPos;
