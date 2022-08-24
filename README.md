@@ -2,7 +2,7 @@
 + Without assets from the official releases, this decompilation will not run.
 
 + You can get the official release of Sonic Mania (Plus) from:
-  * [Windows]
+  * Windows
     * [Via Steam](https://store.steampowered.com/app/584400/Sonic_Mania/)
     * [Via The Epic Games Store](https://www.epicgames.com/store/en-US/p/sonic-mania)
     * [Via Origin](https://www.origin.com/aus/en-us/store/sonic-the-hedgehog/sonic-mania)
