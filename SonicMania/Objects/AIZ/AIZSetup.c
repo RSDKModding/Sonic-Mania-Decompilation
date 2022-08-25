@@ -150,7 +150,6 @@ void AIZSetup_StageLoad(void)
         }
 
         int32 *deformData = RSDK.GetTileLayer(0)->deformationDataW;
-        int32 id = 0;
         for (int32 d = 0; d < 0x200; d += 16) {
             int32 id = MAX(d, 0);
 
