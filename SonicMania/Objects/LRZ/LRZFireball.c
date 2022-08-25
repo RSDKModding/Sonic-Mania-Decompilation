@@ -97,9 +97,15 @@ void LRZFireball_CheckOffScreen(void)
 {
     RSDK_THIS(LRZFireball);
 
-    self->alpha -= 0x20;
+    if (self->alpha > 0) {
+        self->alpha -= 0x20;
+        if (self->alpha <= 0) {
+            destroyEntity(self);
+            return;
+        }
+    }
 
-    if (self->alpha <= 0 || (self->alpha && RSDK.CheckOnScreen(self, &self->updateRange))) {
+    if (RSDK.CheckOnScreen(self, &self->updateRange)) {
         RSDK.ProcessAnimation(&self->animator);
         LRZFireball_CheckPlayerCollisions();
     }
