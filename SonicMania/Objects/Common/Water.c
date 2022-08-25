@@ -1090,7 +1090,7 @@ void Water_State_BtnBigBubble(void)
             if (self->taggedButton->currentlyActive) {
                 foreach_active(Player, player)
                 {
-                    if (Player_CheckCollisionTouch(player, self, &hitbox)) {
+                    if (!player->sidekick && Player_CheckCollisionTouch(player, self, &hitbox)) {
                         if (player->animator.animationID != ANI_BREATHE) {
                             EntityWater *bigBubble = CREATE_ENTITY(Water, INT_TO_VOID(WATER_BUBBLE), self->position.x, self->position.y);
                             RSDK.SetSpriteAnimation(Water->bigBubbleFrames, 7, &bigBubble->animator, true, 0);
