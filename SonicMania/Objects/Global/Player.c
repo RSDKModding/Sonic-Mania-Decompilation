@@ -725,7 +725,7 @@ void Player_StageLoad(void)
     // Handle Sidekick stuff setup
     Player->nextLeaderPosID = 1;
     Player->lastLeaderPosID = 0;
-#if MANIA_USE_PLUS
+#if GAME_VERSION != VER_100
     Player->disableP2KeyCheck = false;
 #endif
 
@@ -1731,7 +1731,7 @@ bool32 Player_CheckP2KeyPress(void)
         return false;
 #endif
 
-#if MANIA_USE_PLUS
+#if GAME_VERSION != VER_100
     if (self->controllerID > PLAYER_COUNT || Player->disableP2KeyCheck)
         return false;
 #else

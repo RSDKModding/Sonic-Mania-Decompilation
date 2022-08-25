@@ -93,7 +93,7 @@ bool32 SPZ2Outro_Cutscene_SetupFBZTV(EntityCutsceneSeq *host)
         WeatherTV->useHighLayer = true;
         camera->target          = NULL;
         player1->camera         = NULL;
-#if MANIA_USE_PLUS
+#if GAME_VERSION != VER_100
         Player->disableP2KeyCheck = true;
 #endif
 

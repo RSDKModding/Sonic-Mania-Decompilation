@@ -108,7 +108,7 @@ bool32 MSZ2Cutscene_Cutscene_GoToPistol(EntityCutsceneSeq *host)
         player1->groundVel = 0;
 
         if (player2->classID == Player->classID) {
-#if MANIA_USE_PLUS
+#if GAME_VERSION != VER_100
             Player->disableP2KeyCheck = true;
 #endif
             player2->state      = Player_State_Ground;

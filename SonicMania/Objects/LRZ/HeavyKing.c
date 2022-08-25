@@ -476,7 +476,7 @@ void HeavyKing_State_HandleCutsceneSetup(void)
         player1->pushing    = false;
         player1->state      = Player_State_Ground;
 
-#if MANIA_USE_PLUS
+#if GAME_VERSION != VER_100
         Player->disableP2KeyCheck = true;
 #endif
 
@@ -794,7 +794,7 @@ void HeavyKing_StateCutscene_AttackRebound(void)
         RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 13, &self->scepterAnimator, false, 0);
         HeavyKing_StartLeap(0);
 
-#if MANIA_USE_PLUS
+#if GAME_VERSION != VER_100
         Player->disableP2KeyCheck = false;
 #endif
         player1->stateInput = Player_Input_P1;
