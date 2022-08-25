@@ -240,8 +240,8 @@ void ItemBox_State_Broken(void)
 
     if (LRZConvItem)
         LRZConvItem_HandleLRZConvPhys(self);
-
-    ItemBox_HandleFallingCollision();
+    else
+        ItemBox_HandleFallingCollision();
 }
 void ItemBox_State_Break(void)
 {
