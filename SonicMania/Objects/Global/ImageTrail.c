@@ -17,36 +17,35 @@ void ImageTrail_LateUpdate(void)
 
     EntityPlayer *player = self->player;
 
-    // Check for fadeouts/destroy triggers
-    if (player->superState == SUPERSTATE_SUPER) {
-        self->baseAlpha = 0x100;
+    if (!player || (player->classID != self->playerClassID && player->classID != DebugMode->classID)) {
+        destroyEntity(self);
     }
     else {
-#if MANIA_USE_PLUS
-        if (player->state == Player_State_MightyHammerDrop) {
-            self->fadeoutTimer = 0x10;
+        // Check for fadeouts/destroy triggers
+        if (player->superState == SUPERSTATE_SUPER) {
+            self->baseAlpha = 0x100;
         }
-        else {
-#endif
-            if (self->fadeoutTimer <= 0) {
-                if (player->speedShoesTimer < 32) {
-                    self->baseAlpha = player->speedShoesTimer;
-                    self->baseAlpha *= 8;
-                    if (self->baseAlpha == 0)
-                        destroyEntity(self);
-                }
-            }
-            else {
-                self->fadeoutTimer--;
-                self->baseAlpha = 0x10;
-                self->baseAlpha *= self->fadeoutTimer;
-                if (self->baseAlpha == 0)
-                    destroyEntity(self);
-            }
 #if MANIA_USE_PLUS
+        else if (player->speedShoesTimer < 16 && player->state == Player_State_MightyHammerDrop) {
+            self->fadeoutTimer = 16;
         }
 #endif
+        else if (self->fadeoutTimer <= 0 && player->speedShoesTimer < 32) {
+            self->baseAlpha = 8 * player->speedShoesTimer;
+            if (!self->baseAlpha) 
+                destroyEntity(self);
+        }
+        else if (self->fadeoutTimer > 0) {
+            self->fadeoutTimer--;
+            self->baseAlpha = 16 * self->fadeoutTimer;
+            if (!self->baseAlpha) 
+                destroyEntity(self);
+        }
     }
+
+    // if we destroyed this entity, skip any more logic
+    if (!self->classID)
+        return;
 
     // Update recordings
     for (int32 i = IMAGETRAIL_TRACK_COUNT - 1; i > 0; --i) {
