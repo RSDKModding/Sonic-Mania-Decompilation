@@ -634,7 +634,7 @@ void HUD_State_MoveIn(void)
         timePos   = &self->vsTimePos[SceneInfo->currentScreenID];
         ringsPos  = &self->vsRingsPos[SceneInfo->currentScreenID];
         lifePos   = &self->vsLifePos[SceneInfo->currentScreenID];
-        targetPos = &self->vsMaxOffsets[SceneInfo->currentScreenID];
+        targetPos = &self->vsTargetPos[SceneInfo->currentScreenID];
     }
     else {
         state     = &self->state;
