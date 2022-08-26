@@ -90,6 +90,10 @@ typedef uint32 color;
 #define TO_FIXED(x)   ((x) << 16)
 #define FROM_FIXED(x) ((x) >> 16)
 
+// floating point variants
+#define TO_FIXED_F(x)   ((x)*65536.0)
+#define FROM_FIXED_F(x) ((x) / 65536.0)
+
 // -------------------------
 // STRUCTS
 // -------------------------

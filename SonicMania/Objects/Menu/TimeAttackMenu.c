@@ -62,35 +62,35 @@ void TimeAttackMenu_StageLoad(void)
 
 void TimeAttackMenu_Initialize(void)
 {
-    String string;
-    INIT_STRING(string);
+    String tag;
+    INIT_STRING(tag);
 
     foreach_all(UIControl, control)
     {
-        RSDK.SetString(&string, "Time Attack");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Time Attack");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             TimeAttackMenu->timeAttackControl = control;
 
-        RSDK.SetString(&string, "Time Attack Legacy");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Time Attack Legacy");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             TimeAttackMenu->timeAttackControl_Legacy = control;
 
-        RSDK.SetString(&string, "Time Attack Zones");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Time Attack Zones");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             TimeAttackMenu->taZoneSelControl = control;
 
-        RSDK.SetString(&string, "Time Attack Detail");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Time Attack Detail");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             TimeAttackMenu->taDetailsControl = control;
 
-        RSDK.SetString(&string, "Leaderboards");
-        if (RSDK.CompareStrings(&string, &control->tag, false)) {
+        RSDK.SetString(&tag, "Leaderboards");
+        if (RSDK.CompareStrings(&tag, &control->tag, false)) {
             TimeAttackMenu->leaderboardsControl = control;
             control->backPressCB                = TimeAttackMenu_LeaderboardsBackPressCB;
         }
 
-        RSDK.SetString(&string, "Replays");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Replays");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             TimeAttackMenu->replaysControl = control;
     }
 

@@ -50,13 +50,13 @@ void MainMenu_StageLoad(void) {}
 
 void MainMenu_Initialize(void)
 {
-    String text;
-    INIT_STRING(text);
+    String tag;
+    INIT_STRING(tag);
+    RSDK.SetString(&tag, "Main Menu");
 
     foreach_all(UIControl, control)
     {
-        RSDK.SetString(&text, "Main Menu");
-        if (RSDK.CompareStrings(&text, &control->tag, false)) {
+        if (RSDK.CompareStrings(&tag, &control->tag, false)) {
             MainMenu->menuControl = control;
             control->backPressCB  = MainMenu_BackPressCB_ReturnToTitle;
         }

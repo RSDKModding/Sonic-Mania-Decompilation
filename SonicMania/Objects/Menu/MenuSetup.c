@@ -241,121 +241,121 @@ void MenuSetup_StartTransitionLB(void (*callback)(void), int32 delay)
 #if !MANIA_USE_PLUS
 void MenuSetup_Initialize(void)
 {
-    String string;
-    INIT_STRING(string);
+    String tag;
+    INIT_STRING(tag);
 
     foreach_all(UIControl, control)
     {
-        RSDK.SetString(&string, "Main Menu");
-        if (RSDK.CompareStrings(&string, &control->tag, false)) {
+        RSDK.SetString(&tag, "Main Menu");
+        if (RSDK.CompareStrings(&tag, &control->tag, false)) {
             MenuSetup->mainMenu  = control;
             control->backPressCB = MenuSetup_BackPressCB_ReturnToTitle;
         }
 
-        RSDK.SetString(&string, "Time Attack");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Time Attack");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             MenuSetup->timeAttack = control;
 
-        RSDK.SetString(&string, "Time Attack Zones");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Time Attack Zones");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             MenuSetup->timeAttackZones = control;
 
-        RSDK.SetString(&string, "Leaderboards");
-        if (RSDK.CompareStrings(&string, &control->tag, false)) {
+        RSDK.SetString(&tag, "Leaderboards");
+        if (RSDK.CompareStrings(&tag, &control->tag, false)) {
             MenuSetup->leaderboards = control;
             control->backPressCB    = MenuSetup_TA_Leaderboards_BackPressCB;
         }
 
-        RSDK.SetString(&string, "Competition");
-        if (RSDK.CompareStrings(&string, &control->tag, false)) {
+        RSDK.SetString(&tag, "Competition");
+        if (RSDK.CompareStrings(&tag, &control->tag, false)) {
             MenuSetup->competition = control;
             control->backPressCB   = MenuSetup_VS_BackoutFromVsCharSelect;
         }
 
-        RSDK.SetString(&string, "Competition Rules");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Competition Rules");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             MenuSetup->competitionRules = control;
 
-        RSDK.SetString(&string, "Competition Zones");
-        if (RSDK.CompareStrings(&string, &control->tag, false)) {
+        RSDK.SetString(&tag, "Competition Zones");
+        if (RSDK.CompareStrings(&tag, &control->tag, false)) {
             MenuSetup->competitionZones = control;
             control->backPressCB        = MenuSetup_VS_CompZones_BackPressCB;
         }
 
-        RSDK.SetString(&string, "Competition Round");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Competition Round");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             MenuSetup->competitionRound = control;
 
-        RSDK.SetString(&string, "Competition Total");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Competition Total");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             MenuSetup->competitionTotal = control;
 
-        RSDK.SetString(&string, "Save Select");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Save Select");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             MenuSetup->saveSelect = control;
 
-        RSDK.SetString(&string, "No Save Mode");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "No Save Mode");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             MenuSetup->noSaveMode = control;
 
-        RSDK.SetString(&string, "Secrets");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Secrets");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             MenuSetup->secrets = control;
 
-        RSDK.SetString(&string, "Extras");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Extras");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             MenuSetup->extras = control;
 
-        RSDK.SetString(&string, "Options");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Options");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             MenuSetup->options = control;
 
-        RSDK.SetString(&string, "Language");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Language");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             MenuSetup->language = control;
 
-        RSDK.SetString(&string, "Video");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Video");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             MenuSetup->video = control;
 
-        RSDK.SetString(&string, "Video WIN");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Video WIN");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             MenuSetup->video_win = control;
 
-        RSDK.SetString(&string, "Sound");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Sound");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             MenuSetup->sound = control;
 
-        RSDK.SetString(&string, "Controls WIN");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Controls WIN");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             MenuSetup->controls_win = control;
 
-        RSDK.SetString(&string, "Controls KB");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Controls KB");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             MenuSetup->controls_KB = control;
 
-        RSDK.SetString(&string, "Controls PS4");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Controls PS4");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             MenuSetup->controls_PS4 = control;
 
-        RSDK.SetString(&string, "Controls XB1");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Controls XB1");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             MenuSetup->controls_XB1 = control;
 
-        RSDK.SetString(&string, "Controls NX");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Controls NX");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             MenuSetup->controls_NX = control;
 
-        RSDK.SetString(&string, "Controls NX Grip");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Controls NX Grip");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             MenuSetup->controls_NX_Grip = control;
 
-        RSDK.SetString(&string, "Controls NX Joycon");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Controls NX Joycon");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             MenuSetup->controls_NX_JoyCon = control;
 
-        RSDK.SetString(&string, "Controls NX Pro");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Controls NX Pro");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             MenuSetup->controls_NX_Pro = control;
     }
 
