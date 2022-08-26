@@ -42,7 +42,7 @@ void ChemicalBall_Create(void *data)
     self->updateRange.y = 0x1000000;
 
     if (!self->interval)
-        self->interval = -128;
+        self->interval = 128;
 
     self->drawPos = self->position;
 
