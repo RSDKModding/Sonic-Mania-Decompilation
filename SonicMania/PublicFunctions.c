@@ -1976,6 +1976,8 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Player_State_Bubble);
     ADD_PUBLIC_FUNC(Player_State_WaterSlide);
     ADD_PUBLIC_FUNC(Player_State_TransportTube);
+    ADD_PUBLIC_FUNC(Player_Gravity_False);
+    ADD_PUBLIC_FUNC(Player_Gravity_True);
     ADD_PUBLIC_FUNC(Player_JumpAbility_Sonic);
     ADD_PUBLIC_FUNC(Player_JumpAbility_Tails);
     ADD_PUBLIC_FUNC(Player_JumpAbility_Knux);

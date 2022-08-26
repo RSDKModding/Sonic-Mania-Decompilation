@@ -306,6 +306,7 @@ void KleptoMobile_SwitchToKing(void)
         }
     }
 
+    // NOTE: this will crash if kingPtr is NULL, make sure there's a phantom king in the scene!!!
     foreach_active(PhantomKing, kingArm)
     {
         if (kingArm->type != PHANTOMKING_KING) {

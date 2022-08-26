@@ -26,69 +26,69 @@ void OptionsMenu_Initialize(void)
 {
     LogHelpers_Print("ManiaModeMenu_Initialize()");
 
-    String string;
-    INIT_STRING(string);
+    String tag;
+    INIT_STRING(tag);
 
     foreach_all(UIControl, control)
     {
-        RSDK.SetString(&string, "Options");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Options");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->optionsControl = control;
 
-        RSDK.SetString(&string, "Language");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Language");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->languageControl = control;
 
-        RSDK.SetString(&string, "Language Old");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Language Old");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->languageControl_Legacy = control;
 
-        RSDK.SetString(&string, "Video");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Video");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->videoControl = control;
 
-        RSDK.SetString(&string, "Video WIN");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Video WIN");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->videoControl_Windows = control;
 
-        RSDK.SetString(&string, "Sound");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Sound");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->soundControl = control;
 
-        RSDK.SetString(&string, "Controls WIN");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Controls WIN");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->controlsControl_Windows = control;
 
-        RSDK.SetString(&string, "Controls KB");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Controls KB");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->controlsControl_KB = control;
 
-        RSDK.SetString(&string, "Controls PS4");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Controls PS4");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->controlsControl_PS4 = control;
 
-        RSDK.SetString(&string, "Controls XB1");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Controls XB1");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->controlsControl_XB1 = control;
 
-        RSDK.SetString(&string, "Controls NX");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Controls NX");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->controlsControl_NX = control;
 
-        RSDK.SetString(&string, "Controls NX Grip");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Controls NX Grip");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->controlsControl_NXGrip = control;
 
-        RSDK.SetString(&string, "Controls NX Joycon");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Controls NX Joycon");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->controlsControl_NXJoycon = control;
 
-        RSDK.SetString(&string, "Controls NX Pro");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Controls NX Pro");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->controlsControl_NXPro = control;
 
-        RSDK.SetString(&string, "Data Options");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Data Options");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->dataOptionsControl = control;
     }
 

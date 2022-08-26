@@ -90,6 +90,10 @@ typedef uint32 color;
 #define TO_FIXED(x)   ((x) << 16)
 #define FROM_FIXED(x) ((x) >> 16)
 
+// floating point variants
+#define TO_FIXED_F(x)   ((x)*65536.0)
+#define FROM_FIXED_F(x) ((x) / 65536.0)
+
 // -------------------------
 // STRUCTS
 // -------------------------
@@ -1171,22 +1175,22 @@ typedef struct {
     // Registration & Core
 #if RETRO_REV0U
     void (*RegisterGlobals)(const char *globalsPath, void **globals, uint32 size, void (*initCB)(void *globals));
-    void (*RegisterObject)(Object **staticVars, void **modStaticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize,
+    void (*RegisterObject)(void **staticVars, void **modStaticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize,
                            uint32 modClassSize, void (*update)(void), void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void),
                            void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void), void (*editorLoad)(void),
                            void (*serialize)(void), void (*staticLoad)(void *staticVars), const char *inherited);
 #else
     void (*RegisterGlobals)(const char *globalsPath, void **globals, uint32 size);
-    void (*RegisterObject)(Object **staticVars, void **modStaticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize,
+    void (*RegisterObject)(void **staticVars, void **modStaticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize,
                            uint32 modClassSize, void (*update)(void), void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void),
                            void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void), void (*editorLoad)(void),
                            void (*serialize)(void), const char *inherited);
 #endif
     void *RegisterObject_STD;
-    void (*RegisterObjectHook)(Object **staticVars, const char *staticName);
+    void (*RegisterObjectHook)(void **staticVars, const char *staticName);
     void *(*FindObject)(const char *name);
     void *(*GetGlobals)(void);
-    void (*Super)(int32 classID, ModSuper callback, void *data);
+    void (*Super)(int32 classID, int32 callback, void *data);
 
     // Mod Info
     bool32 (*LoadModInfo)(const char *id, String *name, String *description, String *version, bool32 *active);
@@ -1346,12 +1350,12 @@ typedef struct {
     // Registration
 #if RETRO_REV0U
     void (*RegisterGlobalVariables)(void **globals, int32 size, void (*initCB)(void *globals));
-    void (*RegisterObject)(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(void),
+    void (*RegisterObject)(void **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(void),
                            void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void),
                            void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void), void (*staticLoad)(void *staticVars));
 #else
     void (*RegisterGlobalVariables)(void **globals, int32 size);
-    void (*RegisterObject)(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(void),
+    void (*RegisterObject)(void **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(void),
                            void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void),
                            void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void));
 #endif
@@ -1360,8 +1364,8 @@ typedef struct {
 #endif
 
     // Entities & Objects
-    bool32 (*GetActiveEntities)(uint16 group, Entity **entity);
-    bool32 (*GetAllEntities)(uint16 classID, Entity **entity);
+    bool32 (*GetActiveEntities)(uint16 group, void **entity);
+    bool32 (*GetAllEntities)(uint16 classID, void **entity);
     void (*BreakForeachLoop)(void);
     void (*SetEditableVar)(uint8 type, const char *name, uint8 classID, int32 offset);
     void *(*GetEntity)(uint16 slot);

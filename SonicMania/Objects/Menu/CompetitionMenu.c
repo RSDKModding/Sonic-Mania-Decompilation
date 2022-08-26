@@ -24,37 +24,37 @@ void CompetitionMenu_StageLoad(void) { CompetitionMenu->timer = 120; }
 
 void CompetitionMenu_Initialize(void)
 {
-    String string;
-    INIT_STRING(string);
+    String tag;
+    INIT_STRING(tag);
 
     foreach_all(UIControl, control)
     {
-        RSDK.SetString(&string, "Competition");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Competition");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             CompetitionMenu->competitionControl = control;
 
-        RSDK.SetString(&string, "Competition Legacy");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Competition Legacy");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             CompetitionMenu->competitionControl_Legacy = control;
 
-        RSDK.SetString(&string, "Competition Rules");
-        if (RSDK.CompareStrings(&string, &control->tag, false)) {
+        RSDK.SetString(&tag, "Competition Rules");
+        if (RSDK.CompareStrings(&tag, &control->tag, false)) {
             CompetitionMenu->compRulesControl = control;
             control->backPressCB              = CompetitionMenu_CompRules_BackPressCB;
         }
 
-        RSDK.SetString(&string, "Competition Zones");
-        if (RSDK.CompareStrings(&string, &control->tag, false)) {
+        RSDK.SetString(&tag, "Competition Zones");
+        if (RSDK.CompareStrings(&tag, &control->tag, false)) {
             CompetitionMenu->compZoneControl = control;
             control->backPressCB             = CompetitionMenu_CompZones_BackPressCB;
         }
 
-        RSDK.SetString(&string, "Competition Round");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Competition Round");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             CompetitionMenu->compRoundControl = control;
 
-        RSDK.SetString(&string, "Competition Total");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Competition Total");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             CompetitionMenu->compTotalControl = control;
     }
 

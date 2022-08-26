@@ -141,7 +141,7 @@ void Pinata_State_Destroyed(void)
 {
     RSDK_THIS(Pinata);
 
-    Vector2 range = { 0x1000000, 0x1000000 };
+    Vector2 range = { TO_FIXED(256), TO_FIXED(256) };
     if (!RSDK.CheckOnScreen(self, &range)) {
         self->state   = Pinata_State_CheckPlayerCollisions;
         self->visible = true;
