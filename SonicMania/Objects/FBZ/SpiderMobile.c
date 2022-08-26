@@ -164,11 +164,11 @@ void SpiderMobile_HandleFallingMovement(void)
 {
     RSDK_THIS(SpiderMobile);
 
-    self->position.x += self->velocity.x;
-    int32 offsetX = self->position.x - self->origin.x;
     self->velocity.y += 0x3000;
+    self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
+    int32 offsetX = self->position.x - self->origin.x;
     int32 offsetY = (self->position.y - self->origin.y) >> 16;
     if (self->position.y > self->origin.y)
         self->angle = 2 * RSDK.ATan2(offsetY, offsetX / -0x11000);
