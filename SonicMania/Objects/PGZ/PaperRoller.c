@@ -130,8 +130,8 @@ void PaperRoller_DrawDeformedLine(int32 startX, int32 startY, int32 endX, int32 
                 int32 distY = (currentY - self->position.y) >> 8;
 
                 int32 angValX = distY * RSDK.Sin256(self->angle) + distX * RSDK.Cos256(self->angle);
-
                 int32 angValY = self->position.y - distX * RSDK.Sin256(self->angle) + distY * RSDK.Cos256(self->angle) - self->position.y;
+
                 int32 lenY    = 0;
 
                 if (angValX >= deformX) {
@@ -350,23 +350,21 @@ void PaperRoller_HandlePrintCollisions(void)
         else
             ++self->lastJumpTimer[playerID];
 
-        int32 distX   = (player->position.x - self->position.x) >> 8;
-        int32 distY   = (player->position.y - self->position.y) >> 8;
-        int32 playerX = distY * RSDK.Sin256(self->angle) + distX * RSDK.Cos256(self->angle) + self->position.x;
-        int32 playerY = distY * RSDK.Cos256(self->angle) - distX * RSDK.Sin256(self->angle) + self->position.y;
+        Vector2 pivotPos = player->position;
+        Zone_RotateOnPivot(&pivotPos, &self->position, self->angle);
 
-        int32 deformX = playerX - self->position.x;
-        int32 defY    = playerY - self->position.y;
+        int32 pivotX = pivotPos.x - self->position.x;
+        int32 pivotY = pivotPos.y - self->position.y;
 
-        if (abs(deformX) <= self->length << 15 && abs(defY) <= 0x280000) {
+        if (abs(pivotX) <= self->length << 15 && abs(pivotY) <= 0x280000) {
             int32 deformY = 0;
-            if (defY < 0) {
-                if (abs(defY) > 0x180000) {
-                    deformY = defY + 0x280000;
+            if (pivotY < 0) {
+                if (abs(pivotY) > 0x180000) {
+                    deformY = pivotY + 0x280000;
                 }
                 else {
                     Vector2 playerPos;
-                    playerPos.x = self->position.x + deformX;
+                    playerPos.x = self->position.x + pivotX;
                     playerPos.y = self->position.y - 0x180000;
                     Zone_RotateOnPivot(&playerPos, &self->position, negAngle);
 
@@ -406,23 +404,23 @@ void PaperRoller_HandlePrintCollisions(void)
 
                 if (player->sidekick) {
                     if (!hasDeformedTop) {
-                        self->deformPosTop.x = deformX;
+                        self->deformPosTop.x = pivotX;
                         self->deformPosTop.y = deformY;
                     }
                 }
                 else {
-                    self->deformPosTop.x = deformX;
+                    self->deformPosTop.x = pivotX;
                     self->deformPosTop.y = deformY;
                     hasDeformedTop       = true;
                 }
             }
             else {
-                if (abs(defY) > 0x180000) {
-                    deformY = defY - 0x280000;
+                if (abs(pivotY) > 0x180000) {
+                    deformY = pivotY - 0x280000;
                 }
                 else {
                     Vector2 playerPos;
-                    playerPos.x = self->position.x + deformX;
+                    playerPos.x = self->position.x + pivotX;
                     playerPos.y = self->position.y + 0x180000;
                     Zone_RotateOnPivot(&playerPos, &self->position, negAngle);
 
@@ -461,12 +459,12 @@ void PaperRoller_HandlePrintCollisions(void)
                 }
 
                 if (!player->sidekick) {
-                    self->deformPosBottom.x = deformX;
+                    self->deformPosBottom.x = pivotX;
                     self->deformPosBottom.y = deformY;
                     hasDeformedBottom       = true;
                 }
                 else if (!hasDeformedBottom) {
-                    self->deformPosBottom.x = deformX;
+                    self->deformPosBottom.x = pivotX;
                     self->deformPosBottom.y = deformY;
                 }
             }
