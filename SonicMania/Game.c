@@ -883,5 +883,9 @@ bool32 LinkModLogic(EngineInfo *info, const char *id)
 #if !RETRO_STANDALONE
 int32 RSDK_main(int32 argc, char **argv, void *linkLogicPtr); // make sure other side has a void* too
 
+#ifdef __PS3__
+int32 main(int32 argc, char *argv[]) { return RSDK_main(argc, argv, LinkGameLogicDLL); }
+#else
 int32 GAME_MAIN(int32 argc, char *argv[]) { return RSDK_main(argc, argv, LinkGameLogicDLL); }
+#endif
 #endif

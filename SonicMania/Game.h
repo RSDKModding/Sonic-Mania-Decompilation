@@ -32,7 +32,11 @@
 #endif
 
 #ifndef RETRO_USE_MOD_LOADER
+#ifdef __PS3__
+#define RETRO_USE_MOD_LOADER (0) // disable for now
+#else
 #define RETRO_USE_MOD_LOADER (1)
+#endif
 #endif
 
 #if RETRO_USE_MOD_LOADER
@@ -41,7 +45,11 @@
 
 // used to manage standalone (RSDKv5.exe & Game.dll) and combined (Game.exe) modes
 #ifndef RETRO_STANDALONE
+#ifdef __PS3__
+#define RETRO_STANDALONE (0) // FUCK this guy in particular
+#else
 #define RETRO_STANDALONE (1)
+#endif
 #endif
 
 // -------------------------
