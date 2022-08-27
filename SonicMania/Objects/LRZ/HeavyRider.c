@@ -1141,13 +1141,9 @@ void HeavyRider_Draw_PlaneSwitch(void)
         drawPos.y += RSDK.Cos256(self->angle) << 12;
     }
 
-    drawPos.x = self->position.x + 0x80000;
+    drawPos.x = self->position.x + TO_FIXED(8);
     drawPos.y = self->position.y - (self->size << 19);
-
-    int32 dx  = (drawPos.x + 0x80000 - self->position.x) >> 8;
-    int32 dy  = (drawPos.y - self->position.y) >> 8;
-    drawPos.x = (dy * RSDK.Sin256(self->angle)) + dx * RSDK.Cos256(self->angle) + self->position.x;
-    drawPos.y = (dy * RSDK.Cos256(self->angle)) - dx * RSDK.Sin256(self->angle) + self->position.y;
+    Zone_RotateOnPivot(&drawPos, &self->position, self->angle);
 
     self->mainAnimator.frameID = (self->flags >> 2) & 3;
     for (int32 i = 0; i < self->size; ++i) {

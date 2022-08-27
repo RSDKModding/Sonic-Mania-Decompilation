@@ -130,8 +130,8 @@ void PaperRoller_DrawDeformedLine(int32 startX, int32 startY, int32 endX, int32 
                 int32 distY = (currentY - self->position.y) >> 8;
 
                 int32 angValX = distY * RSDK.Sin256(self->angle) + distX * RSDK.Cos256(self->angle);
-
                 int32 angValY = self->position.y - distX * RSDK.Sin256(self->angle) + distY * RSDK.Cos256(self->angle) - self->position.y;
+
                 int32 lenY    = 0;
 
                 if (angValX >= deformX) {
@@ -150,8 +150,9 @@ void PaperRoller_DrawDeformedLine(int32 startX, int32 startY, int32 endX, int32 
                 distX = angValX >> 8;
                 distY = (lenY + angValY) >> 8;
 
-                int32 offsetX1 = self->position.x + distY * RSDK.Sin256(negAngle) + distX * RSDK.Cos256(negAngle);
-                int32 offsetY1 = self->position.y - distX * RSDK.Sin256(negAngle) + distY * RSDK.Cos256(negAngle);
+                Vector2 offset1;
+                offset1.x = self->position.x + distY * RSDK.Sin256(negAngle) + distX * RSDK.Cos256(negAngle);
+                offset1.y = self->position.y - distX * RSDK.Sin256(negAngle) + distY * RSDK.Cos256(negAngle);
 
                 distX = ((currentX + moveX) - self->position.x) >> 8;
                 distY = ((currentY + moveY) - self->position.y) >> 8;
@@ -175,10 +176,12 @@ void PaperRoller_DrawDeformedLine(int32 startX, int32 startY, int32 endX, int32 
 
                 distX          = angValX >> 8;
                 distY          = (lenY + angValY) >> 8;
-                int32 offsetX2 = self->position.x + distY * RSDK.Sin256(negAngle) + distX * RSDK.Cos256(negAngle);
-                int32 offsetY2 = self->position.y - distX * RSDK.Sin256(negAngle) + distY * RSDK.Cos256(negAngle);
 
-                RSDK.DrawLine(offsetX + offsetX1, offsetY + offsetY1, offsetX + offsetX2, offsetY + offsetY2, lineColor, 0x7F, INK_NONE, false);
+                Vector2 offset2;
+                offset2.x = self->position.x + distY * RSDK.Sin256(negAngle) + distX * RSDK.Cos256(negAngle);
+                offset2.y = self->position.y - distX * RSDK.Sin256(negAngle) + distY * RSDK.Cos256(negAngle);
+
+                RSDK.DrawLine(offsetX + offset1.x, offsetY + offset1.y, offsetX + offset2.x, offsetY + offset2.y, lineColor, 0x7F, INK_NONE, false);
             }
 
             ++len;
@@ -350,29 +353,25 @@ void PaperRoller_HandlePrintCollisions(void)
         else
             ++self->lastJumpTimer[playerID];
 
-        int32 distX   = (player->position.x - self->position.x) >> 8;
-        int32 distY   = (player->position.y - self->position.y) >> 8;
-        int32 playerX = distY * RSDK.Sin256(self->angle) + distX * RSDK.Cos256(self->angle) + self->position.x;
-        int32 playerY = distY * RSDK.Cos256(self->angle) - distX * RSDK.Sin256(self->angle) + self->position.y;
+        Vector2 pivotPos = player->position;
+        Zone_RotateOnPivot(&pivotPos, &self->position, self->angle);
 
-        int32 deformX = playerX - self->position.x;
-        int32 defY    = playerY - self->position.y;
+        int32 pivotX = pivotPos.x - self->position.x;
+        int32 pivotY = pivotPos.y - self->position.y;
 
-        if (abs(deformX) <= self->length << 15 && abs(defY) <= 0x280000) {
+        if (abs(pivotX) <= self->length << 15 && abs(pivotY) <= 0x280000) {
             int32 deformY = 0;
-            if (defY < 0) {
-                if (abs(defY) > 0x180000) {
-                    deformY = defY + 0x280000;
+            if (pivotY < 0) {
+                if (abs(pivotY) > 0x180000) {
+                    deformY = pivotY + 0x280000;
                 }
                 else {
                     Vector2 playerPos;
-                    playerPos.x = self->position.x + deformX;
+                    playerPos.x = self->position.x + pivotX;
                     playerPos.y = self->position.y - 0x180000;
                     Zone_RotateOnPivot(&playerPos, &self->position, negAngle);
 
-                    Vector2 pivotPos;
-                    pivotPos.x       = 0;
-                    pivotPos.y       = 0;
+                    Vector2 pivotPos = { 0, 0 };
                     player->position = playerPos;
 
                     Vector2 playerVel = player->velocity;
@@ -406,29 +405,27 @@ void PaperRoller_HandlePrintCollisions(void)
 
                 if (player->sidekick) {
                     if (!hasDeformedTop) {
-                        self->deformPosTop.x = deformX;
+                        self->deformPosTop.x = pivotX;
                         self->deformPosTop.y = deformY;
                     }
                 }
                 else {
-                    self->deformPosTop.x = deformX;
+                    self->deformPosTop.x = pivotX;
                     self->deformPosTop.y = deformY;
                     hasDeformedTop       = true;
                 }
             }
             else {
-                if (abs(defY) > 0x180000) {
-                    deformY = defY - 0x280000;
+                if (abs(pivotY) > 0x180000) {
+                    deformY = pivotY - 0x280000;
                 }
                 else {
                     Vector2 playerPos;
-                    playerPos.x = self->position.x + deformX;
+                    playerPos.x = self->position.x + pivotX;
                     playerPos.y = self->position.y + 0x180000;
                     Zone_RotateOnPivot(&playerPos, &self->position, negAngle);
 
-                    Vector2 pivotPos;
-                    pivotPos.x       = 0;
-                    pivotPos.y       = 0;
+                    Vector2 pivotPos = { 0, 0 };
                     player->position = playerPos;
 
                     Vector2 playerVel = player->velocity;
@@ -461,12 +458,12 @@ void PaperRoller_HandlePrintCollisions(void)
                 }
 
                 if (!player->sidekick) {
-                    self->deformPosBottom.x = deformX;
+                    self->deformPosBottom.x = pivotX;
                     self->deformPosBottom.y = deformY;
                     hasDeformedBottom       = true;
                 }
                 else if (!hasDeformedBottom) {
-                    self->deformPosBottom.x = deformX;
+                    self->deformPosBottom.x = pivotX;
                     self->deformPosBottom.y = deformY;
                 }
             }

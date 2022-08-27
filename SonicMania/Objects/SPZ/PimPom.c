@@ -269,17 +269,10 @@ void PimPom_State_Horizontal(void)
             int32 playerVelX = player->velocity.x;
             int32 playerVelY = player->velocity.y;
 
-            int32 distX = (player->position.x - self->position.x) >> 8;
-            int32 distY = (player->position.y - self->position.y) >> 8;
+            Vector2 originVel = { 0, 0 };
 
-            player->position.x = self->position.x + distY * RSDK.Sin256(self->negAngle) + distX * RSDK.Cos256(self->negAngle);
-            player->position.y = self->position.y - distX * RSDK.Sin256(self->negAngle) + distY * RSDK.Cos256(self->negAngle);
-
-            int32 velX = player->velocity.x >> 8;
-            int32 velY = player->velocity.y >> 8;
-
-            player->velocity.x = velY * RSDK.Sin256(self->negAngle) + velX * RSDK.Cos256(self->negAngle);
-            player->velocity.y = velY * RSDK.Cos256(self->negAngle) - velX * RSDK.Sin256(self->negAngle);
+            Zone_RotateOnPivot(&player->position, &self->position, self->negAngle);
+            Zone_RotateOnPivot(&player->velocity, &originVel, self->negAngle);
 
             int32 storedVelX = player->velocity.x;
             int32 storedVelY = player->velocity.y;
@@ -323,17 +316,10 @@ void PimPom_State_Horizontal(void)
                 player->onGround     = false;
                 player->applyJumpCap = false;
 
-                distX = (player->position.x - self->position.x) >> 8;
-                distY = (player->position.y - self->position.y) >> 8;
+                Vector2 originVel = { 0, 0 };
 
-                player->position.x = distY * RSDK.Sin256(self->angle) + distX * RSDK.Cos256(self->angle) + self->position.x;
-                player->position.y = self->position.y - distX * RSDK.Sin256(self->angle) + distY * RSDK.Cos256(self->angle);
-
-                velX = player->velocity.x >> 8;
-                velY = player->velocity.y >> 8;
-
-                player->velocity.x = velY * RSDK.Sin256(self->angle) + velX * RSDK.Cos256(self->angle);
-                player->velocity.y = velY * RSDK.Cos256(self->angle) - velX * RSDK.Sin256(self->angle);
+                Zone_RotateOnPivot(&player->position, &self->position, self->angle);
+                Zone_RotateOnPivot(&player->velocity, &originVel, self->angle);
 
                 if (self->sfxTimer <= 0) {
                     RSDK.PlaySfx(PimPom->sfxBumper2, false, 255);

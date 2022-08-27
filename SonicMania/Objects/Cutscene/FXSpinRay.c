@@ -18,10 +18,8 @@ void FXSpinRay_Update(void)
 
     for (int32 i = 0; i < 20; i += 4) {
         for (int32 v = 0; v < 4; ++v) {
-            int32 x                 = (self->vertexPos[v].x - self->vertexOffset.x) >> 8;
-            int32 y                 = (self->vertexPos[v].y - self->vertexOffset.y) >> 8;
-            self->vertices[i + v].x = (y * RSDK.Sin256(angle)) + (x * RSDK.Cos256(angle)) + self->vertexOffset.x;
-            self->vertices[i + v].y = (y * RSDK.Cos256(angle)) - (x * RSDK.Sin256(angle)) + self->vertexOffset.y;
+            self->vertices[i + v] = self->vertexPos[v];
+            Zone_RotateOnPivot(&self->vertices[i + v] , &self->vertexOffset, angle);
         }
 
         angle += 51;
