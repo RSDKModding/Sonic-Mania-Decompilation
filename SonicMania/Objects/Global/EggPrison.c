@@ -179,7 +179,7 @@ void EggPrison_Create(void *data)
                 self->hitboxButton.bottom = -24;
 
                 self->hitboxButtonTrigger.left  = -15;
-                self->hitboxButtonTrigger.top   = -47;
+                self->hitboxButtonTrigger.top   = -48;
                 self->hitboxButtonTrigger.right = 15;
                 self->hitboxButtonTrigger.top   = -24;
             }

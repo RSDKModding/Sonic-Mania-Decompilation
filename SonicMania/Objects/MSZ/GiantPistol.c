@@ -179,10 +179,8 @@ void GiantPistol_State_SpinGun(void)
         if (((1 << (player->playerID)) & self->activePlayers) > 0) {
             player->position.x = self->position.x + self->playerPos;
             player->position.y = self->position.y - 0x200000;
-            int32 distX        = (player->position.x - self->position.x) >> 8;
-            int32 distY        = (player->position.y - self->position.y) >> 8;
-            player->position.x = self->position.x + distY * RSDK.Sin256(angle) + distX * RSDK.Cos256(angle);
-            player->position.y = (self->position.y - distX * RSDK.Sin256(angle)) + distY * RSDK.Cos256(angle);
+            
+            Zone_RotateOnPivot(&player->position, &self->position, angle);
         }
     }
 
@@ -269,11 +267,8 @@ void GiantPistol_State_Aiming(void)
         if (((1 << (player->playerID)) & self->activePlayers) > 0) {
             player->position.x = self->position.x + self->playerPos;
             player->position.y = self->position.y - 0x200000;
-            int32 distX        = (player->position.x - self->position.x) >> 8;
-            int32 distY        = (player->position.y - self->position.y) >> 8;
-
-            player->position.x = self->position.x + distY * RSDK.Sin256(angle) + distX * RSDK.Cos256(angle);
-            player->position.y = self->position.y - distX * RSDK.Sin256(angle) + distY * RSDK.Cos256(angle);
+            
+            Zone_RotateOnPivot(&player->position, &self->position, angle);
             if (jumpPressed) {
                 player->state            = Player_State_Air;
                 player->onGround         = false;
