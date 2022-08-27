@@ -150,8 +150,9 @@ void PaperRoller_DrawDeformedLine(int32 startX, int32 startY, int32 endX, int32 
                 distX = angValX >> 8;
                 distY = (lenY + angValY) >> 8;
 
-                int32 offsetX1 = self->position.x + distY * RSDK.Sin256(negAngle) + distX * RSDK.Cos256(negAngle);
-                int32 offsetY1 = self->position.y - distX * RSDK.Sin256(negAngle) + distY * RSDK.Cos256(negAngle);
+                Vector2 offset1;
+                offset1.x = self->position.x + distY * RSDK.Sin256(negAngle) + distX * RSDK.Cos256(negAngle);
+                offset1.y = self->position.y - distX * RSDK.Sin256(negAngle) + distY * RSDK.Cos256(negAngle);
 
                 distX = ((currentX + moveX) - self->position.x) >> 8;
                 distY = ((currentY + moveY) - self->position.y) >> 8;
@@ -175,10 +176,12 @@ void PaperRoller_DrawDeformedLine(int32 startX, int32 startY, int32 endX, int32 
 
                 distX          = angValX >> 8;
                 distY          = (lenY + angValY) >> 8;
-                int32 offsetX2 = self->position.x + distY * RSDK.Sin256(negAngle) + distX * RSDK.Cos256(negAngle);
-                int32 offsetY2 = self->position.y - distX * RSDK.Sin256(negAngle) + distY * RSDK.Cos256(negAngle);
 
-                RSDK.DrawLine(offsetX + offsetX1, offsetY + offsetY1, offsetX + offsetX2, offsetY + offsetY2, lineColor, 0x7F, INK_NONE, false);
+                Vector2 offset2;
+                offset2.x = self->position.x + distY * RSDK.Sin256(negAngle) + distX * RSDK.Cos256(negAngle);
+                offset2.y = self->position.y - distX * RSDK.Sin256(negAngle) + distY * RSDK.Cos256(negAngle);
+
+                RSDK.DrawLine(offsetX + offset1.x, offsetY + offset1.y, offsetX + offset2.x, offsetY + offset2.y, lineColor, 0x7F, INK_NONE, false);
             }
 
             ++len;
@@ -368,9 +371,7 @@ void PaperRoller_HandlePrintCollisions(void)
                     playerPos.y = self->position.y - 0x180000;
                     Zone_RotateOnPivot(&playerPos, &self->position, negAngle);
 
-                    Vector2 pivotPos;
-                    pivotPos.x       = 0;
-                    pivotPos.y       = 0;
+                    Vector2 pivotPos = { 0, 0 };
                     player->position = playerPos;
 
                     Vector2 playerVel = player->velocity;
@@ -424,9 +425,7 @@ void PaperRoller_HandlePrintCollisions(void)
                     playerPos.y = self->position.y + 0x180000;
                     Zone_RotateOnPivot(&playerPos, &self->position, negAngle);
 
-                    Vector2 pivotPos;
-                    pivotPos.x       = 0;
-                    pivotPos.y       = 0;
+                    Vector2 pivotPos = { 0, 0 };
                     player->position = playerPos;
 
                     Vector2 playerVel = player->velocity;
