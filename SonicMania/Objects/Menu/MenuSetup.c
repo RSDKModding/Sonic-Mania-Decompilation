@@ -2083,6 +2083,7 @@ void MenuSetup_OptionsVideo_Win_InitVideoOptionsMenu(void)
         for (int32 i = 0; i < videoControl_Win->buttonCount; ++i) {
             EntityUIButton *button = videoControl_Win->buttons[i];
 
+#if GAME_VERSION != VER_100
             if (i == 4) {
                 EntityUIResPicker *resPicker = (EntityUIResPicker *)UIButton_GetChoicePtr(button, button->selection);
                 UIResPicker_GetDisplayInfo(resPicker);
@@ -2094,6 +2095,11 @@ void MenuSetup_OptionsVideo_Win_InitVideoOptionsMenu(void)
             else if (button->selection != options[i]) {
                 UIButton_SetChoiceSelection(button, options[i]);
             }
+#else
+            if (button->selection != options[i]) {
+                UIButton_SetChoiceSelection(button, options[i]);
+            }
+#endif
         }
     }
 }

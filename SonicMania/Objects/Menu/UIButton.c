@@ -126,7 +126,10 @@ void UIButton_Create(void *data)
             EntityUIButton *item = RSDK_GET_ENTITY(slot + i, UIButton);
 
             if ((UIChoice && item->classID == UIChoice->classID) || (UIVsRoundPicker && item->classID == UIVsRoundPicker->classID)
-                || (UIResPicker && item->classID == UIResPicker->classID) || (UIWinSize && item->classID == UIWinSize->classID)) {
+#if GAME_VERSION != VER_100
+                || (UIResPicker && item->classID == UIResPicker->classID) || (UIWinSize && item->classID == UIWinSize->classID)
+#endif
+                ) {
                 item->parent = (Entity *)self;
             }
 
@@ -150,8 +153,11 @@ void UIButton_ManageChoices(EntityUIButton *button)
     for (int32 i = 0; i < button->choiceCount; ++i) {
         EntityUIButton *choice = RSDK_GET_ENTITY(i % button->choiceCount - button->choiceCount + RSDK.GetEntitySlot(button), UIButton);
         if (button->choiceCount > 0
-            && (choice->classID == UIChoice->classID || choice->classID == UIVsRoundPicker->classID || choice->classID == UIResPicker->classID
-                || choice->classID == UIWinSize->classID)) {
+            && (choice->classID == UIChoice->classID || choice->classID == UIVsRoundPicker->classID
+#if GAME_VERSION != VER_100
+                || choice->classID == UIResPicker->classID || choice->classID == UIWinSize->classID
+#endif
+                )) {
 
             choice->visible = i == button->selection;
             choice->active  = i == button->selection ? ACTIVE_NORMAL : ACTIVE_NEVER;
@@ -165,8 +171,11 @@ EntityUIButton *UIButton_GetChoicePtr(EntityUIButton *button, int32 selection)
         return NULL;
 
     EntityUIButton *choice = RSDK_GET_ENTITY(RSDK.GetEntitySlot(button) - button->choiceCount + (selection % button->choiceCount), UIButton);
-    if (choice->classID == UIChoice->classID || choice->classID == UIVsRoundPicker->classID || choice->classID == UIResPicker->classID
-        || choice->classID == UIWinSize->classID) {
+    if (choice->classID == UIChoice->classID || choice->classID == UIVsRoundPicker->classID
+#if GAME_VERSION != VER_100
+        || choice->classID == UIResPicker->classID || choice->classID == UIWinSize->classID
+#endif
+    ) {
         return choice;
     }
 
@@ -189,12 +198,14 @@ void UIButton_SetChoiceSelectionWithCB(EntityUIButton *button, int32 selection)
             else if (curChoice->classID == UIVsRoundPicker->classID) {
                 UIVsRoundPicker_SetChoiceInactive((EntityUIVsRoundPicker *)curChoice);
             }
+#if GAME_VERSION != VER_100
             else if (curChoice->classID == UIResPicker->classID) {
                 UIResPicker_SetChoiceInactive((EntityUIResPicker *)curChoice);
             }
             else if (curChoice->classID == UIWinSize->classID) {
                 UIWinSize_SetChoiceInactive((EntityUIWinSize *)curChoice);
             }
+#endif
 
             curChoice->active = ACTIVE_NEVER;
         }
@@ -242,12 +253,14 @@ void UIButton_SetChoiceSelection(EntityUIButton *button, int32 selection)
             else if (choicePtr->classID == UIVsRoundPicker->classID) {
                 UIVsRoundPicker_SetChoiceInactive((EntityUIVsRoundPicker *)choicePtr);
             }
+#if GAME_VERSION != VER_100
             else if (choicePtr->classID == UIResPicker->classID) {
                 UIResPicker_SetChoiceInactive((EntityUIResPicker *)choicePtr);
             }
             else if (choicePtr->classID == UIWinSize->classID) {
                 UIWinSize_SetChoiceInactive((EntityUIWinSize *)choicePtr);
             }
+#endif
 
             choicePtr->active = ACTIVE_NEVER;
         }
@@ -765,12 +778,14 @@ void UIButton_ButtonLeaveCB(void)
             else if (widget->classID == UIVsRoundPicker->classID) {
                 UIVsRoundPicker_SetChoiceInactive((EntityUIVsRoundPicker *)widget);
             }
+#if GAME_VERSION != VER_100
             else if (widget->classID == UIResPicker->classID) {
                 UIResPicker_SetChoiceInactive((EntityUIResPicker *)widget);
             }
             else if (widget->classID == UIWinSize->classID) {
                 UIWinSize_SetChoiceInactive((EntityUIWinSize *)widget);
             }
+#endif
         }
     }
 }
