@@ -143,6 +143,9 @@ void Options_SaveOptionsBin(void (*callback)(void))
 #if MANIA_USE_PLUS
                 if (callback)
                     callback(false);
+#else
+                if (callback)
+                    callback();
 #endif
             }
 
@@ -161,6 +164,9 @@ void Options_SaveOptionsBin(void (*callback)(void))
 #if MANIA_USE_PLUS
     if (callback)
         callback(true);
+#else
+    if (callback)
+        callback();
 #endif
 }
 

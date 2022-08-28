@@ -3,6 +3,7 @@
 
 #include "Game.h"
 
+#if GAME_VERSION != VER_100
 // Object Class
 struct ObjectUIWinSize {
     RSDK_OBJECT
@@ -59,5 +60,6 @@ void UIWinSize_SetChoiceActive(EntityUIWinSize *entity);
 void UIWinSize_SetChoiceInactive(EntityUIWinSize *entity);
 void UIWinSize_State_HandleButtonLeave(void);
 void UIWinSize_State_HandleButtonEnter(void);
+#endif
 
 #endif //! OBJ_UIWINSIZE_H

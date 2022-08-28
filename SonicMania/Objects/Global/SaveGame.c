@@ -204,6 +204,9 @@ void SaveGame_SaveFile(void (*callback)(void))
 #if MANIA_USE_PLUS
         if (callback)
             callback(false);
+#else
+        if (callback)
+            callback();
 #endif
     }
     else {

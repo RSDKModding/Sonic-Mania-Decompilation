@@ -187,6 +187,9 @@ void GameProgress_TrackGameProgress(void (*callback)(void))
 #if MANIA_USE_PLUS
     if (callback)
         callback(false);
+#else
+    if (callback)
+        callback();
 #endif
 }
 void GameProgress_ClearBSSSave(void)

@@ -7,6 +7,7 @@
 
 #include "Game.h"
 
+#if GAME_VERSION != VER_100
 ObjectUIResPicker *UIResPicker;
 
 void UIResPicker_Update(void)
@@ -383,3 +384,4 @@ void UIResPicker_Serialize(void)
     RSDK_EDITABLE_VAR(UIResPicker, VAR_ENUM, align);
     RSDK_EDITABLE_VAR(UIResPicker, VAR_ENUM, arrowWidth);
 }
+#endif
