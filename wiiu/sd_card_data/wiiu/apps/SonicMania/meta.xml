@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<app version="1">
+  <name>Sonic Mania</name>
+  <coder>Clownacy, Rubberduckycooly, chuliRMG</coder>
+  <version>0.3</version>
+  <release_date>20220829000000</release_date>
+  <url>https://github.com/Clownacy/Sonic-Mania-Decompilation</url>
+  <short_description>Wii U Port of Sonic Mania</short_description>
+  <long_description>A port of Sonic Mania to the Wii U!</long_description>
+  <category>game</category>
+</app>
