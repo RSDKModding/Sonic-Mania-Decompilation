@@ -23,7 +23,7 @@ void Options_StageLoad(void)
 {
 #if !MANIA_USE_PLUS
     Options->changed = false;
-    if (sku_platform == PLATFORM_DEV || sku_platform == PLATFORM_PC) {
+    if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV) {
         Options_Reload();
     }
     else {
@@ -101,7 +101,7 @@ void Options_LoadCallback(bool32 success)
 
 void Options_LoadOptionsBin(void)
 {
-    if (sku_platform && sku_platform != PLATFORM_DEV) {
+    if (sku_platform != PLATFORM_PC && sku_platform != PLATFORM_DEV) {
         if (globals->optionsLoaded != STATUS_CONTINUE) {
             if (globals->optionsLoaded == STATUS_OK) {
                 Options_LoadCallback(true);
@@ -127,7 +127,7 @@ void Options_SaveOptionsBin(void (*callback)(void))
 #endif
 {
     if (Options->changed) {
-        if (sku_platform && sku_platform != PLATFORM_DEV) {
+        if (sku_platform != PLATFORM_PC && sku_platform != PLATFORM_DEV) {
             if (globals->optionsLoaded == STATUS_OK) {
                 Options->saveEntityPtr = SceneInfo->entity;
                 Options->saveCallback  = callback;
@@ -143,6 +143,9 @@ void Options_SaveOptionsBin(void (*callback)(void))
 #if MANIA_USE_PLUS
                 if (callback)
                     callback(false);
+#else
+                if (callback)
+                    callback();
 #endif
             }
 
@@ -161,6 +164,9 @@ void Options_SaveOptionsBin(void (*callback)(void))
 #if MANIA_USE_PLUS
     if (callback)
         callback(true);
+#else
+    if (callback)
+        callback();
 #endif
 }
 

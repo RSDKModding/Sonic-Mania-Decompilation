@@ -121,7 +121,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(EncoreIntro_PhantomRuby_CapsuleFallDown);
     ADD_PUBLIC_FUNC(EncoreIntro_PlayerState_BuddySel);
     ADD_PUBLIC_FUNC(EncoreIntro_PlayerState_HandleAir);
-    ADD_PUBLIC_FUNC(EncoreIntro_PlayerInput_None);
+    ADD_PUBLIC_FUNC(EncoreIntro_PlayerInput_BuddySel);
 #endif
 
     // AIZ/MonkeyDude
@@ -1584,7 +1584,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(ActClear_SaveGameCallback);
 #else
     ADD_PUBLIC_FUNC(ActClear_SaveGameCallback);
-    ADD_PUBLIC_FUNC(ActClear_SetupForceOnScreenP2);
+    ADD_PUBLIC_FUNC(ActClear_SetupRecoverPlayers);
 #endif
     ADD_PUBLIC_FUNC(ActClear_State_EnterText);
     ADD_PUBLIC_FUNC(ActClear_State_AdjustText);
@@ -3696,6 +3696,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(UIReplayCarousel_State_StartAction);
 #endif
 
+#if GAME_VERSION != VER_100
     // Menu/UIResPicker
     ADD_PUBLIC_FUNC(UIResPicker_GetDisplayInfo);
     ADD_PUBLIC_FUNC(UIResPicker_ApplySettings);
@@ -3707,6 +3708,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(UIResPicker_SetChoiceInactive);
     ADD_PUBLIC_FUNC(UIResPicker_State_HandleButtonLeave);
     ADD_PUBLIC_FUNC(UIResPicker_State_HandleButtonEnter);
+#endif
 
 #if MANIA_USE_PLUS
     // Menu/UISaveSlot
@@ -3927,6 +3929,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(UIWidgets_DrawTime);
 #endif
 
+#if GAME_VERSION != VER_100
     // Menu/UIWinSize
     ADD_PUBLIC_FUNC(UIWinSize_SetupText);
     ADD_PUBLIC_FUNC(UIWinSize_ApplySettings);
@@ -3938,6 +3941,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(UIWinSize_SetChoiceInactive);
     ADD_PUBLIC_FUNC(UIWinSize_State_HandleButtonLeave);
     ADD_PUBLIC_FUNC(UIWinSize_State_HandleButtonEnter);
+#endif
 
     // MMZ/BladePole
     ADD_PUBLIC_FUNC(BladePole_DrawSprites);

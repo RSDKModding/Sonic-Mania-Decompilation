@@ -2068,6 +2068,7 @@ void MenuSetup_OptionsVideo_Win_InitVideoOptionsMenu(void)
 
         int32 options[7];
 
+#if GAME_VERSION != VER_100
         options[0] = RSDK.GetVideoSetting(VIDEOSETTING_SHADERID); // filter
         options[1] = optionsRAM->windowSize;                      // window size
         options[2] = RSDK.GetVideoSetting(VIDEOSETTING_BORDERED); // bordered
@@ -2079,10 +2080,23 @@ void MenuSetup_OptionsVideo_Win_InitVideoOptionsMenu(void)
         options[4] = 0;                                                 // fullscreen res
         options[5] = RSDK.GetVideoSetting(VIDEOSETTING_VSYNC);          // vsync
         options[6] = RSDK.GetVideoSetting(VIDEOSETTING_TRIPLEBUFFERED); // triple buffered
+#else
+        options[0] = RSDK.GetVideoSetting(VIDEOSETTING_SHADERID); // filter
+        options[1] = optionsRAM->windowSize;                      // window size
+        options[2] = RSDK.GetVideoSetting(VIDEOSETTING_BORDERED); // bordered
+
+        options[3] = 0;
+        if (!RSDK.GetVideoSetting(VIDEOSETTING_WINDOWED) || optionsRAM->windowSize == 4)
+            options[3] = 1;
+
+        options[4] = RSDK.GetVideoSetting(VIDEOSETTING_VSYNC);          // vsync
+        options[5] = RSDK.GetVideoSetting(VIDEOSETTING_TRIPLEBUFFERED); // triple buffered
+#endif
 
         for (int32 i = 0; i < videoControl_Win->buttonCount; ++i) {
             EntityUIButton *button = videoControl_Win->buttons[i];
 
+#if GAME_VERSION != VER_100
             if (i == 4) {
                 EntityUIResPicker *resPicker = (EntityUIResPicker *)UIButton_GetChoicePtr(button, button->selection);
                 UIResPicker_GetDisplayInfo(resPicker);
@@ -2094,6 +2108,11 @@ void MenuSetup_OptionsVideo_Win_InitVideoOptionsMenu(void)
             else if (button->selection != options[i]) {
                 UIButton_SetChoiceSelection(button, options[i]);
             }
+#else
+            if (button->selection != options[i]) {
+                UIButton_SetChoiceSelection(button, options[i]);
+            }
+#endif
         }
     }
 }

@@ -554,7 +554,7 @@ void ActClear_SaveGameCallback(void)
 }
 #endif
 
-void ActClear_SetupForceOnScreenP2(void)
+void ActClear_SetupRecoverPlayers(void)
 {
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
@@ -594,7 +594,7 @@ void ActClear_State_EnterText(void)
         self->gotThroughPos.x += TO_FIXED(16);
 
     if (!self->timer && Zone->shouldRecoverPlayers)
-        ActClear_SetupForceOnScreenP2();
+        ActClear_SetupRecoverPlayers();
 
     if (++self->timer == 48) {
         self->timer = 0;

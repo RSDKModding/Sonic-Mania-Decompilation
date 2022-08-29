@@ -7,6 +7,7 @@
 
 #include "Game.h"
 
+#if GAME_VERSION != VER_100
 ObjectUIWinSize *UIWinSize;
 
 void UIWinSize_Update(void)
@@ -398,3 +399,4 @@ void UIWinSize_Serialize(void)
     RSDK_EDITABLE_VAR(UIWinSize, VAR_ENUM, align);
     RSDK_EDITABLE_VAR(UIWinSize, VAR_ENUM, arrowWidth);
 }
+#endif

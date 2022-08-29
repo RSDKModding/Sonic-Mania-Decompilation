@@ -3,6 +3,7 @@
 
 #include "Game.h"
 
+#if GAME_VERSION != VER_100
 // Object Class
 struct ObjectUIResPicker {
     RSDK_OBJECT
@@ -61,5 +62,6 @@ void UIResPicker_SetChoiceActive(EntityUIResPicker *entity);
 void UIResPicker_SetChoiceInactive(EntityUIResPicker *entity);
 void UIResPicker_State_HandleButtonLeave(void);
 void UIResPicker_State_HandleButtonEnter(void);
+#endif
 
 #endif //! OBJ_UIRESPICKER_H
