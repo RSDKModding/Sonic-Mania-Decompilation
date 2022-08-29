@@ -41,7 +41,7 @@ void UITABanner_Draw(void)
         }
 
         UITABanner_DrawBGShapes(self->position.x, self->position.y, self->isEncore);
-        UITABanner_DrawBannerInfo(self->actID, self->zoneID % 12, self->characterID, self->isEncore, self->position.x, self->position.y);
+        UITABanner_DrawBannerInfo(self->position.x, self->position.y, self->zoneID % 12, self->actID, self->characterID, self->isEncore);
     }
 }
 
@@ -68,7 +68,7 @@ void UITABanner_Create(void *data)
 
 void UITABanner_StageLoad(void) { UITABanner->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }
 
-void UITABanner_SetupDetails(uint8 characterID, EntityUITABanner *banner, uint8 zoneID, uint8 actID, bool32 isEncore)
+void UITABanner_SetupDetails(EntityUITABanner *banner, uint8 zoneID, uint8 actID, uint8 characterID, bool32 isEncore)
 {
     RSDK.InitString(&banner->zoneName, "", 0);
     Localization_GetZoneName(&banner->zoneName, zoneID);
@@ -103,7 +103,7 @@ void UITABanner_DrawBGShapes(int32 drawX, int32 drawY, bool32 isEncore)
     UIWidgets_DrawRectOutline_Black(drawX, drawY, 312, 67);
 }
 
-void UITABanner_DrawStageInfo(uint8 actID, uint8 characterID, bool32 isEncore, int32 drawX, int32 drawY)
+void UITABanner_DrawStageInfo(int32 drawX, int32 drawY, uint8 actID, uint8 characterID, bool32 isEncore)
 {
     RSDK_THIS(UITABanner);
 
@@ -205,12 +205,12 @@ void UITABanner_DrawZoneIcon(int32 drawX, int32 drawY, int32 zoneID)
     UIWidgets_DrawRectOutline_Black(drawPos.x, drawPos.y, 96, 61);
 }
 
-void UITABanner_DrawBannerInfo(uint8 actID, uint8 zoneID, uint8 characterID, bool32 isEncore, int32 drawX, int32 drawY)
+void UITABanner_DrawBannerInfo(int32 drawX, int32 drawY, uint8 zoneID, uint8 actID, uint8 characterID, bool32 isEncore)
 {
     RSDK_THIS(UITABanner);
 
     Vector2 drawPos;
-    UITABanner_DrawStageInfo(actID, characterID, isEncore, drawX, drawY);
+    UITABanner_DrawStageInfo(drawX, drawY, actID, characterID, isEncore);
     UITABanner_DrawZoneIcon(drawX, drawY, zoneID);
 
     drawPos.y = drawY - 0x100000;
@@ -233,7 +233,7 @@ void UITABanner_EditorDraw(void)
     RSDK.SetSpriteAnimation(UITABanner->aniFrames, 11, &self->zoneIconAnimator, true, self->zoneID % 12);
 
     UITABanner_DrawBGShapes(self->position.x, self->position.y, self->isEncore);
-    UITABanner_DrawBannerInfo(self->actID, self->zoneID % 12, self->characterID, self->isEncore, self->position.x, self->position.y);
+    UITABanner_DrawBannerInfo(self->position.x, self->position.y, self->zoneID % 12, self->actID, self->characterID, self->isEncore);
 }
 
 void UITABanner_EditorLoad(void) { UITABanner->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }
