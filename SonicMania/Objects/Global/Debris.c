@@ -66,7 +66,7 @@ void Debris_CreateFromEntries(int32 aniFrames, int32 *entries, int32 animationID
 
     if (entries) {
         int32 entryCount  = *entries;
-        DebrisEntry *entry = entries + 1;
+        DebrisEntry *entry = (DebrisEntry *)&entries[1];
 
         self->drawFX = FX_FLIP;
         for (int32 e = 0; e < entryCount; ++e) {
@@ -91,7 +91,7 @@ void Debris_CreateFromEntries_UseOffset(int32 aniFrames, int32 *entries)
 
     if (entries) {
         int32 entryCount         = *entries;
-        DebrisOffsetEntry *entry = entries + 1;
+        DebrisOffsetEntry *entry = (DebrisOffsetEntry *)&entries[1];
 
         self->drawFX = FX_FLIP;
         for (int32 e = 0; e < entryCount; ++e) {
