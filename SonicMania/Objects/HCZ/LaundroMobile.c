@@ -1808,7 +1808,7 @@ void LaundroMobile_State_Laundry(void)
         Zone->cameraBoundsT[0] = ScreenInfo->position.y;
 
     if (!LaundroMobile->health && !LaundroMobile->invincibilityTimer) {
-        Debris_FallFlickerSetup(LaundroMobile->aniFrames, LaundroMobile->debrisInfo);
+        Debris_CreateFromEntries_UseOffset(LaundroMobile->aniFrames, LaundroMobile->debrisInfo);
         destroyEntity(self);
     }
 }

@@ -1704,8 +1704,8 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(COverlay_DrawTile);
 
     // Global/Debris
-    ADD_PUBLIC_FUNC(Debris_FallFlickerAnimSetup);
-    ADD_PUBLIC_FUNC(Debris_FallFlickerSetup);
+    ADD_PUBLIC_FUNC(Debris_CreateFromEntries);
+    ADD_PUBLIC_FUNC(Debris_CreateFromEntries_UseOffset);
     ADD_PUBLIC_FUNC(Debris_State_Move);
     ADD_PUBLIC_FUNC(Debris_State_Fall);
     ADD_PUBLIC_FUNC(Debris_State_FallAndFlicker);

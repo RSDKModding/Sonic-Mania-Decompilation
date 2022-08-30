@@ -636,7 +636,7 @@ void CrimsonEye_StateContainer_Explode(void)
     }
 
     if (++self->timer == 48) {
-        Debris_FallFlickerAnimSetup(CrimsonEye->aniFrames, CrimsonEye->debrisInfo, 5);
+        Debris_CreateFromEntries(CrimsonEye->aniFrames, CrimsonEye->debrisInfo, 5);
         self->visible = false;
         Camera_ShakeScreen(0, 0, 4);
         self->state = CrimsonEye_StateContainer_MoveElevatorToTMZ2Entry;
