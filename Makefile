@@ -3,7 +3,7 @@
 PKGCONFIG	=  pkg-config
 STRIP		?= strip
 
-STATIC		?= 1
+STATIC		?= 0
 DEBUG		?= 1
 VERBOSE		?= 0
 PROFILE		?= 0
