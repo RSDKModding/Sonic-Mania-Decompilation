@@ -132,21 +132,36 @@ void TitleCard_StageLoad(void)
 void TitleCard_SetupColors(void)
 {
     RSDK_THIS(TitleCard);
-
+    // Leo UI Modified Code
     if (SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE)) {
-        self->colors[0] = 0x3751A2; // dark blue
-        self->colors[1] = 0xC7525B; // light red
-        self->colors[2] = 0x428FC3; // light blue
-        self->colors[3] = 0xDFB13F; // yellow
-        self->colors[4] = 0x6BAE99; // teal
+        self->colors[0] = 0x000000; // Black
+        self->colors[1] = 0xFF3D3D; // Red
+        self->colors[2] = 0x000000; // Black
+        self->colors[3] = 0x820014; // Red
+        self->colors[4] = 0x000000; // Black
     }
     else {
-        self->colors[0] = 0xF08C18; // orange
-        self->colors[1] = 0x60C0A0; // green
-        self->colors[2] = 0xF05030; // red
-        self->colors[3] = 0x4060B0; // blue
-        self->colors[4] = 0xF0C800; // yellow
+        self->colors[0] = 0x000000; // Black
+        self->colors[1] = 0x3D5AFF; // Blue
+        self->colors[2] = 0x00000; // Black
+        self->colors[3] = 0x001278; // Blue
+        self->colors[4] = 0x000000; // Black
     }
+    // Original Code
+    //if (SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE)) {
+        //self->colors[0] = 0x3751A2; // dark blue
+        //self->colors[1] = 0xC7525B; // light red
+        //self->colors[2] = 0x428FC3; // light blue
+        //self->colors[3] = 0xDFB13F; // yellow
+        //self->colors[4] = 0x6BAE99; // teal
+    //}
+    //else {
+        //self->colors[0] = 0xF08C18; // orange
+        //self->colors[1] = 0x60C0A0; // green
+        //self->colors[2] = 0xF05030; // red
+        //self->colors[3] = 0x4060B0; // blue
+        //self->colors[4] = 0xF0C800; // yellow
+    //}
 }
 #endif
 
@@ -777,7 +792,7 @@ void TitleCard_Draw_ShowTitleCard(void)
 #else
         self->decorationAnimator.frameID = 2 * 0 + 1;
 #endif
-        RSDK.DrawSprite(&self->decorationAnimator, &self->decorationPos, true);
+        RSDK.DrawSprite(&self->decorationAnimator, &self->decorationPos, false);
     }
 
     // Draw the BG thingos
@@ -883,7 +898,7 @@ void TitleCard_Draw_SlideAway(void)
 #else
         self->decorationAnimator.frameID = 2 * 0 + 1;
 #endif
-        RSDK.DrawSprite(&self->decorationAnimator, &self->decorationPos, true);
+        RSDK.DrawSprite(&self->decorationAnimator, &self->decorationPos, false);
     }
 
     // Draw Act Number

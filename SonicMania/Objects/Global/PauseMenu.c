@@ -203,9 +203,13 @@ void PauseMenu_SetupTintTable(void)
 {
 #if MANIA_USE_PLUS
     for (int32 i = 0; i < 0x10000; ++i) {
-        uint32 r = (0x20F * (i >> 11) + 23) >> 6;
-        uint32 g = (0x103 * ((i >> 5) & 0x3F) + 33) >> 6;
-        uint32 b = (0x20F * (i & 0x1F) + 23) >> 6;
+        // This part of code determines the brightness and colors of Paused screen
+        uint32 r = (0x10F * (i >> 11) + 23) >> 6;
+        //uint32 r = (0x20F * (i >> 11) + 23) >> 6;
+        uint32 g = (0x3 * ((i >> 5) & 0x3F) + 33) >> 6;
+        //uint32 g = (0x103 * ((i >> 5) & 0x3F) + 33) >> 6;
+        uint32 b = (0x10F * (i & 0x1F) + 23) >> 6;
+        //uint32 b = (0x20F * (i & 0x1F) + 23) >> 6;
 
         int32 brightness = MIN(((b + g + r) << 8) / 680, 0xFF);
 
@@ -567,7 +571,7 @@ void PauseMenu_State_SetupButtons(void)
 
         PauseMenu_AddButton(0, PauseMenu_ResumeButtonCB);
 
-        if (!self->disableRestart)
+        //if (!self->disableRestart) // this line deactivates Restart button in Special Stages and Blue Spheres
             PauseMenu_AddButton(1, PauseMenu_RestartButtonCB);
 
         PauseMenu_AddButton(2, PauseMenu_ExitButtonCB);
@@ -949,19 +953,29 @@ void PauseMenu_DrawPauseMenu(void)
     RSDK_THIS(PauseMenu);
 
     Vector2 drawPos;
-    drawPos.x = self->position.x + TO_FIXED(100) + self->headerPos.x + -TO_FIXED(1) * ScreenInfo->center.x;
+    // Leo UI Code
+    drawPos.x = self->position.x + TO_FIXED(-100) + self->headerPos.x + -TO_FIXED(1) * ScreenInfo->center.x;
     drawPos.y = self->position.y - TO_FIXED(96) + self->headerPos.y;
-    UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, 200, 68, 68, 0xE8, 0x28, 0x58);
-
-    drawPos.x += TO_FIXED(10);
-    drawPos.y += TO_FIXED(6);
-    UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, 115, 24, 24, 0x00, 0x00, 0x00);
+    // Original Code
+    //drawPos.x = self->position.x + TO_FIXED(100) + self->headerPos.x + -TO_FIXED(1) * ScreenInfo->center.x;
+    //drawPos.y = self->position.y - TO_FIXED(96) + self->headerPos.y;
+    UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, 200, 68, 68, 0x00, 0x10, 0x7B); // The Red background behind Paused Text
+    // Leo UI Code
+    drawPos.x += TO_FIXED(199);
+    drawPos.y += TO_FIXED(5);
+    // Original Code
+    //drawPos.x += TO_FIXED(10);
+    //drawPos.y += TO_FIXED(6);
+    UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, 115, 24, 24, 0x00, 0x00, 0x00); // The Black Background behind Paused Text
 
     // "PAUSED" text
-    RSDK.DrawSprite(&self->animator, &drawPos, false);
-
-    UIWidgets_DrawRightTriangle(self->yellowTrianglePos.x + TO_FIXED(ScreenInfo->center.x) + self->position.x,
-                                self->yellowTrianglePos.y + TO_FIXED(ScreenInfo->center.y) + self->position.y, -232, 0xF0, 0xD8, 0x08);
+    RSDK.DrawSprite(&self->animator, &drawPos, false); // true hides the text , false shows the text
+        // Leo UI Code
+        UIWidgets_DrawRightTriangle(self->yellowTrianglePos.x + TO_FIXED(325) + self->position.x,
+                                    self->yellowTrianglePos.y + TO_FIXED(ScreenInfo->center.y) + self->position.y, -232, 0x39, 0x59, 0xFF); // The Yellow Background on right
+        // Original Code
+        //UIWidgets_DrawRightTriangle(self->yellowTrianglePos.x + TO_FIXED(ScreenInfo->center.x) + self->position.x,
+                                    //self->yellowTrianglePos.y + TO_FIXED(ScreenInfo->center.y) + self->position.y, -232, 0xF0, 0xD8, 0x08);
 }
 
 void PauseMenu_Draw_RegularPause(void)
