@@ -3,6 +3,20 @@
 
 #include "Game.h"
 
+// Structs
+typedef struct {
+    int32 frame;
+    int32 direction;
+    Vector2 velocity;
+} DebrisEntry;
+
+typedef struct {
+    int32 frame;
+    int32 direction;
+    Vector2 velocity;
+    Vector2 offset;
+} DebrisOffsetEntry;
+
 // Object Class
 struct ObjectDebris {
     RSDK_OBJECT
@@ -37,8 +51,11 @@ void Debris_EditorLoad(void);
 void Debris_Serialize(void);
 
 // Extra Entity Functions
-void Debris_FallFlickerAnimSetup(int32 aniFrames, int32 *entries, int32 animationID);
-void Debris_FallFlickerSetup(int32 aniFrames, int32 *entries);
+
+// 'entries' format: int32 count, [count] entries of type DebrisEntry
+void Debris_CreateFromEntries(int32 aniFrames, int32 *entries, int32 animationID);
+// 'entries' format: int32 count, [count] entries of type DebrisOffsetEntry
+void Debris_CreateFromEntries_UseOffset(int32 aniFrames, int32 *entries);
 
 void Debris_State_Move(void);
 void Debris_State_Fall(void);

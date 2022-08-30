@@ -1102,7 +1102,7 @@ void KleptoMobile_State_Destroyed(void)
     KleptoMobile_Explode();
 
     if (++self->timer == 96) {
-        Debris_FallFlickerAnimSetup(KleptoMobile->aniFrames, KleptoMobile->debrisInfo, 18);
+        Debris_CreateFromEntries(KleptoMobile->aniFrames, KleptoMobile->debrisInfo, 18);
     }
     else if (self->timer == 144) {
         KleptoMobile->defeated = true;
