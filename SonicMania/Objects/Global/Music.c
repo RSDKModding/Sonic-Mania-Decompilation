@@ -523,8 +523,9 @@ void Music_FinishJingle(EntityMusic *entity)
                 }
             }
 
-            Music_Stop();
             if (trackPtr) { // another track is on the music stack still
+                Music_Stop();
+
                 if (trackPtr->trackID == Music->activeTrack) {
                     trackPtr->trackStartPos = 0;
                 }
@@ -543,6 +544,8 @@ void Music_FinishJingle(EntityMusic *entity)
                 }
             }
             else if (Music->nextTrack > TRACK_NONE) { // next track is queued
+                Music_Stop();
+
                 Music->activeTrack = Music->nextTrack;
                 Music->nextTrack   = TRACK_NONE;
 

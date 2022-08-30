@@ -49,11 +49,11 @@ void UITABanner_EditorLoad(void);
 void UITABanner_Serialize(void);
 
 // Extra Entity Functions
-void UITABanner_SetupDetails(uint8 characterID, EntityUITABanner *banner, uint8 zoneID, uint8 actID, bool32 isEncore);
+void UITABanner_SetupDetails(EntityUITABanner *banner, uint8 zoneID, uint8 actID, uint8 characterID, bool32 isEncore);
 void UITABanner_DrawBGShapes(int32 drawX, int32 drawY, bool32 isEncore);
-void UITABanner_DrawStageInfo(uint8 actID, uint8 characterID, bool32 isEncore, int32 drawX, int32 drawY);
+void UITABanner_DrawStageInfo(int32 drawX, int32 drawY, uint8 actID, uint8 characterID, bool32 isEncore);
 void UITABanner_DrawZoneIcon(int32 drawX, int32 drawY, int32 zoneID);
-void UITABanner_DrawBannerInfo(uint8 actID, uint8 zoneID, uint8 characterID, bool32 isEncore, int32 drawX, int32 drawY);
+void UITABanner_DrawBannerInfo(int32 drawX, int32 drawY, uint8 zoneID, uint8 actID, uint8 characterID, bool32 isEncore);
 
 #endif
 

@@ -264,7 +264,7 @@ void TimeAttackMenu_HandleMenuReturn(void)
 
     EntityUIControl *detailsControl = TimeAttackMenu->taDetailsControl;
     if (param->inTimeAttack) {
-        UITABanner_SetupDetails(param->characterID, TimeAttackMenu->detailsBanner, param->zoneID, param->actID, param->isEncoreMode);
+        UITABanner_SetupDetails(TimeAttackMenu->detailsBanner, param->zoneID, param->actID, param->characterID, param->isEncoreMode);
         TimeAttackMenu_SetupDetailsView();
 
         UIButton_SetChoiceSelectionWithCB(detailsControl->buttons[0], param->actID);
@@ -403,7 +403,7 @@ void TimeAttackMenu_SetupLeaderboards(int32 zoneID, int32 characterID, int32 act
         LeaderboardID *leaderboardInfo = TimeAttackData_GetLeaderboardInfo(zoneID, act, characterID, isEncore);
         API.FetchLeaderboard(leaderboardInfo, TimeAttackMenu->prevIsUser);
 
-        UITABanner_SetupDetails(characterID, TimeAttackMenu->leaderboardsBanner, zoneID, act, isEncore);
+        UITABanner_SetupDetails(TimeAttackMenu->leaderboardsBanner, zoneID, act, characterID, isEncore);
     }
 }
 
@@ -694,7 +694,7 @@ void TimeAttackMenu_TAModule_ActionCB(void)
     param->zoneID     = self->zoneID;
     control->buttonID = 0;
 
-    UITABanner_SetupDetails(self->characterID, banner, self->zoneID, 0, TimeAttackMenu->encoreMode);
+    UITABanner_SetupDetails(banner, self->zoneID, 0, self->characterID, TimeAttackMenu->encoreMode);
     TimeAttackMenu_SetupDetailsView();
 
     UITransition_SetNewTag("Time Attack Detail");
@@ -846,7 +846,7 @@ void TimeAttackMenu_TAZoneModule_ChoiceChangeCB(void)
 
     int32 act = control->buttons[0]->selection;
 
-    UITABanner_SetupDetails(param->characterID, TimeAttackMenu->detailsBanner, param->zoneID, act, TimeAttackMenu->encoreMode);
+    UITABanner_SetupDetails(TimeAttackMenu->detailsBanner, param->zoneID, act, param->characterID, TimeAttackMenu->encoreMode);
     TimeAttackData_ConfigureTableView(param->zoneID, act, param->characterID, TimeAttackMenu->encoreMode);
 
     int32 rowCount = 1;

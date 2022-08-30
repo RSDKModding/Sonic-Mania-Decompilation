@@ -89,7 +89,7 @@ void ActClear_SaveGameCallback(bool32 success);
 #else
 void ActClear_SaveGameCallback(void);
 #endif
-void ActClear_SetupForceOnScreenP2(void);
+void ActClear_SetupRecoverPlayers(void);
 
 void ActClear_State_EnterText(void);
 void ActClear_State_AdjustText(void);

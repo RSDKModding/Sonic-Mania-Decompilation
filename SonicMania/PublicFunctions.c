@@ -121,7 +121,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(EncoreIntro_PhantomRuby_CapsuleFallDown);
     ADD_PUBLIC_FUNC(EncoreIntro_PlayerState_BuddySel);
     ADD_PUBLIC_FUNC(EncoreIntro_PlayerState_HandleAir);
-    ADD_PUBLIC_FUNC(EncoreIntro_PlayerInput_None);
+    ADD_PUBLIC_FUNC(EncoreIntro_PlayerInput_BuddySel);
 #endif
 
     // AIZ/MonkeyDude
@@ -1584,7 +1584,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(ActClear_SaveGameCallback);
 #else
     ADD_PUBLIC_FUNC(ActClear_SaveGameCallback);
-    ADD_PUBLIC_FUNC(ActClear_SetupForceOnScreenP2);
+    ADD_PUBLIC_FUNC(ActClear_SetupRecoverPlayers);
 #endif
     ADD_PUBLIC_FUNC(ActClear_State_EnterText);
     ADD_PUBLIC_FUNC(ActClear_State_AdjustText);
