@@ -2,10 +2,13 @@
 <app version="1">
   <name>Sonic Mania</name>
   <coder>Clownacy, Rubberduckycooly, chuliRMG</coder>
-  <version>0.3</version>
-  <release_date>20220829000000</release_date>
+  <version>0.4</version>
+  <release_date>20220830000000</release_date>
   <url>https://github.com/Clownacy/Sonic-Mania-Decompilation</url>
-  <short_description>Wii U Port of Sonic Mania</short_description>
-  <long_description>A port of Sonic Mania to the Wii U!</long_description>
+  <short_description>By the Mania for the Mania</short_description>
+  <long_description>Notes:
+* Put your 'Data.rsdk' file in a folder called 'v5' in a folder called 'RSDK' on the root of the SD card. The full path should be '[sd card]/RSDK/v5/Data.rsdk'.
+* If you own the Sonic Mania Plus DLC, then you can enable it through editing the 'RSDK/v5/Settings.ini' file, by setting the 'dlcEnabled' variable to 'y'.
+* To change the username that pops up in the main menu, set the 'username' variable in 'RSDK/v5/Settings.ini' to the name you'd like.</long_description>
   <category>game</category>
 </app>
