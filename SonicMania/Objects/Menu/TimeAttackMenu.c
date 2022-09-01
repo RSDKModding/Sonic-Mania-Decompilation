@@ -326,7 +326,7 @@ void TimeAttackMenu_ConfirmDeleteReplay_Yes_CB(void)
     EntityUIReplayCarousel *carousel = TimeAttackMenu->replayCarousel;
 
     int32 row = API.GetSortedUserDBRowID(globals->replayTableID, carousel->curReplayID);
-    ReplayRecorder_DeleteReplay(row, TimeAttackMenu_DeleteReplayCB, false);
+    ReplayDB_DeleteReplay(row, TimeAttackMenu_DeleteReplayCB, false);
 }
 
 void TimeAttackMenu_DeleteReplayCB(bool32 success)
@@ -796,7 +796,7 @@ void TimeAttackMenu_ResetTimes_YesCB(void)
     }
 
     control->buttonID = 0;
-    TimeAttackData_SaveTimeAttackDB(NULL);
+    TimeAttackData_SaveDB(NULL);
 
     TimeAttackMenu_TAZoneModule_ChoiceChangeCB();
 }

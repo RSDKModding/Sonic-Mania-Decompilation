@@ -70,9 +70,9 @@ bool32 ManiaModeMenu_InitAPI(void)
 
             if (!MenuSetup->initializedSaves) {
                 UIWaitSpinner_StartWait();
-                Options_LoadOptionsBin();
-                SaveGame_LoadFile();
-                ReplayRecorder_LoadReplayDB(NULL);
+                Options_LoadFile(Options_LoadCallback);
+                SaveGame_LoadFile(SaveGame_SaveLoadedCB);
+                ReplayDB_LoadDB(ReplayDB_LoadCallback);
 
                 MenuSetup->initializedSaves = true;
             }

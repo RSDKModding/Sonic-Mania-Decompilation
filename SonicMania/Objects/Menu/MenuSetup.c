@@ -496,8 +496,8 @@ bool32 MenuSetup_InitAPI(void)
 
             if (!MenuSetup->initializedSaves) {
                 UIWaitSpinner_StartWait();
-                Options_LoadOptionsBin();
-                SaveGame_LoadFile();
+                Options_LoadFile(Options_LoadCallback);
+                SaveGame_LoadFile(SaveGame_SaveLoadedCB);
 
                 MenuSetup->initializedSaves = true;
             }
@@ -2137,7 +2137,7 @@ void MenuSetup_Options_MenuSetupCB(void)
     if (Options->changed) {
         UIWaitSpinner_StartWait();
 
-        Options_SaveOptionsBin(MenuSetup_Options_SaveOptionsCB_Load);
+        Options_SaveFile(MenuSetup_Options_SaveOptionsCB_Load);
     }
 }
 

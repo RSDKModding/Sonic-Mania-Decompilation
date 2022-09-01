@@ -639,7 +639,7 @@ void OptionsMenu_MenuSetupCB(void)
 {
     if (Options->changed) {
         UIWaitSpinner_StartWait();
-        Options_SaveOptionsBin(OptionsMenu_SaveOptionsCB_Load);
+        Options_SaveFile(OptionsMenu_SaveOptionsCB_Load);
     }
 
     EntityUIControl *control = OptionsMenu->optionsControl;
@@ -686,7 +686,7 @@ void OptionsMenu_LanguageButton_ActionCB(void)
 
     UIWaitSpinner_StartWait();
 
-    Options_SaveOptionsBin(OptionsMenu_SaveOptionsCB_Action);
+    Options_SaveFile(OptionsMenu_SaveOptionsCB_Action);
 }
 
 void OptionsMenu_ShaderButton_ActionCB(void)
@@ -929,7 +929,7 @@ void OptionsMenu_AreYouSureDlg_YesCB_EraseTimeAttack(void)
     UIWaitSpinner_StartWait();
     API.RemoveAllDBRows(globals->taTableID);
 
-    TimeAttackData_SaveTimeAttackDB(OptionsMenu_EraseSaveDataCB);
+    TimeAttackData_SaveDB(OptionsMenu_EraseSaveDataCB);
     LogHelpers_Print("TimeAttack table ID = %d, status = %d", globals->taTableID, globals->taTableLoaded);
 }
 
@@ -955,15 +955,15 @@ void OptionsMenu_AreYouSureDlg_YesCB_EraseReplays(void)
     API.SetupUserDBRowSorting(globals->taTableID);
 
     if (API.GetSortedUserDBRowCount(globals->replayTableID) <= 0) {
-        ReplayRecorder_SaveReplayDB(OptionsMenu_EraseReplaysCB);
+        ReplayDB_SaveDB(OptionsMenu_EraseReplaysCB);
     }
     else {
         int32 row = API.GetSortedUserDBRowID(globals->replayTableID, 0);
-        ReplayRecorder_DeleteReplay(row, OptionsMenu_EraseReplaysCB, true);
+        ReplayDB_DeleteReplay(row, OptionsMenu_EraseReplaysCB, true);
     }
 }
 
-void OptionsMenu_EraseReplaysCB(bool32 success) { TimeAttackData_SaveTimeAttackDB(OptionsMenu_EraseSaveDataCB); }
+void OptionsMenu_EraseReplaysCB(bool32 success) { TimeAttackData_SaveDB(OptionsMenu_EraseSaveDataCB); }
 
 void OptionsMenu_EraseReplaysButton_ActionCB(void)
 {

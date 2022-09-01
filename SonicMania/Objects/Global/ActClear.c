@@ -747,7 +747,7 @@ void ActClear_State_SaveGameProgress(void)
 
                 if (rank < 3) {
                     rank++;
-                    TimeAttackData_SaveTATime(zoneID, act, characterID, rank, time);
+                    TimeAttackData_AddRecord(zoneID, act, characterID, rank, time);
                     APICallback_TrackTAClear(zoneID, act, characterID, time);
                     param->timeScore = rank;
                     SaveGame_SaveFile(ActClear_SaveGameCallback);

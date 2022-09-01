@@ -166,16 +166,18 @@ void SaveGame_LoadSaveData(void)
     }
 }
 
-void SaveGame_LoadFile(void)
+void SaveGame_LoadFile(void (*callback)(bool32 success))
 {
 #if MANIA_USE_PLUS
     if (!SaveGame->saveRAM || globals->saveLoaded == STATUS_CONTINUE) {
-        SaveGame_SaveLoadedCB(false);
+        if (callback)
+            callback(false);
         return;
     }
 
     if (globals->saveLoaded == STATUS_OK) {
-        SaveGame_SaveLoadedCB(true);
+        if (callback)
+            callback(true);
         return;
     }
 #else
@@ -183,14 +185,15 @@ void SaveGame_LoadFile(void)
         return;
 
     if (globals->saveLoaded == STATUS_OK) {
-        SaveGame_SaveLoadedCB(true);
+        if (callback)
+            callback(true);
         return;
     }
 #endif
 
     globals->saveLoaded     = STATUS_CONTINUE;
     SaveGame->loadEntityPtr = SceneInfo->entity;
-    SaveGame->loadCallback  = SaveGame_SaveLoadedCB;
+    SaveGame->loadCallback  = callback;
     API_LoadUserFile("SaveData.bin", globals->saveRAM, sizeof(globals->saveRAM), SaveGame_LoadFile_CB);
 }
 
@@ -246,7 +249,7 @@ void SaveGame_SaveLoadedCB(bool32 success)
 
 #if MANIA_USE_PLUS
     if ((globals->taTableID == -1 || globals->taTableLoaded != STATUS_OK) && globals->taTableLoaded != STATUS_CONTINUE)
-        TimeAttackData_LoadTimeAttackDB(NULL);
+        TimeAttackData_LoadDB(NULL);
 #endif
 }
 

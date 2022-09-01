@@ -2008,14 +2008,14 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(ReplayRecorder_SaveReplayDLG_CB);
     ADD_PUBLIC_FUNC(ReplayRecorder_SaveReplay);
     ADD_PUBLIC_FUNC(ReplayRecorder_SaveFile_Replay);
-    ADD_PUBLIC_FUNC(ReplayRecorder_SaveUserDB_ReplayDB);
-    ADD_PUBLIC_FUNC(ReplayRecorder_SaveUserDB_TimeAttackDB);
+    ADD_PUBLIC_FUNC(ReplayRecorder_SaveCallback_ReplayDB);
+    ADD_PUBLIC_FUNC(ReplayRecorder_SaveCallback_TimeAttackDB);
     ADD_PUBLIC_FUNC(ReplayRecorder_Buffer_PackInPlace);
     ADD_PUBLIC_FUNC(ReplayRecorder_Buffer_Unpack);
-    ADD_PUBLIC_FUNC(ReplayRecorder_Buffer_SaveFile);
-    ADD_PUBLIC_FUNC(ReplayRecorder_SetReplayStatus);
     ADD_PUBLIC_FUNC(ReplayRecorder_Buffer_LoadFile);
-    ADD_PUBLIC_FUNC(ReplayRecorder_LoadFile_Replay);
+    ADD_PUBLIC_FUNC(ReplayRecorder_Buffer_SaveFile);
+    ADD_PUBLIC_FUNC(ReplayRecorder_LoadReplayCallback);
+    ADD_PUBLIC_FUNC(ReplayRecorder_SaveReplayCallback);
     ADD_PUBLIC_FUNC(ReplayRecorder_ConfigureGhost_CB);
     ADD_PUBLIC_FUNC(ReplayRecorder_SetupActions);
     ADD_PUBLIC_FUNC(ReplayRecorder_SetupWriteBuffer);
@@ -2037,19 +2037,9 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(ReplayRecorder_PlayerState_PlaybackReplay);
     ADD_PUBLIC_FUNC(ReplayRecorder_State_SetupPlayback);
     ADD_PUBLIC_FUNC(ReplayRecorder_State_Playback);
-    ADD_PUBLIC_FUNC(ReplayRecorder_Late_Playback);
     ADD_PUBLIC_FUNC(ReplayRecorder_State_Record);
+    ADD_PUBLIC_FUNC(ReplayRecorder_Late_Playback);
     ADD_PUBLIC_FUNC(ReplayRecorder_Late_RecordFrames);
-    ADD_PUBLIC_FUNC(ReplayRecorder_LoadReplayDB);
-    ADD_PUBLIC_FUNC(ReplayRecorder_SaveReplayDB);
-    ADD_PUBLIC_FUNC(ReplayRecorder_CreateReplayDB);
-    ADD_PUBLIC_FUNC(ReplayRecorder_AddReplayID);
-    ADD_PUBLIC_FUNC(ReplayRecorder_DeleteReplay);
-    ADD_PUBLIC_FUNC(ReplayRecorder_DeleteReplay_CB);
-    ADD_PUBLIC_FUNC(ReplayRecorder_DeleteReplaySave_CB);
-    ADD_PUBLIC_FUNC(ReplayRecorder_DeleteReplaySave2_CB);
-    ADD_PUBLIC_FUNC(ReplayRecorder_SetStatus);
-    ADD_PUBLIC_FUNC(ReplayRecorder_SaveUserDB_ReplayDBManager);
 #endif
 
     // Global/Ring
@@ -2556,8 +2546,8 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Options_Reload);
     ADD_PUBLIC_FUNC(Options_GetWinSize);
     ADD_PUBLIC_FUNC(Options_LoadCallback);
-    ADD_PUBLIC_FUNC(Options_LoadOptionsBin);
-    ADD_PUBLIC_FUNC(Options_SaveOptionsBin);
+    ADD_PUBLIC_FUNC(Options_LoadFile);
+    ADD_PUBLIC_FUNC(Options_SaveFile);
 #if MANIA_USE_PLUS
     ADD_PUBLIC_FUNC(Options_SetLanguage);
 #endif
@@ -2583,6 +2573,18 @@ void InitPublicFunctions()
 
     // Helpers/ReplayDB
 #if MANIA_USE_PLUS
+    ADD_PUBLIC_FUNC(ReplayDB_CreateDB);
+    ADD_PUBLIC_FUNC(ReplayDB_LoadDB);
+    ADD_PUBLIC_FUNC(ReplayDB_SaveDB);
+    ADD_PUBLIC_FUNC(ReplayDB_AddReplay);
+    ADD_PUBLIC_FUNC(ReplayDB_DeleteReplay);
+    ADD_PUBLIC_FUNC(ReplayDB_DeleteReplay_CB);
+    ADD_PUBLIC_FUNC(ReplayDB_DeleteReplaySave_CB);
+    ADD_PUBLIC_FUNC(ReplayDB_DeleteReplaySave2_CB);
+    ADD_PUBLIC_FUNC(ReplayDB_LoadDBCallback);
+    ADD_PUBLIC_FUNC(ReplayDB_SaveDBCallback);
+    ADD_PUBLIC_FUNC(ReplayDB_LoadCallback);
+
     ADD_PUBLIC_FUNC(ReplayDB_Buffer_PackEntry);
     ADD_PUBLIC_FUNC(ReplayDB_Buffer_UnpackEntry);
 #endif
@@ -2595,18 +2597,20 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(TimeAttackData_Clear);
 #endif
     ADD_PUBLIC_FUNC(TimeAttackData_GetManiaListPos);
+#if MANIA_USE_PLUS
     ADD_PUBLIC_FUNC(TimeAttackData_GetEncoreListPos);
+#endif
     ADD_PUBLIC_FUNC(TimeAttackData_GetUnpackedTime);
     ADD_PUBLIC_FUNC(TimeAttackData_GetRecordedTime);
 #if MANIA_USE_PLUS
-    ADD_PUBLIC_FUNC(TimeAttackData_LoadTimeAttackDB);
-    ADD_PUBLIC_FUNC(TimeAttackData_LoadUserDB_TimeAttackDB);
-    ADD_PUBLIC_FUNC(TimeAttackData_ResetTimeAttackDB);
+    ADD_PUBLIC_FUNC(TimeAttackData_CreateDB);
+    ADD_PUBLIC_FUNC(TimeAttackData_LoadDB);
+    ADD_PUBLIC_FUNC(TimeAttackData_SaveDB);
+    ADD_PUBLIC_FUNC(TimeAttackData_LoadDBCallback);
+    ADD_PUBLIC_FUNC(TimeAttackData_SaveDBCallback);
     ADD_PUBLIC_FUNC(TimeAttackData_MigrateLegacySaves);
-    ADD_PUBLIC_FUNC(TimeAttackData_AddTimeAttackDBEntry);
-    ADD_PUBLIC_FUNC(TimeAttackData_AddTADBEntry);
-    ADD_PUBLIC_FUNC(TimeAttackData_SaveTimeAttackDB);
-    ADD_PUBLIC_FUNC(TimeAttackData_SaveUserDB_TimeAttackDB);
+    ADD_PUBLIC_FUNC(TimeAttackData_AddDBRow);
+    ADD_PUBLIC_FUNC(TimeAttackData_AddRecord);
     ADD_PUBLIC_FUNC(TimeAttackData_GetScore);
     ADD_PUBLIC_FUNC(TimeAttackData_GetReplayID);
     ADD_PUBLIC_FUNC(TimeAttackData_ConfigureTableView);
@@ -2614,7 +2618,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(TimeAttackData_AddLeaderboardEntry);
     ADD_PUBLIC_FUNC(TimeAttackData_GetLeaderboardInfo);
 #else
-    ADD_PUBLIC_FUNC(TimeAttackData_SaveTATime);
+    ADD_PUBLIC_FUNC(TimeAttackData_AddRecord);
 #endif
 
     // HPZ/Batbot

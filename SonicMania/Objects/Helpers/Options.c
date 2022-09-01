@@ -99,31 +99,33 @@ void Options_LoadCallback(bool32 success)
     }
 }
 
-void Options_LoadOptionsBin(void)
+void Options_LoadFile(void (*callback)(bool32 success))
 {
     if (sku_platform != PLATFORM_PC && sku_platform != PLATFORM_DEV) {
         if (globals->optionsLoaded != STATUS_CONTINUE) {
             if (globals->optionsLoaded == STATUS_OK) {
-                Options_LoadCallback(true);
+                if (callback)
+                    callback(true);
             }
             else {
                 globals->optionsLoaded = STATUS_CONTINUE;
                 Options->loadEntityPtr = SceneInfo->entity;
-                Options->loadCallback  = Options_LoadCallback;
-                API_LoadUserFile("Options.bin", globals->optionsRAM, 0x200, Options_LoadOptionsCallback);
+                Options->loadCallback  = callback;
+                API_LoadUserFile("Options.bin", globals->optionsRAM, sizeof(globals->optionsRAM), Options_LoadOptionsCallback);
             }
         }
     }
     else {
         globals->optionsLoaded = STATUS_OK;
-        Options_LoadCallback(true);
+        if (callback)
+            callback(true);
     }
 }
 
 #if MANIA_USE_PLUS
-void Options_SaveOptionsBin(void (*callback)(bool32 success))
+void Options_SaveFile(void (*callback)(bool32 success))
 #else
-void Options_SaveOptionsBin(void (*callback)(void))
+void Options_SaveFile(void (*callback)(void))
 #endif
 {
     if (Options->changed) {
@@ -133,9 +135,9 @@ void Options_SaveOptionsBin(void (*callback)(void))
                 Options->saveCallback  = callback;
 
 #if MANIA_USE_PLUS
-                API_SaveUserFile("Options.bin", globals->optionsRAM, 0x200, Options_SaveOptionsCallback, false);
+                API_SaveUserFile("Options.bin", globals->optionsRAM, sizeof(globals->optionsRAM), Options_SaveOptionsCallback, false);
 #else
-                API_SaveUserFile("Options.bin", globals->optionsRAM, 0x200, Options_SaveOptionsCallback);
+                API_SaveUserFile("Options.bin", globals->optionsRAM, sizeof(globals->optionsRAM), Options_SaveOptionsCallback);
 #endif
             }
             else {

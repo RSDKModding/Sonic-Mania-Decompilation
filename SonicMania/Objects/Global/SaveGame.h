@@ -95,7 +95,7 @@ int32 *SaveGame_GetDataPtr(int32 slot, bool32 encore);
 int32 *SaveGame_GetDataPtr(int32 slot);
 #endif
 void SaveGame_LoadSaveData(void);
-void SaveGame_LoadFile(void);
+void SaveGame_LoadFile(void (*callback)(bool32 success));
 #if MANIA_USE_PLUS
 void SaveGame_SaveFile(void (*callback)(bool32 success));
 #else

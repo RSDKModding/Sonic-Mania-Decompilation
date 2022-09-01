@@ -273,7 +273,7 @@ void TimeAttackGate_AddRecord(void)
         int32 act              = param->actID;
         bool32 encore          = SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE);
 
-        param->timeAttackRank = TimeAttackData_AddTADBEntry(zoneID, act, characterID, encore, score, TimeAttackGate_WaitSave_Leaderboards);
+        param->timeAttackRank = TimeAttackData_AddRecord(zoneID, act, characterID, encore, score, TimeAttackGate_WaitSave_Leaderboards);
         TimeAttackData_AddLeaderboardEntry(zoneID, act, characterID, encore, score);
     }
 }
