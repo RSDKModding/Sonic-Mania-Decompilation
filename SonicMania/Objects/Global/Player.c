@@ -6008,16 +6008,11 @@ void Player_JumpAbility_Sonic(void)
 {
     RSDK_THIS(Player);
 
-    bool32 dropdashAllowed = false;
+    bool32 dropdashDisabled = false;
 
     if (self->jumpAbilityState == 1) {
 #if MANIA_USE_PLUS
-        if (self->stateInput != Player_Input_P2_AI
-            || (self->up
-#if MANIA_USE_PLUS
-                && globals->gameMode != MODE_ENCORE
-#endif
-                )) {
+        if (self->stateInput != Player_Input_P2_AI || (self->up && globals->gameMode != MODE_ENCORE)) {
 #else
         if (self->stateInput != Player_Input_P2_AI) {
 #endif
@@ -6049,10 +6044,8 @@ void Player_JumpAbility_Sonic(void)
                             // [Fallthrough]
                         case SHIELD_BLUE:
                             // returns 0 if dropdash (bit 4) is disabled
-                            // returns 1 if dropdash is enabled and instashield (bit 3) is disabled
-                            // returns 2 if dropdash AND instashield are enabled
-                            if (!(globals->medalMods & MEDAL_NODROPDASH))
-                                self->jumpAbilityState = (~(globals->medalMods & 0xFF) >> 3) & 2;
+                            // returns 2 if dropdash is enabled
+                            self->jumpAbilityState = (~(globals->medalMods & 0xFF) >> 3) & 2;
                             break;
 
                         case SHIELD_BUBBLE:
@@ -6101,10 +6094,10 @@ void Player_JumpAbility_Sonic(void)
             return;
         }
 
-        dropdashAllowed = true;
+        dropdashDisabled = true;
     }
 
-    if ((self->jumpAbilityState >= 2 || dropdashAllowed) && self->jumpHold) {
+    if (!dropdashDisabled && self->jumpHold) {
         if (++self->jumpAbilityState >= 22) {
             self->state           = Player_State_DropDash;
             self->nextGroundState = StateMachine_None;

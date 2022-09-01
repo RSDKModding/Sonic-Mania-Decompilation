@@ -455,6 +455,7 @@ void CheckerBall_HandleObjectCollisions(void)
     foreach_active(Platform, platform)
     {
         if (platform->state != Platform_State_Falling2 && platform->state != Platform_State_Hold) {
+            platform->position.x = platform->drawPos.x - platform->collisionOffset.x;
             platform->position.y = platform->drawPos.y - platform->collisionOffset.y;
 
             int32 side = C_NONE;
@@ -522,7 +523,7 @@ void CheckerBall_HandleObjectCollisions(void)
     foreach_active(Newtron, newtron)
     {
         if (newtron->state == Newtron_State_Projectile) {
-            if (RSDK.CheckObjectCollisionTouchBox(newtron, &Newtron->hitboxRange, self, &CheckerBall->hitboxBall)) {
+            if (RSDK.CheckObjectCollisionTouchBox(newtron, &Newtron->hitboxProjectile, self, &CheckerBall->hitboxBall)) {
                 int32 angle         = RSDK.ATan2(self->position.x - newtron->position.x, self->position.y - newtron->position.y);
                 newtron->velocity.x = -0x800 * RSDK.Cos256(angle);
                 newtron->velocity.y = -0x800 * RSDK.Sin256(angle);
