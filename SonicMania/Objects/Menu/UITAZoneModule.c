@@ -775,7 +775,7 @@ void UITAZoneModule_State_StartTimeAttackAttempt(void)
 {
     RSDK_THIS(UITAZoneModule);
 
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     self->isSelected = true;
 

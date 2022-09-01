@@ -798,7 +798,7 @@ void ItemBox_GivePowerup(void)
 void ItemBox_Break(EntityItemBox *itemBox, EntityPlayer *player)
 {
     if (globals->gameMode == MODE_COMPETITION) {
-        EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+        EntityCompetitionSession *session = CompetitionSession_GetSession();
         ++session->items[RSDK.GetEntitySlot(player)];
     }
 

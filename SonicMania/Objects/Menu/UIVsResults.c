@@ -80,7 +80,7 @@ void UIVsResults_SetupSprites(void)
 {
     RSDK_THIS(UIVsResults);
 
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
 
     self->characterID = self->playerID;
     if (!SceneInfo->inEditor) {

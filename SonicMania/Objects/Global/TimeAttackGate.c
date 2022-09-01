@@ -266,7 +266,7 @@ void TimeAttackGate_AddRecord(void)
         if (UIWaitSpinner)
             UIWaitSpinner_StartWait();
 
-        EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+        EntityMenuParam *param = MenuParam_GetParam();
         int32 characterID      = param->characterID;
         int32 zoneID           = param->zoneID;
         int32 score            = SceneInfo->milliseconds + 100 * (SceneInfo->seconds + 60 * SceneInfo->minutes);

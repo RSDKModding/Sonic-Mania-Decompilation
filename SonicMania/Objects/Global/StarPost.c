@@ -212,14 +212,14 @@ void StarPost_CheckBonusStageEntry(void)
 #if MANIA_USE_PLUS
                 ProgressRAM *progress = GameProgress_GetProgressRAM();
                 if ((API.CheckDLC(DLC_PLUS) && progress && progress->allGoldMedals) || globals->gameMode == MODE_ENCORE) {
-                    SaveGame->saveRAM->storedStageID = SceneInfo->listPos;
+                    SaveGame_GetSaveRAM()->storedStageID = SceneInfo->listPos;
                     RSDK.SetScene("Pinball", "");
                     Zone_StartFadeOut(10, 0xF0F0F0);
                     Music_Stop();
                 }
                 else {
 #endif
-                    SaveGame->saveRAM->storedStageID = SceneInfo->listPos;
+                    SaveGame_GetSaveRAM()->storedStageID = SceneInfo->listPos;
                     RSDK.SetScene("Blue Spheres", "");
                     SceneInfo->listPos += globals->blueSpheresID;
                     Zone_StartFadeOut(10, 0xF0F0F0);

@@ -320,7 +320,7 @@ TimeAttackRAM *TimeAttackData_GetTimeAttackRAM(void) { return (TimeAttackRAM *)&
 
 void TimeAttackData_Clear(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     param->puyoSelection = PUYO_SELECTION_NONE;
     memset(param->menuTag, 0, sizeof(param->menuTag));

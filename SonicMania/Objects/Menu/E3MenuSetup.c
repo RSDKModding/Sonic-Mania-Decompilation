@@ -105,7 +105,7 @@ void E3MenuSetup_SetupButtons(void)
 
 void E3MenuSetup_Callback_LoadScene(void)
 {
-    EntityMenuParam *param   = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param   = MenuParam_GetParam();
     EntityUIControl *control = E3MenuSetup->zoneControl;
 
     globals->gameMode  = MODE_NOSAVE;
@@ -141,7 +141,7 @@ void E3MenuSetup_ActionCB_ZoneSelect(void)
 // Sonic Sel
 void E3MenuSetup_ActionCB_Sonic(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     TimeAttackData_Clear();
     param->characterID = 1;
@@ -157,7 +157,7 @@ void E3MenuSetup_ActionCB_Sonic(void)
 // Tails Sel
 void E3MenuSetup_ActionCB_Tails(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     TimeAttackData_Clear();
     param->characterID = 2;
@@ -173,7 +173,7 @@ void E3MenuSetup_ActionCB_Tails(void)
 // Knux Sel
 void E3MenuSetup_ActionCB_Knux(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     TimeAttackData_Clear();
     param->characterID = 3;

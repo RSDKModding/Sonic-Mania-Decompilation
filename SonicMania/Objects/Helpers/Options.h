@@ -68,6 +68,7 @@ void Options_EditorLoad(void);
 void Options_Serialize(void);
 
 // Extra Entity Functions
+OptionsRAM *Options_GetOptionsRAM(void);
 void Options_Reload(void);
 void Options_GetWinSize(void);
 void Options_LoadCallback(bool32 success);

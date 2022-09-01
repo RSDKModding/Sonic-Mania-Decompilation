@@ -82,5 +82,6 @@ void MenuParam_EditorLoad(void);
 void MenuParam_Serialize(void);
 
 // Extra Entity Functions
+EntityMenuParam *MenuParam_GetParam(void);
 
 #endif //! OBJ_MENUPARAM_H

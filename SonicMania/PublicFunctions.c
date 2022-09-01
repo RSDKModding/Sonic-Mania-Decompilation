@@ -2066,6 +2066,7 @@ void InitPublicFunctions()
 
 #if MANIA_USE_PLUS
     // Global/SaveGame
+    ADD_PUBLIC_FUNC(SaveGame_GetSaveRAM);
     ADD_PUBLIC_FUNC(SaveGame_GetDataPtr);
 #else
     ADD_PUBLIC_FUNC(SaveGame_GetDataPtr);
@@ -2484,8 +2485,9 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(ColorHelpers_RGBToHSL);
     ADD_PUBLIC_FUNC(ColorHelpers_HSLToRGB);
 
-#if !MANIA_USE_PLUS
     // Helpers/CompetitionSession
+    ADD_PUBLIC_FUNC(CompetitionSession_GetSession);
+#if !MANIA_USE_PLUS
     ADD_PUBLIC_FUNC(CompetitionSession_ResetOptions);
     ADD_PUBLIC_FUNC(CompetitionSession_ClearMatchData);
     ADD_PUBLIC_FUNC(CompetitionSession_DeriveWinner);
@@ -2543,6 +2545,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(MathHelpers_ConstrainToBox);
 
     // Helpers/Options
+    ADD_PUBLIC_FUNC(Options_GetOptionsRAM);
     ADD_PUBLIC_FUNC(Options_Reload);
     ADD_PUBLIC_FUNC(Options_GetWinSize);
     ADD_PUBLIC_FUNC(Options_LoadCallback);
@@ -3245,6 +3248,9 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(ManiaModeMenu_SetupActions);
     ADD_PUBLIC_FUNC(ManiaModeMenu_HandleMenuReturn);
 #endif
+
+    // Menu/MenuParam
+    ADD_PUBLIC_FUNC(MenuParam_GetParam);
 
     // Menu/MenuSetup
     ADD_PUBLIC_FUNC(MenuSetup_StartTransition);

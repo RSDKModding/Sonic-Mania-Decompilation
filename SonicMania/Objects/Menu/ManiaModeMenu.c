@@ -255,7 +255,7 @@ void ManiaModeMenu_SetupActions(void)
 
 void ManiaModeMenu_HandleMenuReturn(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     char buffer[0x100];
     memset(buffer, 0, 0x100);

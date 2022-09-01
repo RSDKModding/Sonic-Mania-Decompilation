@@ -76,7 +76,7 @@ void ReplayRecorder_StaticUpdate(void)
             if (ReplayRecorder->startPlayback) {
                 EntityPlayer *player = NULL;
                 if (Player->playerCount <= 1) {
-                    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+                    EntityMenuParam *param = MenuParam_GetParam();
 
                     player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
                     API_SetAchievementsEnabled(false);
@@ -201,7 +201,7 @@ void ReplayRecorder_StageLoad(void)
             else
                 replayPtr = ReplayRecorder->playbackBuffer;
 
-            EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+            EntityMenuParam *param = MenuParam_GetParam();
             if (param->viewReplay && replayPtr->header.isNotEmpty) {
                 if (param->showGhost) {
                     globals->playerID        = GET_CHARACTER_ID(1) | (GET_CHARACTER_ID(1) << 8);
@@ -301,7 +301,7 @@ void ReplayRecorder_SaveReplayDLG_YesCB(void)
     int32 millisecs = SceneInfo->milliseconds;
     LogHelpers_Print("Bout to create ReplayDB entry...");
 
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
     int32 rowID            = ReplayDB_AddReplay(param->zoneID, param->actID, param->characterID, millisecs + 100 * (secs + 60 * mins),
                                              SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE));
     if (rowID == -1) {
@@ -647,7 +647,7 @@ void ReplayRecorder_SetupActions(void)
 
 void ReplayRecorder_SetupWriteBuffer(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
     Replay *replayPtr      = ReplayRecorder->recordBuffer;
 
     replayPtr->header.signature     = REPLAY_SIGNATURE;
