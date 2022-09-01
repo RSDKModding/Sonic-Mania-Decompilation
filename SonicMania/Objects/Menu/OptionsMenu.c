@@ -374,7 +374,7 @@ void OptionsMenu_InitVideoOptionsMenu(void)
 {
     if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV) {
         EntityUIControl *videoControl_Win = OptionsMenu->videoControl_Windows;
-        OptionsRAM *optionsRAM            = (OptionsRAM *)globals->optionsRAM;
+        OptionsRAM *optionsRAM            = Options_GetOptionsRAM();
 
         Options_GetWinSize();
 
@@ -639,7 +639,7 @@ void OptionsMenu_MenuSetupCB(void)
 {
     if (Options->changed) {
         UIWaitSpinner_StartWait();
-        Options_SaveOptionsBin(OptionsMenu_SaveOptionsCB_Load);
+        Options_SaveFile(OptionsMenu_SaveOptionsCB_Load);
     }
 
     EntityUIControl *control = OptionsMenu->optionsControl;
@@ -661,7 +661,7 @@ void OptionsMenu_TransitionCB_ReloadScene(void)
 
 void OptionsMenu_SaveOptionsCB_Action(bool32 success)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     UIWaitSpinner_FinishWait();
 
@@ -686,14 +686,14 @@ void OptionsMenu_LanguageButton_ActionCB(void)
 
     UIWaitSpinner_StartWait();
 
-    Options_SaveOptionsBin(OptionsMenu_SaveOptionsCB_Action);
+    Options_SaveFile(OptionsMenu_SaveOptionsCB_Action);
 }
 
 void OptionsMenu_ShaderButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
 
-    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
+    OptionsRAM *options = Options_GetOptionsRAM();
 
     options->screenShader   = self->selection;
     options->overrideShader = true;
@@ -707,7 +707,7 @@ void OptionsMenu_WindowScaleButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
 
-    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
+    OptionsRAM *options = Options_GetOptionsRAM();
     if (self->selection != 4) {
         RSDK.SetVideoSetting(VIDEOSETTING_WINDOW_WIDTH, WIDE_SCR_XSIZE * (self->selection + 1));
         RSDK.SetVideoSetting(VIDEOSETTING_WINDOW_HEIGHT, SCREEN_YSIZE * (self->selection + 1));
@@ -721,7 +721,7 @@ void OptionsMenu_BorderlessButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
 
-    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
+    OptionsRAM *options = Options_GetOptionsRAM();
 
     options->windowBorder = self->selection;
     RSDK.SetVideoSetting(VIDEOSETTING_BORDERED, self->selection);
@@ -733,7 +733,7 @@ void OptionsMenu_FullScreenButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
 
-    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
+    OptionsRAM *options = Options_GetOptionsRAM();
 
     options->windowed = self->selection ^ 1;
     RSDK.SetVideoSetting(VIDEOSETTING_WINDOWED, self->selection ^ 1);
@@ -745,7 +745,7 @@ void OptionsMenu_VSyncButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
 
-    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
+    OptionsRAM *options = Options_GetOptionsRAM();
 
     options->vSync = self->selection;
     RSDK.SetVideoSetting(VIDEOSETTING_VSYNC, self->selection);
@@ -757,7 +757,7 @@ void OptionsMenu_TripleBufferButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
 
-    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
+    OptionsRAM *options = Options_GetOptionsRAM();
 
     options->tripleBuffering = self->selection;
     RSDK.SetVideoSetting(VIDEOSETTING_TRIPLEBUFFERED, self->selection);
@@ -769,7 +769,7 @@ void OptionsMenu_UISlider_ChangedCB(void)
 {
     RSDK_THIS(UISlider);
 
-    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
+    OptionsRAM *options = Options_GetOptionsRAM();
 
     // Bug Details (?):
     // what the hell is up with this???????
@@ -929,7 +929,7 @@ void OptionsMenu_AreYouSureDlg_YesCB_EraseTimeAttack(void)
     UIWaitSpinner_StartWait();
     API.RemoveAllDBRows(globals->taTableID);
 
-    TimeAttackData_SaveTimeAttackDB(OptionsMenu_EraseSaveDataCB);
+    TimeAttackData_SaveDB(OptionsMenu_EraseSaveDataCB);
     LogHelpers_Print("TimeAttack table ID = %d, status = %d", globals->taTableID, globals->taTableLoaded);
 }
 
@@ -955,15 +955,15 @@ void OptionsMenu_AreYouSureDlg_YesCB_EraseReplays(void)
     API.SetupUserDBRowSorting(globals->taTableID);
 
     if (API.GetSortedUserDBRowCount(globals->replayTableID) <= 0) {
-        ReplayRecorder_SaveReplayDB(OptionsMenu_EraseReplaysCB);
+        ReplayDB_SaveDB(OptionsMenu_EraseReplaysCB);
     }
     else {
         int32 row = API.GetSortedUserDBRowID(globals->replayTableID, 0);
-        ReplayRecorder_DeleteReplay(row, OptionsMenu_EraseReplaysCB, true);
+        ReplayDB_DeleteReplay(row, OptionsMenu_EraseReplaysCB, true);
     }
 }
 
-void OptionsMenu_EraseReplaysCB(bool32 success) { TimeAttackData_SaveTimeAttackDB(OptionsMenu_EraseSaveDataCB); }
+void OptionsMenu_EraseReplaysCB(bool32 success) { TimeAttackData_SaveDB(OptionsMenu_EraseSaveDataCB); }
 
 void OptionsMenu_EraseReplaysButton_ActionCB(void)
 {

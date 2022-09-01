@@ -93,6 +93,8 @@ void CompetitionSession_EditorLoad(void);
 void CompetitionSession_Serialize(void);
 
 // Extra Entity Functions
+EntityCompetitionSession *CompetitionSession_GetSession(void);
+
 #if !MANIA_USE_PLUS
 void CompetitionSession_ResetOptions(void);
 void CompetitionSession_ClearMatchData(void);

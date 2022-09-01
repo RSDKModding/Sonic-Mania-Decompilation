@@ -400,8 +400,8 @@ bool32 PauseMenu_IsDisconnected(void)
 
 uint8 PauseMenu_GetPlayerCount(void)
 {
-    EntityMenuParam *param            = (EntityMenuParam *)globals->menuParam;
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityMenuParam *param            = MenuParam_GetParam();
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
 
     if (RSDK.CheckSceneFolder("Puyo")) {
         if (param->puyoSelection >= PUYO_SELECTION_VS_2P)
@@ -518,8 +518,8 @@ void PauseMenu_ExitFadeCB(void)
     globals->specialRingID = 0;
 
     if (globals->gameMode == MODE_COMPETITION) {
-        EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
-        EntityMenuParam *param            = (EntityMenuParam *)globals->menuParam;
+        EntityCompetitionSession *session = CompetitionSession_GetSession();
+        EntityMenuParam *param            = MenuParam_GetParam();
 
         sprintf_s(param->menuTag, (int32)sizeof(param->menuTag), "Competition Zones");
         param->menuSelection = session->stageIndex;
@@ -848,7 +848,7 @@ void PauseMenu_State_ResumeCompetition(void)
             int32 t = self->timer - 8;
 
             if (self->timer == 8) {
-                EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+                EntityCompetitionSession *session = CompetitionSession_GetSession();
                 RSDK.SetVideoSetting(VIDEOSETTING_SCREENCOUNT, session->playerCount);
                 PauseMenu_UpdateCameras();
             }
@@ -885,7 +885,7 @@ void PauseMenu_State_ForcedResumeCompetition(void)
             self->paused = true;
 
             if (self->timer == 8) {
-                EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+                EntityCompetitionSession *session = CompetitionSession_GetSession();
                 RSDK.SetVideoSetting(VIDEOSETTING_SCREENCOUNT, session->playerCount);
                 PauseMenu_UpdateCameras();
             }

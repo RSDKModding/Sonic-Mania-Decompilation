@@ -125,7 +125,7 @@ void Announcer_Draw_Countdown(void)
 
     if (self->playerID > 0) {
         self->inkEffect                   = INK_NONE;
-        EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+        EntityCompetitionSession *session = CompetitionSession_GetSession();
 
         int32 frame = 0;
         switch (session->playerID[SceneInfo->currentScreenID]) {

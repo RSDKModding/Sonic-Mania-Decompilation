@@ -90,7 +90,7 @@ void SpecialRing_StageLoad(void)
             ring->enabled = false;
         }
         else {
-            ring->enabled = !(SaveGame->saveRAM->collectedSpecialRings & (1 << ((16 * Zone->actID) + ring->id - 1)));
+            ring->enabled = !(SaveGame_GetSaveRAM()->collectedSpecialRings & (1 << ((16 * Zone->actID) + ring->id - 1)));
             if (globals->specialRingID == ring->id) {
                 for (int32 p = 0; p < Player->playerCount; ++p) {
                     EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
@@ -173,7 +173,7 @@ void SpecialRing_State_Idle(void)
                     self->sparkleRadius = TO_FIXED(16);
                     self->state         = SpecialRing_State_Flash;
 
-                    SaveRAM *saveRAM = SaveGame->saveRAM;
+                    SaveRAM *saveRAM = SaveGame_GetSaveRAM();
 #if GAME_VERSION != VER_100
                     // rings spawned via debug mode give you 50 rings, always
                     if (saveRAM->chaosEmeralds != 0b01111111 && self->id) {
@@ -233,7 +233,7 @@ void SpecialRing_State_Flash(void)
         self->sparkleRadius -= TO_FIXED(8);
     }
 
-    if (SaveGame->saveRAM->chaosEmeralds == 0b01111111 || !self->id) {
+    if (SaveGame_GetSaveRAM()->chaosEmeralds == 0b01111111 || !self->id) {
         destroyEntity(self);
     }
     else if (self->warpAnimator.frameID == self->warpAnimator.frameCount - 1) {
@@ -251,7 +251,7 @@ void SpecialRing_State_Warp(void)
         RSDK.PlaySfx(SpecialRing->sfxSpecialWarp, false, 0xFE);
         destroyEntity(self);
 
-        SaveRAM *saveRAM       = SaveGame->saveRAM;
+        SaveRAM *saveRAM       = SaveGame_GetSaveRAM();
         saveRAM->storedStageID = SceneInfo->listPos;
         RSDK.SetScene("Special Stage", "");
         SceneInfo->listPos += saveRAM->nextSpecialStage;

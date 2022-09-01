@@ -28,9 +28,9 @@ void BSS_Setup_Update(void)
     }
 
 #if MANIA_USE_PLUS
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
     if (param->bssSelection == BSS_SELECTION_NONE && !self->stopMovement && globals->gameMode < MODE_TIMEATTACK)
-        ++SaveGame->saveRAM->zoneTimes[28];
+        ++SaveGame_GetSaveRAM()->zoneTimes[28];
 #endif
 }
 
@@ -219,7 +219,7 @@ void BSS_Setup_StageLoad(void)
     BSS_Setup->sfxMedalCaught = RSDK.GetSfx("Special/MedalCaught.wav");
     BSS_Setup->sfxTeleport    = RSDK.GetSfx("Global/Teleport.wav");
 
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
     if (param->bssSelection == BSS_SELECTION_EXTRAS) {
         String string;
         Localization_GetString(&string, STR_RPC_PLAYING);
@@ -678,7 +678,7 @@ void BSS_Setup_HandleSteppedObjects(void)
         case BSS_MEDAL_SILVER:
         case BSS_MEDAL_GOLD:
             if (self->globeTimer > 240) {
-                EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+                EntityMenuParam *param = MenuParam_GetParam();
                 if (param->bssSelection == BSS_SELECTION_NONE && globals->gameMode < MODE_TIMEATTACK) {
                     int32 pos = BSS_Setup_GetStageID();
                     if (pos >= 0) {

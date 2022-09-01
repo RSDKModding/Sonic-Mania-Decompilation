@@ -71,8 +71,8 @@ void PuyoGame_SetupStartingEntities(void)
 {
     RSDK_THIS(PuyoGame);
 
-    EntityMenuParam *param            = (EntityMenuParam *)globals->menuParam;
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityMenuParam *param            = MenuParam_GetParam();
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
 
     ScreenInfo->position.x = (self->position.x >> 16) - ScreenInfo->center.x;
     ScreenInfo->position.y = (self->position.y >> 16) - ScreenInfo->center.y;
@@ -208,7 +208,7 @@ void PuyoGame_State_SelectingLevel(void)
 {
     RSDK_THIS(PuyoGame);
 
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     EntityPuyoLevelSelect *levelSelP1 = PuyoGame->levelSel[0];
     EntityPuyoLevelSelect *levelSelP2 = PuyoGame->levelSel[1];
@@ -262,7 +262,7 @@ void PuyoGame_State_SetupEntities(void)
 {
     RSDK_THIS(PuyoGame);
 
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     self->determinedLoser = false;
     self->roundWinner     = 0;
@@ -317,7 +317,7 @@ void PuyoGame_State_HandleRound(void)
 void PuyoGame_State_ShowRoundResults(void)
 {
     RSDK_THIS(PuyoGame);
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     if (self->timer >= 60) {
         int32 count          = param->puyoSelection >= PUYO_SELECTION_VS_2P ? 2 : 1;
@@ -344,7 +344,7 @@ void PuyoGame_State_ShowMatchResults(void)
 {
     RSDK_THIS(PuyoGame);
 
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     if (self->timer >= 60) {
         int32 count          = param->puyoSelection >= PUYO_SELECTION_VS_2P ? 2 : 1;
@@ -374,8 +374,8 @@ void PuyoGame_State_FadeToMenu(void)
 {
     RSDK_THIS(PuyoGame);
 
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
-    EntityMenuParam *param            = (EntityMenuParam *)globals->menuParam;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
+    EntityMenuParam *param            = MenuParam_GetParam();
 
     EntityFXFade *fxFade = PuyoGame->fxFade;
     if (fxFade->timer == 512) {

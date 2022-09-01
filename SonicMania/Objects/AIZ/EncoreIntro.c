@@ -985,7 +985,7 @@ bool32 EncoreIntro_Cutscene_LoadGHZ(EntityCutsceneSeq *host)
     RSDK_THIS(EncoreIntro);
     Player->playerCount = 2;
     SaveGame_SavePlayerState();
-    SaveGame->saveRAM->saveState = SAVEGAME_INPROGRESS; // save file is active
+    SaveGame_GetSaveRAM()->saveState = SAVEGAME_INPROGRESS; // save file is active
     RSDK.SetScene("Cutscenes", "Green Hill Zone");
     EncoreIntro->awaitingSaveFinish = true;
     SaveGame_SaveFile(EncoreIntro_SaveGameCB);

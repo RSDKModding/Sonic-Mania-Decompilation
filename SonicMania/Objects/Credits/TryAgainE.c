@@ -119,8 +119,8 @@ void TryAgainE_SetupEmeralds(void)
         emerald->state = TAEmerald_State_MoveCircle;
         emerald->timer = timer;
 
-        if (SaveGame->saveRAM) {
-            if (!(id & SaveGame->saveRAM->chaosEmeralds))
+        if (SaveGame_GetSaveRAM()) {
+            if (!(id & SaveGame_GetSaveRAM()->chaosEmeralds))
                 timer += 8;
         }
 

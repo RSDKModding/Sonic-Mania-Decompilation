@@ -21,10 +21,12 @@ void CompetitionSession_Create(void *data) {}
 
 void CompetitionSession_StageLoad(void) {}
 
+EntityCompetitionSession *CompetitionSession_GetSession(void) { return (EntityCompetitionSession *)globals->competitionSession; }
+
 #if !MANIA_USE_PLUS
 void CompetitionSession_ResetOptions(void)
 {
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
 
     session->inMatch    = false;
     session->matchID    = 0;
@@ -53,7 +55,7 @@ void CompetitionSession_ResetOptions(void)
 
 void CompetitionSession_ClearMatchData(void)
 {
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
 
     session->matchWinner[session->matchID] = 0;
     for (int32 p = 0; p < PLAYER_COUNT; ++p) {
@@ -70,7 +72,7 @@ void CompetitionSession_ClearMatchData(void)
 
 void CompetitionSession_DeriveWinner(int32 playerID, int32 finishType)
 {
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
     session->finishState[playerID]    = finishType;
 
     if (finishType == FINISHTYPE_GAMEOVER) {
@@ -174,7 +176,7 @@ void CompetitionSession_DeriveWinner(int32 playerID, int32 finishType)
 
 void CompetitionSession_WinMatchFor(int32 player)
 {
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
 
     LogHelpers_Print("CompetitionSession_WinMatchFor(%d)", player);
     ++session->wins[player];

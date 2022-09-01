@@ -285,7 +285,7 @@ void UIVsZoneButton_SelectedCB(void)
     RSDK_THIS(UIVsZoneButton);
 
     EntityUIControl *parent = (EntityUIControl *)self->parent;
-    EntityMenuParam *param  = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param  = MenuParam_GetParam();
 
     parent->state = StateMachine_None;
     RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);

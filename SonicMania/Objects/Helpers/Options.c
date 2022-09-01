@@ -27,7 +27,7 @@ void Options_StageLoad(void)
         Options_Reload();
     }
     else {
-        OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
+        OptionsRAM *options = Options_GetOptionsRAM();
 
         options->vSync           = false;
         options->windowed        = false;
@@ -37,9 +37,11 @@ void Options_StageLoad(void)
 #endif
 }
 
+OptionsRAM *Options_GetOptionsRAM(void) { return (OptionsRAM *)globals->optionsRAM; }
+
 void Options_Reload(void)
 {
-    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
+    OptionsRAM *options = Options_GetOptionsRAM();
 
     options->overrideLanguage = true;
 
@@ -68,7 +70,7 @@ void Options_Reload(void)
 
 void Options_GetWinSize(void)
 {
-    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
+    OptionsRAM *options = Options_GetOptionsRAM();
 
     bool32 windowed = RSDK.GetVideoSetting(VIDEOSETTING_WINDOWED);
     if (!windowed) {
@@ -99,31 +101,33 @@ void Options_LoadCallback(bool32 success)
     }
 }
 
-void Options_LoadOptionsBin(void)
+void Options_LoadFile(void (*callback)(bool32 success))
 {
     if (sku_platform != PLATFORM_PC && sku_platform != PLATFORM_DEV) {
         if (globals->optionsLoaded != STATUS_CONTINUE) {
             if (globals->optionsLoaded == STATUS_OK) {
-                Options_LoadCallback(true);
+                if (callback)
+                    callback(true);
             }
             else {
                 globals->optionsLoaded = STATUS_CONTINUE;
                 Options->loadEntityPtr = SceneInfo->entity;
-                Options->loadCallback  = Options_LoadCallback;
-                API_LoadUserFile("Options.bin", globals->optionsRAM, 0x200, Options_LoadOptionsCallback);
+                Options->loadCallback  = callback;
+                API_LoadUserFile("Options.bin", globals->optionsRAM, sizeof(globals->optionsRAM), Options_LoadOptionsCallback);
             }
         }
     }
     else {
         globals->optionsLoaded = STATUS_OK;
-        Options_LoadCallback(true);
+        if (callback)
+            callback(true);
     }
 }
 
 #if MANIA_USE_PLUS
-void Options_SaveOptionsBin(void (*callback)(bool32 success))
+void Options_SaveFile(void (*callback)(bool32 success))
 #else
-void Options_SaveOptionsBin(void (*callback)(void))
+void Options_SaveFile(void (*callback)(void))
 #endif
 {
     if (Options->changed) {
@@ -133,9 +137,9 @@ void Options_SaveOptionsBin(void (*callback)(void))
                 Options->saveCallback  = callback;
 
 #if MANIA_USE_PLUS
-                API_SaveUserFile("Options.bin", globals->optionsRAM, 0x200, Options_SaveOptionsCallback, false);
+                API_SaveUserFile("Options.bin", globals->optionsRAM, sizeof(globals->optionsRAM), Options_SaveOptionsCallback, false);
 #else
-                API_SaveUserFile("Options.bin", globals->optionsRAM, 0x200, Options_SaveOptionsCallback);
+                API_SaveUserFile("Options.bin", globals->optionsRAM, sizeof(globals->optionsRAM), Options_SaveOptionsCallback);
 #endif
             }
             else {
@@ -172,7 +176,7 @@ void Options_SaveOptionsBin(void (*callback)(void))
 
 void Options_SetLanguage(int32 language)
 {
-    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
+    OptionsRAM *options = Options_GetOptionsRAM();
 
     if (language >= 0) {
         options->language         = language;
@@ -205,7 +209,7 @@ void Options_LoadValuesFromSettings(OptionsRAM *options)
 
 void Options_LoadOptionsCallback(int32 status)
 {
-    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
+    OptionsRAM *options = Options_GetOptionsRAM();
     bool32 success      = false;
 
 #if MANIA_USE_PLUS
@@ -218,7 +222,7 @@ void Options_LoadOptionsCallback(int32 status)
 
         LogHelpers_Print("dataPtr.language = %d", options->language);
         LogHelpers_Print("dataPtr.overrideLanguage = %d", options->overrideLanguage);
-        Options_LoadValuesFromSettings((OptionsRAM *)globals->optionsRAM);
+        Options_LoadValuesFromSettings(Options_GetOptionsRAM());
 
         RSDK.SetVideoSetting(VIDEOSETTING_SHADERID, options->screenShader);
         RSDK.SetVideoSetting(VIDEOSETTING_STREAM_VOL, options->volMusic);

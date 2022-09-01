@@ -38,7 +38,7 @@ void Zone_LateUpdate(void)
             RSDK.PlaySfx(Player->sfxHurt, false, 0xFF);
 
 #if MANIA_USE_PLUS
-            EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+            EntityCompetitionSession *session = CompetitionSession_GetSession();
 #endif
 
             foreach_active(Player, player)
@@ -109,7 +109,7 @@ void Zone_StaticUpdate(void)
 
     int32 pos = act + 2 * zone;
     if (pos >= 0 && SceneInfo->timeEnabled && globals->gameMode < MODE_TIMEATTACK)
-        ++SaveGame->saveRAM->zoneTimes[pos];
+        ++SaveGame_GetSaveRAM()->zoneTimes[pos];
 #endif
 }
 
@@ -141,7 +141,7 @@ void Zone_StageLoad(void)
     Zone->randSeed = (uint32)time(NULL);
 
     // Setup encore character flags & stock if needed
-    SaveRAM *saveRAM = SaveGame->saveRAM;
+    SaveRAM *saveRAM = SaveGame_GetSaveRAM();
     if (globals->gameMode == MODE_ENCORE) {
         if (globals->characterFlags == ID_NONE) {
             globals->characterFlags = 0;
@@ -252,7 +252,7 @@ void Zone_StageLoad(void)
     RSDK.ResetEntitySlot(SLOT_ZONE, Zone->classID, NULL);
 
     // Setup Competition options (or ensure they're not active if not in competition mode)
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
     if (globals->gameMode == MODE_COMPETITION) {
         if (RSDK.CheckSceneFolder("Puyo")) {
             if (globals->gameMode == MODE_COMPETITION) {
@@ -832,7 +832,7 @@ void Zone_State_FadeIn(void)
 void Zone_State_FadeOut_Competition(void)
 {
     RSDK_THIS(Zone);
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
 
     self->timer += self->fadeSpeed;
     if (self->timer > 1024) {
@@ -1308,7 +1308,7 @@ void Zone_State_SwapPlayers(void)
             RSDK.PlaySfx(Zone->sfxFail, false, 255);
         }
         else {
-            EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+            EntityCompetitionSession *session = CompetitionSession_GetSession();
 
             uint8 playerIDs = 0;
 

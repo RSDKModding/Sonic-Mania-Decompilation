@@ -311,7 +311,7 @@ void UISubHeading_SaveButton_ActionCB(void)
 {
     RSDK_THIS(UISaveSlot);
 
-    EntityMenuParam *param   = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param   = MenuParam_GetParam();
     EntityUIControl *control = (EntityUIControl *)self->parent;
 
     SaveRAM *saveRAM = (SaveRAM *)SaveGame_GetDataPtr(self->slotID, self->encoreMode);

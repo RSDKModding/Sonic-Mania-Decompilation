@@ -192,8 +192,8 @@ void PBL_Crane_HandlePrizes(void)
         }
 
         case PBL_CRANE_PRIZE_1UP:
-            if (SaveGame->saveRAM->lives < 99)
-                SaveGame->saveRAM->lives++;
+            if (SaveGame_GetSaveRAM()->lives < 99)
+                SaveGame_GetSaveRAM()->lives++;
 
             if (globals->restartLives[0] < 99)
                 globals->restartLives[0]++;

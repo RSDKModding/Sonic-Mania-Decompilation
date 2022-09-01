@@ -234,7 +234,7 @@ void TimeAttackMenu_SetupActions(void)
 
 void TimeAttackMenu_HandleMenuReturn(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     if (param->inTimeAttack)
         TimeAttackMenu_SetEncoreLayouts(param->isEncoreMode);
@@ -326,7 +326,7 @@ void TimeAttackMenu_ConfirmDeleteReplay_Yes_CB(void)
     EntityUIReplayCarousel *carousel = TimeAttackMenu->replayCarousel;
 
     int32 row = API.GetSortedUserDBRowID(globals->replayTableID, carousel->curReplayID);
-    ReplayRecorder_DeleteReplay(row, TimeAttackMenu_DeleteReplayCB, false);
+    ReplayDB_DeleteReplay(row, TimeAttackMenu_DeleteReplayCB, false);
 }
 
 void TimeAttackMenu_DeleteReplayCB(bool32 success)
@@ -426,7 +426,7 @@ void TimeAttackMenu_ReplayCarousel_ActionCB(void)
 
 void TimeAttackMenu_WatchReplay(int32 row, bool32 showGhost)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     int32 id = API_GetFilteredInputDeviceID(false, false, 0);
     API_ResetInputSlotAssignments();
@@ -521,7 +521,7 @@ void TimeAttackMenu_ReplayLoad_CB(bool32 success)
 
 void TimeAttackMenu_WatchReplayActionCB_ReplaysMenu(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     EntityUIControl *control         = TimeAttackMenu->replaysControl;
     EntityUIReplayCarousel *carousel = TimeAttackMenu->replayCarousel;
@@ -537,7 +537,7 @@ void TimeAttackMenu_WatchReplayActionCB_ReplaysMenu(void)
 
 void TimeAttackMenu_ChallengeReplayActionCB_ReplaysMenu(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     EntityUIControl *control         = TimeAttackMenu->replaysControl;
     EntityUIReplayCarousel *carousel = TimeAttackMenu->replayCarousel;
@@ -553,7 +553,7 @@ void TimeAttackMenu_ChallengeReplayActionCB_ReplaysMenu(void)
 
 void TimeAttackMenu_WatchReplayCB_RanksMenu(void)
 {
-    EntityMenuParam *param     = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param     = MenuParam_GetParam();
     EntityUIPopover *popover   = UIPopover->activePopover;
     EntityUIRankButton *button = (EntityUIRankButton *)popover->storedEntity;
     EntityUIControl *parent    = (EntityUIControl *)button->parent;
@@ -569,7 +569,7 @@ void TimeAttackMenu_WatchReplayCB_RanksMenu(void)
 
 void TimeAttackMenu_ChallengeReplayCB_RanksMenu(void)
 {
-    EntityMenuParam *param     = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param     = MenuParam_GetParam();
     EntityUIPopover *popover   = UIPopover->activePopover;
     EntityUIRankButton *button = (EntityUIRankButton *)popover->storedEntity;
     EntityUIControl *parent    = (EntityUIControl *)button->parent;
@@ -663,7 +663,7 @@ void TimeAttackMenu_SortReplayChoiceCB(void)
 
 void TimeAttackMenu_SetupDetailsView(void)
 {
-    EntityMenuParam *param   = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param   = MenuParam_GetParam();
     EntityUIControl *control = TimeAttackMenu->taDetailsControl;
     EntityUITABanner *banner = TimeAttackMenu->detailsBanner;
 
@@ -687,7 +687,7 @@ void TimeAttackMenu_TAModule_ActionCB(void)
 {
     RSDK_THIS(UITAZoneModule);
 
-    EntityMenuParam *param   = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param   = MenuParam_GetParam();
     EntityUITABanner *banner = TimeAttackMenu->detailsBanner;
     EntityUIControl *control = TimeAttackMenu->taDetailsControl;
 
@@ -702,7 +702,7 @@ void TimeAttackMenu_TAModule_ActionCB(void)
 
 void TimeAttackMenu_StartTAAttempt(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     sprintf_s(param->menuTag, (int32)sizeof(param->menuTag), "Time Attack Detail");
     param->menuSelection = 0;
@@ -718,7 +718,7 @@ void TimeAttackMenu_StartTAAttempt(void)
 
 void TimeAttackMenu_LoadScene(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     SaveGame_ResetPlayerState();
 
@@ -796,7 +796,7 @@ void TimeAttackMenu_ResetTimes_YesCB(void)
     }
 
     control->buttonID = 0;
-    TimeAttackData_SaveTimeAttackDB(NULL);
+    TimeAttackData_SaveDB(NULL);
 
     TimeAttackMenu_TAZoneModule_ChoiceChangeCB();
 }
@@ -814,7 +814,7 @@ void TimeAttackMenu_TAZoneModule_ActionCB(void)
 {
     RSDK_THIS(UIButton);
 
-    EntityMenuParam *param  = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param  = MenuParam_GetParam();
     EntityUIControl *parent = (EntityUIControl *)self->parent;
 
     parent->selectionDisabled = true;
@@ -841,7 +841,7 @@ void TimeAttackMenu_MenuSetupCB_Details(void) { TimeAttackMenu_TAZoneModule_Choi
 
 void TimeAttackMenu_TAZoneModule_ChoiceChangeCB(void)
 {
-    EntityMenuParam *param   = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param   = MenuParam_GetParam();
     EntityUIControl *control = TimeAttackMenu->taDetailsControl;
 
     int32 act = control->buttons[0]->selection;
@@ -874,7 +874,7 @@ void TimeAttackMenu_CharButton_ActionCB(void)
 {
     RSDK_THIS(UICharButton);
 
-    EntityMenuParam *param   = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param   = MenuParam_GetParam();
     EntityUIControl *control = TimeAttackMenu->taZoneSelControl;
 
     TimeAttackData_Clear();

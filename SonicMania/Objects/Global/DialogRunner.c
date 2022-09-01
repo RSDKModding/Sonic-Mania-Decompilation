@@ -56,7 +56,7 @@ void DialogRunner_StageLoad(void)
 
     Options->changed = false;
     if (sku_platform && sku_platform != PLATFORM_DEV) {
-        OptionsRAM *options      = (OptionsRAM *)globals->optionsRAM;
+        OptionsRAM *options      = Options_GetOptionsRAM();
         options->vSync           = false;
         options->windowed        = false;
         options->windowBorder    = false;

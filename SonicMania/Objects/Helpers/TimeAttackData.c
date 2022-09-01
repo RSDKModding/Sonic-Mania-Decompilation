@@ -320,7 +320,7 @@ TimeAttackRAM *TimeAttackData_GetTimeAttackRAM(void) { return (TimeAttackRAM *)&
 
 void TimeAttackData_Clear(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     param->puyoSelection = PUYO_SELECTION_NONE;
     memset(param->menuTag, 0, sizeof(param->menuTag));
@@ -375,6 +375,7 @@ int32 TimeAttackData_GetManiaListPos(int32 zoneID, int32 act, int32 characterID)
 
     return listPos;
 }
+#if MANIA_USE_PLUS
 int32 TimeAttackData_GetEncoreListPos(int32 zoneID, int32 act, int32 characterID)
 {
     int32 listPos = 0;
@@ -401,6 +402,7 @@ int32 TimeAttackData_GetEncoreListPos(int32 zoneID, int32 act, int32 characterID
     LogHelpers_Print("listPos = %d", listPos);
     return listPos;
 }
+#endif
 
 uint32 TimeAttackData_GetPackedTime(int32 minutes, int32 seconds, int32 milliseconds) { return 6000 * minutes + 100 * seconds + milliseconds; }
 
@@ -432,53 +434,7 @@ uint16 *TimeAttackData_GetRecordedTime(uint8 zoneID, uint8 act, uint8 characterI
 }
 
 #if MANIA_USE_PLUS
-uint16 TimeAttackData_LoadTimeAttackDB(void (*callback)(bool32 success))
-{
-    LogHelpers_Print("Loading Time Attack DB");
-    globals->taTableLoaded = STATUS_CONTINUE;
-
-    TimeAttackData->loadEntityPtr = SceneInfo->entity;
-    TimeAttackData->loadCallback  = callback;
-    globals->taTableID            = API.LoadUserDB("TimeAttackDB.bin", TimeAttackData_LoadUserDB_TimeAttackDB);
-
-    if (globals->taTableID == -1) {
-        LogHelpers_Print("Couldn't claim a slot for loading %s", "TimeAttackDB.bin");
-        globals->taTableLoaded = STATUS_ERROR;
-    }
-
-    return globals->taTableID;
-}
-
-void TimeAttackData_LoadUserDB_TimeAttackDB(int32 statusCode)
-{
-    if (statusCode == STATUS_OK) {
-        globals->taTableLoaded = STATUS_OK;
-        API.SetupUserDBRowSorting(globals->taTableID);
-        LogHelpers_Print("Load Succeeded! Replay count: %d", API.GetSortedUserDBRowCount(globals->taTableID));
-    }
-    else {
-        LogHelpers_Print("Load Failed! Creating new Time Attack DB");
-        TimeAttackData_ResetTimeAttackDB();
-    }
-
-    // Bug Details:
-    // Due to how options work, this is called after the db is loaded, but before the result is assigned to globals->taTableID
-    // meaning that globals->taTableID will be 0xFFFF initially, even if the tabel id was loaded and returned successfully
-    LogHelpers_Print("Replay DB Slot => %d, Load Status => %d", globals->taTableID, globals->taTableLoaded);
-
-    if (TimeAttackData->loadCallback) {
-        Entity *entStore = SceneInfo->entity;
-        if (TimeAttackData->loadEntityPtr)
-            SceneInfo->entity = TimeAttackData->loadEntityPtr;
-        TimeAttackData->loadCallback(statusCode == STATUS_OK);
-        SceneInfo->entity = entStore;
-
-        TimeAttackData->loadCallback  = NULL;
-        TimeAttackData->loadEntityPtr = NULL;
-    }
-}
-
-void TimeAttackData_ResetTimeAttackDB(void)
+void TimeAttackData_CreateDB(void)
 {
     uint16 id = API.InitUserDB("TimeAttackDB.bin", DBVAR_UINT8, "zoneID", DBVAR_UINT8, "act", DBVAR_UINT8, "characterID", DBVAR_UINT8, "encore",
                                DBVAR_UINT32, "score", DBVAR_UINT32, "replayID", NULL);
@@ -491,6 +447,82 @@ void TimeAttackData_ResetTimeAttackDB(void)
         if (!API_GetNoSave() && globals->saveLoaded == STATUS_OK) {
             TimeAttackData_MigrateLegacySaves();
         }
+    }
+}
+
+uint16 TimeAttackData_LoadDB(void (*callback)(bool32 success))
+{
+    LogHelpers_Print("Loading Time Attack DB");
+    globals->taTableLoaded = STATUS_CONTINUE;
+
+    TimeAttackData->loadEntityPtr = SceneInfo->entity;
+    TimeAttackData->loadCallback  = callback;
+    globals->taTableID            = API.LoadUserDB("TimeAttackDB.bin", TimeAttackData_LoadDBCallback);
+
+    if (globals->taTableID == -1) {
+        LogHelpers_Print("Couldn't claim a slot for loading %s", "TimeAttackDB.bin");
+        globals->taTableLoaded = STATUS_ERROR;
+    }
+
+    return globals->taTableID;
+}
+
+void TimeAttackData_SaveDB(void (*callback)(bool32 success))
+{
+    if (API.GetNoSave() || globals->taTableID == (uint16)-1 || globals->taTableLoaded != STATUS_OK) {
+        if (callback)
+            callback(false);
+    }
+    else {
+        LogHelpers_Print("Saving Time Attack DB");
+
+        TimeAttackData->saveEntityPtr = SceneInfo->entity;
+        TimeAttackData->saveCallback  = callback;
+
+        API.SaveUserDB(globals->taTableID, TimeAttackData_SaveDBCallback);
+    }
+}
+
+void TimeAttackData_LoadDBCallback(int32 status)
+{
+    if (status == STATUS_OK) {
+        globals->taTableLoaded = STATUS_OK;
+        API.SetupUserDBRowSorting(globals->taTableID);
+        LogHelpers_Print("Load Succeeded! Replay count: %d", API.GetSortedUserDBRowCount(globals->taTableID));
+    }
+    else {
+        LogHelpers_Print("Load Failed! Creating new Time Attack DB");
+        TimeAttackData_CreateDB();
+    }
+
+    // Bug Details:
+    // Due to how options work, this is called after the db is loaded, but before the result is assigned to globals->taTableID
+    // meaning that globals->taTableID will be 0xFFFF initially, even if the tabel id was loaded and returned successfully
+    LogHelpers_Print("Replay DB Slot => %d, Load Status => %d", globals->taTableID, globals->taTableLoaded);
+
+    if (TimeAttackData->loadCallback) {
+        Entity *entStore = SceneInfo->entity;
+        if (TimeAttackData->loadEntityPtr)
+            SceneInfo->entity = TimeAttackData->loadEntityPtr;
+        TimeAttackData->loadCallback(status == STATUS_OK);
+        SceneInfo->entity = entStore;
+
+        TimeAttackData->loadCallback  = NULL;
+        TimeAttackData->loadEntityPtr = NULL;
+    }
+}
+
+void TimeAttackData_SaveDBCallback(int32 status)
+{
+    if (TimeAttackData->saveCallback) {
+        Entity *entStore = SceneInfo->entity;
+        if (TimeAttackData->saveEntityPtr)
+            SceneInfo->entity = TimeAttackData->saveEntityPtr;
+        TimeAttackData->saveCallback(status == STATUS_OK);
+        SceneInfo->entity = entStore;
+
+        TimeAttackData->saveCallback  = NULL;
+        TimeAttackData->saveEntityPtr = NULL;
     }
 }
 
@@ -511,7 +543,7 @@ void TimeAttackData_MigrateLegacySaves(void)
                         if (records && *records) {
                             int32 score = *records;
                             LogHelpers_Print("Import: zone=%d act=%d charID=%d rank=%d -> %d", zone, act, charID, rank, score);
-                            TimeAttackData_AddTADBEntry(zone, act, charID, MODE_MANIA, score, NULL);
+                            TimeAttackData_AddRecord(zone, act, charID, MODE_MANIA, score, NULL);
                         }
                     }
                 }
@@ -522,7 +554,7 @@ void TimeAttackData_MigrateLegacySaves(void)
     }
 }
 
-int32 TimeAttackData_AddTimeAttackDBEntry(uint8 zoneID, uint8 act, uint8 characterID, uint8 mode, int32 score)
+int32 TimeAttackData_AddDBRow(uint8 zoneID, uint8 act, uint8 characterID, uint8 mode, int32 score)
 {
     if (globals->taTableLoaded != STATUS_OK)
         return -1;
@@ -551,9 +583,9 @@ int32 TimeAttackData_AddTimeAttackDBEntry(uint8 zoneID, uint8 act, uint8 charact
     return rowID;
 }
 
-int32 TimeAttackData_AddTADBEntry(uint8 zoneID, uint8 act, uint8 characterID, bool32 encore, int32 score, void (*callback)(bool32 success))
+int32 TimeAttackData_AddRecord(uint8 zoneID, uint8 act, uint8 characterID, bool32 encore, int32 score, void (*callback)(bool32 success))
 {
-    uint16 row  = TimeAttackData_AddTimeAttackDBEntry(zoneID, act, characterID, encore, score);
+    uint16 row  = TimeAttackData_AddDBRow(zoneID, act, characterID, encore, score);
     uint32 uuid = API.GetUserDBRowUUID(globals->taTableID, row);
 
     TimeAttackData_ConfigureTableView(zoneID, act, characterID, encore);
@@ -588,40 +620,10 @@ int32 TimeAttackData_AddTADBEntry(uint8 zoneID, uint8 act, uint8 characterID, bo
             callback(true);
     }
     else {
-        TimeAttackData_SaveTimeAttackDB(callback);
+        TimeAttackData_SaveDB(callback);
     }
 
     return rank + 1;
-}
-
-void TimeAttackData_SaveTimeAttackDB(void (*callback)(bool32 success))
-{
-    if (API.GetNoSave() || globals->taTableID == (uint16)-1 || globals->taTableLoaded != STATUS_OK) {
-        if (callback)
-            callback(false);
-    }
-    else {
-        LogHelpers_Print("Saving Time Attack DB");
-
-        TimeAttackData->saveEntityPtr = SceneInfo->entity;
-        TimeAttackData->saveCallback  = callback;
-
-        API.SaveUserDB(globals->taTableID, TimeAttackData_SaveUserDB_TimeAttackDB);
-    }
-}
-
-void TimeAttackData_SaveUserDB_TimeAttackDB(int32 statusCode)
-{
-    if (TimeAttackData->saveCallback) {
-        Entity *entStore = SceneInfo->entity;
-        if (TimeAttackData->saveEntityPtr)
-            SceneInfo->entity = TimeAttackData->saveEntityPtr;
-        TimeAttackData->saveCallback(statusCode == STATUS_OK);
-        SceneInfo->entity = entStore;
-
-        TimeAttackData->saveCallback  = NULL;
-        TimeAttackData->saveEntityPtr = NULL;
-    }
 }
 
 int32 TimeAttackData_GetScore(uint8 zoneID, uint8 act, uint8 characterID, bool32 encore, int32 rank)
@@ -724,7 +726,7 @@ LeaderboardID *TimeAttackData_GetLeaderboardInfo(uint8 zoneID, uint8 act, uint8 
 }
 
 #else
-void TimeAttackData_SaveTATime(uint8 zone, uint8 act, uint8 characterID, uint8 rank, uint16 score)
+void TimeAttackData_AddRecord(uint8 zone, uint8 act, uint8 characterID, uint8 rank, uint16 score)
 {
     rank--;
     if (rank < 3) {

@@ -654,7 +654,7 @@ void Player_Create(void *data)
         Player->powerups = 0;
 
         // Handle Lives/Score setup
-        EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+        EntityCompetitionSession *session = CompetitionSession_GetSession();
         if (globals->gameMode == MODE_COMPETITION) {
             self->lives    = session->lives[self->playerID];
             self->score    = 0;
@@ -852,7 +852,7 @@ void Player_LoadSprites(void)
 }
 void Player_LoadSpritesVS(void)
 {
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
 
     foreach_all(Player, spawn)
     {
@@ -914,7 +914,7 @@ void Player_GiveScore(EntityPlayer *player, int32 score)
 }
 void Player_GiveRings(EntityPlayer *player, int32 amount, bool32 playSfx)
 {
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
 
     if (globals->gameMode == MODE_COMPETITION)
         session->totalRings[player->playerID] += amount;
@@ -1938,7 +1938,7 @@ void Player_HandleDeath(EntityPlayer *player)
 #endif
             globals->coolBonus[player->playerID] = 0;
 
-            EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+            EntityCompetitionSession *session = CompetitionSession_GetSession();
             if (globals->gameMode == MODE_COMPETITION)
                 session->lives[player->playerID] = player->lives;
 
@@ -1951,7 +1951,7 @@ void Player_HandleDeath(EntityPlayer *player)
                         player->classID = TYPE_BLANK;
                         RSDK.ResetEntitySlot(SLOT_GAMEOVER, GameOver->classID, INT_TO_VOID(true));
 
-                        SaveRAM *saveRAM = SaveGame->saveRAM;
+                        SaveRAM *saveRAM = SaveGame_GetSaveRAM();
                         if (globals->gameMode == MODE_COMPETITION) {
                             int32 playerID                    = RSDK.GetEntitySlot(player);
                             if (!session->finishState[playerID]) {
@@ -1989,7 +1989,7 @@ void Player_HandleDeath(EntityPlayer *player)
                     }
                     else if (globals->gameMode != MODE_COMPETITION) {
                         // Regular Death, fade out and respawn
-                        SaveRAM *saveRAM = SaveGame->saveRAM;
+                        SaveRAM *saveRAM = SaveGame_GetSaveRAM();
                         if (saveRAM) {
                             saveRAM->lives    = player->lives;
                             saveRAM->score    = player->score;
@@ -6008,22 +6008,17 @@ void Player_JumpAbility_Sonic(void)
 {
     RSDK_THIS(Player);
 
-    bool32 dropdashAllowed = false;
+    bool32 dropdashDisabled = false;
 
     if (self->jumpAbilityState == 1) {
 #if MANIA_USE_PLUS
-        if (self->stateInput != Player_Input_P2_AI
-            || (self->up
-#if MANIA_USE_PLUS
-                && globals->gameMode != MODE_ENCORE
-#endif
-                )) {
+        if (self->stateInput != Player_Input_P2_AI || (self->up && globals->gameMode != MODE_ENCORE)) {
 #else
         if (self->stateInput != Player_Input_P2_AI) {
 #endif
             if (self->jumpPress
 #if GAME_VERSION == VER_100
-                && !Player_TryTransform(self, SaveGame->saveRAM->chaosEmeralds)
+                && !Player_TryTransform(self, SaveGame_GetSaveRAM()->chaosEmeralds)
 #endif
             ) {
                 EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(self), Shield);
@@ -6049,10 +6044,8 @@ void Player_JumpAbility_Sonic(void)
                             // [Fallthrough]
                         case SHIELD_BLUE:
                             // returns 0 if dropdash (bit 4) is disabled
-                            // returns 1 if dropdash is enabled and instashield (bit 3) is disabled
-                            // returns 2 if dropdash AND instashield are enabled
-                            if (!(globals->medalMods & MEDAL_NODROPDASH))
-                                self->jumpAbilityState = (~(globals->medalMods & 0xFF) >> 3) & 2;
+                            // returns 2 if dropdash is enabled
+                            self->jumpAbilityState = (~(globals->medalMods & 0xFF) >> 3) & 2;
                             break;
 
                         case SHIELD_BUBBLE:
@@ -6095,16 +6088,16 @@ void Player_JumpAbility_Sonic(void)
 #if GAME_VERSION != VER_100
             else {
                 if (ControllerInfo[self->controllerID].keyY.press)
-                    Player_TryTransform(self, SaveGame->saveRAM->chaosEmeralds);
+                    Player_TryTransform(self, SaveGame_GetSaveRAM()->chaosEmeralds);
             }
 #endif
             return;
         }
 
-        dropdashAllowed = true;
+        dropdashDisabled = true;
     }
 
-    if ((self->jumpAbilityState >= 2 || dropdashAllowed) && self->jumpHold) {
+    if (!dropdashDisabled && self->jumpHold) {
         if (++self->jumpAbilityState >= 22) {
             self->state           = Player_State_DropDash;
             self->nextGroundState = StateMachine_None;
@@ -6126,7 +6119,7 @@ void Player_JumpAbility_Tails(void)
 #endif
                 ))
 #if GAME_VERSION == VER_100
-        && !Player_TryTransform(self, SaveGame->saveRAM->chaosEmeralds)
+        && !Player_TryTransform(self, SaveGame_GetSaveRAM()->chaosEmeralds)
 #endif
     ) {
         if (!self->invertGravity) {
@@ -6144,7 +6137,7 @@ void Player_JumpAbility_Tails(void)
     }
 #if GAME_VERSION != VER_100
     else if (ControllerInfo[self->controllerID].keyY.press)
-        Player_TryTransform(self, SaveGame->saveRAM->chaosEmeralds);
+        Player_TryTransform(self, SaveGame_GetSaveRAM()->chaosEmeralds);
 #endif
 }
 void Player_JumpAbility_Knux(void)
@@ -6159,7 +6152,7 @@ void Player_JumpAbility_Knux(void)
 #endif
                 ))
 #if GAME_VERSION == VER_100
-        && !Player_TryTransform(self, SaveGame->saveRAM->chaosEmeralds)
+        && !Player_TryTransform(self, SaveGame_GetSaveRAM()->chaosEmeralds)
 #endif
     ) {
         if (!self->invertGravity) {
@@ -6187,7 +6180,7 @@ void Player_JumpAbility_Knux(void)
     }
 #if GAME_VERSION != VER_100
     else if (ControllerInfo[self->controllerID].keyY.press)
-        Player_TryTransform(self, SaveGame->saveRAM->chaosEmeralds);
+        Player_TryTransform(self, SaveGame_GetSaveRAM()->chaosEmeralds);
 #endif
 }
 #if MANIA_USE_PLUS
@@ -6219,7 +6212,7 @@ void Player_JumpAbility_Mighty(void)
             }
         }
         else if (ControllerInfo[self->controllerID].keyY.press)
-            Player_TryTransform(self, SaveGame->saveRAM->chaosEmeralds);
+            Player_TryTransform(self, SaveGame_GetSaveRAM()->chaosEmeralds);
     }
     else if (--self->jumpAbilityState == 1)
         self->jumpAbilityState = 0;
@@ -6270,7 +6263,7 @@ void Player_JumpAbility_Ray(void)
         }
     }
     else if (ControllerInfo[self->controllerID].keyY.press)
-        Player_TryTransform(self, SaveGame->saveRAM->chaosEmeralds);
+        Player_TryTransform(self, SaveGame_GetSaveRAM()->chaosEmeralds);
 }
 
 bool32 Player_SfxCheck_RayDive(void) { return Player->rayDiveTimer > 0; }

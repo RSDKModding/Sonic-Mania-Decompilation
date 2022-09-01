@@ -158,7 +158,7 @@ void ExtrasMenu_ProcessInputs(void)
 
 void ExtrasMenu_Start_Puyo_vsAI(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     TimeAttackData_Clear();
 
@@ -174,7 +174,7 @@ void ExtrasMenu_Puyo_vsAI_ActionCB(void) { MenuSetup_StartTransition(ExtrasMenu_
 
 void ExtrasMenu_Start_Puyo_vs2P(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     TimeAttackData_Clear();
 
@@ -190,7 +190,7 @@ void ExtrasMenu_Puyo_vs2P_ActionCB(void) { MenuSetup_StartTransition(ExtrasMenu_
 
 void ExtrasMenu_Start_Credits(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     TimeAttackData_Clear();
 
@@ -207,7 +207,7 @@ void ExtrasMenu_CreditsButton_ActionCB(void) { MenuSetup_StartTransition(ExtrasM
 
 void ExtrasMenu_Start_DAGarden(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     TimeAttackData_Clear();
 
@@ -228,7 +228,7 @@ void ExtrasMenu_DAGarden_ActionCB(void) { MenuSetup_StartTransition(ExtrasMenu_S
 
 void ExtrasMenu_Start_BSS_3K(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     TimeAttackData_Clear();
 
@@ -244,7 +244,7 @@ void ExtrasMenu_BSS_S3_ActionCB(void) { MenuSetup_StartTransition(ExtrasMenu_Sta
 
 void ExtrasMenu_Start_BSS_Mania(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     TimeAttackData_Clear();
 

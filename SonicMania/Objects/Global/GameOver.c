@@ -162,7 +162,7 @@ void GameOver_State_EnterLetters(void)
 
     if (self->timer == 0) {
 #if MANIA_USE_PLUS
-        EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+        EntityCompetitionSession *session = CompetitionSession_GetSession();
         if (globals->gameMode != MODE_COMPETITION) {
             Music_TransitionTrack(TRACK_GAMEOVER, 0.025);
         }
@@ -223,7 +223,7 @@ void GameOver_State_WaitComp(void)
     RSDK_THIS(GameOver);
 
     EntityCompetition *manager        = Competition->sessionManager;
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
 
     int32 gameOverCount = 0;
     int32 deathCount    = 0;
@@ -303,7 +303,7 @@ void GameOver_State_ExitLetters(void)
     if (self->timer == 90) {
         self->timer = 0;
 
-        EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+        EntityCompetitionSession *session = CompetitionSession_GetSession();
         if (globals->gameMode == MODE_COMPETITION) {
             session->completedStages[session->stageIndex] = true;
 #if MANIA_USE_PLUS
@@ -322,7 +322,7 @@ void GameOver_State_ExitLetters(void)
             RSDK.LoadScene();
         }
         else {
-            SaveRAM *saveRAM = SaveGame->saveRAM;
+            SaveRAM *saveRAM = SaveGame_GetSaveRAM();
             if (globals->gameMode >= MODE_TIMEATTACK) {
                 RSDK.SetScene("Presentation", "Menu");
                 RSDK.LoadScene();

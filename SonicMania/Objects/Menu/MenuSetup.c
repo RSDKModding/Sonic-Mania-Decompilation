@@ -153,7 +153,7 @@ void MenuSetup_Create(void *data)
 void MenuSetup_StageLoad(void)
 {
 #if MANIA_USE_PLUS
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
     LogHelpers_Print("Menu recall ctrl: %s", param->menuTag);
 
     MenuSetup->initializedMenuReturn = false;
@@ -496,8 +496,8 @@ bool32 MenuSetup_InitAPI(void)
 
             if (!MenuSetup->initializedSaves) {
                 UIWaitSpinner_StartWait();
-                Options_LoadOptionsBin();
-                SaveGame_LoadFile();
+                Options_LoadFile(Options_LoadCallback);
+                SaveGame_LoadFile(SaveGame_SaveLoadedCB);
 
                 MenuSetup->initializedSaves = true;
             }
@@ -849,7 +849,7 @@ void MenuSetup_HandleUnlocks(void)
 
 void MenuSetup_HandleMenuReturn(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     char buffer[0x100];
     memset(buffer, 0, 0x100);
@@ -927,7 +927,7 @@ void MenuSetup_HandleMenuReturn(void)
             control->buttonID   = Localization->language;
         }
 
-        EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+        EntityCompetitionSession *session = CompetitionSession_GetSession();
         if (session->inMatch) {
             if (control == MenuSetup->competition) {
                 foreach_all(UIVsCharSelector, selector)
@@ -1288,7 +1288,7 @@ void MenuSetup_SaveSel_YPressCB(void)
 
 void MenuSetup_TA_OpenZoneList_Sonic(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
     TimeAttackData_Clear();
 
     param->characterID = 1;
@@ -1304,7 +1304,7 @@ void MenuSetup_TA_OpenZoneList_Sonic(void)
 
 void MenuSetup_TA_OpenZoneList_Tails(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
     TimeAttackData_Clear();
 
     param->characterID = 2;
@@ -1320,7 +1320,7 @@ void MenuSetup_TA_OpenZoneList_Tails(void)
 
 void MenuSetup_TA_OpenZoneList_Knux(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
     TimeAttackData_Clear();
 
     param->characterID = 3;
@@ -1338,7 +1338,7 @@ void MenuSetup_TA_TAZoneModule_ActionCB(void) { MenuSetup_StartTransition(MenuSe
 
 void MenuSetup_TA_StartAttempt(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     sprintf(param->menuTag, "Time Attack Zones");
     param->menuSelection    = param->zoneID;
@@ -1504,8 +1504,8 @@ void MenuSetup_VS_MenuSetupCB(void)
 
 void MenuSetup_VS_StartMatch(void)
 {
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
-    EntityMenuParam *param            = (EntityMenuParam *)globals->menuParam;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
+    EntityMenuParam *param            = MenuParam_GetParam();
 
     sprintf(param->menuTag, "Competition Round");
     session->stageIndex = MenuSetup->competitionZones->buttonID;
@@ -1542,7 +1542,7 @@ void MenuSetup_VS_RulesButton_ActionCB(void)
 {
     EntityUIControl *compControl      = MenuSetup->competition;
     EntityUIControl *rulesControl     = MenuSetup->competitionRules;
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
 
     int32 matchCount = 0;
     foreach_all(UIVsRoundPicker, vsRoundPicker)
@@ -1602,7 +1602,7 @@ void MenuSetup_VS_OpenCompTotal(void) { UIControl_MatchMenuTag("Competition Tota
 
 void MenuSetup_VS_Round_ProcessButtonCB(void)
 {
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
 
     if (UIControl->confirmPress[0] || UIControl->confirmPress[1] || UIControl->confirmPress[2] || UIControl->confirmPress[3]) {
         bool32 toCompTotal = false;
@@ -1628,7 +1628,7 @@ void MenuSetup_VS_Round_ProcessButtonCB(void)
 
 void MenuSetup_VS_Round_MenuSetupCB(void)
 {
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
     EntityUIControl *roundControl     = MenuSetup->competitionRound;
 
     int32 matchWinner = session->matchWinner[session->matchID - 1];
@@ -1745,7 +1745,7 @@ void MenuSetup_VS_GotoCompetition(void) { UIControl_MatchMenuTag("Competition");
 
 void MenuSetup_VS_Total_ProcessButtonCB(void)
 {
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
 
     if (UIControl->anyConfirmPress) {
         int32 mostWins = 0;
@@ -1776,7 +1776,7 @@ void MenuSetup_VS_Total_ProcessButtonCB(void)
 void MenuSetup_VS_Total_MenuSetupCB(void)
 {
     EntityUIControl *totalControl     = MenuSetup->competitionTotal;
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
 
     MenuSetup->vsTotalTimer = 120;
 
@@ -1934,7 +1934,7 @@ bool32 MenuSetup_VS_CompZones_BackPressCB(void)
 
 void MenuSetup_VS_StartPuyoMatch(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     TimeAttackData_Clear();
 
@@ -2063,7 +2063,7 @@ void MenuSetup_OptionsVideo_Win_InitVideoOptionsMenu(void)
 {
     if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV) {
         EntityUIControl *videoControl_Win = MenuSetup->video_win;
-        OptionsRAM *optionsRAM            = (OptionsRAM *)globals->optionsRAM;
+        OptionsRAM *optionsRAM            = Options_GetOptionsRAM();
         Options_GetWinSize();
 
         int32 options[7];
@@ -2137,7 +2137,7 @@ void MenuSetup_Options_MenuSetupCB(void)
     if (Options->changed) {
         UIWaitSpinner_StartWait();
 
-        Options_SaveOptionsBin(MenuSetup_Options_SaveOptionsCB_Load);
+        Options_SaveFile(MenuSetup_Options_SaveOptionsCB_Load);
     }
 }
 
@@ -2151,7 +2151,7 @@ void MenuSetup_Options_LaunchManual(void)
 
 void MenuSetup_OptionsLanguage_LanguageButton_ActionCB(void)
 {
-    OptionsRAM *options      = (OptionsRAM *)globals->optionsRAM;
+    OptionsRAM *options      = Options_GetOptionsRAM();
     EntityUIControl *control = MenuSetup->language;
 
     if (control->buttonID < 0)
@@ -2181,7 +2181,7 @@ void MenuSetup_OptionsVideo_ShaderButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
 
-    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
+    OptionsRAM *options = Options_GetOptionsRAM();
 
     options->screenShader   = self->selection;
     options->overrideShader = true;
@@ -2194,7 +2194,7 @@ void MenuSetup_OptionsVideo_WindowScaleButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
 
-    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
+    OptionsRAM *options = Options_GetOptionsRAM();
 
     if (self->selection != 4) {
         RSDK.SetVideoSetting(VIDEOSETTING_WINDOW_WIDTH, WIDE_SCR_XSIZE * (self->selection + 1));
@@ -2209,7 +2209,7 @@ void MenuSetup_OptionsVideo_BorderlessButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
 
-    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
+    OptionsRAM *options = Options_GetOptionsRAM();
 
     options->windowBorder = self->selection;
     RSDK.SetVideoSetting(VIDEOSETTING_BORDERED, self->selection);
@@ -2222,7 +2222,7 @@ void MenuSetup_OptionsVideo_FullscreenButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
 
-    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
+    OptionsRAM *options = Options_GetOptionsRAM();
 
     options->windowed = self->selection ^ 1;
     RSDK.SetVideoSetting(VIDEOSETTING_WINDOWED, options->windowed);
@@ -2235,7 +2235,7 @@ void MenuSetup_OptionsVideo_VSyncButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
 
-    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
+    OptionsRAM *options = Options_GetOptionsRAM();
 
     options->vSync = self->selection;
     RSDK.SetVideoSetting(VIDEOSETTING_VSYNC, self->selection);
@@ -2247,7 +2247,7 @@ void MenuSetup_OptionsVideo_TripleBufferButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
 
-    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
+    OptionsRAM *options = Options_GetOptionsRAM();
 
     options->tripleBuffering = self->selection;
     RSDK.SetVideoSetting(VIDEOSETTING_TRIPLEBUFFERED, self->selection);
@@ -2259,7 +2259,7 @@ void MenuSetup_OptionsVideo_UISlider_ChangedCB(void)
 {
     RSDK_THIS(UISlider);
 
-    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
+    OptionsRAM *options = Options_GetOptionsRAM();
 
     // Bug Details (?):
     // what the hell is up with this???????
@@ -2320,7 +2320,7 @@ void MenuSetup_Extras_ProcessButtonCB(void) { UIControl_ProcessButtonInput(); }
 
 void MenuSetup_Extras_Start_Puyo_vsAI(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     TimeAttackData_Clear();
 
@@ -2336,7 +2336,7 @@ void MenuSetup_Extras_Puyo_vsAI_ActionCB(void) { MenuSetup_StartTransition(MenuS
 
 void MenuSetup_Extras_Start_Puyo_vs2P(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     TimeAttackData_Clear();
 
@@ -2352,7 +2352,7 @@ void MenuSetup_Extras_Puyo_vs2P_ActionCB(void) { MenuSetup_StartTransition(MenuS
 
 void MenuSetup_Extras_Start_Credits(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     TimeAttackData_Clear();
 
@@ -2369,7 +2369,7 @@ void MenuSetup_Extras_Credits_ActionCB(void) { MenuSetup_StartTransition(MenuSet
 
 void MenuSetup_Extras_StartDAGarden(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     TimeAttackData_Clear();
 
@@ -2384,7 +2384,7 @@ void MenuSetup_Extras_DAGarden_ActionCB(void) { MenuSetup_StartTransition(MenuSe
 
 void MenuSetup_Extras_Start_BSS_3K(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     TimeAttackData_Clear();
 
@@ -2400,7 +2400,7 @@ void MenuSetup_Extras_BSS_3K_ActionCB(void) { MenuSetup_StartTransition(MenuSetu
 
 void MenuSetup_Extras_Start_BSS_Mania(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     TimeAttackData_Clear();
 

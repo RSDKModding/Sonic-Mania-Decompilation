@@ -76,7 +76,7 @@ void ReplayRecorder_StaticUpdate(void)
             if (ReplayRecorder->startPlayback) {
                 EntityPlayer *player = NULL;
                 if (Player->playerCount <= 1) {
-                    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+                    EntityMenuParam *param = MenuParam_GetParam();
 
                     player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
                     API_SetAchievementsEnabled(false);
@@ -201,7 +201,7 @@ void ReplayRecorder_StageLoad(void)
             else
                 replayPtr = ReplayRecorder->playbackBuffer;
 
-            EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+            EntityMenuParam *param = MenuParam_GetParam();
             if (param->viewReplay && replayPtr->header.isNotEmpty) {
                 if (param->showGhost) {
                     globals->playerID        = GET_CHARACTER_ID(1) | (GET_CHARACTER_ID(1) << 8);
@@ -273,10 +273,10 @@ void ReplayRecorder_Buffer_Move(void)
 
     if (replayPtr->header.isNotEmpty) {
         if (replayPtr->header.frameCount < ReplayRecorder->recordingManager->maxFrameCount - 1) {
-            memset(globals->replayTempWBuffer, 0, REPLAY_BUFFER_SIZE);
+            memset(globals->replayTempWBuffer, 0, sizeof(globals->replayTempWBuffer));
             LogHelpers_Print("Buffer_Move(0x%08x, 0x%08x)", globals->replayTempWBuffer, replayPtr);
-            memcpy(globals->replayTempWBuffer, replayPtr, REPLAY_BUFFER_SIZE);
-            memset(replayPtr, 0, REPLAY_BUFFER_SIZE);
+            memcpy(globals->replayTempWBuffer, replayPtr, sizeof(globals->replayTempWBuffer));
+            memset(replayPtr, 0, sizeof(globals->replayWriteBuffer));
             ReplayRecorder_Buffer_PackInPlace(globals->replayTempWBuffer);
             HUD->replaySaveEnabled = true;
         }
@@ -301,8 +301,8 @@ void ReplayRecorder_SaveReplayDLG_YesCB(void)
     int32 millisecs = SceneInfo->milliseconds;
     LogHelpers_Print("Bout to create ReplayDB entry...");
 
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    int32 rowID            = ReplayRecorder_AddReplayID(param->zoneID, param->actID, param->characterID, millisecs + 100 * (secs + 60 * mins),
+    EntityMenuParam *param = MenuParam_GetParam();
+    int32 rowID            = ReplayDB_AddReplay(param->zoneID, param->actID, param->characterID, millisecs + 100 * (secs + 60 * mins),
                                              SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE));
     if (rowID == -1) {
         LogHelpers_Print("Table row ID invalid! %d", -1);
@@ -318,7 +318,7 @@ void ReplayRecorder_SaveReplayDLG_YesCB(void)
         UIWaitSpinner_StartWait();
 
         ReplayRecorder->savedReplay = true;
-        ReplayRecorder_Buffer_SaveFile(fileName, globals->replayTempWBuffer);
+        ReplayRecorder_Buffer_SaveFile(fileName, globals->replayTempWBuffer, ReplayRecorder_SaveFile_Replay);
         HUD->replaySaveEnabled = false;
     }
 }
@@ -358,7 +358,7 @@ void ReplayRecorder_SaveFile_Replay(bool32 success)
 {
     if (success) {
         LogHelpers_Print("Replay save successful!");
-        ReplayRecorder_SaveReplayDB(ReplayRecorder_SaveUserDB_ReplayDB);
+        ReplayDB_SaveDB(ReplayRecorder_SaveCallback_ReplayDB);
     }
     else {
         if (ReplayRecorder->replayRowID != -1)
@@ -377,7 +377,7 @@ void ReplayRecorder_SaveFile_Replay(bool32 success)
     }
 }
 
-void ReplayRecorder_SaveUserDB_ReplayDB(bool32 success)
+void ReplayRecorder_SaveCallback_ReplayDB(bool32 success)
 {
     if (success) {
         if (TimeAttackData->rowID == -1) {
@@ -393,7 +393,7 @@ void ReplayRecorder_SaveUserDB_ReplayDB(bool32 success)
         }
         else {
             API.SetUserDBValue(globals->taTableID, TimeAttackData->rowID, DBVAR_UINT32, "replayID", &ReplayRecorder->replayID);
-            TimeAttackData_SaveTimeAttackDB(ReplayRecorder_SaveUserDB_TimeAttackDB);
+            TimeAttackData_SaveDB(ReplayRecorder_SaveCallback_TimeAttackDB);
         }
     }
     else {
@@ -418,7 +418,7 @@ void ReplayRecorder_SaveUserDB_ReplayDB(bool32 success)
     }
 }
 
-void ReplayRecorder_SaveUserDB_TimeAttackDB(bool32 success)
+void ReplayRecorder_SaveCallback_TimeAttackDB(bool32 success)
 {
     UIWaitSpinner_FinishWait();
 
@@ -505,7 +505,7 @@ void ReplayRecorder_Buffer_Unpack(int32 *readBuffer, int32 *tempReadBuffer)
 
             replayPtr->header.isPacked   = false;
             replayPtr->header.bufferSize = uncompressedSize;
-            memset(tempReadBuffer, 0, REPLAY_BUFFER_SIZE);
+            memset(tempReadBuffer, 0, sizeof(globals->replayTempRBuffer));
         }
         else {
             LogHelpers_Print("Buffer_Unpack ERROR: Buffer is not packed");
@@ -516,42 +516,43 @@ void ReplayRecorder_Buffer_Unpack(int32 *readBuffer, int32 *tempReadBuffer)
     }
 }
 
-void ReplayRecorder_Buffer_SaveFile(const char *fileName, int32 *buffer)
+void ReplayRecorder_Buffer_SaveFile(const char *fileName, int32 *buffer, void (*callback)(bool32 success))
 {
     LogHelpers_Print("Buffer_SaveFile(%s, %08x)", fileName, buffer);
 
     Replay *replayPtr = (Replay *)buffer;
     if (replayPtr->header.isNotEmpty) {
-        ReplayRecorder->saveFinishPtr = ReplayRecorder_SaveFile_Replay;
-        API_SaveUserFile(fileName, buffer, replayPtr->header.bufferSize, ReplayRecorder_SetReplayStatus, true);
+        ReplayRecorder->saveCallback = callback;
+        API_SaveUserFile(fileName, buffer, replayPtr->header.bufferSize, ReplayRecorder_SaveReplayCallback, true);
     }
     else {
         LogHelpers_Print("Attempted to save an empty replay buffer");
-        ReplayRecorder_SaveFile_Replay(false);
+        if (callback)
+            callback(false);
     }
 }
 
-void ReplayRecorder_SetReplayStatus(int32 status)
+void ReplayRecorder_SaveReplayCallback(int32 status)
 {
-    if (ReplayRecorder->saveFinishPtr)
-        ReplayRecorder->saveFinishPtr(status == STATUS_OK);
+    if (ReplayRecorder->saveCallback)
+        ReplayRecorder->saveCallback(status == STATUS_OK);
 
-    ReplayRecorder->saveFinishPtr = NULL;
+    ReplayRecorder->saveCallback = NULL;
 }
 
 void ReplayRecorder_Buffer_LoadFile(const char *fileName, void *buffer, void (*callback)(bool32 success))
 {
     LogHelpers_Print("Buffer_LoadFile(%s, %08x)", fileName, buffer);
 
-    memset(buffer, 0, REPLAY_BUFFER_SIZE);
+    memset(buffer, 0, sizeof(globals->replayReadBuffer));
     ReplayRecorder->fileBuffer   = buffer;
     ReplayRecorder->loadCallback = callback;
     strcpy(ReplayRecorder->filename, fileName);
 
-    API_LoadUserFile(fileName, buffer, REPLAY_BUFFER_SIZE, ReplayRecorder_LoadFile_Replay);
+    API_LoadUserFile(fileName, buffer, sizeof(globals->replayReadBuffer), ReplayRecorder_LoadReplayCallback);
 }
 
-void ReplayRecorder_LoadFile_Replay(int32 status)
+void ReplayRecorder_LoadReplayCallback(int32 status)
 {
     if (ReplayRecorder->loadCallback)
         ReplayRecorder->loadCallback(status == STATUS_OK);
@@ -646,7 +647,7 @@ void ReplayRecorder_SetupActions(void)
 
 void ReplayRecorder_SetupWriteBuffer(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
     Replay *replayPtr      = ReplayRecorder->recordBuffer;
 
     replayPtr->header.signature     = REPLAY_SIGNATURE;
@@ -1197,6 +1198,8 @@ void ReplayRecorder_State_SetupPlayback(void)
 
 void ReplayRecorder_State_Playback(void) {}
 
+void ReplayRecorder_State_Record(void) {}
+
 void ReplayRecorder_Late_Playback(void)
 {
     RSDK_THIS(ReplayRecorder);
@@ -1245,8 +1248,6 @@ void ReplayRecorder_Late_Playback(void)
 
     ++self->replayFrame;
 }
-
-void ReplayRecorder_State_Record(void) {}
 
 void ReplayRecorder_Late_RecordFrames(void)
 {
@@ -1390,176 +1391,6 @@ void ReplayRecorder_Late_RecordFrames(void)
     else {
         self->state     = StateMachine_None;
         self->stateLate = StateMachine_None;
-    }
-}
-
-void ReplayRecorder_LoadReplayDB(void (*callback)(bool32 success))
-{
-    if ((globals->replayTableID != -1 && globals->replayTableLoaded == STATUS_OK) || globals->replayTableLoaded == STATUS_CONTINUE)
-        return;
-
-    LogHelpers_Print("Loading Replay DB");
-    globals->replayTableLoaded = STATUS_CONTINUE;
-
-    ReplayDB->loadEntity   = SceneInfo->entity;
-    ReplayDB->loadCallback = NULL;
-    globals->replayTableID = API.LoadUserDB("ReplayDB.bin", ReplayRecorder_SetStatus); // Shouldn't this use 'callback'?
-
-    if (globals->replayTableID == -1) {
-        LogHelpers_Print("Couldn't claim a slot for loading %s", "ReplayDB.bin");
-        globals->replayTableLoaded = STATUS_ERROR;
-    }
-}
-
-void ReplayRecorder_SaveReplayDB(void (*callback)(bool32 success))
-{
-    if (API_GetNoSave() || globals->replayTableID == (uint16)-1 || globals->replayTableLoaded != STATUS_OK) {
-        if (callback)
-            callback(false);
-    }
-    else {
-        LogHelpers_Print("Saving Replay DB");
-        ReplayDB->saveEntity   = SceneInfo->entity;
-        ReplayDB->saveCallback = callback;
-        API.SaveUserDB(globals->replayTableID, ReplayRecorder_SaveUserDB_ReplayDBManager);
-    }
-}
-
-void ReplayRecorder_CreateReplayDB(void)
-{
-    globals->replayTableID = API.InitUserDB("ReplayDB.bin", DBVAR_UINT32, "score", DBVAR_UINT8, "zoneID", DBVAR_UINT8, "act", DBVAR_UINT8,
-                                            "characterID", DBVAR_UINT8, "encore", DBVAR_UINT32, "zoneSortVal", NULL);
-
-    if (globals->replayTableID == -1)
-        globals->replayTableLoaded = STATUS_ERROR;
-    else
-        globals->replayTableLoaded = STATUS_OK;
-}
-
-uint32 ReplayRecorder_AddReplayID(uint8 zoneID, uint8 act, uint8 characterID, int32 score, uint8 encore)
-{
-    if (globals->replayTableLoaded == STATUS_OK) {
-        uint32 rowID       = API.AddUserDBRow(globals->replayTableID);
-        int32 zoneStortVal = (score & 0x3FFFFFF) | (((zoneID << 2) | (act & 1) | ((encore & 1) << 1)) << 26);
-
-        API.SetUserDBValue(globals->replayTableID, rowID, DBVAR_UINT32, "score", &score);
-        API.SetUserDBValue(globals->replayTableID, rowID, DBVAR_UINT8, "zoneID", &zoneID);
-        API.SetUserDBValue(globals->replayTableID, rowID, DBVAR_UINT8, "act", &act);
-        API.SetUserDBValue(globals->replayTableID, rowID, DBVAR_UINT8, "characterID", &characterID);
-        API.SetUserDBValue(globals->replayTableID, rowID, DBVAR_UINT8, "encore", &encore);
-        API.SetUserDBValue(globals->replayTableID, rowID, DBVAR_UINT32, "zoneSortVal", &zoneStortVal);
-
-        uint32 UUID = API.GetUserDBRowUUID(globals->replayTableID, rowID);
-        char createTime[24];
-        sprintf_s(createTime, (int32)sizeof(createTime), "");
-        API.GetUserDBRowCreationTime(globals->replayTableID, rowID, createTime, 23, "%Y/%m/%d %H:%M:%S");
-
-        LogHelpers_Print("Replay DB Added Entry");
-        LogHelpers_Print("Created at %s", createTime);
-        LogHelpers_Print("Row ID: %d", rowID);
-        LogHelpers_Print("UUID: %08X", UUID);
-
-        return rowID;
-    }
-
-    return -1;
-}
-
-void ReplayRecorder_DeleteReplay(int32 row, void (*callback)(bool32 success), bool32 useAltCB)
-{
-    int32 id       = API.GetUserDBRowUUID(globals->replayTableID, row);
-    int32 replayID = 0;
-
-    ReplayDB->deleteEntity   = SceneInfo->entity;
-    ReplayDB->deleteCallback = callback;
-    API.RemoveDBRow(globals->replayTableID, row);
-    TimeAttackData->loaded = false;
-
-    API.SetupUserDBRowSorting(globals->taTableID);
-    API.AddRowSortFilter(globals->taTableID, DBVAR_UINT32, "replayID", &id);
-
-    int32 count = API.GetSortedUserDBRowCount(globals->taTableID);
-    for (int32 i = 0; i < count; ++i) {
-        uint32 uuid = API.GetSortedUserDBRowID(globals->taTableID, i);
-        LogHelpers_Print("Deleting Time Attack replay from row #%d", uuid);
-        API.SetUserDBValue(globals->taTableID, uuid, DBVAR_UINT32, "replayID", &replayID);
-    }
-
-    char filename[0x20];
-    sprintf_s(filename, (int32)sizeof(filename), "Replay_%08X.bin", id);
-    if (!useAltCB)
-        API.DeleteUserFile(filename, ReplayRecorder_DeleteReplay_CB);
-    else
-        API.DeleteUserFile(filename, ReplayRecorder_DeleteReplaySave2_CB);
-}
-
-void ReplayRecorder_DeleteReplay_CB(int32 status)
-{
-    LogHelpers_Print("DeleteReplay_CB(%d)", status);
-
-    API.SaveUserDB(globals->replayTableID, ReplayRecorder_DeleteReplaySave_CB);
-}
-
-void ReplayRecorder_DeleteReplaySave_CB(int32 status)
-{
-    LogHelpers_Print("DeleteReplaySave_CB(%d)", status);
-
-    API.SaveUserDB(globals->taTableID, ReplayRecorder_DeleteReplaySave2_CB);
-}
-
-void ReplayRecorder_DeleteReplaySave2_CB(int32 status)
-{
-    LogHelpers_Print("DeleteReplaySave2_CB(%d)", status);
-
-    if (ReplayDB->deleteCallback) {
-        Entity *store = SceneInfo->entity;
-        if (ReplayDB->deleteEntity)
-            SceneInfo->entity = ReplayDB->deleteEntity;
-        ReplayDB->deleteCallback(status == STATUS_OK);
-        SceneInfo->entity = store;
-
-        ReplayDB->deleteCallback = NULL;
-        ReplayDB->deleteEntity   = NULL;
-    }
-}
-
-void ReplayRecorder_SetStatus(int32 status)
-{
-    if (status == STATUS_OK) {
-        globals->replayTableLoaded = STATUS_OK;
-        API.SetupUserDBRowSorting(globals->replayTableID);
-        LogHelpers_Print("Load Succeeded! Replay count: %d", API.GetSortedUserDBRowCount(globals->replayTableID));
-    }
-    else {
-        LogHelpers_Print("Load Failed! Creating new Replay DB");
-        ReplayRecorder_CreateReplayDB();
-    }
-
-    LogHelpers_Print("Replay DB Slot => %d, Load Status => %d", globals->replayTableID, globals->replayTableLoaded);
-
-    if (ReplayDB->loadCallback) {
-        Entity *store = SceneInfo->entity;
-        if (ReplayDB->loadEntity)
-            SceneInfo->entity = ReplayDB->loadEntity;
-        ReplayDB->loadCallback(status == STATUS_OK);
-        SceneInfo->entity = store;
-
-        ReplayDB->loadCallback = NULL;
-        ReplayDB->loadEntity   = NULL;
-    }
-}
-
-void ReplayRecorder_SaveUserDB_ReplayDBManager(int32 status)
-{
-    if (ReplayDB->saveCallback) {
-        Entity *store = SceneInfo->entity;
-        if (ReplayDB->saveEntity)
-            SceneInfo->entity = ReplayDB->saveEntity;
-        ReplayDB->saveCallback(status == STATUS_OK);
-        SceneInfo->entity = store;
-
-        ReplayDB->saveCallback = NULL;
-        ReplayDB->saveEntity   = NULL;
     }
 }
 
