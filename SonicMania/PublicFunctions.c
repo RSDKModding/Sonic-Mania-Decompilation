@@ -3612,8 +3612,10 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(UIKeyBinder_State_HandleButtonLeave);
     ADD_PUBLIC_FUNC(UIKeyBinder_State_HandleButtonEnter);
     ADD_PUBLIC_FUNC(UIKeyBinder_State_Selected);
+#if GAME_VERSION != VER_100
     ADD_PUBLIC_FUNC(UIKeyBinder_MoveKeyToActionCB_No);
     ADD_PUBLIC_FUNC(UIKeyBinder_MoveKeyToActionCB_Yes);
+#endif
 
     // Menu/UILeaderboard
     ADD_PUBLIC_FUNC(UILeaderboard_SetupEntrySprites);

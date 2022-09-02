@@ -52,6 +52,8 @@ void UIKeyBinder_Update(void)
                     continue;
 
                 if (self->state == UIKeyBinder_State_Selected) {
+#if GAME_VERSION != VER_100
+                    // Handle Key clashes
                     UIKeyBinder->activeInputID  = inputSlot;
                     UIKeyBinder->activeButtonID = buttonID;
 
@@ -69,6 +71,14 @@ void UIKeyBinder_Update(void)
                     UIKeyBinder_SetMappings(self->type, inputID, KEYMAP_NO_MAPPING);
                     self->lasyKeyMap = KEYMAP_NO_MAPPING;
                     UIDialog_CreateDialogYesNo(&string, UIKeyBinder_MoveKeyToActionCB_Yes, UIKeyBinder_MoveKeyToActionCB_No, true, true);
+#else
+                    // key clash!! just fail!!
+                    int32 frame = UIButtonPrompt_MappingsToFrame(self->lasyKeyMap);
+                    RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &self->keyAnimator, true, frame);
+                    UIKeyBinder_SetMappings(inputID, self->type, KEYMAP_AUTO_MAPPING);
+
+                    RSDK.PlaySfx(UIKeyBinder->sfxFail, false, 255);
+#endif
                     keyMapChanged = false;
                 }
             }
@@ -81,22 +91,28 @@ void UIKeyBinder_Update(void)
             self->lasyKeyMap = keyMap;
 
             if (self->state == UIKeyBinder_State_Selected) {
+#if GAME_VERSION != VER_100
                 LogHelpers_Print("bind = %d 0x%02x", keyMap, keyMap);
-
                 UIKeyBinder->isSelected   = false;
+#endif
+
                 parent->selectionDisabled = false;
                 self->processButtonCB     = UIButton_ProcessButtonCB_Scroll;
                 self->state               = UIKeyBinder_State_HandleButtonEnter;
 
-                UIKeyBinder->activeBinder = NULL;
                 parent->childHasFocus     = false;
 
+#if GAME_VERSION != VER_100
+                UIKeyBinder->activeBinder = NULL;
                 RSDK.SetVideoSetting(VIDEOSETTING_CHANGED, true);
+#endif
                 RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
             }
         }
         else {
+#if GAME_VERSION != VER_100
             LogHelpers_Print("bind = %d 0x%02x", keyMap, keyMap);
+#endif
 
             int32 frame = UIButtonPrompt_MappingsToFrame(self->lasyKeyMap);
             RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &self->keyAnimator, true, frame);
@@ -305,6 +321,7 @@ void UIKeyBinder_SelectedCB(void)
 {
     RSDK_THIS(UIKeyBinder);
 
+#if GAME_VERSION != VER_100
     if (!UIKeyBinder->isSelected) {
         UIKeyBinder->isSelected = true;
 
@@ -319,6 +336,15 @@ void UIKeyBinder_SelectedCB(void)
 
         UIKeyBinder_SetMappings(self->inputID + 1, self->type, KEYMAP_AUTO_MAPPING);
     }
+#else
+    EntityUIControl *parent = (EntityUIControl *)self->parent;
+    parent->childHasFocus = true;
+
+    self->state = UIKeyBinder_State_Selected;
+    RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
+
+    UIKeyBinder_SetMappings(self->inputID + 1, self->type, KEYMAP_AUTO_MAPPING);
+#endif
 }
 
 void UIKeyBinder_State_HandleButtonLeave(void)
@@ -389,6 +415,7 @@ void UIKeyBinder_State_Selected(void)
     self->timer++;
 }
 
+#if GAME_VERSION != VER_100
 void UIKeyBinder_MoveKeyToActionCB_No(void)
 {
     EntityUIKeyBinder *binder = UIKeyBinder->activeBinder;
@@ -428,6 +455,7 @@ void UIKeyBinder_MoveKeyToActionCB_Yes(void)
         UIKeyBinder->activeButtonID = KEYMAP_AUTO_MAPPING;
     }
 }
+#endif
 
 #if RETRO_INCLUDE_EDITOR
 void UIKeyBinder_EditorDraw(void)
