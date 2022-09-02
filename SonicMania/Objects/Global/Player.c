@@ -6008,7 +6008,7 @@ void Player_JumpAbility_Sonic(void)
 {
     RSDK_THIS(Player);
 
-    bool32 dropdashDisabled = false;
+    bool32 dropdashDisabled = self->jumpAbilityState <= 1;
 
     if (self->jumpAbilityState == 1) {
 #if MANIA_USE_PLUS
