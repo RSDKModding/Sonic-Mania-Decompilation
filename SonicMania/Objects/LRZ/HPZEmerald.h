@@ -19,7 +19,7 @@ struct ObjectHPZEmerald {
 struct EntityHPZEmerald {
     RSDK_ENTITY
     StateMachine(state); // unused
-    int32 type;
+    uint8 type;
     bool32 solid;
     Vector2 startPos;
     Hitbox *hitbox;
