@@ -765,7 +765,7 @@ void ActClear_State_SaveGameProgress(void)
                 SaveGame_ClearRestartData();
                 StarPost_ResetStarPosts();
                 if (Zone->actID > 0)
-                    SaveGame_GetSaveRAM()->collectedSpecialRings = 0;
+                    SaveGame_ClearCollectedSpecialRings();
                 SaveGame_SaveProgress();
 #if MANIA_USE_PLUS
                 if (globals->saveSlotID != NO_SAVE_SLOT && !ActClear->forceNoSave) {

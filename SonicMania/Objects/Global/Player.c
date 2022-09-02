@@ -6018,7 +6018,7 @@ void Player_JumpAbility_Sonic(void)
 #endif
             if (self->jumpPress
 #if GAME_VERSION == VER_100
-                && !Player_TryTransform(self, SaveGame_GetSaveRAM()->chaosEmeralds)
+                && !Player_TryTransform(self, SaveGame_GetSaveRAM()->collectedEmeralds)
 #endif
             ) {
                 EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(self), Shield);
@@ -6088,7 +6088,7 @@ void Player_JumpAbility_Sonic(void)
 #if GAME_VERSION != VER_100
             else {
                 if (ControllerInfo[self->controllerID].keyY.press)
-                    Player_TryTransform(self, SaveGame_GetSaveRAM()->chaosEmeralds);
+                    Player_TryTransform(self, SaveGame_GetSaveRAM()->collectedEmeralds);
             }
 #endif
             return;
@@ -6119,7 +6119,7 @@ void Player_JumpAbility_Tails(void)
 #endif
                 ))
 #if GAME_VERSION == VER_100
-        && !Player_TryTransform(self, SaveGame_GetSaveRAM()->chaosEmeralds)
+        && !Player_TryTransform(self, SaveGame_GetSaveRAM()->collectedEmeralds)
 #endif
     ) {
         if (!self->invertGravity) {
@@ -6137,7 +6137,7 @@ void Player_JumpAbility_Tails(void)
     }
 #if GAME_VERSION != VER_100
     else if (ControllerInfo[self->controllerID].keyY.press)
-        Player_TryTransform(self, SaveGame_GetSaveRAM()->chaosEmeralds);
+        Player_TryTransform(self, SaveGame_GetSaveRAM()->collectedEmeralds);
 #endif
 }
 void Player_JumpAbility_Knux(void)
@@ -6152,7 +6152,7 @@ void Player_JumpAbility_Knux(void)
 #endif
                 ))
 #if GAME_VERSION == VER_100
-        && !Player_TryTransform(self, SaveGame_GetSaveRAM()->chaosEmeralds)
+        && !Player_TryTransform(self, SaveGame_GetSaveRAM()->collectedEmeralds)
 #endif
     ) {
         if (!self->invertGravity) {
@@ -6180,7 +6180,7 @@ void Player_JumpAbility_Knux(void)
     }
 #if GAME_VERSION != VER_100
     else if (ControllerInfo[self->controllerID].keyY.press)
-        Player_TryTransform(self, SaveGame_GetSaveRAM()->chaosEmeralds);
+        Player_TryTransform(self, SaveGame_GetSaveRAM()->collectedEmeralds);
 #endif
 }
 #if MANIA_USE_PLUS
@@ -6212,7 +6212,7 @@ void Player_JumpAbility_Mighty(void)
             }
         }
         else if (ControllerInfo[self->controllerID].keyY.press)
-            Player_TryTransform(self, SaveGame_GetSaveRAM()->chaosEmeralds);
+            Player_TryTransform(self, SaveGame_GetSaveRAM()->collectedEmeralds);
     }
     else if (--self->jumpAbilityState == 1)
         self->jumpAbilityState = 0;
@@ -6263,7 +6263,7 @@ void Player_JumpAbility_Ray(void)
         }
     }
     else if (ControllerInfo[self->controllerID].keyY.press)
-        Player_TryTransform(self, SaveGame_GetSaveRAM()->chaosEmeralds);
+        Player_TryTransform(self, SaveGame_GetSaveRAM()->collectedEmeralds);
 }
 
 bool32 Player_SfxCheck_RayDive(void) { return Player->rayDiveTimer > 0; }

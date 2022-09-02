@@ -461,6 +461,39 @@ void SaveGame_SaveFile_CB(int32 status)
     }
 }
 
+bool32 SaveGame_AllChaosEmeralds()
+{
+    SaveRAM *saveRAM = SaveGame_GetSaveRAM();
+    return saveRAM->collectedEmeralds == 0b01111111;
+}
+
+bool32 SaveGame_GetEmerald(uint8 emeraldID)
+{
+    SaveRAM *saveRAM = SaveGame_GetSaveRAM();
+    return (saveRAM->collectedEmeralds >> emeraldID) & 1;
+}
+void SaveGame_SetEmerald(uint8 emeraldID)
+{
+    SaveRAM *saveRAM = SaveGame_GetSaveRAM();
+    saveRAM->collectedEmeralds |= 1 << emeraldID;
+}
+
+void SaveGame_ClearCollectedSpecialRings()
+{
+    SaveRAM *saveRAM               = SaveGame_GetSaveRAM();
+    saveRAM->collectedSpecialRings = 0;
+}
+bool32 SaveGame_GetCollectedSpecialRing(uint8 id)
+{
+    SaveRAM *saveRAM = SaveGame_GetSaveRAM();
+    return saveRAM->collectedSpecialRings & (1 << (16 * Zone->actID - 1 + id));
+}
+void SaveGame_SetCollectedSpecialRing(uint8 id)
+{
+    SaveRAM *saveRAM = SaveGame_GetSaveRAM();
+    saveRAM->collectedSpecialRings |= 1 << (16 * Zone->actID - 1 + id);
+}
+
 #if RETRO_INCLUDE_EDITOR
 void SaveGame_EditorDraw(void) {}
 

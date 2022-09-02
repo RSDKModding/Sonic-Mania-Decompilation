@@ -32,16 +32,14 @@ void SpecialClear_Draw(void)
     drawPos.x     = centerX - 0x600000;
 
     // Draw Emeralds
-    int32 id = 1;
     for (int32 i = 0; i < 7; ++i) {
         int32 frame = 7;
-        if ((id & saveRAM->chaosEmeralds) > 0)
+        if (SaveGame_GetEmerald(i))
             frame = i;
         self->emeraldsAnimator.frameID = frame;
         drawPos.y                      = self->emeraldPositions[i];
         RSDK.DrawSprite(&self->emeraldsAnimator, &drawPos, true);
         drawPos.x += 0x200000;
-        id <<= 1;
     }
 
     drawPos.x    = self->messagePos2.x;
@@ -257,7 +255,7 @@ void SpecialClear_Create(void *data)
             self->score      = saveRAM->score;
             self->score1UP   = saveRAM->score1UP;
             self->lives      = saveRAM->lives;
-            if (saveRAM->chaosEmeralds == 0b01111111)
+            if (SaveGame_AllChaosEmeralds())
                 self->messageType = SC_MSG_ALLEMERALDS;
             else
                 self->messageType = !UFO_Setup->timedOut ? SC_MSG_GOTEMERALD : SC_MSG_SPECIALCLEAR;
@@ -595,7 +593,7 @@ void SpecialClear_State_ShowTotalScore_Continues(void)
         saveRAM->playerID       = globals->playerID;
 #endif
 
-        if (saveRAM->chaosEmeralds == 0b01111111) {
+        if (SaveGame_AllChaosEmeralds()) {
             self->state = SpecialClear_State_ExitFinishMessage;
         }
         else {
@@ -618,7 +616,7 @@ void SpecialClear_State_ShowTotalScore_NoContinues(void)
         saveRAM->score        = self->score;
         globals->restartScore = self->score;
 
-        if (saveRAM->chaosEmeralds == 0b01111111) {
+        if (SaveGame_AllChaosEmeralds()) {
             self->state = SpecialClear_State_ExitFinishMessage;
         }
         else {

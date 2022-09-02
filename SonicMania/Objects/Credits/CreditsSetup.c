@@ -45,7 +45,7 @@ void CreditsSetup_StaticUpdate(void)
                 if (param->creditsReturnToMenu) {
                     RSDK.SetScene("Presentation", "Menu");
                 }
-                else if (SaveGame_GetSaveRAM()->chaosEmeralds < 0b01111111) {
+                else if (SaveGame_GetSaveRAM()->collectedEmeralds < 0b01111111) {
                     globals->gameMode == MODE_ENCORE ? RSDK.SetScene("Cutscenes", "Try Again Encore") : RSDK.SetScene("Cutscenes", "Try Again");
                 }
                 else if (globals->gameMode == MODE_ENCORE) {
@@ -57,7 +57,7 @@ void CreditsSetup_StaticUpdate(void)
 #else
                 if (param->creditsReturnToMenu)
                     RSDK.SetScene("Presentation", "Menu");
-                else if (SaveGame_GetSaveRAM()->chaosEmeralds < 0b01111111)
+                else if (SaveGame_GetSaveRAM()->collectedEmeralds < 0b01111111)
                     RSDK.SetScene("Cutscenes", "Try Again");
                 else
                     RSDK.SetScene("Presentation", "Menu");

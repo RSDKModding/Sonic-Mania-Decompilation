@@ -2087,6 +2087,12 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(SaveGame_ResetPlayerState);
     ADD_PUBLIC_FUNC(SaveGame_LoadFile_CB);
     ADD_PUBLIC_FUNC(SaveGame_SaveFile_CB);
+    ADD_PUBLIC_FUNC(SaveGame_AllChaosEmeralds);
+    ADD_PUBLIC_FUNC(SaveGame_GetEmerald);
+    ADD_PUBLIC_FUNC(SaveGame_SetEmerald);
+    ADD_PUBLIC_FUNC(SaveGame_ClearCollectedSpecialRings);
+    ADD_PUBLIC_FUNC(SaveGame_GetCollectedSpecialRing);
+    ADD_PUBLIC_FUNC(SaveGame_SetCollectedSpecialRing);
 
     // Global/Shield
     ADD_PUBLIC_FUNC(Shield_State_Default);
