@@ -107,7 +107,7 @@ void Debris_CreateFromEntries_UseOffset(int32 aniFrames, int32 *entries)
             debris->updateRange.x   = TO_FIXED(128);
             debris->updateRange.y   = TO_FIXED(128);
 
-            entry += 6;
+            entry++;
         }
     }
 }
