@@ -43,7 +43,7 @@ void HUD_LateUpdate(void)
     if (globals->gameMode < MODE_TIMEATTACK) {
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (SceneInfo->timeEnabled && player->rings >= 50 && player->superState < SUPERSTATE_SUPER
-            && SaveGame_GetSaveRAM()->chaosEmeralds >= 0b01111111) {
+            && SaveGame_GetSaveRAM()->collectedEmeralds >= 0b01111111) {
             if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_SWITCH || sku_platform == PLATFORM_DEV)
                 HUD_GetActionButtonFrames();
 

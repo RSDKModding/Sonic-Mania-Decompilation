@@ -299,9 +299,9 @@ void UFO_Setup_Finish_Win(void)
 {
     EntityUFO_Setup *setup = RSDK_GET_ENTITY(SLOT_UFO_SETUP, UFO_Setup);
 
-    SaveRAM *saveRAM = SaveGame_GetSaveRAM();
-    saveRAM->chaosEmeralds |= 1 << UFO_Setup->specialStageID;
+    SaveGame_SetEmerald(UFO_Setup->specialStageID);
 
+    SaveRAM *saveRAM = SaveGame_GetSaveRAM();
     if (globals->saveSlotID != NO_SAVE_SLOT)
         GameProgress_GiveEmerald(saveRAM->nextSpecialStage);
 

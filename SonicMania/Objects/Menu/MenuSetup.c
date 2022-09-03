@@ -1193,7 +1193,7 @@ void MenuSetup_SaveSlot_ActionCB(void)
             saveRAM->characterID   = self->frameID;
             saveRAM->zoneID        = 0;
             saveRAM->lives         = 3;
-            saveRAM->chaosEmeralds = self->saveEmeralds;
+            saveRAM->collectedEmeralds = self->saveEmeralds;
             saveRAM->continues     = 0;
 
             UIWaitSpinner_StartWait();
@@ -1201,8 +1201,8 @@ void MenuSetup_SaveSlot_ActionCB(void)
             SaveGame_SaveFile(MenuSetup_SaveFileCB);
         }
         else {
-            if (saveRAM->saveState == 2) {
-                saveRAM->collectedSpecialRings = 0;
+            if (saveRAM->saveState == SAVEGAME_COMPLETE) {
+                SaveGame_ClearCollectedSpecialRings();
                 saveRAM->score                 = 0;
                 saveRAM->score1UP              = 500000;
             }
@@ -2008,6 +2008,7 @@ void MenuSetup_Options_SetDefaultMappings_P1(void)
 
 void MenuSetup_Options_SetDefaultMappings_P2(void)
 {
+#if GAME_VERSION != VER_100
     ControllerInfo[CONT_P2].keyUp.keyMap     = KEYMAP_NUMPAD8;
     ControllerInfo[CONT_P2].keyDown.keyMap   = KEYMAP_NUMPAD5;
     ControllerInfo[CONT_P2].keyLeft.keyMap   = KEYMAP_NUMPAD4;
@@ -2020,6 +2021,20 @@ void MenuSetup_Options_SetDefaultMappings_P2(void)
     ControllerInfo[CONT_P2].keyZ.keyMap      = KEYMAP_NO_MAPPING;
     ControllerInfo[CONT_P2].keyStart.keyMap  = KEYMAP_OEM_4;
     ControllerInfo[CONT_P2].keySelect.keyMap = KEYMAP_OEM_6;
+#else
+    ControllerInfo[CONT_P2].keyUp.keyMap     = KEYMAP_I;
+    ControllerInfo[CONT_P2].keyDown.keyMap   = KEYMAP_K;
+    ControllerInfo[CONT_P2].keyLeft.keyMap   = KEYMAP_J;
+    ControllerInfo[CONT_P2].keyRight.keyMap  = KEYMAP_L;
+    ControllerInfo[CONT_P2].keyA.keyMap      = KEYMAP_V;
+    ControllerInfo[CONT_P2].keyB.keyMap      = KEYMAP_B;
+    ControllerInfo[CONT_P2].keyC.keyMap      = KEYMAP_NO_MAPPING;
+    ControllerInfo[CONT_P2].keyX.keyMap      = KEYMAP_F;
+    ControllerInfo[CONT_P2].keyY.keyMap      = KEYMAP_G;
+    ControllerInfo[CONT_P2].keyZ.keyMap      = KEYMAP_NO_MAPPING;
+    ControllerInfo[CONT_P2].keyStart.keyMap  = KEYMAP_O;
+    ControllerInfo[CONT_P2].keySelect.keyMap = KEYMAP_NO_MAPPING;
+#endif
 }
 
 void MenuSetup_Options_SetupKBControlsMenu(int32 playerID)
@@ -2044,15 +2059,17 @@ void MenuSetup_Options_SetupKBControlsMenu(int32 playerID)
     }
 
     for (int32 b = 0; b < control->buttonCount; ++b) {
-        EntityUIKeyBinder *binder = (EntityUIKeyBinder *)control->buttons[b];
-
-        if (binder->classID == UIKeyBinder->classID) {
+        if (control->buttons[b]->classID == UIKeyBinder->classID) {
+            EntityUIKeyBinder *binder = (EntityUIKeyBinder *)control->buttons[b];
             binder->inputID = playerID;
+        }
+        else if (control->buttons[b]->classID == UIButton->classID) {
+            EntityUIButton *button = control->buttons[b];
 
             if (playerID == 1)
-                binder->actionCB = MenuSetup_Options_SetDefaultMappings_P2;
-            else if (!playerID)
-                binder->actionCB = MenuSetup_Options_SetDefaultMappings_P1;
+                button->actionCB = MenuSetup_Options_SetDefaultMappings_P2;
+            else if (playerID == 0)
+                button->actionCB = MenuSetup_Options_SetDefaultMappings_P1;
         }
     }
 }

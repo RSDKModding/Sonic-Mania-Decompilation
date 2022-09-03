@@ -80,7 +80,7 @@ void TimeAttackData_EditorLoad(void);
 #endif
 void TimeAttackData_Serialize(void);
 
-// Extra Entity FUnctions
+// Extra Entity Functions
 #if MANIA_USE_PLUS
 void TimeAttackData_TrackActClear(StatInfo *stat, uint8 zone, uint8 act, uint8 charID, int32 time, int32 rings, int32 score);
 void TimeAttackData_TrackTAClear(StatInfo *stat, uint8 zone, uint8 actID, uint8 charID, int32 gameMode, int32 time);

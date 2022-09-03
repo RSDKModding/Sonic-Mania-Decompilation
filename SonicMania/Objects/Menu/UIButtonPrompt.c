@@ -235,7 +235,7 @@ int32 UIButtonPrompt_GetGamepadType(void)
 
 uint8 UIButtonPrompt_MappingsToFrame(int32 mappings)
 {
-#if MANIA_USE_PLUS
+#if GAME_VERSION != VER_100
     switch (mappings) {
         case KEYMAP_BACK: return 14;
         case KEYMAP_TAB: return 15;
@@ -335,20 +335,13 @@ uint8 UIButtonPrompt_MappingsToFrame(int32 mappings)
         case KEYMAP_LSHIFT: return 42;
         case KEYMAP_CONTROL:
         case KEYMAP_LCONTROL: return 54;
-        case KEYMAP_MENU:
-        case KEYMAP_LMENU: return 55;
+        case KEYMAP_MENU: return 55;
         case KEYMAP_CAPITAL: return 29;
         case KEYMAP_SPACE: return 56;
-        case KEYMAP_PRIOR: return 91;
-        case KEYMAP_NEXT: return 92;
-        case KEYMAP_END: return 93;
-        case KEYMAP_HOME: return 94;
         case KEYMAP_LEFT: return 61;
         case KEYMAP_UP: return 59;
         case KEYMAP_RIGHT: return 62;
         case KEYMAP_DOWN: return 60;
-        case KEYMAP_INSERT: return 95;
-        case KEYMAP_DELETE: return 96;
         case KEYMAP_0: return 11;
         case KEYMAP_1: return 2;
         case KEYMAP_2: return 3;
@@ -402,19 +395,6 @@ uint8 UIButtonPrompt_MappingsToFrame(int32 mappings)
         case KEYMAP_DIVIDE: return 63;
         case KEYMAP_RSHIFT: return 53;
         case KEYMAP_RCONTROL: return 58;
-        case KEYMAP_RMENU: return 57;
-        case KEYMAP_OEM_1: return 79;
-        case KEYMAP_OEM_PLUS: return 87;
-        case KEYMAP_OEM_COMMA: return 88;
-        case KEYMAP_OEM_MINUS: return 89;
-        case KEYMAP_OEM_PERIOD: return 90;
-        case KEYMAP_OEM_2: return 80;
-        case KEYMAP_OEM_3: return 81;
-        case KEYMAP_OEM_4: return 82;
-        case KEYMAP_OEM_5: return 83;
-        case KEYMAP_OEM_6: return 84;
-        case KEYMAP_OEM_7: return 85;
-        case KEYMAP_OEM_8: return 86;
         default: return 0;
     }
 #endif

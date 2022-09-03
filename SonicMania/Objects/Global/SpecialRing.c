@@ -90,7 +90,8 @@ void SpecialRing_StageLoad(void)
             ring->enabled = false;
         }
         else {
-            ring->enabled = !(SaveGame_GetSaveRAM()->collectedSpecialRings & (1 << ((16 * Zone->actID) + ring->id - 1)));
+            ring->enabled = !SaveGame_GetCollectedSpecialRing(ring->id);
+
             if (globals->specialRingID == ring->id) {
                 for (int32 p = 0; p < Player->playerCount; ++p) {
                     EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
@@ -176,10 +177,10 @@ void SpecialRing_State_Idle(void)
                     SaveRAM *saveRAM = SaveGame_GetSaveRAM();
 #if GAME_VERSION != VER_100
                     // rings spawned via debug mode give you 50 rings, always
-                    if (saveRAM->chaosEmeralds != 0b01111111 && self->id) {
+                    if (!SaveGame_AllChaosEmeralds() && self->id) {
 #else
-                    // rings spawned via debug mode take you to special stage, always
-                    if (saveRAM->chaosEmeralds != 0b01111111) {
+                    // rings spawned via debug mode behave as regular special rings
+                    if (!SaveGame_AllChaosEmeralds()) {
 #endif
                         player->visible        = false;
                         player->active         = ACTIVE_NEVER;
@@ -190,10 +191,10 @@ void SpecialRing_State_Idle(void)
                     }
 
                     if (self->id > 0) {
-                        if (saveRAM->chaosEmeralds != 0b01111111)
+                        if (!SaveGame_AllChaosEmeralds())
                             globals->specialRingID = self->id;
 
-                        saveRAM->collectedSpecialRings |= 1 << (16 * Zone->actID - 1 + self->id);
+                        SaveGame_SetCollectedSpecialRing(self->id);
                     }
 
                     RSDK.PlaySfx(SpecialRing->sfxSpecialRing, false, 0xFE);
@@ -233,7 +234,14 @@ void SpecialRing_State_Flash(void)
         self->sparkleRadius -= TO_FIXED(8);
     }
 
-    if (SaveGame_GetSaveRAM()->chaosEmeralds == 0b01111111 || !self->id) {
+    SaveRAM *saveRAM = SaveGame_GetSaveRAM();
+#if GAME_VERSION != VER_100
+    // rings spawned via debug mode give you 50 rings, always
+    if (SaveGame_AllChaosEmeralds() || !self->id) {
+#else
+    // rings spawned via debug mode behave as regular special rings
+    if (SaveGame_AllChaosEmeralds()) {
+#endif
         destroyEntity(self);
     }
     else if (self->warpAnimator.frameID == self->warpAnimator.frameCount - 1) {
