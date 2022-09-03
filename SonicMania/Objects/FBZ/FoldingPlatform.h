@@ -14,7 +14,7 @@ struct EntityFoldingPlatform {
 
     uint16 interval;
     uint16 intervalOffset;
-    int32 duration;
+    int16 duration;
 };
 
 // Object Struct
