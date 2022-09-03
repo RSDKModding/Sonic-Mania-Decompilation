@@ -1175,13 +1175,13 @@ typedef struct {
     // Registration & Core
 #if RETRO_REV0U
     void (*RegisterGlobals)(const char *globalsPath, void **globals, uint32 size, void (*initCB)(void *globals));
-    void (*RegisterObject)(Object **staticVars, void **modStaticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize,
+    void (*RegisterObject)(void **staticVars, void **modStaticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize,
                            uint32 modClassSize, void (*update)(void), void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void),
                            void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void), void (*editorLoad)(void),
                            void (*serialize)(void), void (*staticLoad)(void *staticVars), const char *inherited);
 #else
     void (*RegisterGlobals)(const char *globalsPath, void **globals, uint32 size);
-    void (*RegisterObject)(Object **staticVars, void **modStaticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize,
+    void (*RegisterObject)(void **staticVars, void **modStaticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize,
                            uint32 modClassSize, void (*update)(void), void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void),
                            void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void), void (*editorLoad)(void),
                            void (*serialize)(void), const char *inherited);
@@ -1350,12 +1350,12 @@ typedef struct {
     // Registration
 #if RETRO_REV0U
     void (*RegisterGlobalVariables)(void **globals, int32 size, void (*initCB)(void *globals));
-    void (*RegisterObject)(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(void),
+    void (*RegisterObject)(void **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(void),
                            void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void),
                            void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void), void (*staticLoad)(void *staticVars));
 #else
     void (*RegisterGlobalVariables)(void **globals, int32 size);
-    void (*RegisterObject)(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(void),
+    void (*RegisterObject)(void **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(void),
                            void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void),
                            void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void));
 #endif
@@ -1364,8 +1364,8 @@ typedef struct {
 #endif
 
     // Entities & Objects
-    bool32 (*GetActiveEntities)(uint16 group, Entity **entity);
-    bool32 (*GetAllEntities)(uint16 classID, Entity **entity);
+    bool32 (*GetActiveEntities)(uint16 group, void **entity);
+    bool32 (*GetAllEntities)(uint16 classID, void **entity);
     void (*BreakForeachLoop)(void);
     void (*SetEditableVar)(uint8 type, const char *name, uint8 classID, int32 offset);
     void *(*GetEntity)(uint16 slot);
@@ -1697,17 +1697,17 @@ typedef struct {
 
 #if RETRO_REV0U
 #define RSDK_REGISTER_OBJECT(object)                                                                                                                 \
-    RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
+    RSDK.RegisterObject((void **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
                         object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, object##_EditorDraw, object##_EditorLoad,         \
                         object##_Serialize, NULL)
 
 #define RSDK_REGISTER_OBJECT_STATICLOAD(object)                                                                                                      \
-    RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
+    RSDK.RegisterObject((void **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
                         object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, object##_EditorDraw, object##_EditorLoad,         \
                         object##_Serialize, object##_StaticLoad)
 #else
 #define RSDK_REGISTER_OBJECT(object)                                                                                                                 \
-    RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
+    RSDK.RegisterObject((void **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
                         object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, object##_EditorDraw, object##_EditorLoad,         \
                         object##_Serialize)
 #endif
@@ -1716,16 +1716,16 @@ typedef struct {
 
 #if RETRO_REV0U
 #define RSDK_REGISTER_OBJECT(object)                                                                                                                 \
-    RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
+    RSDK.RegisterObject((void **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
                         object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, NULL, NULL, object##_Serialize, NULL)
 
 #define RSDK_REGISTER_OBJECT_STATICLOAD(object)                                                                                                      \
-    RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
+    RSDK.RegisterObject((void **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
                         object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, NULL, NULL, object##_Serialize,                   \
                         object##_StaticLoad)
 #else
 #define RSDK_REGISTER_OBJECT(object)                                                                                                                 \
-    RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
+    RSDK.RegisterObject((void **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
                         object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, NULL, NULL, object##_Serialize)
 #endif
 
@@ -1739,7 +1739,7 @@ typedef struct {
 
 // Excludes StaticLoad (Parity With REV01 & REV02)
 #define MOD_REGISTER_OBJECT(object, inherit, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad, serialize)           \
-    Mod.RegisterObject((Object **)&object, NULL, #object, sizeof(Entity##object), sizeof(Object##object), 0, update, lateUpdate, staticUpdate, draw, \
+    Mod.RegisterObject((void **)&object, NULL, #object, sizeof(Entity##object), sizeof(Object##object), 0, update, lateUpdate, staticUpdate, draw, \
                        create, stageLoad, editorDraw, editorLoad, serialize, NULL, inherit)
 
 #define MOD_REGISTER_OBJ_OVERLOAD(object, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad, serialize)              \
@@ -1751,18 +1751,18 @@ typedef struct {
 
 #define MOD_REGISTER_OBJ_OVERLOAD_MSV(object, modSVars, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad,           \
                                       serialize)                                                                                                     \
-    Mod.RegisterObject((Object **)&object, (Object **)&modSVars, #object, sizeof(Entity##object), sizeof(Object##object), sizeof(ModObject##object), \
+    Mod.RegisterObject((void **)&object, (void **)&modSVars, #object, sizeof(Entity##object), sizeof(Object##object), sizeof(ModObject##object), \
                        update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad, serialize, NULL, NULL)
 
 #define MOD_REGISTER_OBJ_OVERLOAD_MSV_NOCLASS(object, modSVars, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad,   \
                                               serialize)                                                                                             \
-    Mod.RegisterObject(NULL, (Object **)&modSVars, #object, sizeof(Entity##object), 0, sizeof(ModObject##object), update, lateUpdate, staticUpdate,  \
+    Mod.RegisterObject(NULL, (void **)&modSVars, #object, sizeof(Entity##object), 0, sizeof(ModObject##object), update, lateUpdate, staticUpdate,  \
                        draw, create, stageLoad, editorDraw, editorLoad, serialize, NULL, NULL)
 
 // Includes StaticLoad
 #define MOD_REGISTER_OBJECT_STATIC(object, inherit, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad, serialize,    \
                                    staticLoad)                                                                                                       \
-    Mod.RegisterObject((Object **)&object, NULL, #object, sizeof(Entity##object), sizeof(Object##object), 0, update, lateUpdate, staticUpdate, draw, \
+    Mod.RegisterObject((void **)&object, NULL, #object, sizeof(Entity##object), sizeof(Object##object), 0, update, lateUpdate, staticUpdate, draw, \
                        create, stageLoad, editorDraw, editorLoad, serialize, staticLoad, inherit)
 
 #define MOD_REGISTER_OBJ_OVERLOAD_STATIC(object, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad, serialize,       \
@@ -1776,18 +1776,18 @@ typedef struct {
 
 #define MOD_REGISTER_OBJ_OVERLOAD_MSV_STATIC(object, modSVars, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad,    \
                                              serialize, staticLoad)                                                                                  \
-    Mod.RegisterObject((Object **)&object, (Object **)&modSVars, #object, sizeof(Entity##object), sizeof(Object##object), sizeof(ModObject##object), \
+    Mod.RegisterObject((void **)&object, (void **)&modSVars, #object, sizeof(Entity##object), sizeof(Object##object), sizeof(ModObject##object), \
                        update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad, serialize, staticLoad, NULL)
 
 #define MOD_REGISTER_OBJ_OVERLOAD_MSV_NOCLASS_STATIC(object, modSVars, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw,        \
                                                      editorLoad, serialize, staticLoad)                                                              \
-    Mod.RegisterObject(NULL, (Object **)&modSVars, #object, sizeof(Entity##object), 0, sizeof(ModObject##object), update, lateUpdate, staticUpdate,  \
+    Mod.RegisterObject(NULL, (void **)&modSVars, #object, sizeof(Entity##object), 0, sizeof(ModObject##object), update, lateUpdate, staticUpdate,  \
                        draw, create, stageLoad, editorDraw, editorLoad, serialize, staticLoad, NULL)
 
 #else
 
 #define MOD_REGISTER_OBJECT(object, inherit, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad, serialize)           \
-    Mod.RegisterObject((Object **)&object, NULL, #object, sizeof(Entity##object), sizeof(Object##object), 0, update, lateUpdate, staticUpdate, draw, \
+    Mod.RegisterObject((void **)&object, NULL, #object, sizeof(Entity##object), sizeof(Object##object), 0, update, lateUpdate, staticUpdate, draw, \
                        create, stageLoad, editorDraw, editorLoad, serialize, inherit)
 
 #define MOD_REGISTER_OBJ_OVERLOAD(object, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad, serialize)              \
@@ -1799,17 +1799,17 @@ typedef struct {
 
 #define MOD_REGISTER_OBJ_OVERLOAD_MSV(object, modSVars, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad,           \
                                       serialize)                                                                                                     \
-    Mod.RegisterObject((Object **)&object, (Object **)&modSVars, #object, sizeof(Entity##object), sizeof(Object##object), sizeof(ModObject##object), \
+    Mod.RegisterObject((void **)&object, (void **)&modSVars, #object, sizeof(Entity##object), sizeof(Object##object), sizeof(ModObject##object), \
                        update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad, serialize, NULL)
 
 #define MOD_REGISTER_OBJ_OVERLOAD_MSV_NOCLASS(object, modSVars, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad,   \
                                               serialize)                                                                                             \
-    Mod.RegisterObject(NULL, (Object **)&modSVars, #object, sizeof(Entity##object), 0, sizeof(ModObject##object), update, lateUpdate, staticUpdate,  \
+    Mod.RegisterObject(NULL, (void **)&modSVars, #object, sizeof(Entity##object), 0, sizeof(ModObject##object), update, lateUpdate, staticUpdate,  \
                        draw, create, stageLoad, editorDraw, editorLoad, serialize, NULL)
 #endif
 
 
-#define MOD_REGISTER_OBJECT_HOOK(object) Mod.RegisterObjectHook((Object **)&object, #object)
+#define MOD_REGISTER_OBJECT_HOOK(object) Mod.RegisterObjectHook((void **)&object, #object)
 
 #define GET_PUBLIC_FUNC(modID, name, returnType, ...) returnType (*name)(__VA_ARGS__) = Mod.GetPublicFunction(modID, #name)
 #endif
@@ -1838,17 +1838,17 @@ typedef struct {
 
 #define foreach_active(type, entityOut)                                                                                                              \
     Entity##type *entityOut = NULL;                                                                                                                  \
-    while (RSDK.GetActiveEntities(type->classID, (Entity **)&entityOut))
+    while (RSDK.GetActiveEntities(type->classID, (void **)&entityOut))
 #define foreach_all(type, entityOut)                                                                                                                 \
     Entity##type *entityOut = NULL;                                                                                                                  \
-    while (RSDK.GetAllEntities(type->classID, (Entity **)&entityOut))
+    while (RSDK.GetAllEntities(type->classID, (void **)&entityOut))
 
 #define foreach_active_group(group, entityOut)                                                                                                       \
     Entity *entityOut = NULL;                                                                                                                        \
-    while (RSDK.GetActiveEntities(group, (Entity **)&entityOut))
+    while (RSDK.GetActiveEntities(group, (void **)&entityOut))
 #define foreach_all_group(group, entityOut)                                                                                                          \
     Entity *entityOut = NULL;                                                                                                                        \
-    while (RSDK.GetAllEntities(group, (Entity **)&entityOut))
+    while (RSDK.GetAllEntities(group, (void **)&entityOut))
 
 #if RETRO_USE_MOD_LOADER
 #define foreach_config(text)                                                                                                                         \
