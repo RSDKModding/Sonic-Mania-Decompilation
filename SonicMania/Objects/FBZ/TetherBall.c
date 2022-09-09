@@ -201,7 +201,7 @@ void TetherBall_State_SwingBall(void)
     if (player) {
         if (Player_CheckValidState(player)) {
             Hitbox *playerHitbox    = Player_GetHitbox(player);
-            player->angle           = ((self->angle >> 2) + 64);
+            player->angle           = ((self->angle >> 2) + 64) & 0xFF;
             player->rotation        = player->angle << 1;
             player->position.x      = self->position.x + ((self->size + ((playerHitbox->bottom + 24) << 6)) * RSDK.Cos1024(self->angle));
             player->position.y      = self->position.y + ((self->size + ((playerHitbox->bottom + 24) << 6)) * RSDK.Sin1024(self->angle));
@@ -219,7 +219,7 @@ void TetherBall_State_SwingBall(void)
             else {
                 int32 vel = player->groundVel <= 0 ? -0x60000 : 0x60000;
 
-                switch (self->angle >> 8) {
+                switch ((self->angle >> 8) & 3) {
                     case 0:
                         player->collisionMode = CMODE_RWALL;
                         player->position.y += vel;
