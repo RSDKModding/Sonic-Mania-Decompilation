@@ -132,9 +132,9 @@ void UIWinSize_SetupText(EntityUIWinSize *entityPtr)
 
         self->maxScale = height / SCREEN_YSIZE;
         if (self->selection < 1)
-            self->selection = self->maxScale - 1;
+            self->selection = self->maxScale;
 
-        if (self->selection >= self->maxScale)
+        if (self->selection > self->maxScale)
             self->selection = 1;
 
         char buffer[0x10];
