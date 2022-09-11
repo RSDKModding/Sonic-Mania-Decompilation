@@ -40,8 +40,8 @@ struct EntityERZKing {
     int32 health;
     int32 typeChangeTimer;
     int32 bodyAngle;
-    int32 frameIDs[10];
-    Vector2 framePositions[10];
+    int32 armAngles[10];
+    Vector2 armPositions[10];
     Vector2 rubyPos;
     Vector2 unused;
     EntityERZKing *parent;

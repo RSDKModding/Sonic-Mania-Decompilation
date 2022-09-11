@@ -885,7 +885,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(KleptoMobile_State_MoveAround);
     ADD_PUBLIC_FUNC(KleptoMobile_State_Hover);
     ADD_PUBLIC_FUNC(KleptoMobile_HandleArmPositions);
-    ADD_PUBLIC_FUNC(KleptoMobile_State_HandleChargeFinish);
+    ADD_PUBLIC_FUNC(KleptoMobile_HandleChargeFinish);
     ADD_PUBLIC_FUNC(KleptoMobile_State_FirstChargeAttack);
     ADD_PUBLIC_FUNC(KleptoMobile_State_NextChargeAttacks);
     ADD_PUBLIC_FUNC(KleptoMobile_State_Switch);

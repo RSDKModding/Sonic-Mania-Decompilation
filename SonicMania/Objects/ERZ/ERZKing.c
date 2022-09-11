@@ -161,15 +161,15 @@ void ERZKing_HandleFrames(void)
     int32 angle = self->bodyAngle;
 
     for (int32 i = 0; i < 10; i += 2) {
-        self->framePositions[i].x = x + 2 * RSDK.Cos512(self->rotation) * RSDK.Cos1024(angle);
-        self->framePositions[i].y = y + 2 * RSDK.Sin512(self->rotation) * RSDK.Cos1024(angle);
-        self->frameIDs[i]         = angle & 0x3FF;
+        self->armPositions[i].x = x + 2 * RSDK.Cos512(self->rotation) * RSDK.Cos1024(angle);
+        self->armPositions[i].y = y + 2 * RSDK.Sin512(self->rotation) * RSDK.Cos1024(angle);
+        self->armAngles[i]         = angle & 0x3FF;
 
-        angle += 512;
+        angle += 0x200;
 
-        self->framePositions[i + 1].x = x + 2 * RSDK.Cos512(self->rotation) * RSDK.Cos1024(angle);
-        self->framePositions[i + 1].y = y + 2 * RSDK.Sin512(self->rotation) * RSDK.Cos1024(angle);
-        self->frameIDs[i + 1]         = angle & 0x3FF;
+        self->armPositions[i + 1].x = x + 2 * RSDK.Cos512(self->rotation) * RSDK.Cos1024(angle);
+        self->armPositions[i + 1].y = y + 2 * RSDK.Sin512(self->rotation) * RSDK.Cos1024(angle);
+        self->armAngles[i + 1]         = angle & 0x3FF;
 
         x += RSDK.Sin512(negAng) << 10;
         y += RSDK.Cos512(negAng) << 10;
@@ -205,9 +205,9 @@ void ERZKing_Draw_Body(void)
     RSDK.DrawSprite(&self->bodyAnimator, NULL, false);
 
     for (int32 i = 0; i < 10; ++i) {
-        if (self->frameIDs[i] < 0x200) {
-            self->particleAnimator.frameID = self->frameIDs[i] / 42 % 6;
-            RSDK.DrawSprite(&self->particleAnimator, &self->framePositions[i], false);
+        if (self->armAngles[i] < 0x200) {
+            self->particleAnimator.frameID = self->armAngles[i] / 42 % 6;
+            RSDK.DrawSprite(&self->particleAnimator, &self->armPositions[i], false);
         }
     }
 
@@ -216,9 +216,9 @@ void ERZKing_Draw_Body(void)
 
     self->drawFX = self->storeDrawFX | FX_ROTATE | FX_FLIP;
     for (int32 i = 0; i < 10; ++i) {
-        if (self->frameIDs[i] >= 0x200) {
-            self->particleAnimator.frameID = self->frameIDs[i] / 42 % 6;
-            RSDK.DrawSprite(&self->particleAnimator, &self->framePositions[i], false);
+        if (self->armAngles[i] >= 0x200) {
+            self->particleAnimator.frameID = self->armAngles[i] / 42 % 6;
+            RSDK.DrawSprite(&self->particleAnimator, &self->armPositions[i], false);
         }
     }
 
@@ -246,11 +246,11 @@ void ERZKing_Draw_Arm(void)
     }
 
     for (int32 i = 0; i < 6; ++i) {
-        RSDK.DrawSprite(&self->armAnimator, &self->framePositions[i], false);
+        RSDK.DrawSprite(&self->armAnimator, &self->armPositions[i], false);
     }
 
-    RSDK.DrawSprite(&self->cuffAnimator, &self->framePositions[6], false);
-    RSDK.DrawSprite(&self->handAnimator, &self->framePositions[6], false);
+    RSDK.DrawSprite(&self->cuffAnimator, &self->armPositions[6], false);
+    RSDK.DrawSprite(&self->handAnimator, &self->armPositions[6], false);
 
     if (parent->typeChangeTimer > 0) {
         RSDK.CopyPalette(1, 0, 0, 0, 48);
@@ -462,7 +462,7 @@ void ERZKing_State_Arm(void)
 
     int32 percent = 0x1800;
     for (int32 i = 0; i < 7; ++i) {
-        self->framePositions[i] = MathHelpers_GetBezierPoint(percent, x, y, x2, y2, x2, y2, self->position.x, self->position.y);
+        self->armPositions[i] = MathHelpers_GetBezierPoint(percent, x, y, x2, y2, x2, y2, self->position.x, self->position.y);
         percent += 0x2000;
     }
 
