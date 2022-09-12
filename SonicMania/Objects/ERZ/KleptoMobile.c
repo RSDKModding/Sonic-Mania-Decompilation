@@ -246,22 +246,22 @@ void KleptoMobile_HandleFrames(void)
     RSDK_THIS(KleptoMobile);
 
     self->rotation = RSDK.Sin512(2 * Zone->timer) >> 6;
-    self->angle2   = (self->angle2 + 12) & 0x3FF;
+    self->armAngle   = (self->armAngle + 12) & 0x3FF;
 
     int32 moveX = 0x1C00 * RSDK.Sin512(-self->rotation) + self->position.x;
     int32 moveY = 0x1C00 * RSDK.Cos512(-self->rotation) + self->position.y;
 
-    int32 angle = self->angle2;
+    int32 angle = self->armAngle;
 
     for (int32 i = 0; i < 10; i += 2) {
-        self->framePositions[i].x = moveX + 2 * RSDK.Cos1024(angle) * RSDK.Cos512(self->rotation);
-        self->framePositions[i].y = moveY + 2 * RSDK.Cos1024(angle) * RSDK.Sin512(self->rotation);
-        self->frameIDs[i]         = angle & 0x3FF;
+        self->armPositions[i].x = moveX + 2 * RSDK.Cos1024(angle) * RSDK.Cos512(self->rotation);
+        self->armPositions[i].y = moveY + 2 * RSDK.Cos1024(angle) * RSDK.Sin512(self->rotation);
+        self->armAngles[i]    = angle & 0x3FF;
         angle += 0x200;
 
-        self->framePositions[i + 1].x = moveX + 2 * RSDK.Cos1024(angle) * RSDK.Cos512(self->rotation);
-        self->framePositions[i + 1].y = moveY + 2 * RSDK.Cos1024(angle) * RSDK.Sin512(self->rotation);
-        self->frameIDs[i + 1]         = angle & 0x3FF;
+        self->armPositions[i + 1].x = moveX + 2 * RSDK.Cos1024(angle) * RSDK.Cos512(self->rotation);
+        self->armPositions[i + 1].y = moveY + 2 * RSDK.Cos1024(angle) * RSDK.Sin512(self->rotation);
+        self->armAngles[i + 1]      = angle & 0x3FF;
 
         moveX += RSDK.Sin512(-self->rotation) << 10;
         moveY += RSDK.Cos512(-self->rotation) << 10;
@@ -313,7 +313,7 @@ void KleptoMobile_SwitchToKing(void)
             kingArm->position.x = kingPtr->position.x;
             kingArm->position.y = kingPtr->position.y;
 
-            for (int32 i = 0; i < 10; ++i) kingArm->framePositions[i] = kingPtr->position;
+            for (int32 i = 0; i < 10; ++i) kingArm->armPositions[i] = kingPtr->position;
 
             kingArm->velocity.x = 0;
             kingArm->velocity.y = 0;
@@ -479,7 +479,7 @@ void KleptoMobile_State_MoveAround(void)
 
                 EntityKleptoMobile *arm = RSDK_GET_ENTITY(armSlot, KleptoMobile);
 
-                x = self->direction == FLIP_X ? self->position.x - 0x30000 : self->position.x + 0x30000;
+                x = self->position.x + (self->direction == FLIP_X ? -0x30000 : 0x30000);
                 if (arm->type == KLEPTOMOBILE_ARM_R)
                     x += 0x180000;
                 y = self->position.y + 0xD0000;
@@ -547,7 +547,7 @@ void KleptoMobile_HandleArmPositions(void)
             eggman->position.x         = parent->position.x;
             eggman->position.y         = parent->position.y;
 
-            for (int32 i = 0; i < 10; ++i) eggman->framePositions[i] = parent->position;
+            for (int32 i = 0; i < 10; ++i) eggman->armPositions[i] = parent->position;
 
             eggman->velocity.x = 0;
             eggman->velocity.y = 0;
@@ -555,7 +555,7 @@ void KleptoMobile_HandleArmPositions(void)
     }
 }
 
-void KleptoMobile_State_HandleChargeFinish(void)
+void KleptoMobile_HandleChargeFinish(void)
 {
     RSDK_THIS(KleptoMobile);
 
@@ -569,6 +569,7 @@ void KleptoMobile_State_HandleChargeFinish(void)
     else
         self->position.x = player1->position.x + 0x1800000;
 
+    self->originPos.y = (RSDK.Rand(-2, 3) << 21) + player1->position.y;
     while (self->originPos.y > (Zone->cameraBoundsB[0] - 64) << 16 && self->originPos.y < (Zone->cameraBoundsT[0] + 64) << 16) {
         self->originPos.y = (RSDK.Rand(-2, 3) << 21) + player1->position.y;
     }
@@ -603,7 +604,7 @@ void KleptoMobile_State_FirstChargeAttack(void)
         self->circleRadius += 8;
 
     if (++self->timer >= 180) {
-        KleptoMobile_State_HandleChargeFinish();
+        KleptoMobile_HandleChargeFinish();
         self->state = KleptoMobile_State_NextChargeAttacks;
     }
 
@@ -627,7 +628,7 @@ void KleptoMobile_State_NextChargeAttacks(void)
     }
 
     if (++self->timer >= 180)
-        KleptoMobile_State_HandleChargeFinish();
+        KleptoMobile_HandleChargeFinish();
 
     self->position.x += self->velocity.x;
     self->originPos.y += self->velocity.y;
@@ -699,12 +700,12 @@ void KleptoMobile_StateHand_Cutscene(void)
 
     int32 percent = 0x1800;
     for (int32 i = 0; i < 7; ++i) {
-        self->framePositions[i] = MathHelpers_GetBezierPoint(percent, x, y, x2, y2, x2, y2, self->position.x, self->position.y);
+        self->armPositions[i] = MathHelpers_GetBezierPoint(percent, x, y, x2, y2, x2, y2, self->position.x, self->position.y);
         percent += 0x2000;
     }
 
-    parent->rubyPos.x = self->framePositions[6].x;
-    parent->rubyPos.y = self->framePositions[6].y;
+    parent->rubyPos.x = self->armPositions[6].x;
+    parent->rubyPos.y = self->armPositions[6].y;
 
     if (self->direction)
         parent->rubyPos.x += 0x80000;
@@ -733,12 +734,12 @@ void KleptoMobile_StateHand_Boss(void)
 
     int32 percent = 0x1800;
     for (int32 i = 0; i < 7; ++i) {
-        self->framePositions[i] = MathHelpers_GetBezierPoint(percent, parentX, parentY, x, y, x, y, self->position.x, self->position.y);
+        self->armPositions[i] = MathHelpers_GetBezierPoint(percent, parentX, parentY, x, y, x, y, self->position.x, self->position.y);
         percent += 0x2000;
     }
 
-    parent->rubyPos.x = self->framePositions[6].x;
-    parent->rubyPos.y = self->framePositions[6].y;
+    parent->rubyPos.x = self->armPositions[6].x;
+    parent->rubyPos.y = self->armPositions[6].y;
 
     parent->rubyPos.x += self->direction ? 0x80000 : -0x80000;
     parent->rubyPos.y += 0x80000;
@@ -753,9 +754,9 @@ void KleptoMobile_Draw_Hand(void)
     if (parent->holdingRuby)
         RSDK.DrawSprite(&parent->rubyAnimator, &parent->rubyPos, false);
 
-    for (int32 i = 0; i < 6; ++i) RSDK.DrawSprite(&self->orbAnimator, &self->framePositions[i], false);
+    for (int32 i = 0; i < 6; ++i) RSDK.DrawSprite(&self->orbAnimator, &self->armPositions[i], false);
 
-    RSDK.DrawSprite(&self->handAnimator, &self->framePositions[6], false);
+    RSDK.DrawSprite(&self->handAnimator, &self->armPositions[6], false);
 }
 
 void KleptoMobile_CheckPlayerCollisions_Arm(void)
@@ -849,7 +850,7 @@ void KleptoMobile_StateArm_Cutscene(void)
 
     int32 percent = 0x1800;
     for (int32 i = 0; i < 7; ++i) {
-        self->framePositions[i] = MathHelpers_GetBezierPoint(percent, x, y, x2, y2, x2, y2, self->position.x, self->position.y);
+        self->armPositions[i] = MathHelpers_GetBezierPoint(percent, x, y, x2, y2, x2, y2, self->position.x, self->position.y);
         percent += 0x2000;
     }
 
@@ -880,7 +881,7 @@ void KleptoMobile_StateArm_Idle(void)
 
     int32 percent = 0x1800;
     for (int32 i = 0; i < 7; ++i) {
-        self->framePositions[i] = MathHelpers_GetBezierPoint(percent, x, y, self->armBezierPos.x, self->armBezierPos.y, self->armBezierPos.x,
+        self->armPositions[i] = MathHelpers_GetBezierPoint(percent, x, y, self->armBezierPos.x, self->armBezierPos.y, self->armBezierPos.x,
                                                              self->armBezierPos.y, self->position.x, self->position.y);
         percent += 0x2000;
     }
@@ -953,7 +954,7 @@ void KleptoMobile_StateArm_BashAttack(void)
 
     int32 percent = 0x1800;
     for (int32 i = 0; i < 7; ++i) {
-        self->framePositions[i] = MathHelpers_GetBezierPoint(percent, x, y, x2, y2, x3, y3, self->position.x, self->position.y);
+        self->armPositions[i] = MathHelpers_GetBezierPoint(percent, x, y, x2, y2, x3, y3, self->position.x, self->position.y);
         percent += 0x2000;
     }
 
@@ -987,6 +988,8 @@ void KleptoMobile_StateArm_ChargeAttack(void)
     if (self->direction == FLIP_X)
         moveX = parentX + 0x400000;
 
+    self->direction = parent->direction;
+
     int32 x = 0;
     int32 y = parent->position.y + 0xD0000;
     if (self->direction == FLIP_X) {
@@ -1018,7 +1021,7 @@ void KleptoMobile_StateArm_ChargeAttack(void)
 
     int32 percent = 0x1800;
     for (int32 i = 0; i < 7; ++i) {
-        self->framePositions[i] = MathHelpers_GetBezierPoint(percent, x, y, x2, y2, x2, y2, self->position.x, self->position.y);
+        self->armPositions[i] = MathHelpers_GetBezierPoint(percent, x, y, x2, y2, x2, y2, self->position.x, self->position.y);
         percent += 0x2000;
     }
 
@@ -1033,62 +1036,62 @@ void KleptoMobile_Draw_Arm(void)
 {
     RSDK_THIS(KleptoMobile);
 
-    for (int32 i = 0; i < 6; ++i) RSDK.DrawSprite(&self->orbAnimator, &self->framePositions[i], false);
+    for (int32 i = 0; i < 6; ++i) RSDK.DrawSprite(&self->orbAnimator, &self->armPositions[i], false);
 
-    RSDK.DrawSprite(&self->handAnimator, &self->framePositions[6], false);
+    RSDK.DrawSprite(&self->handAnimator, &self->armPositions[6], false);
 
     if (self->direction) {
         if (self->type == KLEPTOMOBILE_ARM_R) {
-            self->framePositions[6].x += 0x280000;
-            self->framePositions[6].y -= 0x80000;
-            RSDK.DrawSprite(&self->finger1Animator, &self->framePositions[6], false);
+            self->armPositions[6].x += 0x280000;
+            self->armPositions[6].y -= 0x80000;
+            RSDK.DrawSprite(&self->finger1Animator, &self->armPositions[6], false);
 
-            self->framePositions[6].y += 0x100000;
-            RSDK.DrawSprite(&self->finger1Animator, &self->framePositions[6], false);
+            self->armPositions[6].y += 0x100000;
+            RSDK.DrawSprite(&self->finger1Animator, &self->armPositions[6], false);
 
-            self->framePositions[6].x -= 0x40000;
-            self->framePositions[6].y -= 0x80000;
-            RSDK.DrawSprite(&self->finger2Animator, &self->framePositions[6], false);
+            self->armPositions[6].x -= 0x40000;
+            self->armPositions[6].y -= 0x80000;
+            RSDK.DrawSprite(&self->finger2Animator, &self->armPositions[6], false);
         }
         else {
-            self->framePositions[6].x += 0x280000;
-            RSDK.DrawSprite(&self->finger2Animator, &self->framePositions[6], false);
+            self->armPositions[6].x += 0x280000;
+            RSDK.DrawSprite(&self->finger2Animator, &self->armPositions[6], false);
 
-            self->framePositions[6].x -= 0x40000;
-            self->framePositions[6].y -= 0x80000;
-            RSDK.DrawSprite(&self->finger1Animator, &self->framePositions[6], false);
+            self->armPositions[6].x -= 0x40000;
+            self->armPositions[6].y -= 0x80000;
+            RSDK.DrawSprite(&self->finger1Animator, &self->armPositions[6], false);
 
-            self->framePositions[6].y += 0x100000;
-            RSDK.DrawSprite(&self->finger1Animator, &self->framePositions[6], false);
+            self->armPositions[6].y += 0x100000;
+            RSDK.DrawSprite(&self->finger1Animator, &self->armPositions[6], false);
 
-            self->framePositions[6].y -= 0x80000;
+            self->armPositions[6].y -= 0x80000;
         }
     }
     else {
         if (self->type == KLEPTOMOBILE_ARM_R) {
-            self->framePositions[6].x -= 0x280000;
-            self->framePositions[6].y -= 0x80000;
-            RSDK.DrawSprite(&self->finger1Animator, &self->framePositions[6], false);
+            self->armPositions[6].x -= 0x280000;
+            self->armPositions[6].y -= 0x80000;
+            RSDK.DrawSprite(&self->finger1Animator, &self->armPositions[6], false);
 
-            self->framePositions[6].y += 0x100000;
-            RSDK.DrawSprite(&self->finger1Animator, &self->framePositions[6], false);
+            self->armPositions[6].y += 0x100000;
+            RSDK.DrawSprite(&self->finger1Animator, &self->armPositions[6], false);
 
-            self->framePositions[6].x += 0x40000;
-            self->framePositions[6].y -= 0x80000;
-            RSDK.DrawSprite(&self->finger2Animator, &self->framePositions[6], false);
+            self->armPositions[6].x += 0x40000;
+            self->armPositions[6].y -= 0x80000;
+            RSDK.DrawSprite(&self->finger2Animator, &self->armPositions[6], false);
         }
         else {
-            self->framePositions[6].x -= 0x280000;
-            RSDK.DrawSprite(&self->finger2Animator, &self->framePositions[6], false);
+            self->armPositions[6].x -= 0x280000;
+            RSDK.DrawSprite(&self->finger2Animator, &self->armPositions[6], false);
 
-            self->framePositions[6].x += 0x40000;
-            self->framePositions[6].y -= 0x80000;
-            RSDK.DrawSprite(&self->finger1Animator, &self->framePositions[6], false);
+            self->armPositions[6].x += 0x40000;
+            self->armPositions[6].y -= 0x80000;
+            RSDK.DrawSprite(&self->finger1Animator, &self->armPositions[6], false);
 
-            self->framePositions[6].y += 0x100000;
-            RSDK.DrawSprite(&self->finger1Animator, &self->framePositions[6], false);
+            self->armPositions[6].y += 0x100000;
+            RSDK.DrawSprite(&self->finger1Animator, &self->armPositions[6], false);
 
-            self->framePositions[6].y -= 0x80000;
+            self->armPositions[6].y -= 0x80000;
         }
     }
 }

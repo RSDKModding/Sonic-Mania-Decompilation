@@ -35,8 +35,8 @@ struct EntityPhantomKing {
     int32 health;
     int32 typeChangeTimer; // Leftover from ERZKing, never used but the draw code for it is still there
     int32 bodyAngle;
-    int32 frameIDs[10];
-    Vector2 framePositions[10];
+    int32 armAngles[10];
+    Vector2 armPositions[10];
     Vector2 armBezierPos;
     Vector2 rubyPos;
     Vector2 unused;

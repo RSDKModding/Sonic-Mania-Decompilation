@@ -3543,9 +3543,9 @@ void Player_HandleFlyCarry(EntityPlayer *leader)
 
     int32 off;
     if (leader->animator.animationID == ANI_JUMP)
-        off = self->position.y + 0x210000;
+        off = self->position.y + TO_FIXED(33);
     else
-        off = self->position.y + 0x1C0000;
+        off = self->position.y + TO_FIXED(28);
 
     if (leader->state != Player_State_FlyCarried && (!leader->onGround || self->velocity.y < 0)) {
         bool32 canFlyCarry = (leader->state == Player_State_Roll || leader->state == Player_State_LookUp || leader->state == Player_State_Crouch
@@ -3554,7 +3554,7 @@ void Player_HandleFlyCarry(EntityPlayer *leader)
             canFlyCarry = canFlyCarry && (!((1 << RSDK.GetEntitySlot(leader)) & LottoMachine->activePlayers));
 
         if (canFlyCarry && (leader->animator.animationID != ANI_FAN)) {
-            if (abs(self->position.x - leader->position.x) < 0xC0000 && abs(off - leader->position.y) < 0xC0000 && !self->flyCarryTimer
+            if (abs(self->position.x - leader->position.x) < TO_FIXED(12) && abs(off - leader->position.y) < TO_FIXED(12) && !self->flyCarryTimer
                 && !leader->down && !leader->onGround) {
                 RSDK.SetSpriteAnimation(leader->aniFrames, ANI_HANG, &leader->animator, false, 0);
                 leader->state           = Player_State_FlyCarried;
@@ -3592,8 +3592,8 @@ void Player_HandleFlyCarry(EntityPlayer *leader)
         self->velocity.x = entityXVel;
         self->velocity.y = entityYVel;
 
-        leader->position.y = entityYPos + 0x1C0000;
         leader->position.x = entityXPos;
+        leader->position.y = entityYPos + TO_FIXED(28);
         leader->velocity.x = entityXVel;
         leader->velocity.y = entityYVel;
 
