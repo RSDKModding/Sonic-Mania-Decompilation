@@ -21,7 +21,9 @@ void Player_Update(void)
         Player_ChangeCharacter(self, ID_SONIC);
 #endif
 
+#if MANIA_USE_PLUS
     StateMachine_Run(self->stateInputReplay);
+#endif
     StateMachine_Run(self->stateInput);
 
     if (self->classID == Player->classID) {
@@ -120,8 +122,10 @@ void Player_Update(void)
         if (self->forceRespawn)
             self->state = Player_State_HoldRespawn;
 
+#if GAME_VERSION != VER_100
         if (self->isTransforming)
             self->state = Player_State_Transform;
+#endif
 
         StateMachine_Run(self->state);
 
@@ -1248,7 +1252,9 @@ bool32 Player_TryTransform(EntityPlayer *player, uint8 emeraldMasks)
         player->nextGroundState = StateMachine_None;
         player->interaction     = false;
         player->state           = Player_State_Transform;
+#if GAME_VERSION != VER_100
         player->isTransforming  = true;
+#endif
 
 #if MANIA_USE_PLUS
         if (!ERZStart && globals->superMusicEnabled)
@@ -4210,7 +4216,9 @@ void Player_State_Transform(void)
     if (++self->timer != 36) {
         if (!self->isChibi) {
             if (self->animator.frameID == self->animator.frameCount - 1) {
+#if GAME_VERSION != VER_100
                 self->isTransforming = false;
+#endif
                 self->interaction    = true;
                 self->state          = Player_State_Air;
                 RSDK.SetSpriteAnimation(self->aniFrames, ANI_WALK, &self->animator, false, 3);
@@ -4239,7 +4247,9 @@ void Player_State_Transform(void)
 
         if (!self->isChibi) {
             if (self->animator.frameID == self->animator.frameCount - 1) {
+#if GAME_VERSION != VER_100
                 self->isTransforming = false;
+#endif
                 self->interaction    = true;
                 self->state          = Player_State_Air;
 
@@ -4252,7 +4262,9 @@ void Player_State_Transform(void)
             }
         }
         else {
+#if GAME_VERSION != VER_100
             self->isTransforming = false;
+#endif
             self->interaction    = true;
             self->state          = Player_State_Air;
             RSDK.SetSpriteAnimation(self->aniFrames, ANI_WALK, &self->animator, false, 3);
