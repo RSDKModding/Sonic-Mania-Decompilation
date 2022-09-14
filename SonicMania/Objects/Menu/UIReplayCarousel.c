@@ -300,7 +300,7 @@ void UIReplayCarousel_SetupVisibleReplayButtons(void)
             if (id >= self->sortedRowCount)
                 break;
             int32 row    = API.GetSortedUserDBRowID(globals->replayTableID, id);
-            int32 zoneID = 0xFF;
+            uint8 zoneID = 0xFF;
             API.GetUserDBValue(globals->replayTableID, row, DBVAR_UINT8, "zoneID", &zoneID);
             API.GetUserDBRowCreationTime(globals->replayTableID, row, buffer, 31, "%D");
             if (zoneID != 0xFF) {
@@ -527,11 +527,11 @@ void UIReplayCarousel_Draw_Carousel(void)
         if (id >= self->sortedRowCount)
             break;
 
-        int32 score        = 0;
-        uint16 zoneID      = 0;
-        uint16 act         = 0;
-        uint16 characterID = 0;
-        uint16 encore      = 0;
+        int32 score       = 0;
+        uint8 zoneID      = 0;
+        uint8 act         = 0;
+        uint8 characterID = 0;
+        uint8 encore      = 0;
 
         int32 row = API.GetSortedUserDBRowID(globals->replayTableID, id);
         API.GetUserDBValue(globals->replayTableID, row, DBVAR_UINT32, "score", &score);
