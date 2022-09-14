@@ -84,7 +84,7 @@ uint32 ReplayDB_AddReplay(uint8 zoneID, uint8 act, uint8 characterID, int32 scor
         uint32 UUID = API.GetUserDBRowUUID(globals->replayTableID, rowID);
         char createTime[24];
         sprintf_s(createTime, (int32)sizeof(createTime), "");
-        API.GetUserDBRowCreationTime(globals->replayTableID, rowID, createTime, 23, "%Y/%m/%d %H:%M:%S");
+        API.GetUserDBRowCreationTime(globals->replayTableID, rowID, createTime, sizeof(createTime) - 1, "%Y/%m/%d %H:%M:%S");
 
         LogHelpers_Print("Replay DB Added Entry");
         LogHelpers_Print("Created at %s", createTime);
