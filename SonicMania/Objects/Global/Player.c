@@ -3766,7 +3766,9 @@ void Player_State_Air(void)
 {
     RSDK_THIS(Player);
 
+#if GAME_VERSION != VER_100
     self->tileCollisions = TILECOLLISION_DOWN;
+#endif
     Player_HandleAirFriction();
 
     if (self->onGround) {
