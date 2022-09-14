@@ -302,7 +302,7 @@ void UIReplayCarousel_SetupVisibleReplayButtons(void)
             int32 row    = API.GetSortedUserDBRowID(globals->replayTableID, id);
             uint8 zoneID = 0xFF;
             API.GetUserDBValue(globals->replayTableID, row, DBVAR_UINT8, "zoneID", &zoneID);
-            API.GetUserDBRowCreationTime(globals->replayTableID, row, buffer, 31, "%D");
+            API.GetUserDBRowCreationTime(globals->replayTableID, row, buffer, sizeof(buffer) - 1, "%D");
             if (zoneID != 0xFF) {
                 RSDK.InitString(&self->zoneNameText[i], "", 0);
                 Localization_GetZoneName(&self->zoneNameText[i], zoneID);
