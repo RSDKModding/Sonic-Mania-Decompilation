@@ -370,7 +370,12 @@ void MSZSetup_State_ManageFade_ST(void)
 {
     RSDK_THIS(MSZSetup);
 
-    if (ScreenInfo->position.x + ScreenInfo->center.x > 0x1980) {
+#if GAME_VERSION == VER_100
+    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+    if (player1->position.x > TO_FIXED(6528)) {
+#else
+    if (ScreenInfo->position.x + ScreenInfo->center.x > 6528) {
+#endif
         self->state = MSZSetup_State_SwitchPalettes;
     }
 }
@@ -380,7 +385,7 @@ void MSZSetup_State_ManageFade_K(void)
     RSDK_THIS(MSZSetup);
 
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    if (player1->position.x < 0x21000000 && player1->position.y < 0x6400000)
+    if (player1->position.x < TO_FIXED(8448) && player1->position.y < TO_FIXED(1600))
         self->state = MSZSetup_State_SwitchPalettes;
 }
 
