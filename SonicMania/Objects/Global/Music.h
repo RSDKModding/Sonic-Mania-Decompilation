@@ -12,13 +12,10 @@ typedef enum {
     TRACK_HBHBOSS      = 4,
     TRACK_EGGMAN1      = 5,
     TRACK_EGGMAN2      = 6,
-    TRACK_RUBYPRESENCE = 5,
-    TRACK_BUDDYBEAT    = 6,
     TRACK_ACTCLEAR     = 7,
     TRACK_DROWNING     = 8,
     TRACK_GAMEOVER     = 9,
     TRACK_SUPER        = 10,
-    TRACK_ERZBOSS      = 10,
 #if MANIA_USE_PLUS
     TRACK_HBHMISCHIEF = 11,
     TRACK_SOUNDTEST   = 12,
@@ -27,6 +24,12 @@ typedef enum {
     TRACK_HBHMISCHIEF = 12,
 #endif
     TRACK_1UP = 13,
+
+    // Aliases/Reused slots
+    TRACK_METALSONIC   = TRACK_EGGMAN1,
+    TRACK_RUBYPRESENCE = TRACK_EGGMAN1,
+    TRACK_BUDDYBEAT    = TRACK_EGGMAN2,
+    TRACK_ERZBOSS      = TRACK_SUPER,
 } MusicTracks;
 
 typedef enum {
