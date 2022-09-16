@@ -59,7 +59,9 @@
 #ifdef MANIA_FIRST_RELEASE
 #define GAME_VERSION VER_100
 #else
+#ifndef GAME_VERSION
 #define GAME_VERSION VER_103
+#endif
 #endif
 
 #undef RETRO_REV02
