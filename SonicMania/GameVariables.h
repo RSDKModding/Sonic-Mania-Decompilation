@@ -217,7 +217,9 @@ typedef struct {
     int32 restartScore;
     int32 restartScore1UP;
     int32 restartLives[4];
+#if GAME_VERSION != VER_100
     int32 restartMusicID;
+#endif
     int32 restartFlags;
     int32 tempFlags;
     int32 continues;

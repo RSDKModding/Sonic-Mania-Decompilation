@@ -62,6 +62,7 @@ void Music_StageLoad(void)
     // Slot 12 (slot 11 in pre-plus): "no load"
     Music_SetMusicTrack("1up.ogg", TRACK_1UP, false);
 
+#if GAME_VERSION != VER_100
     if (globals->suppressAutoMusic) {
         if (globals->restartMusicID > TRACK_STAGE)
             Music->activeTrack = globals->restartMusicID;
@@ -72,6 +73,15 @@ void Music_StageLoad(void)
 
     globals->restartMusicID = TRACK_STAGE;
     Music->nextTrack        = TRACK_NONE;
+#else
+    if (!globals->suppressAutoMusic)
+        Music->activeTrack = TRACK_STAGE;
+
+    Music->prevTrack         = TRACK_NONE;
+    Music->nextTrack         = TRACK_NONE;
+    Music->playingDrownTrack = false;
+    Music->playing1UPTrack   = false;
+#endif
 
 #if MANIA_USE_PLUS
     if (sku_platform == PLATFORM_DEV)
