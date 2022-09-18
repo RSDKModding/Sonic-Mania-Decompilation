@@ -55,8 +55,8 @@ void LavaGeyser_Serialize(void);
 // Extra Entity Functions
 void LavaGeyser_CheckPlayerCollisions(void);
 void LavaGeyser_HandleSetup(void);
-void LavaGeyser_State_Intervals(void);
 
+void LavaGeyser_State_Intervals(void);
 void LavaGeyser_State_Init(void);
 void LavaGeyser_State_ShowPlume(void);
 void LavaGeyser_State_Erupting(void);

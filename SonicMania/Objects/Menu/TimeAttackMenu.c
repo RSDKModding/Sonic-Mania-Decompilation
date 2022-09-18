@@ -437,10 +437,10 @@ void TimeAttackMenu_WatchReplay(int32 row, bool32 showGhost)
     LogHelpers_Print("uuid: %08X", uuid);
 
     int32 score       = 0;
-    int32 zoneID      = 0;
-    int32 act         = 0;
-    int32 characterID = 0;
-    int32 encore      = 0;
+    uint8 zoneID      = 0;
+    uint8 act         = 0;
+    uint8 characterID = 0;
+    uint8 encore      = 0;
     API.GetUserDBValue(globals->replayTableID, row, DBVAR_UINT32, "score", &score);
     API.GetUserDBValue(globals->replayTableID, row, DBVAR_UINT8, "zoneID", &zoneID);
     API.GetUserDBValue(globals->replayTableID, row, DBVAR_UINT8, "act", &act);

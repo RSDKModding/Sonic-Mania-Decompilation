@@ -63,7 +63,14 @@
 #define VER_107 (7) // 1.07 (EGS/Origin releases)
 
 #ifdef MANIA_PREPLUS
+
+#ifdef MANIA_FIRST_RELEASE
+#define GAME_VERSION VER_100
+#else
+#ifndef GAME_VERSION
 #define GAME_VERSION VER_103
+#endif
+#endif
 
 #undef RETRO_REV02
 #define RETRO_REV02 (0)

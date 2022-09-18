@@ -242,10 +242,10 @@ void GigaMetal_StageLoad(void)
         foreach_all(Music, music)
         {
             if (music->playOnLoad)
-                music->trackID = TRACK_EGGMAN1;
+                music->trackID = TRACK_METALSONIC;
         }
 
-        Music->restartTrackID = TRACK_EGGMAN1;
+        Music->restartTrackID = TRACK_METALSONIC;
     }
 }
 

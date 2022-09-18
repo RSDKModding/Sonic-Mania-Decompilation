@@ -393,7 +393,9 @@ struct EntityPlayer {
     bool32 groundedStore; // prev frame's onGround value
     bool32 invertGravity;
     bool32 isChibi;
+#if GAME_VERSION != VER_100
     bool32 isTransforming;
+#endif
     int32 superState;
     int32 superRingLossTimer;
     int32 superBlendAmount;
@@ -419,7 +421,9 @@ struct EntityPlayer {
     int32 sensorX[5];
     int32 sensorY;
     Vector2 moveLayerPosition;
+#if MANIA_USE_PLUS
     StateMachine(stateInputReplay);
+#endif
     StateMachine(stateInput);
     int32 controllerID;
     int32 controlLock;
