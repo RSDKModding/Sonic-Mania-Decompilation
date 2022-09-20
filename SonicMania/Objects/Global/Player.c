@@ -1752,10 +1752,10 @@ bool32 Player_CheckP2KeyPress(void)
 #endif
 
 #if GAME_VERSION != VER_100
-    if (self->controllerID > PLAYER_COUNT || Player->disableP2KeyCheck)
+    if (self->controllerID > CONT_P4 || Player->disableP2KeyCheck)
         return false;
 #else
-    if (self->controllerID > PLAYER_COUNT)
+    if (self->controllerID > CONT_P4)
         return false;
 #endif
 
@@ -6297,7 +6297,7 @@ void Player_Input_P1(void)
 {
     RSDK_THIS(Player);
 
-    if (self->controllerID < PLAYER_COUNT) {
+    if (self->controllerID <= CONT_P4) {
         if (globals->gameMode != MODE_COMPETITION || Announcer->finishedCountdown) {
             RSDKControllerState *controller = &ControllerInfo[self->controllerID];
             RSDKAnalogState *stick          = &AnalogStickInfoL[self->controllerID];
