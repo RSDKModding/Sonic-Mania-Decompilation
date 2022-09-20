@@ -111,10 +111,10 @@ void SaveGame_LoadPlayerState(void);
 void SaveGame_ResetPlayerState(void);
 void SaveGame_LoadFile_CB(int32 status);
 void SaveGame_SaveFile_CB(int32 status);
-bool32 SaveGame_AllChaosEmeralds();
+bool32 SaveGame_AllChaosEmeralds(void);
 bool32 SaveGame_GetEmerald(uint8 emeraldID);
 void SaveGame_SetEmerald(uint8 emeraldID);
-void SaveGame_ClearCollectedSpecialRings();
+void SaveGame_ClearCollectedSpecialRings(void);
 bool32 SaveGame_GetCollectedSpecialRing(uint8 id);
 void SaveGame_SetCollectedSpecialRing(uint8 id);
 

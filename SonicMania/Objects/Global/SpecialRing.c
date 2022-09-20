@@ -174,7 +174,6 @@ void SpecialRing_State_Idle(void)
                     self->sparkleRadius = TO_FIXED(16);
                     self->state         = SpecialRing_State_Flash;
 
-                    SaveRAM *saveRAM = SaveGame_GetSaveRAM();
 #if GAME_VERSION != VER_100
                     // rings spawned via debug mode give you 50 rings, always
                     if (!SaveGame_AllChaosEmeralds() && self->id) {
@@ -234,7 +233,6 @@ void SpecialRing_State_Flash(void)
         self->sparkleRadius -= TO_FIXED(8);
     }
 
-    SaveRAM *saveRAM = SaveGame_GetSaveRAM();
 #if GAME_VERSION != VER_100
     // rings spawned via debug mode give you 50 rings, always
     if (SaveGame_AllChaosEmeralds() || !self->id) {
