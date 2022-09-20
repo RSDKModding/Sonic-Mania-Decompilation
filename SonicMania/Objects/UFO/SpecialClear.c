@@ -26,7 +26,6 @@ void SpecialClear_Draw(void)
 
     Vector2 vertPos[4];
     Vector2 drawPos;
-    SaveRAM *saveRAM = SaveGame_GetSaveRAM();
 
     int32 centerX = ScreenInfo->center.x << 16;
     drawPos.x     = centerX - 0x600000;

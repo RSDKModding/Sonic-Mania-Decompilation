@@ -461,7 +461,7 @@ void SaveGame_SaveFile_CB(int32 status)
     }
 }
 
-bool32 SaveGame_AllChaosEmeralds()
+bool32 SaveGame_AllChaosEmeralds(void)
 {
     SaveRAM *saveRAM = SaveGame_GetSaveRAM();
     return saveRAM->collectedEmeralds == 0b01111111;
@@ -478,7 +478,7 @@ void SaveGame_SetEmerald(uint8 emeraldID)
     saveRAM->collectedEmeralds |= 1 << emeraldID;
 }
 
-void SaveGame_ClearCollectedSpecialRings()
+void SaveGame_ClearCollectedSpecialRings(void)
 {
     SaveRAM *saveRAM               = SaveGame_GetSaveRAM();
     saveRAM->collectedSpecialRings = 0;
