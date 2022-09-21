@@ -224,6 +224,21 @@ void ButtonDoor_EditorDraw(void)
         ButtonDoor_SetupTagLink();
 
         RSDK_DRAWING_OVERLAY(true);
+
+        Vector2 storePos = self->position;
+        switch (self->orientation) {
+            case BUTTONDOOR_UP: self->position.y = self->startPos.y - self->size.y; break;
+            case BUTTONDOOR_LEFT: self->position.x = self->startPos.x - self->size.x; break;
+            case BUTTONDOOR_DOWN: self->position.y = self->startPos.y + self->size.y; break;
+            case BUTTONDOOR_RIGHT: self->position.x = self->startPos.x + self->size.x; break;
+        }
+        self->inkEffect = INK_BLEND;
+        ButtonDoor_DrawSprites();
+
+        DrawHelpers_DrawArrow(storePos.x, storePos.y, self->position.x, self->position.y, 0x00F000, INK_NONE, 0xFF);
+        self->position  = storePos;
+        self->inkEffect = INK_NONE;
+
         if (self->taggedButton) {
             DrawHelpers_DrawArrow(self->taggedButton->position.x, self->taggedButton->position.y, self->position.x, self->position.y, 0xFFFF00,
                                   INK_NONE, 0xFF);

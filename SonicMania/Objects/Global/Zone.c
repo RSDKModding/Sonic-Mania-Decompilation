@@ -770,7 +770,7 @@ int32 Zone_GetListPos_ManiaMode(void)
 void Zone_Draw_Fade(void)
 {
     RSDK_THIS(Zone);
-    RSDK.FillScreen(self->fadeColor, self->timer, self->timer - 0x80, self->timer - 0x100);
+    RSDK.FillScreen(self->fadeColor, self->timer, self->timer - 128, self->timer - 0x100);
 }
 
 void Zone_State_FadeOut(void)

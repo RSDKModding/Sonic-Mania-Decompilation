@@ -40,9 +40,11 @@ void Batbrain_Serialize(void);
 // Extra Entity Functions
 void Batbrain_DebugDraw(void);
 void Batbrain_DebugSpawn(void);
+
 // Helpers
 void Batbrain_CheckPlayerCollisions(void);
 void Batbrain_CheckOffScreen(void);
+
 // States
 void Batbrain_State_Init(void);
 void Batbrain_State_CheckPlayerInRange(void);

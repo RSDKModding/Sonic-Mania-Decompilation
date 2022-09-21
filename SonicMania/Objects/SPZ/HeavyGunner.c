@@ -295,7 +295,7 @@ void HeavyGunner_Draw_FadeOut(void)
 {
     RSDK_THIS(HeavyGunner);
 
-    RSDK.FillScreen(0xF0F0F0, self->timer, self->timer - 0x80, self->timer - 0x100);
+    RSDK.FillScreen(0xF0F0F0, self->timer, self->timer - 128, self->timer - 256);
 }
 
 void HeavyGunner_StateManager_SetupArena(void)
