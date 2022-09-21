@@ -22,6 +22,7 @@ void Orbinaut_StaticUpdate(void) {}
 void Orbinaut_Draw(void)
 {
     RSDK_THIS(Orbinaut);
+
     for (int32 o = 0; o < ORBINAUT_ORB_COUNT; ++o) {
         if ((1 << o) & self->activeOrbs) {
             RSDK.DrawSprite(&self->animatorOrb, &self->orbPositions[o], false);
@@ -164,6 +165,7 @@ void Orbinaut_HandleRotation(void)
 void Orbinaut_CheckOffScreen(void)
 {
     RSDK_THIS(Orbinaut);
+
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
         self->position  = self->startPos;
         self->direction = self->startDir;
@@ -174,6 +176,7 @@ void Orbinaut_CheckOffScreen(void)
 void Orbinaut_State_Init(void)
 {
     RSDK_THIS(Orbinaut);
+
     self->active = ACTIVE_NORMAL;
     self->state  = Orbinaut_State_Moving;
     Orbinaut_State_Moving();
@@ -184,6 +187,7 @@ void Orbinaut_State_Moving(void)
     RSDK_THIS(Orbinaut);
 
     self->position.x += self->velocity.x;
+
     Orbinaut_HandleRotation();
     Orbinaut_HandlePlayerInteractions();
 
@@ -230,21 +234,21 @@ void Orbinaut_State_ReleasingOrbs(void)
 {
     RSDK_THIS(Orbinaut);
 
-    int32 angle = self->angle;
+    uint8 angle = self->angle;
     Orbinaut_HandleRotation();
 
     for (int32 i = 0; i < ORBINAUT_ORB_COUNT; ++i) {
         if (angle == 64) {
             if ((1 << i) & self->activeOrbs) {
                 self->activeOrbs &= ~(1 << i);
-                EntityOrbinaut *sol = CREATE_ENTITY(Orbinaut, INT_TO_VOID(true), self->orbPositions[i].x, self->orbPositions[i].y);
+                EntityOrbinaut *orb = CREATE_ENTITY(Orbinaut, INT_TO_VOID(true), self->orbPositions[i].x, self->orbPositions[i].y);
                 if (self->direction == FLIP_NONE)
-                    sol->velocity.x = -0x20000;
+                    orb->velocity.x = -0x20000;
                 else
-                    sol->velocity.x = 0x20000;
+                    orb->velocity.x = 0x20000;
             }
-            angle += (0x100 / ORBINAUT_ORB_COUNT);
         }
+        angle += (0x100 / ORBINAUT_ORB_COUNT);
     }
     Orbinaut_HandlePlayerInteractions();
 
@@ -267,7 +271,9 @@ void Orbinaut_State_ReleasingOrbs(void)
 void Orbinaut_State_Orbless(void)
 {
     RSDK_THIS(Orbinaut);
+
     self->position.x += self->velocity.x;
+
     Orbinaut_HandlePlayerInteractions();
     Orbinaut_CheckOffScreen();
 }
@@ -275,6 +281,7 @@ void Orbinaut_State_Orbless(void)
 void Orbinaut_State_Orb(void)
 {
     RSDK_THIS(Orbinaut);
+
     if (RSDK.CheckOnScreen(self, &self->updateRange)) {
         self->position.x += self->velocity.x;
 
@@ -282,7 +289,7 @@ void Orbinaut_State_Orb(void)
         {
             if (self->planeFilter <= 0 || player->collisionPlane == (uint8)((self->planeFilter - 1) & 1)) {
                 if (Player_CheckCollisionTouch(player, self, &Orbinaut->hitboxOrb)) {
-                    Player_ElementHurt(player, self, SHIELD_FIRE);
+                    Player_Hurt(player, self);
                 }
             }
         }
@@ -295,6 +302,7 @@ void Orbinaut_State_Orb(void)
 void Orbinaut_State_OrbDebris(void)
 {
     RSDK_THIS(Orbinaut);
+
     if (RSDK.CheckOnScreen(self, &self->updateRange)) {
         self->position.x += self->velocity.x;
         self->position.y += self->velocity.y;
@@ -306,9 +314,32 @@ void Orbinaut_State_OrbDebris(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Orbinaut_EditorDraw(void) {}
+void Orbinaut_EditorDraw(void)
+{
+    RSDK_THIS(Orbinaut);
 
-void Orbinaut_EditorLoad(void) {}
+    int32 angle = self->angle;
+    Orbinaut_HandleRotation();
+    self->angle = angle;
+    
+    Orbinaut_Draw();
+}
+
+void Orbinaut_EditorLoad(void)
+{
+    Orbinaut->aniFrames = RSDK.LoadSpriteAnimation("MMZ/Orbinaut.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Orbinaut, planeFilter);
+    RSDK_ENUM_VAR("None", PLANEFILTER_NONE);
+    RSDK_ENUM_VAR("AL", PLANEFILTER_AL);
+    RSDK_ENUM_VAR("BL", PLANEFILTER_BL);
+    RSDK_ENUM_VAR("AH", PLANEFILTER_AH);
+    RSDK_ENUM_VAR("BH", PLANEFILTER_BH);
+
+    RSDK_ACTIVE_VAR(Orbinaut, direction);
+    RSDK_ENUM_VAR("Left", FLIP_NONE);
+    RSDK_ENUM_VAR("Right", FLIP_X);
+}
 #endif
 
 void Orbinaut_Serialize(void)

@@ -266,7 +266,7 @@ void Sol_State_ShootingOrbs(void)
     self->position.y = (RSDK.Sin256(self->oscillateAngle) << 10) + self->startPos.y;
     self->oscillateAngle += 4;
 
-    int32 angle = self->angle;
+    uint8 angle = self->angle;
     Sol_HandleRotation();
 
     for (int32 i = 0; i < SOL_FLAMEORB_COUNT; ++i) {
@@ -276,9 +276,9 @@ void Sol_State_ShootingOrbs(void)
                 EntitySol *sol  = CREATE_ENTITY(Sol, INT_TO_VOID(true), self->positions[i].x, self->positions[i].y);
                 sol->velocity.x = self->direction == FLIP_NONE ? -0x20000 : 0x20000;
             }
-
-            angle += (0x100 / SOL_FLAMEORB_COUNT);
         }
+
+        angle += (0x100 / SOL_FLAMEORB_COUNT);
     }
 
     Sol_HandlePlayerInteractions();

@@ -243,10 +243,10 @@ void Caterkiller_HandlePlayerInteractions(void)
 
 bool32 Caterkiller_CheckTileAngle(int32 x, int32 y, int32 dir)
 {
-    int32 ty = (y >> 16) + 8;
     int32 tx = x >> 16;
+    int32 ty = (y >> 16) + 8;
 
-    uint16 tile = RSDK.GetTile(Zone->fgLayer[1], x >> 16, ty);
+    uint16 tile = RSDK.GetTile(Zone->fgLayer[1], tx, ty);
     if (tile == (uint16)-1)
         tile = RSDK.GetTile(Zone->fgLayer[0], tx, ty);
 

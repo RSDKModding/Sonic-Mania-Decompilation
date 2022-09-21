@@ -146,7 +146,7 @@ void LogoSetup_Draw_Fade(void)
 {
     RSDK_THIS(LogoSetup);
 
-    RSDK.FillScreen(0x000000, self->timer, self->timer - 0x80, self->timer - 0x100);
+    RSDK.FillScreen(0x000000, self->timer, self->timer - 128, self->timer - 256);
 }
 
 #if RETRO_INCLUDE_EDITOR

@@ -39,10 +39,10 @@ void FXRuby_Draw(void)
 
     if (self->fadeWhite >= 512 || self->fadeBlack >= 512 || SceneInfo->currentDrawGroup != self->drawGroup) {
         if (self->fadeWhite > 0)
-            RSDK.FillScreen(0xFFF0F0, self->fadeWhite, self->fadeWhite - 0x100, self->fadeWhite - 0x100);
+            RSDK.FillScreen(0xFFF0F0, self->fadeWhite, self->fadeWhite - 256, self->fadeWhite - 256);
 
         if (self->fadeBlack > 0)
-            RSDK.FillScreen(0x000000, self->fadeBlack, self->fadeBlack - 0x80, self->fadeBlack - 0x100);
+            RSDK.FillScreen(0x000000, self->fadeBlack, self->fadeBlack - 128, self->fadeBlack - 256);
     }
     else {
         if (self->outerRadius <= ScreenInfo->size.x) {

@@ -103,6 +103,7 @@ void Bomb_DebugDraw(void)
 void Bomb_CheckOffScreen(void)
 {
     RSDK_THIS(Bomb);
+
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
         self->position  = self->startPos;
         self->direction = self->startDir;
@@ -134,6 +135,7 @@ void Bomb_CheckPlayerCollisions(void)
 void Bomb_State_Init(void)
 {
     RSDK_THIS(Bomb);
+
     self->active = ACTIVE_NORMAL;
     self->state  = Bomb_State_Walk;
     Bomb_State_Walk();
@@ -142,14 +144,16 @@ void Bomb_State_Init(void)
 void Bomb_State_Walk(void)
 {
     RSDK_THIS(Bomb);
+
     self->position.x += self->velocity.x;
+
     if (!--self->timer) {
         self->timer = 180;
         self->state = Bomb_State_Idle;
     }
     else {
         bool32 groundCollided = false;
-        if ((self->direction & 2)) // RWall???
+        if ((self->direction & FLIP_Y)) // RWall??? it should be roof right???
             groundCollided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_RWALL, 0, 0, -0x100000, 2);
         else
             groundCollided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, 2);
@@ -162,6 +166,7 @@ void Bomb_State_Walk(void)
     }
 
     RSDK.ProcessAnimation(&self->mainAnimator);
+
     Bomb_CheckPlayerCollisions();
     Bomb_CheckOffScreen();
 }
@@ -169,8 +174,9 @@ void Bomb_State_Walk(void)
 void Bomb_State_Idle(void)
 {
     RSDK_THIS(Bomb);
+
     if (!--self->timer) {
-        self->direction ^= 1;
+        self->direction ^= FLIP_X;
         self->velocity.x = -self->velocity.x;
         self->timer      = 0x600;
         RSDK.SetSpriteAnimation(Bomb->aniFrames, 1, &self->mainAnimator, true, 0);
@@ -178,6 +184,7 @@ void Bomb_State_Idle(void)
     }
 
     RSDK.ProcessAnimation(&self->mainAnimator);
+
     Bomb_CheckPlayerCollisions();
     Bomb_CheckOffScreen();
 }
@@ -185,10 +192,12 @@ void Bomb_State_Idle(void)
 void Bomb_State_Explode(void)
 {
     RSDK_THIS(Bomb);
-    if ((self->direction & 2))
+
+    if ((self->direction & FLIP_Y))
         self->fuseOffset -= 0x1000;
     else
         self->fuseOffset += 0x1000;
+
     if (--self->timer > 0) {
         RSDK.ProcessAnimation(&self->mainAnimator);
         RSDK.ProcessAnimation(&self->fuseAnimator);
@@ -221,7 +230,7 @@ void Bomb_State_Explode(void)
         debris->planeFilter = self->planeFilter;
         debris->drawGroup   = self->drawGroup;
 
-        EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(1), self->position.x, self->position.y);
+        EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y);
         explosion->planeFilter     = self->planeFilter;
         explosion->drawGroup       = self->drawGroup + 1;
 
@@ -232,6 +241,7 @@ void Bomb_State_Explode(void)
 void Bomb_State_Shrapnel(void)
 {
     RSDK_THIS(Bomb);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x1800;
@@ -267,8 +277,10 @@ void Bomb_EditorLoad(void)
     RSDK_ENUM_VAR("BH", PLANEFILTER_BH);
 
     RSDK_ACTIVE_VAR(Bomb, direction);
-    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
-    RSDK_ENUM_VAR("Flip X", FLIP_X);
+    RSDK_ENUM_VAR("Left", FLIP_NONE);
+    RSDK_ENUM_VAR("Right", FLIP_X);
+    RSDK_ENUM_VAR("Left (Flip Y)", FLIP_Y);
+    RSDK_ENUM_VAR("Right (Flip Y)", FLIP_XY);
 }
 #endif
 
