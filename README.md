@@ -47,11 +47,8 @@ A: Submit an issue in the issues tab and we _might_ fix it in the main branch. D
 ### Q: Will you do a decompilation for Sonic CD (2011) and/or Sonic 1/2 (2013)?
 A: I already have! You can find Sonic CD [here](https://github.com/Rubberduckycooly/Sonic-CD-11-Decompilation) and Sonic 1/2 [here](https://github.com/Rubberduckycooly/Sonic-1-2-2013-Decompilation).
 
-### Q: Will there be a decompilation for Sonic Origins/Sonic 3?
-A: No. This is the last decompilation from us. This project took about 1.5 years to do, and doing Sonic 3 would take equally as long, if not longer, as Sonic 3 is not only larger in scope, but Origins' hybrid codebase makes it harder to read. We would also like to expand our horizons beyond sonic going forward, and we don't wish to spend forever just playing catchup with Sega's official releases.
-
-### Q: Are there anymore decompilation projects in the works?
-A: Absolutely not. Between the last two and this one, we're done with decompiling, at least for the time being. Please do not expect any more decompilations from us, Sonic or otherwise!
+### Q: Are there anymore decompilation projects in the works, such as Sonic Origins/Sonic 3?
+A: Absolutely not. This project took about 1 and a half years to do, and doing Sonic 3 would take equally as long, if not longer, as Sonic 3 is not only larger in scope, but Origins' hybrid codebase makes it harder to read. Between our other decompilation projects and this one, we're done with decompiling, at least for the time being. We would also like to expand our horizons beyond Sonic going forward, and we don't wish to spend forever just playing catchup with Sega's official releases. Please do not expect any more decompilations from us, Sonic or otherwise!
 
 # Special Thanks
 * [Chuli](https://github.com/MGRich) for general decompilation assistance, helping me fix bugs, tweaking up my sometimes sloppy code and generally being really helpful and fun to work with on this project
