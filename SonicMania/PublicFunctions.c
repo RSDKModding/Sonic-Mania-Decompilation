@@ -2484,6 +2484,8 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Whirlpool_SetupBubbles);
 
     // Helpers/BadnikHelpers
+    ADD_PUBLIC_FUNC(BadnikHelpers_BadnikBreak);
+    ADD_PUBLIC_FUNC(BadnikHelpers_BadnikBreakUnseeded);
     ADD_PUBLIC_FUNC(BadnikHelpers_Oscillate);
 
     // Helpers/ColorHelpers
