@@ -35,8 +35,8 @@
 #define RETRO_USE_MOD_LOADER (1)
 #endif
 
-#if RETRO_USE_MOD_LOADER
-#define RETRO_MOD_LOADER_VER (1)
+#ifndef RETRO_MOD_LOADER_VER
+#define RETRO_MOD_LOADER_VER (2)
 #endif
 
 // used to manage standalone (RSDKv5.exe & Game.dll) and combined (Game.exe) modes
