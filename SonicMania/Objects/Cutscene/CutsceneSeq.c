@@ -157,7 +157,7 @@ void CutsceneSeq_CheckSkip(uint8 skipType, EntityCutsceneSeq *seq, void (*skipCa
 
 Entity *CutsceneSeq_GetEntity(int32 type)
 {
-    foreach_all_group(type, entity) { foreach_return entity; }
+    foreach_all_type(type, entity) { foreach_return entity; }
 
     return NULL;
 }
