@@ -359,43 +359,19 @@ void MenuSetup_Initialize(void)
             MenuSetup->controls_NX_Pro = control;
     }
 
-    Hitbox hitbox;
     foreach_all(UIButtonPrompt, prompt)
     {
-        EntityUIControl *saveControl = MenuSetup->saveSelect;
-        int32 x                      = saveControl->startPos.x - saveControl->cameraOffset.x;
-        int32 y                      = saveControl->startPos.y - saveControl->cameraOffset.y;
+        EntityUIControl *saveControl         = MenuSetup->saveSelect;
+        EntityUIControl *leaderboardsControl = MenuSetup->leaderboards;
+        EntityUIControl *optionsControl      = MenuSetup->options;
 
-        hitbox.right  = saveControl->size.x >> 17;
-        hitbox.left   = -(saveControl->size.x >> 17);
-        hitbox.bottom = saveControl->size.y >> 17;
-        hitbox.top    = -(saveControl->size.y >> 17);
-
-        if (MathHelpers_PointInHitbox(x, y, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox) && prompt->buttonID == 2)
+        if (UIControl_ContainsPos(saveControl, &prompt->position) && prompt->buttonID == 2)
             MenuSetup->delSavePrompt = prompt;
 
-        EntityUIControl *leaderboardsControl = MenuSetup->leaderboards;
-        x                                    = leaderboardsControl->startPos.x - leaderboardsControl->cameraOffset.x;
-        y                                    = leaderboardsControl->startPos.y - leaderboardsControl->cameraOffset.y;
-
-        hitbox.right  = leaderboardsControl->size.x >> 17;
-        hitbox.left   = -(leaderboardsControl->size.x >> 17);
-        hitbox.bottom = leaderboardsControl->size.y >> 17;
-        hitbox.top    = -(leaderboardsControl->size.y >> 17);
-
-        if (MathHelpers_PointInHitbox(x, y, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox) && prompt->buttonID == 3)
+        if (UIControl_ContainsPos(leaderboardsControl, &prompt->position) && prompt->buttonID == 3)
             MenuSetup->leaderboardPrompt = prompt;
 
-        EntityUIControl *optionsControl = MenuSetup->options;
-        x                               = optionsControl->startPos.x - optionsControl->cameraOffset.x;
-        y                               = optionsControl->startPos.y - optionsControl->cameraOffset.y;
-
-        hitbox.right  = optionsControl->size.x >> 17;
-        hitbox.left   = -(optionsControl->size.x >> 17);
-        hitbox.bottom = optionsControl->size.y >> 17;
-        hitbox.top    = -(optionsControl->size.y >> 17);
-
-        if (MathHelpers_PointInHitbox(x, y, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox) && prompt->buttonID == 3)
+        if (UIControl_ContainsPos(optionsControl, &prompt->position) && prompt->buttonID == 3)
             MenuSetup->optionsPrompt = prompt;
     }
 
@@ -404,56 +380,26 @@ void MenuSetup_Initialize(void)
     foreach_all(UIInfoLabel, label)
     {
         EntityUIControl *roundControl = MenuSetup->competitionRound;
-        int32 x                       = roundControl->startPos.x - roundControl->cameraOffset.x;
-        int32 y                       = roundControl->startPos.y - roundControl->cameraOffset.y;
+        EntityUIControl *totalControl = MenuSetup->competitionTotal;
 
-        hitbox.right  = roundControl->size.x >> 17;
-        hitbox.left   = -(roundControl->size.x >> 17);
-        hitbox.bottom = roundControl->size.y >> 17;
-        hitbox.top    = -(roundControl->size.y >> 17);
-
-        if (MathHelpers_PointInHitbox(x, y, label->position.x, label->position.y, FLIP_NONE, &hitbox))
+        if (UIControl_ContainsPos(roundControl, &label->position))
             MenuSetup->roundLabel = label;
 
-        EntityUIControl *totalControl = MenuSetup->competitionTotal;
-        x                             = totalControl->startPos.x - totalControl->cameraOffset.x;
-        y                             = totalControl->startPos.y - totalControl->cameraOffset.y;
-
-        hitbox.right  = totalControl->size.x >> 17;
-        hitbox.left   = -(totalControl->size.x >> 17);
-        hitbox.bottom = totalControl->size.y >> 17;
-        hitbox.top    = -(totalControl->size.y >> 17);
-
-        if (MathHelpers_PointInHitbox(x, y, label->position.x, label->position.y, FLIP_NONE, &hitbox))
+        if (UIControl_ContainsPos(totalControl, &label->position))
             MenuSetup->totalLabel = label;
     }
 
     foreach_all(UIVsScoreboard, scoreboard)
     {
         EntityUIControl *roundControl = MenuSetup->competitionRound;
-        int32 x                       = roundControl->startPos.x - roundControl->cameraOffset.x;
-        int32 y                       = roundControl->startPos.y - roundControl->cameraOffset.y;
+        EntityUIControl *totalControl = MenuSetup->competitionTotal;
 
-        hitbox.right  = roundControl->size.x >> 17;
-        hitbox.left   = -(roundControl->size.x >> 17);
-        hitbox.bottom = roundControl->size.y >> 17;
-        hitbox.top    = -(roundControl->size.y >> 17);
-
-        if (MathHelpers_PointInHitbox(x, y, scoreboard->position.x, scoreboard->position.y, FLIP_NONE, &hitbox)) {
+        if (UIControl_ContainsPos(roundControl, &scoreboard->position)) {
             MenuSetup->roundScoreboard = scoreboard;
             scoreboard->parentPos      = &roundControl->position;
         }
 
-        EntityUIControl *totalControl = MenuSetup->competitionTotal;
-        x                             = totalControl->startPos.x - totalControl->cameraOffset.x;
-        y                             = totalControl->startPos.y - totalControl->cameraOffset.y;
-
-        hitbox.right  = totalControl->size.x >> 17;
-        hitbox.left   = -(totalControl->size.x >> 17);
-        hitbox.bottom = totalControl->size.y >> 17;
-        hitbox.top    = -(totalControl->size.y >> 17);
-
-        if (MathHelpers_PointInHitbox(x, y, scoreboard->position.x, scoreboard->position.y, FLIP_NONE, &hitbox)) {
+        if (UIControl_ContainsPos(totalControl, &scoreboard->position)) {
             MenuSetup->totalScoreboard = scoreboard;
             scoreboard->parentPos      = &totalControl->position;
         }
@@ -561,7 +507,6 @@ void MenuSetup_SetupActions(void)
     foreach_all(UIModeButton, modeButton) { modeButton->actionCB = MenuSetup_MenuButton_ActionCB; }
     foreach_all(UISaveSlot, saveSlot) { saveSlot->actionCB = MenuSetup_SaveSlot_ActionCB; }
 
-    Hitbox hitbox;
     foreach_all(UIButton, button)
     {
         switch (button->listID) {
@@ -595,42 +540,16 @@ void MenuSetup_SetupActions(void)
                 break;
         }
 
-        int32 x       = controls_win->startPos.x - controls_win->cameraOffset.x;
-        int32 y       = controls_win->startPos.y - controls_win->cameraOffset.y;
-        hitbox.right  = controls_win->size.x >> 17;
-        hitbox.left   = -(controls_win->size.x >> 17);
-        hitbox.bottom = controls_win->size.y >> 17;
-        hitbox.top    = -(controls_win->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, button->position.x, button->position.y, FLIP_NONE, &hitbox))
+        if (UIControl_ContainsPos(controls_win, &button->position))
             button->actionCB = MenuSetup_Options_OpenKBControlsMenu;
 
-        x             = compRules->startPos.x - compRules->cameraOffset.x;
-        y             = compRules->startPos.y - compRules->cameraOffset.y;
-        hitbox.right  = compRules->size.x >> 17;
-        hitbox.left   = -(compRules->size.x >> 17);
-        hitbox.bottom = compRules->size.y >> 17;
-        hitbox.top    = -(compRules->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 9
-            && button->frameID == 2)
+        if (UIControl_ContainsPos(compRules, &button->position) && button->listID == 9 && button->frameID == 2)
             button->actionCB = MenuSetup_VS_RulesButton_ActionCB;
 
-        x             = secrets->startPos.x - secrets->cameraOffset.x;
-        y             = secrets->startPos.y - secrets->cameraOffset.y;
-        hitbox.right  = secrets->size.x >> 17;
-        hitbox.left   = -(secrets->size.x >> 17);
-        hitbox.bottom = secrets->size.y >> 17;
-        hitbox.top    = -(secrets->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 9
-            && button->frameID == 2)
+        if (UIControl_ContainsPos(secrets, &button->position) && button->listID == 9 && button->frameID == 2)
             button->actionCB = MenuSetup_OpenSaveSelectMenu;
 
-        x             = options->startPos.x - options->cameraOffset.x;
-        y             = options->startPos.y - options->cameraOffset.y;
-        hitbox.right  = options->size.x >> 17;
-        hitbox.left   = -(options->size.x >> 17);
-        hitbox.bottom = options->size.y >> 17;
-        hitbox.top    = -(options->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 3) {
+        if (UIControl_ContainsPos(options, &button->position) && button->listID == 3) {
             switch (button->frameID) {
                 case 0: button->actionCB = MenuSetup_Options_VideoMenuButton_ActionCB; break;
                 case 1: button->actionCB = MenuSetup_Options_SoundMenuButton_ActionCB; break;
@@ -639,32 +558,13 @@ void MenuSetup_SetupActions(void)
             }
         }
 
-        x             = language->startPos.x - language->cameraOffset.x;
-        y             = language->startPos.y - language->cameraOffset.y;
-        hitbox.right  = language->size.x >> 17;
-        hitbox.left   = -(language->size.x >> 17);
-        hitbox.bottom = language->size.y >> 17;
-        hitbox.top    = -(language->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, button->position.x, button->position.y, FLIP_NONE, &hitbox))
+        if (UIControl_ContainsPos(language, &button->position))
             button->actionCB = MenuSetup_OptionsLanguage_LanguageButton_ActionCB;
 
-        x             = video->startPos.x - video->cameraOffset.x;
-        y             = video->startPos.y - video->cameraOffset.y;
-        hitbox.right  = video->size.x >> 17;
-        hitbox.left   = -(video->size.x >> 17);
-        hitbox.bottom = video->size.y >> 17;
-        hitbox.top    = -(video->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 3
-            && button->frameID == 0)
+        if (UIControl_ContainsPos(video, &button->position) && button->listID == 3 && button->frameID == 0)
             button->choiceChangeCB = MenuSetup_OptionsVideo_ShaderButton_ActionCB;
 
-        x             = video_win->startPos.x - video_win->cameraOffset.x;
-        y             = video_win->startPos.y - video_win->cameraOffset.y;
-        hitbox.right  = video_win->size.x >> 17;
-        hitbox.left   = -(video_win->size.x >> 17);
-        hitbox.bottom = video_win->size.y >> 17;
-        hitbox.top    = -(video->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 17) {
+        if (UIControl_ContainsPos(video_win, &button->position) && button->listID == 17) {
             switch (button->frameID) {
                 case 2: button->choiceChangeCB = MenuSetup_OptionsVideo_ShaderButton_ActionCB; break;
                 case 7: button->choiceChangeCB = MenuSetup_OptionsVideo_WindowScaleButton_ActionCB; break;
@@ -723,14 +623,7 @@ void MenuSetup_SetupActions(void)
 
     foreach_all(UISlider, slider)
     {
-        hitbox.right  = sound->size.x >> 17;
-        hitbox.left   = -(sound->size.x >> 17);
-        hitbox.bottom = sound->size.y >> 17;
-        hitbox.top    = -(sound->size.y >> 17);
-
-        if (MathHelpers_PointInHitbox(sound->startPos.x - sound->cameraOffset.x, sound->startPos.y - sound->cameraOffset.y, slider->position.x,
-                                      slider->position.y, FLIP_NONE, &hitbox)
-            && slider->listID == 5)
+        if (UIControl_ContainsPos(sound, &slider->position) && slider->listID == 5)
             slider->sliderChangedCB = MenuSetup_OptionsVideo_UISlider_ChangedCB;
     }
 
@@ -1674,16 +1567,7 @@ void MenuSetup_VS_Round_MenuSetupCB(void)
     char buffer[0x40];
     foreach_all(UIVsResults, results)
     {
-        int32 x = roundControl->startPos.x - roundControl->cameraOffset.x;
-        int32 y = roundControl->startPos.y - roundControl->cameraOffset.y;
-
-        Hitbox hitbox;
-        hitbox.left   = -(roundControl->size.x >> 17);
-        hitbox.top    = -(roundControl->size.y >> 17);
-        hitbox.right  = roundControl->size.x >> 17;
-        hitbox.bottom = roundControl->size.y >> 17;
-
-        if (MathHelpers_PointInHitbox(x, y, results->position.x, results->position.y, FLIP_NONE, &hitbox)) {
+        if (UIControl_ContainsPos(roundControl, &results->position)) {
             int32 p = results->playerID;
             int32 r = results->playerID ^ 1;
 
@@ -1810,16 +1694,7 @@ void MenuSetup_VS_Total_MenuSetupCB(void)
 
     foreach_all(UIVsResults, results)
     {
-        int32 x = totalControl->startPos.x - totalControl->cameraOffset.x;
-        int32 y = totalControl->startPos.y - totalControl->cameraOffset.y;
-
-        Hitbox hitbox;
-        hitbox.left   = -(totalControl->size.x >> 17);
-        hitbox.top    = -(totalControl->size.y >> 17);
-        hitbox.right  = totalControl->size.x >> 17;
-        hitbox.bottom = totalControl->size.y >> 17;
-
-        if (MathHelpers_PointInHitbox(x, y, results->position.x, results->position.y, FLIP_NONE, &hitbox)) {
+        if (UIControl_ContainsPos(totalControl, &results->position)) {
             bool32 *highlight = &results->row0Highlight;
 
             results->numRows  = session->matchCount;
@@ -2043,16 +1918,7 @@ void MenuSetup_Options_SetupKBControlsMenu(int32 playerID)
 
     foreach_all(UISubHeading, subHeading)
     {
-        Hitbox hitbox;
-        int32 x = control->startPos.x - control->cameraOffset.x;
-        int32 y = control->startPos.y - control->cameraOffset.y;
-
-        hitbox.right  = control->size.x >> 17;
-        hitbox.left   = -(control->size.x >> 17);
-        hitbox.bottom = control->size.y >> 17;
-        hitbox.top    = -(control->size.y >> 17);
-
-        if (MathHelpers_PointInHitbox(x, y, subHeading->position.x, subHeading->position.y, FLIP_NONE, &hitbox)) {
+        if (UIControl_ContainsPos(control, &subHeading->position)) {
             subHeading->frameID = playerID + 8;
             foreach_break;
         }

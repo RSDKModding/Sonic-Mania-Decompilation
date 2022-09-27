@@ -558,21 +558,14 @@ void UIReplayCarousel_Draw_Carousel(void)
 void UIReplayCarousel_State_Init(void)
 {
     RSDK_THIS(UIReplayCarousel);
+
     EntityUIControl *parent = (EntityUIControl *)self->parent;
 
     foreach_all(UIButtonPrompt, prompt)
     {
-        Hitbox hitbox;
-        hitbox.left   = -(parent->size.x) >> 17;
-        hitbox.top    = -(parent->size.y) >> 17;
-        hitbox.right  = (parent->size.x) >> 17;
-        hitbox.bottom = (parent->size.y) >> 17;
-        if (MathHelpers_PointInHitbox(parent->startPos.x - parent->cameraOffset.x, parent->startPos.y - parent->cameraOffset.y, prompt->position.x,
-                                      prompt->position.y, FLIP_NONE, &hitbox)) {
-            if (prompt->buttonID == 3) {
-                UIReplayCarousel->prompt = prompt;
-                foreach_break;
-            }
+        if (UIControl_ContainsPos(parent, &prompt->position) && prompt->buttonID == 3) {
+            UIReplayCarousel->prompt = prompt;
+            foreach_break;
         }
     }
 

@@ -99,37 +99,15 @@ void TimeAttackMenu_Initialize(void)
     EntityUIControl *replayControl  = TimeAttackMenu->replaysControl;
     EntityUIControl *detailsControl = TimeAttackMenu->taDetailsControl;
 
-    Hitbox hitbox;
     foreach_all(UIButtonPrompt, prompt)
     {
-        int32 x       = zoneControl->startPos.x - zoneControl->cameraOffset.x;
-        int32 y       = zoneControl->startPos.y - zoneControl->cameraOffset.y;
-        hitbox.right  = zoneControl->size.x >> 17;
-        hitbox.left   = -(zoneControl->size.x >> 17);
-        hitbox.bottom = zoneControl->size.y >> 17;
-        hitbox.top    = -(zoneControl->size.y >> 17);
-
-        if (MathHelpers_PointInHitbox(x, y, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox) && prompt->buttonID == 3)
+        if (UIControl_ContainsPos(zoneControl, &prompt->position) && prompt->buttonID == 3)
             TimeAttackMenu->switchModePrompt = prompt;
 
-        x             = lbControl->startPos.x - lbControl->cameraOffset.x;
-        y             = lbControl->startPos.y - lbControl->cameraOffset.y;
-        hitbox.right  = lbControl->size.x >> 17;
-        hitbox.left   = -(lbControl->size.x >> 17);
-        hitbox.bottom = lbControl->size.y >> 17;
-        hitbox.top    = -(lbControl->size.y >> 17);
-
-        if (MathHelpers_PointInHitbox(x, y, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox) && prompt->buttonID == 3)
+        if (UIControl_ContainsPos(lbControl, &prompt->position) && prompt->buttonID == 3)
             TimeAttackMenu->topRankPrompt = prompt;
 
-        x             = replayControl->startPos.x - replayControl->cameraOffset.x;
-        y             = replayControl->startPos.y - replayControl->cameraOffset.y;
-        hitbox.right  = replayControl->size.x >> 17;
-        hitbox.left   = -(replayControl->size.x >> 17);
-        hitbox.bottom = replayControl->size.y >> 17;
-        hitbox.top    = -(replayControl->size.y >> 17);
-
-        if (MathHelpers_PointInHitbox(x, y, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox) && prompt->buttonID == 2)
+        if (UIControl_ContainsPos(replayControl, &prompt->position) && prompt->buttonID == 2)
             TimeAttackMenu->replayPrompt = prompt;
     }
 
@@ -139,26 +117,12 @@ void TimeAttackMenu_Initialize(void)
 
     foreach_all(UITABanner, banner)
     {
-        int32 x       = detailsControl->startPos.x - detailsControl->cameraOffset.x;
-        int32 y       = detailsControl->startPos.y - detailsControl->cameraOffset.y;
-        hitbox.right  = detailsControl->size.x >> 17;
-        hitbox.left   = -(detailsControl->size.x >> 17);
-        hitbox.bottom = detailsControl->size.y >> 17;
-        hitbox.top    = -(detailsControl->size.y >> 17);
-
-        if (MathHelpers_PointInHitbox(x, y, banner->position.x, banner->position.y, FLIP_NONE, &hitbox)) {
+        if (UIControl_ContainsPos(detailsControl, &banner->position)) {
             TimeAttackMenu->detailsBanner = banner;
             banner->parent                = TimeAttackMenu->taDetailsControl;
         }
 
-        x             = lbControl->startPos.x - lbControl->cameraOffset.x;
-        y             = lbControl->startPos.y - lbControl->cameraOffset.y;
-        hitbox.right  = lbControl->size.x >> 17;
-        hitbox.left   = -(lbControl->size.x >> 17);
-        hitbox.bottom = lbControl->size.y >> 17;
-        hitbox.top    = -(lbControl->size.y >> 17);
-
-        if (MathHelpers_PointInHitbox(x, y, banner->position.x, banner->position.y, FLIP_NONE, &hitbox)) {
+        if (UIControl_ContainsPos(lbControl, &banner->position)) {
             TimeAttackMenu->leaderboardsBanner = banner;
             banner->parent                     = TimeAttackMenu->leaderboardsControl;
         }

@@ -687,9 +687,10 @@ void ReplayRecorder_DrawGhostDisplay(void)
 
         Hitbox hitbox;
         hitbox.left   = -(ScreenInfo->size.x >> 1);
-        hitbox.right  = ScreenInfo->size.x >> 1;
         hitbox.top    = -(ScreenInfo->size.y >> 1);
+        hitbox.right  = ScreenInfo->size.x >> 1;
         hitbox.bottom = ScreenInfo->size.y >> 1;
+
         if (!MathHelpers_PointInHitbox(screenX, screenY, player->position.x, player->position.y, FLIP_NONE, &hitbox)) {
             // Draw Player Preview (when ghost is off screen)
             Vector2 drawPos;
@@ -1144,6 +1145,7 @@ void ReplayRecorder_PlayerState_PlaybackReplay(void)
                 hitbox.top    = -(farPlane->size.y >> 16);
                 hitbox.right  = (farPlane->size.x >> 16);
                 hitbox.bottom = (farPlane->size.y >> 16);
+
                 if (MathHelpers_PointInHitbox(farPlane->origin.x, farPlane->origin.y, self->position.x, self->position.y, FLIP_NONE, &hitbox)) {
                     self->position.x =
                         (farPlane->position.x - ((farPlane->position.x - screenX) >> 1) + 0x8000) + ((self->position.x - farPlane->origin.x) >> 1);

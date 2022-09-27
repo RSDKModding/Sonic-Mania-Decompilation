@@ -58,54 +58,27 @@ void CompetitionMenu_Initialize(void)
             CompetitionMenu->compTotalControl = control;
     }
 
-    Hitbox hitbox;
     foreach_all(UIInfoLabel, label)
     {
         EntityUIControl *roundControl = CompetitionMenu->compRoundControl;
-        int32 x                       = roundControl->startPos.x - roundControl->cameraOffset.x;
-        int32 y                       = roundControl->startPos.y - roundControl->cameraOffset.y;
+        EntityUIControl *totalControl = CompetitionMenu->compTotalControl;
 
-        hitbox.right  = roundControl->size.x >> 17;
-        hitbox.left   = -(roundControl->size.x >> 17);
-        hitbox.bottom = roundControl->size.y >> 17;
-        hitbox.top    = -(roundControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, label->position.x, label->position.y, FLIP_NONE, &hitbox))
+        if (UIControl_ContainsPos(roundControl, &label->position))
             CompetitionMenu->resultsLabel_Round = label;
 
-        EntityUIControl *totalControl = CompetitionMenu->compTotalControl;
-        x                             = totalControl->startPos.x - totalControl->cameraOffset.x;
-        y                             = totalControl->startPos.y - totalControl->cameraOffset.y;
-
-        hitbox.right  = totalControl->size.x >> 17;
-        hitbox.left   = -(totalControl->size.x >> 17);
-        hitbox.bottom = totalControl->size.y >> 17;
-        hitbox.top    = -(totalControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, label->position.x, label->position.y, FLIP_NONE, &hitbox))
+        if (UIControl_ContainsPos(totalControl, &label->position))
             CompetitionMenu->resultsLabel_Total = label;
     }
 
     foreach_all(UIButtonPrompt, prompt)
     {
-        EntityUIControl *compControl = CompetitionMenu->competitionControl;
-        int32 x                      = compControl->startPos.x - compControl->cameraOffset.x;
-        int32 y                      = compControl->startPos.y - compControl->cameraOffset.y;
+        EntityUIControl *compControl        = CompetitionMenu->competitionControl;
+        EntityUIControl *compControl_Legacy = CompetitionMenu->competitionControl_Legacy;
 
-        hitbox.right  = compControl->size.x >> 17;
-        hitbox.left   = -(compControl->size.x >> 17);
-        hitbox.bottom = compControl->size.y >> 17;
-        hitbox.top    = -(compControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox) && prompt->buttonID == 5)
+        if (UIControl_ContainsPos(compControl, &prompt->position) && prompt->buttonID == 5)
             CompetitionMenu->startCompPrompt = prompt;
 
-        EntityUIControl *compControl_Legacy = CompetitionMenu->competitionControl_Legacy;
-        x                                   = compControl_Legacy->startPos.x - compControl_Legacy->cameraOffset.x;
-        y                                   = compControl_Legacy->startPos.y - compControl_Legacy->cameraOffset.y;
-
-        hitbox.right  = compControl_Legacy->size.x >> 17;
-        hitbox.left   = -(compControl_Legacy->size.x >> 17);
-        hitbox.bottom = compControl_Legacy->size.y >> 17;
-        hitbox.top    = -(compControl_Legacy->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox) && prompt->buttonID == 5)
+        if (UIControl_ContainsPos(compControl_Legacy, &prompt->position) && prompt->buttonID == 5)
             CompetitionMenu->startCompPrompt_Legacy = prompt;
     }
 }
@@ -120,16 +93,7 @@ void CompetitionMenu_SetupActions(void)
 
     foreach_all(UIButton, button)
     {
-        int32 x = rulesControl->startPos.x - rulesControl->cameraOffset.x;
-        int32 y = rulesControl->startPos.y - rulesControl->cameraOffset.y;
-
-        Hitbox hitbox;
-        hitbox.right  = rulesControl->size.x >> 17;
-        hitbox.left   = -(rulesControl->size.x >> 17);
-        hitbox.bottom = rulesControl->size.y >> 17;
-        hitbox.top    = -(rulesControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 9
-            && button->frameID == 2)
+        if (UIControl_ContainsPos(rulesControl, &button->position) && button->listID == 9 && button->frameID == 2)
             button->actionCB = CompetitionMenu_RulesButton_ActionCB;
     }
 

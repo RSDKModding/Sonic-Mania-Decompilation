@@ -139,30 +139,14 @@ void UISubHeading_SetupActions(void)
 
     foreach_all(UIButtonPrompt, prompt)
     {
-        Hitbox hitbox;
-        EntityUIControl *saveSel = ManiaModeMenu->saveSelectMenu;
-        hitbox.right             = saveSel->size.x >> 17;
-        hitbox.left              = -(saveSel->size.x >> 17);
-        hitbox.bottom            = saveSel->size.y >> 17;
-        hitbox.top               = -(saveSel->size.y >> 17);
+        EntityUIControl *saveSel       = ManiaModeMenu->saveSelectMenu;
+        EntityUIControl *encoreSaveSel = ManiaModeMenu->encoreSaveSelect;
 
-        if (MathHelpers_PointInHitbox(saveSel->startPos.x - saveSel->cameraOffset.x, saveSel->startPos.y - saveSel->cameraOffset.y,
-                                      prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox)
-            && prompt->buttonID == 2) {
+        if (UIControl_ContainsPos(saveSel, &prompt->position) && prompt->buttonID == 2) 
             ManiaModeMenu->delSavePrompt = prompt;
-        }
-        else {
-            saveSel = ManiaModeMenu->encoreSaveSelect;
 
-            hitbox.right  = saveSel->size.x >> 17;
-            hitbox.left   = -(saveSel->size.x >> 17);
-            hitbox.bottom = saveSel->size.y >> 17;
-            hitbox.top    = -(saveSel->size.y >> 17);
-            if (MathHelpers_PointInHitbox(saveSel->startPos.x - saveSel->cameraOffset.x, saveSel->startPos.y - saveSel->cameraOffset.y,
-                                          prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox)
-                && prompt->buttonID == 2)
-                ManiaModeMenu->delSavePrompt_Encore = prompt;
-        }
+        if (UIControl_ContainsPos(encoreSaveSel, &prompt->position) && prompt->buttonID == 2)
+            ManiaModeMenu->delSavePrompt_Encore = prompt;
     }
 
     EntityUIControl *saveSel = ManiaModeMenu->saveSelectMenu;

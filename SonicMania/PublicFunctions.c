@@ -3544,6 +3544,7 @@ void InitPublicFunctions()
 #endif
     ADD_PUBLIC_FUNC(UIControl_ProcessInputs);
     ADD_PUBLIC_FUNC(UIControl_ProcessButtonInput);
+    ADD_PUBLIC_FUNC(UIControl_ContainsPos);
 
     // Menu/UICreditsText
     ADD_PUBLIC_FUNC(UICreditsText_SetText);

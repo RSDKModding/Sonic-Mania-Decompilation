@@ -479,18 +479,9 @@ void UITAZoneModule_State_Init(void)
 #if !MANIA_USE_PLUS
     EntityUIControl *parent = (EntityUIControl *)self->parent;
 
-    Hitbox hitboxBounds;
     foreach_all(UIButtonPrompt, prompt)
     {
-        int32 posX = parent->startPos.x - parent->cameraOffset.x;
-        int32 posY = parent->startPos.y - parent->cameraOffset.y;
-
-        hitboxBounds.right  = parent->size.x >> 17;
-        hitboxBounds.left   = -(parent->size.x >> 17);
-        hitboxBounds.bottom = parent->size.y >> 17;
-        hitboxBounds.top    = -(parent->size.y >> 17);
-
-        if (MathHelpers_PointInHitbox(posX, posY, prompt->position.x, prompt->position.y, FLIP_NONE, &hitboxBounds) && prompt->buttonID == 3)
+        if (UIControl_ContainsPos(parent, &prompt->position) && prompt->buttonID == 3)
             UITAZoneModule->leaderboardsPrompt = prompt;
     }
 #endif
@@ -964,18 +955,9 @@ void UITAZoneModule_State_ExpandModule(void)
 
         foreach_all(UIButtonPrompt, prompt)
         {
-            Hitbox hitboxBounds;
             foreach_all(UIButtonPrompt, prompt)
             {
-                int32 posX = parent->startPos.x - parent->cameraOffset.x;
-                int32 posY = parent->startPos.y - parent->cameraOffset.y;
-
-                hitboxBounds.left   = -(parent->size.x) >> 17;
-                hitboxBounds.top    = -(parent->size.y) >> 17;
-                hitboxBounds.right  = (parent->size.x) >> 17;
-                hitboxBounds.bottom = (parent->size.y) >> 17;
-
-                if (MathHelpers_PointInHitbox(posX, posY, prompt->position.x, prompt->position.y, FLIP_NONE, &hitboxBounds)) {
+                if (UIControl_ContainsPos(parent, &prompt->position)) {
                     if (prompt->startPos.y >> 16 < ScreenInfo->position.y) {
                         prompt->position.y = (ScreenInfo->position.y << 16) + 0x180000;
 
@@ -1007,18 +989,9 @@ void UITAZoneModule_State_ExpandModule(void)
             heading->position.y = pos;
         }
 
-        Hitbox hitboxBounds;
         foreach_all(UIButtonPrompt, prompt)
         {
-            int32 posX = parent->startPos.x - parent->cameraOffset.x;
-            int32 posY = parent->startPos.y - parent->cameraOffset.y;
-
-            hitboxBounds.left   = -(parent->size.x) >> 17;
-            hitboxBounds.top    = -(parent->size.y) >> 17;
-            hitboxBounds.right  = (parent->size.x) >> 17;
-            hitboxBounds.bottom = (parent->size.y) >> 17;
-
-            if (MathHelpers_PointInHitbox(posX, posY, prompt->position.x, prompt->position.y, FLIP_NONE, &hitboxBounds)) {
+            if (UIControl_ContainsPos(parent, &prompt->position)) {
                 if (!prompt->buttonID)
                     prompt->promptID = 4;
 
@@ -1069,18 +1042,9 @@ void UITAZoneModule_State_ContractModule(void)
                     module->state = UITAZoneModule_State_ComeBackOnScreen;
             }
 
-            Hitbox hitboxBounds;
             foreach_all(UIButtonPrompt, prompt)
             {
-                int32 posX = parent->startPos.x - parent->cameraOffset.x;
-                int32 posY = parent->startPos.y - parent->cameraOffset.y;
-
-                hitboxBounds.left   = -(parent->size.x) >> 17;
-                hitboxBounds.top    = -(parent->size.y) >> 17;
-                hitboxBounds.right  = (parent->size.x) >> 17;
-                hitboxBounds.bottom = (parent->size.y) >> 17;
-
-                if (MathHelpers_PointInHitbox(posX, posY, prompt->position.x, prompt->position.y, FLIP_NONE, &hitboxBounds)) {
+                if (UIControl_ContainsPos(parent, &prompt->position)) {
                     if (!prompt->buttonID)
                         prompt->promptID = 0;
 
@@ -1121,22 +1085,13 @@ void UITAZoneModule_State_ContractModule(void)
             heading->position.y = pos;
         }
 
-        Hitbox hitboxBounds;
         foreach_all(UIButtonPrompt, prompt)
         {
-            int32 posX = parent->startPos.x - parent->cameraOffset.x;
-            int32 posY = parent->startPos.y - parent->cameraOffset.y;
-
-            hitboxBounds.left   = -(parent->size.x) >> 17;
-            hitboxBounds.top    = -(parent->size.y) >> 17;
-            hitboxBounds.right  = (parent->size.x) >> 17;
-            hitboxBounds.bottom = (parent->size.y) >> 17;
-
-            if (MathHelpers_PointInHitbox(posX, posY, prompt->position.x, prompt->position.y, FLIP_NONE, &hitboxBounds)) {
+            if (UIControl_ContainsPos(parent, &prompt->position)) {
                 if (prompt->startPos.y >> 16 < ScreenInfo->position.y) {
 
-                    int32 offset1 = prompt == showLBPrompt ? -0x180000 : -0x300000;
-                    int32 offset2 = prompt == showLBPrompt ? 0x300000 : 0x180000;
+                    int32 offset1 = prompt == showLBPrompt ? -TO_FIXED(24) : -TO_FIXED(48);
+                    int32 offset2 = prompt == showLBPrompt ? TO_FIXED(48) : TO_FIXED(24);
 
                     int32 pos = (ScreenInfo->position.y << 16) + offset2;
                     if (self->timer) {
