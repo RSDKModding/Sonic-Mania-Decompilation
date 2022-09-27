@@ -119,7 +119,7 @@ void TeeterTotter_ProcessSegmentGravity(void)
 
     int32 x       = self->position.x;
     int32 y       = self->position.y;
-    int32 offsetX = (0x100000 - (self->length << 21)) + x;
+    int32 offsetX = x + (0x100000 - (self->length << 21));
 
     for (uint32 i = 0; i < 2 * self->length; ++i) {
         if (!((1 << i) & self->inactiveSegments)) {
@@ -128,7 +128,7 @@ void TeeterTotter_ProcessSegmentGravity(void)
 
             Vector2 segmentPos;
             segmentPos.x = (offsetX + (i << 21)) & 0xFFFF0000;
-            segmentPos.y = (self->segmentPosition[i] + y) & 0xFFFF0000;
+            segmentPos.y = (y + self->segmentPosition[i]) & 0xFFFF0000;
             if (!RSDK.CheckPosOnScreen(&segmentPos, &self->updateRange))
                 self->inactiveSegments |= 1 << i;
         }
@@ -141,9 +141,9 @@ void TeeterTotter_HandleSegmentPositions(void)
 
     uint8 len = self->length;
     for (uint32 i = 0; i < 2 * self->length; ++i) {
-        int8 pos = i - len + 1;
-        if (i - len < 0)
-            pos = i - len;
+        int8 pos = i - len;
+        if (pos >= 0)
+            pos++;
 
         self->segmentPosition[i] = (self->fallPos >> 1) * (int8)(2 * pos + 2 * ((int8)(2 * pos) <= 0) - 1);
     }

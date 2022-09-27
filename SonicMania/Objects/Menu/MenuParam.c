@@ -21,6 +21,8 @@ void MenuParam_Create(void *data) {}
 
 void MenuParam_StageLoad(void) {}
 
+EntityMenuParam *MenuParam_GetParam(void) { return (EntityMenuParam *)globals->menuParam; }
+
 #if RETRO_INCLUDE_EDITOR
 void MenuParam_EditorDraw(void) {}
 

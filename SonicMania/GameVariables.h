@@ -9,7 +9,7 @@ typedef enum {
 #if !MANIA_USE_PLUS
     MODE_NOSAVE,
 #endif
-    MODE_MANIA,
+    MODE_MANIA, // officially called "MODE_SAVEGAME" in pre-plus, but it's easier to re-use names lol
 #if MANIA_USE_PLUS
     MODE_ENCORE,
 #endif
@@ -17,16 +17,14 @@ typedef enum {
     MODE_COMPETITION,
 } GameModes;
 
-typedef enum { MEDIA_DEMO } CategoryIDS;
-
 typedef enum {
-    ID_NONE     = 0x00,
-    ID_SONIC    = 0x01,
-    ID_TAILS    = 0x02,
-    ID_KNUCKLES = 0x04,
+    ID_NONE     = 0 << 0,
+    ID_SONIC    = 1 << 0,
+    ID_TAILS    = 1 << 1,
+    ID_KNUCKLES = 1 << 2,
 #if MANIA_USE_PLUS
-    ID_MIGHTY = 0x08,
-    ID_RAY    = 0x10,
+    ID_MIGHTY = 1 << 3,
+    ID_RAY    = 1 << 4,
 #endif
     ID_TAILS_ASSIST    = ID_TAILS << 8,
     ID_KNUCKLES_ASSIST = ID_KNUCKLES << 8, // custom-added, can be used to check if "& knux" is active
@@ -54,14 +52,37 @@ typedef enum {
 #endif
 } MedalMods;
 
-typedef enum { FORCE_SPLIT = 2 } ScreenSplit;
+typedef enum { MEDIA_DEMO } CategoryIDS;
 
-typedef enum { WIDE_SCR_XSIZE = 424, WIDE_SCR_XCENTER = 212 } ScreenSizes;
+typedef enum { FORCE_SPLIT } ScreenSplit;
 
 typedef enum { NO_SAVE_SLOT = 255 } SaveSlots;
 
+typedef enum { WIDE_SCR_XSIZE = 424, WIDE_SCR_XCENTER = 212 } ScreenSizes;
+
+#if RETRO_REV02
+typedef enum {
+    // General Filters
+    FILTER_NONE  = 0 << 0,
+    FILTER_SLOT1 = 1 << 0,
+    FILTER_SLOT2 = 1 << 1,
+    FILTER_SLOT3 = 1 << 2,
+    FILTER_SLOT4 = 1 << 3,
+    FILTER_SLOT5 = 1 << 4,
+    FILTER_SLOT6 = 1 << 5,
+    FILTER_SLOT7 = 1 << 6,
+    FILTER_SLOT8 = 1 << 7,
+    FILTER_ANY   = FILTER_SLOT1 | FILTER_SLOT2 | FILTER_SLOT3 | FILTER_SLOT4 | FILTER_SLOT5 | FILTER_SLOT6 | FILTER_SLOT7 | FILTER_SLOT8,
+} SceneFilters;
+#endif
+
 #if MANIA_USE_PLUS
-typedef enum { FILTER_NONE = 0, FILTER_BOTH = 1, FILTER_MANIA = 2, FILTER_ENCORE = 4, FILTER_ANY = 0xFF } ModeFilters;
+typedef enum {
+    // Mania-Specific filter uses
+    FILTER_BOTH   = FILTER_SLOT1,
+    FILTER_MANIA  = FILTER_SLOT2,
+    FILTER_ENCORE = FILTER_SLOT3,
+} ManiaFilters;
 
 typedef enum { DLC_PLUS } GameDLC;
 #endif
@@ -217,7 +238,9 @@ typedef struct {
     int32 restartScore;
     int32 restartScore1UP;
     int32 restartLives[4];
+#if GAME_VERSION != VER_100
     int32 restartMusicID;
+#endif
     int32 restartFlags;
     int32 tempFlags;
     int32 continues;

@@ -38,7 +38,7 @@ void Zone_LateUpdate(void)
             RSDK.PlaySfx(Player->sfxHurt, false, 0xFF);
 
 #if MANIA_USE_PLUS
-            EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+            EntityCompetitionSession *session = CompetitionSession_GetSession();
 #endif
 
             foreach_active(Player, player)
@@ -109,7 +109,7 @@ void Zone_StaticUpdate(void)
 
     int32 pos = act + 2 * zone;
     if (pos >= 0 && SceneInfo->timeEnabled && globals->gameMode < MODE_TIMEATTACK)
-        ++SaveGame->saveRAM->zoneTimes[pos];
+        ++SaveGame_GetSaveRAM()->zoneTimes[pos];
 #endif
 }
 
@@ -141,7 +141,7 @@ void Zone_StageLoad(void)
     Zone->randSeed = (uint32)time(NULL);
 
     // Setup encore character flags & stock if needed
-    SaveRAM *saveRAM = SaveGame->saveRAM;
+    SaveRAM *saveRAM = SaveGame_GetSaveRAM();
     if (globals->gameMode == MODE_ENCORE) {
         if (globals->characterFlags == ID_NONE) {
             globals->characterFlags = 0;
@@ -252,7 +252,7 @@ void Zone_StageLoad(void)
     RSDK.ResetEntitySlot(SLOT_ZONE, Zone->classID, NULL);
 
     // Setup Competition options (or ensure they're not active if not in competition mode)
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
     if (globals->gameMode == MODE_COMPETITION) {
         if (RSDK.CheckSceneFolder("Puyo")) {
             if (globals->gameMode == MODE_COMPETITION) {
@@ -770,7 +770,7 @@ int32 Zone_GetListPos_ManiaMode(void)
 void Zone_Draw_Fade(void)
 {
     RSDK_THIS(Zone);
-    RSDK.FillScreen(self->fadeColor, self->timer, self->timer - 0x80, self->timer - 0x100);
+    RSDK.FillScreen(self->fadeColor, self->timer, self->timer - 128, self->timer - 0x100);
 }
 
 void Zone_State_FadeOut(void)
@@ -832,7 +832,7 @@ void Zone_State_FadeIn(void)
 void Zone_State_FadeOut_Competition(void)
 {
     RSDK_THIS(Zone);
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
 
     self->timer += self->fadeSpeed;
     if (self->timer > 1024) {
@@ -918,7 +918,7 @@ void Zone_HandlePlayerSwap(void)
     int32 cameraBoundsT[PLAYER_COUNT];
     int32 cameraBoundsR[PLAYER_COUNT];
     int32 cameraBoundsL[PLAYER_COUNT];
-    int32 layerIDs[LAYER_COUNT];
+    uint8 layerIDs[PLAYER_COUNT][LAYER_COUNT];
 
 #if MANIA_USE_PLUS
     for (int32 p = 0; p < Player->playerCount; ++p) {
@@ -939,13 +939,12 @@ void Zone_HandlePlayerSwap(void)
         playerBoundActiveT[p] = Zone->playerBoundActiveT[p];
         playerBoundActiveB[p] = Zone->playerBoundActiveB[p];
 
-        uint8 *layerPlanes = (uint8 *)&layerIDs[2 * p];
         for (int32 l = 0; l < LAYER_COUNT; ++l) {
             TileLayer *layer = RSDK.GetTileLayer(l);
             if (layer)
-                layerPlanes[l] = layer->drawGroup[Zone->preSwapPlayerIDs[p]];
+                layerIDs[p][l] = layer->drawGroup[Zone->preSwapPlayerIDs[p]];
             else
-                layerPlanes[l] = DRAWGROUP_COUNT;
+                layerIDs[p][l] = DRAWGROUP_COUNT;
         }
 
         EntityCamera *camera = player->camera;
@@ -1016,10 +1015,9 @@ void Zone_HandlePlayerSwap(void)
         Zone->playerBoundActiveT[Zone->swappedPlayerIDs[p]] = playerBoundActiveT[p];
         Zone->playerBoundActiveB[Zone->swappedPlayerIDs[p]] = playerBoundActiveB[p];
 
-        uint8 *layerPlanes = (uint8 *)&layerIDs[2 * p];
         for (int32 l = 0; l < LAYER_COUNT; ++l) {
             TileLayer *layer                            = RSDK.GetTileLayer(l);
-            layer->drawGroup[Zone->swappedPlayerIDs[p]] = layerPlanes[l];
+            layer->drawGroup[Zone->swappedPlayerIDs[p]] = layerIDs[p][l];
         }
 
         EntityCamera *camera = player->camera;
@@ -1069,13 +1067,12 @@ void Zone_HandlePlayerSwap(void)
         playerBoundActiveT[p] = Zone->playerBoundActiveT[p];
         playerBoundActiveB[p] = Zone->playerBoundActiveB[p];
 
-        uint8 *layerPlanes = (uint8 *)&layerIDs[2 * p];
         for (int32 l = 0; l < LAYER_COUNT; ++l) {
             TileLayer *layer = RSDK.GetTileLayer(l);
             if (layer)
-                layerPlanes[l] = layer->drawGroup[p];
+                layerIDs[p][l] = layer->drawGroup[p];
             else
-                layerPlanes[l] = DRAWGROUP_COUNT;
+                layerIDs[p][l] = DRAWGROUP_COUNT;
         }
     }
 
@@ -1148,10 +1145,9 @@ void Zone_HandlePlayerSwap(void)
         Zone->playerBoundActiveT[newPlayerID] = playerBoundActiveT[curPlayerID];
         Zone->playerBoundActiveB[newPlayerID] = playerBoundActiveB[curPlayerID];
 
-        uint8 *layerPlanes = (uint8 *)&layerIDs[2 * curPlayerID];
         for (int32 l = 0; l < LAYER_COUNT; ++l) {
             TileLayer *layer = RSDK.GetTileLayer(l);
-            layer->drawGroup[newPlayerID] = layerPlanes[l];
+            layer->drawGroup[newPlayerID] = layerIDs[curPlayerID][l];
         }
         EntityCamera *newCamera = RSDK_GET_ENTITY(SLOT_CAMERA1 + newPlayerID, Camera);
         EntityCamera *curCamera = RSDK_GET_ENTITY(SLOT_CAMERA1 + curPlayerID, Camera);
@@ -1237,10 +1233,9 @@ void Zone_HandlePlayerSwap(void)
         Zone->playerBoundActiveT[newPlayerID] = playerBoundActiveT[curPlayerID];
         Zone->playerBoundActiveB[newPlayerID] = playerBoundActiveB[curPlayerID];
 
-        uint8 *layerPlanes = (uint8 *)&layerIDs[2 * curPlayerID];
         for (int32 l = 0; l < LAYER_COUNT; ++l) {
             TileLayer *layer = RSDK.GetTileLayer(l);
-            layer->drawGroup[newPlayerID] = layerPlanes[l];
+            layer->drawGroup[newPlayerID] = layerIDs[curPlayerID][l];
         }
         EntityCamera *curCamera = &camStore;
         EntityCamera *newCamera = RSDK_GET_ENTITY(SLOT_CAMERA1 + newPlayerID, Camera);
@@ -1308,7 +1303,7 @@ void Zone_State_SwapPlayers(void)
             RSDK.PlaySfx(Zone->sfxFail, false, 255);
         }
         else {
-            EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+            EntityCompetitionSession *session = CompetitionSession_GetSession();
 
             uint8 playerIDs = 0;
 

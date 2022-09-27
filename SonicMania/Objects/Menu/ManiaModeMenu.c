@@ -70,9 +70,9 @@ bool32 ManiaModeMenu_InitAPI(void)
 
             if (!MenuSetup->initializedSaves) {
                 UIWaitSpinner_StartWait();
-                Options_LoadOptionsBin();
-                SaveGame_LoadFile();
-                ReplayRecorder_LoadReplayDB(NULL);
+                Options_LoadFile(Options_LoadCallback);
+                SaveGame_LoadFile(SaveGame_SaveLoadedCB);
+                ReplayDB_LoadDB(ReplayDB_LoadCallback);
 
                 MenuSetup->initializedSaves = true;
             }
@@ -255,7 +255,7 @@ void ManiaModeMenu_SetupActions(void)
 
 void ManiaModeMenu_HandleMenuReturn(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     char buffer[0x100];
     memset(buffer, 0, 0x100);
@@ -289,20 +289,21 @@ void ManiaModeMenu_HandleMenuReturn(void)
         UIButton_SetChoiceSelection(extras->buttons[1], 1);
     }
 
-    int32 characterID = 0, zoneID = 0, act = 0, isEncoreMode = false;
-    if (param->inTimeAttack) {
+    int32 zoneID = 0, actID = 0, characterID = 0, isEncoreMode = false;
+    bool32 inTimeAttack = param->inTimeAttack;
+    if (inTimeAttack) {
         characterID  = param->characterID;
         zoneID       = param->zoneID;
-        act          = param->actID;
+        actID        = param->actID;
         isEncoreMode = param->isEncoreMode;
     }
 
     TimeAttackData_Clear();
 
-    if (param->inTimeAttack) {
+    if (inTimeAttack) {
         param->characterID  = characterID;
         param->zoneID       = zoneID;
-        param->actID        = act;
+        param->actID        = actID;
         param->isEncoreMode = isEncoreMode;
     }
 }

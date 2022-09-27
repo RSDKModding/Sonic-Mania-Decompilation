@@ -1233,7 +1233,7 @@ void HotaruHiWatt_StateBoss_Destroyed(void)
     HotaruHiWatt_Explode();
 
     if (++self->timer == 60) {
-        Debris_FallFlickerAnimSetup(HotaruHiWatt->aniFrames, HotaruHiWatt->debrisInfo, 8);
+        Debris_CreateFromEntries(HotaruHiWatt->aniFrames, HotaruHiWatt->debrisInfo, 8);
         self->visible = false;
     }
     else if (self->timer == 90) {

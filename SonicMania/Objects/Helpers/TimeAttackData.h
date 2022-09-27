@@ -80,7 +80,7 @@ void TimeAttackData_EditorLoad(void);
 #endif
 void TimeAttackData_Serialize(void);
 
-// Extra Entity FUnctions
+// Extra Entity Functions
 #if MANIA_USE_PLUS
 void TimeAttackData_TrackActClear(StatInfo *stat, uint8 zone, uint8 act, uint8 charID, int32 time, int32 rings, int32 score);
 void TimeAttackData_TrackTAClear(StatInfo *stat, uint8 zone, uint8 actID, uint8 charID, int32 gameMode, int32 time);
@@ -90,20 +90,22 @@ void TimeAttackData_TrackEnemyDefeat(StatInfo *stat, uint8 zoneID, uint8 actID, 
 TimeAttackRAM *TimeAttackData_GetTimeAttackRAM(void);
 void TimeAttackData_Clear(void);
 int32 TimeAttackData_GetManiaListPos(int32 zoneID, int32 act, int32 characterID);
+#if MANIA_USE_PLUS
 int32 TimeAttackData_GetEncoreListPos(int32 zoneID, int32 act, int32 characterID);
+#endif
 uint32 TimeAttackData_GetPackedTime(int32 minutes, int32 seconds, int32 milliseconds);
 void TimeAttackData_GetUnpackedTime(int32 time, int32 *minutes, int32 *seconds, int32 *milliseconds);
 uint16 *TimeAttackData_GetRecordedTime(uint8 zoneID, uint8 act, uint8 characterID, uint8 rank);
 
 #if MANIA_USE_PLUS
-uint16 TimeAttackData_LoadTimeAttackDB(void (*callback)(bool32 success));
-void TimeAttackData_LoadUserDB_TimeAttackDB(int32 statusCode);
-void TimeAttackData_ResetTimeAttackDB(void);
+void TimeAttackData_CreateDB(void);
+uint16 TimeAttackData_LoadDB(void (*callback)(bool32 success));
+void TimeAttackData_SaveDB(void (*callback)(bool32 success));
+void TimeAttackData_LoadDBCallback(int32 status);
+void TimeAttackData_SaveDBCallback(int32 status);
 void TimeAttackData_MigrateLegacySaves(void);
-int32 TimeAttackData_AddTimeAttackDBEntry(uint8 zoneID, uint8 act, uint8 characterID, uint8 encore, int32 score);
-int32 TimeAttackData_AddTADBEntry(uint8 zoneID, uint8 act, uint8 characterID, bool32 encore, int32 score, void (*callback)(bool32 success));
-void TimeAttackData_SaveTimeAttackDB(void (*callback)(bool32 success));
-void TimeAttackData_SaveUserDB_TimeAttackDB(int32 statusCode);
+int32 TimeAttackData_AddDBRow(uint8 zoneID, uint8 act, uint8 characterID, uint8 encore, int32 score);
+int32 TimeAttackData_AddRecord(uint8 zoneID, uint8 act, uint8 characterID, bool32 encore, int32 score, void (*callback)(bool32 success));
 int32 TimeAttackData_GetScore(uint8 zoneID, uint8 act, uint8 characterID, bool32 encore, int32 rank);
 int32 TimeAttackData_GetReplayID(uint8 zoneID, uint8 act, uint8 characterID, bool32 encore, int32 rank);
 void TimeAttackData_ConfigureTableView(uint8 zoneID, uint8 act, uint8 characterID, bool32 encore);
@@ -112,7 +114,7 @@ void TimeAttackData_Leaderboard_GetRank(bool32 success, int32 rank);
 void TimeAttackData_AddLeaderboardEntry(uint8 zoneID, uint8 act, uint8 characterID, bool32 isEncore, int32 score);
 LeaderboardID *TimeAttackData_GetLeaderboardInfo(uint8 zoneID, uint8 act, uint8 characterID, bool32 isEncore);
 #else
-void TimeAttackData_SaveTATime(uint8 zoneID, uint8 act, uint8 characterID, uint8 rank, uint16 score);
+void TimeAttackData_AddRecord(uint8 zoneID, uint8 act, uint8 characterID, uint8 rank, uint16 score);
 #endif
 
 #endif //! OBJ_TIMEATTACKDATA_H

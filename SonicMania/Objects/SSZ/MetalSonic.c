@@ -454,7 +454,7 @@ void MetalSonic_State_WaitForHologram(void)
 #if MANIA_USE_PLUS
             Music_ClearMusicStack();
 #endif
-            Music_PlayTrack(TRACK_EGGMAN1);
+            Music_PlayTrack(TRACK_METALSONIC);
             RSDK.PlaySfx(MetalSonic->sfxMSFireball, false, 255);
 
             self->position.y += 0x600000;

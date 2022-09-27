@@ -609,7 +609,7 @@ void TitleCard_State_SlideAway(void)
         self->zoneDecorVerts[3].x -= speed;
     }
 
-    if (self->actionTimer == 6 && globals->gameMode < MODE_TIMEATTACK) {
+    if (self->actionTimer == 60 && globals->gameMode < MODE_TIMEATTACK) {
         SceneInfo->timeEnabled = true;
     }
 

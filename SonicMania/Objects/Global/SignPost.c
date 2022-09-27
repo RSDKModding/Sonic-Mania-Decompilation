@@ -362,7 +362,7 @@ void SignPost_CheckTouch(void)
                             RSDK.PlaySfx(SignPost->sfxSignPost2P, false, 255);
                         }
 
-                        EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+                        EntityCompetitionSession *session = CompetitionSession_GetSession();
                         EntityCompetition *manager        = Competition->sessionManager;
                         if (!manager)
                             manager = Competition->sessionManager = CREATE_ENTITY(Competition, NULL, self->position.x, self->position.y);

@@ -111,20 +111,17 @@ void TryAgainE_StageLoad(void)
 
 void TryAgainE_SetupEmeralds(void)
 {
-    int32 id    = 1;
     int32 timer = 0;
 
+    int32 id = 0;
     foreach_all(TAEmerald, emerald)
     {
         emerald->state = TAEmerald_State_MoveCircle;
         emerald->timer = timer;
 
-        if (SaveGame->saveRAM) {
-            if (!(id & SaveGame->saveRAM->chaosEmeralds))
-                timer += 8;
-        }
-
-        id <<= 1;
+        if (SaveGame_GetSaveRAM() && !SaveGame_GetEmerald(id))
+            timer += 8;
+        id++;
     }
 }
 

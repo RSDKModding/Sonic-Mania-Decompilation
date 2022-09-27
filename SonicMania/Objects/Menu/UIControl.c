@@ -91,19 +91,9 @@ void UIControl_Create(void *data)
         if (UIButtonPrompt && slotID != SLOT_DIALOG_UICONTROL) {
             foreach_all(UIButtonPrompt, prompt)
             {
-                if (self->promptCount < UICONTROL_PROMPT_COUNT) {
-                    int32 x = self->startPos.x - self->cameraOffset.x;
-                    int32 y = self->startPos.y - self->cameraOffset.y;
-
-                    Hitbox hitbox;
-                    hitbox.right  = self->size.x >> 17;
-                    hitbox.left   = -(self->size.x >> 17);
-                    hitbox.bottom = self->size.y >> 17;
-                    hitbox.top    = -(self->size.y >> 17);
-                    if (MathHelpers_PointInHitbox(x, y, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox)) {
-                        prompt->parent                     = (Entity *)self;
-                        self->prompts[self->promptCount++] = prompt;
-                    }
+                if (self->promptCount < UICONTROL_PROMPT_COUNT && UIControl_ContainsPos(self, &prompt->position)) {
+                    prompt->parent                     = (Entity *)self;
+                    self->prompts[self->promptCount++] = prompt;
                 }
             }
         }
@@ -551,18 +541,10 @@ void UIControl_SetupButtons(void)
 
     int32 slotID = RSDK.GetEntitySlot(self);
 
-    Hitbox hitboxRange;
     if (UIHeading && slotID != SLOT_DIALOG_UICONTROL) {
         foreach_all(UIHeading, heading)
         {
-            int32 x            = self->startPos.x - self->cameraOffset.x;
-            int32 y            = self->startPos.y - self->cameraOffset.y;
-            hitboxRange.left   = -(self->size.x >> 17);
-            hitboxRange.top    = -(self->size.y >> 17);
-            hitboxRange.right  = self->size.x >> 17;
-            hitboxRange.bottom = self->size.y >> 17;
-
-            if (MathHelpers_PointInHitbox(x, y, heading->position.x, heading->position.y, FLIP_NONE, &hitboxRange))
+            if (UIControl_ContainsPos(self, &heading->position))
                 self->heading = heading;
         }
     }
@@ -571,14 +553,7 @@ void UIControl_SetupButtons(void)
     if (UIShifter && slotID != SLOT_DIALOG_UICONTROL) {
         foreach_all(UIShifter, shifter)
         {
-            int32 x            = self->startPos.x - self->cameraOffset.x;
-            int32 y            = self->startPos.y - self->cameraOffset.y;
-            hitboxRange.right  = self->size.x >> 17;
-            hitboxRange.left   = -(self->size.x >> 17);
-            hitboxRange.bottom = (self->size.y >> 17);
-            hitboxRange.top    = -(self->size.y >> 17);
-
-            if (MathHelpers_PointInHitbox(x, y, shifter->position.x, shifter->position.y, FLIP_NONE, &hitboxRange)) {
+            if (UIControl_ContainsPos(self, &shifter->position)) {
                 self->shifter   = shifter;
                 shifter->parent = self;
             }
@@ -588,14 +563,7 @@ void UIControl_SetupButtons(void)
     if (UICarousel && slotID != SLOT_DIALOG_UICONTROL) {
         foreach_all(UICarousel, carousel)
         {
-            int32 x            = self->startPos.x - self->cameraOffset.x;
-            int32 y            = self->startPos.y - self->cameraOffset.y;
-            hitboxRange.right  = self->size.x >> 17;
-            hitboxRange.left   = -(self->size.x >> 17);
-            hitboxRange.bottom = self->size.y >> 17;
-            hitboxRange.top    = -(self->size.y >> 17);
-
-            if (MathHelpers_PointInHitbox(x, y, carousel->position.x, carousel->position.y, FLIP_NONE, &hitboxRange)) {
+            if (UIControl_ContainsPos(self, &carousel->position)) {
                 self->carousel   = carousel;
                 carousel->parent = self;
             }
@@ -618,20 +586,11 @@ void UIControl_SetupButtons(void)
                 && (!UISlider || classID != UISlider->classID) && (!UIKeyBinder || classID != UIKeyBinder->classID)) {
             }
             else {
-                int32 x            = self->startPos.x - self->cameraOffset.x;
-                int32 y            = self->startPos.y - self->cameraOffset.y;
-                hitboxRange.left   = -(self->size.x >> 17);
-                hitboxRange.top    = -(self->size.y >> 17);
-                hitboxRange.right  = self->size.x >> 17;
-                hitboxRange.bottom = self->size.y >> 17;
+                if (self->buttonCount < UICONTROL_BUTTON_COUNT && UIControl_ContainsPos(self, &button->position)) {
+                    if (!button->parent)
+                        button->parent = (Entity *)self;
 
-                if (MathHelpers_PointInHitbox(x, y, button->position.x, button->position.y, FLIP_NONE, &hitboxRange)) {
-                    if (self->buttonCount < UICONTROL_BUTTON_COUNT) {
-                        if (!button->parent)
-                            button->parent = (Entity *)self;
-
-                        self->buttons[self->buttonCount++] = button;
-                    }
+                    self->buttons[self->buttonCount++] = button;
                 }
             }
         }
@@ -860,6 +819,22 @@ void UIControl_ProcessButtonInput(void)
             }
         }
     }
+}
+
+bool32 UIControl_ContainsPos(EntityUIControl *control, Vector2 *pos) {
+    int32 x = control->startPos.x - control->cameraOffset.x;
+    int32 y = control->startPos.y - control->cameraOffset.y;
+
+    Hitbox hitbox;
+    hitbox.top    = -(control->size.y >> 17);
+    hitbox.left   = -(control->size.x >> 17);
+    hitbox.right  = control->size.x >> 17;
+    hitbox.bottom = control->size.y >> 17;
+
+    if (MathHelpers_PointInHitbox(x, y, pos->x, pos->y, FLIP_NONE, &hitbox))
+        return true;
+
+    return false;
 }
 
 #if RETRO_INCLUDE_EDITOR

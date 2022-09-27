@@ -139,30 +139,14 @@ void UISubHeading_SetupActions(void)
 
     foreach_all(UIButtonPrompt, prompt)
     {
-        Hitbox hitbox;
-        EntityUIControl *saveSel = ManiaModeMenu->saveSelectMenu;
-        hitbox.right             = saveSel->size.x >> 17;
-        hitbox.left              = -(saveSel->size.x >> 17);
-        hitbox.bottom            = saveSel->size.y >> 17;
-        hitbox.top               = -(saveSel->size.y >> 17);
+        EntityUIControl *saveSel       = ManiaModeMenu->saveSelectMenu;
+        EntityUIControl *encoreSaveSel = ManiaModeMenu->encoreSaveSelect;
 
-        if (MathHelpers_PointInHitbox(saveSel->startPos.x - saveSel->cameraOffset.x, saveSel->startPos.y - saveSel->cameraOffset.y,
-                                      prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox)
-            && prompt->buttonID == 2) {
+        if (UIControl_ContainsPos(saveSel, &prompt->position) && prompt->buttonID == 2) 
             ManiaModeMenu->delSavePrompt = prompt;
-        }
-        else {
-            saveSel = ManiaModeMenu->encoreSaveSelect;
 
-            hitbox.right  = saveSel->size.x >> 17;
-            hitbox.left   = -(saveSel->size.x >> 17);
-            hitbox.bottom = saveSel->size.y >> 17;
-            hitbox.top    = -(saveSel->size.y >> 17);
-            if (MathHelpers_PointInHitbox(saveSel->startPos.x - saveSel->cameraOffset.x, saveSel->startPos.y - saveSel->cameraOffset.y,
-                                          prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox)
-                && prompt->buttonID == 2)
-                ManiaModeMenu->delSavePrompt_Encore = prompt;
-        }
+        if (UIControl_ContainsPos(encoreSaveSel, &prompt->position) && prompt->buttonID == 2)
+            ManiaModeMenu->delSavePrompt_Encore = prompt;
     }
 
     EntityUIControl *saveSel = ManiaModeMenu->saveSelectMenu;
@@ -311,7 +295,7 @@ void UISubHeading_SaveButton_ActionCB(void)
 {
     RSDK_THIS(UISaveSlot);
 
-    EntityMenuParam *param   = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param   = MenuParam_GetParam();
     EntityUIControl *control = (EntityUIControl *)self->parent;
 
     SaveRAM *saveRAM = (SaveRAM *)SaveGame_GetDataPtr(self->slotID, self->encoreMode);
@@ -350,15 +334,15 @@ void UISubHeading_SaveButton_ActionCB(void)
             saveRAM->characterID   = self->frameID;
             saveRAM->zoneID        = 0;
             saveRAM->lives         = 3;
-            saveRAM->chaosEmeralds = self->saveEmeralds;
+            saveRAM->collectedEmeralds = self->saveEmeralds;
             saveRAM->continues     = 0;
             UIWaitSpinner_StartWait();
             loadingSave = true;
             SaveGame_SaveFile(UISubHeading_SaveFileCB);
         }
         else {
-            if (saveRAM->saveState == 2) {
-                saveRAM->collectedSpecialRings = 0;
+            if (saveRAM->saveState == SAVEGAME_COMPLETE) {
+                SaveGame_ClearCollectedSpecialRings();
                 saveRAM->score                 = 0;
                 saveRAM->score1UP              = 500000;
             }

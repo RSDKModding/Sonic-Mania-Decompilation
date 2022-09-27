@@ -58,7 +58,7 @@ struct EntityHUD {
     Vector2 vsTimePos[PLAYER_COUNT];
     Vector2 vsRingsPos[PLAYER_COUNT];
     Vector2 vsLifePos[PLAYER_COUNT];
-    int32 vsMaxOffsets[PLAYER_COUNT];
+    int32 vsTargetPos[PLAYER_COUNT];
     int32 screenID;
 #endif
 #if GAME_VERSION != VER_100

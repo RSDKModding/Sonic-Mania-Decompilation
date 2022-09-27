@@ -10,8 +10,6 @@
 // but as far as I can tell, this one is just random numbers?
 #define REPLAY_SIGNATURE (0xF6057BED)
 
-#define REPLAY_BUFFER_SIZE (0x100000)
-
 #define REPLAY_MAX_FRAMECOUNT (37447)
 
 typedef struct {
@@ -94,7 +92,7 @@ struct ObjectReplayRecorder {
     void *fileBuffer;
     void (*loadCallback)(bool32 success);
     char filename[0x100];
-    void (*saveFinishPtr)(bool32 success);
+    void (*saveCallback)(bool32 success);
     int32 replayID;
     int32 replayRowID;
 };
@@ -154,14 +152,14 @@ void ReplayRecorder_SaveReplayDLG_YesCB(void);
 void ReplayRecorder_SaveReplayDLG_CB(void);
 void ReplayRecorder_SaveReplay(void);
 void ReplayRecorder_SaveFile_Replay(bool32 success);
-void ReplayRecorder_SaveUserDB_ReplayDB(bool32 success);
-void ReplayRecorder_SaveUserDB_TimeAttackDB(bool32 success);
+void ReplayRecorder_SaveCallback_ReplayDB(bool32 success);
+void ReplayRecorder_SaveCallback_TimeAttackDB(bool32 success);
 void ReplayRecorder_Buffer_PackInPlace(int32 *tempWriteBuffer);
 void ReplayRecorder_Buffer_Unpack(int32 *readBuffer, int32 *tempReadBuffer);
-void ReplayRecorder_Buffer_SaveFile(const char *fileName, int32 *buffer);
-void ReplayRecorder_SetReplayStatus(int32 status);
 void ReplayRecorder_Buffer_LoadFile(const char *fileName, void *buffer, void (*callback)(bool32 success));
-void ReplayRecorder_LoadFile_Replay(int32 status);
+void ReplayRecorder_Buffer_SaveFile(const char *fileName, int32 *buffer, void (*callback)(bool32 success));
+void ReplayRecorder_LoadReplayCallback(int32 status);
+void ReplayRecorder_SaveReplayCallback(int32 status);
 void ReplayRecorder_ConfigureGhost_CB(void);
 void ReplayRecorder_SetupActions(void);
 void ReplayRecorder_SetupWriteBuffer(void);
@@ -183,19 +181,9 @@ void ReplayRecorder_Pause(EntityReplayRecorder *recorder);
 void ReplayRecorder_PlayerState_PlaybackReplay(void);
 void ReplayRecorder_State_SetupPlayback(void);
 void ReplayRecorder_State_Playback(void);
-void ReplayRecorder_Late_Playback(void);
 void ReplayRecorder_State_Record(void);
+void ReplayRecorder_Late_Playback(void);
 void ReplayRecorder_Late_RecordFrames(void);
-void ReplayRecorder_LoadReplayDB(void (*callback)(bool32 success));
-void ReplayRecorder_SaveReplayDB(void (*callback)(bool32 success));
-void ReplayRecorder_CreateReplayDB(void);
-uint32 ReplayRecorder_AddReplayID(uint8 zoneID, uint8 act, uint8 characterID, int32 score, uint8 encore);
-void ReplayRecorder_DeleteReplay(int32 row, void (*callback)(bool32 success), bool32 useAltCB);
-void ReplayRecorder_DeleteReplay_CB(int32 status);
-void ReplayRecorder_DeleteReplaySave_CB(int32 status);
-void ReplayRecorder_DeleteReplaySave2_CB(int32 status);
-void ReplayRecorder_SetStatus(int32 status);
-void ReplayRecorder_SaveUserDB_ReplayDBManager(int32 status);
 #endif
 
 #endif //! OBJ_REPLAYRECORDER_H

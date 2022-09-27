@@ -924,7 +924,7 @@ void WeatherMobile_State_Defeated(void)
             break;
 
         case 96:
-            Debris_FallFlickerAnimSetup(WeatherMobile->aniFrames, WeatherMobile->debrisInfo, 24);
+            Debris_CreateFromEntries(WeatherMobile->aniFrames, WeatherMobile->debrisInfo, 24);
             RSDK.SetSpriteAnimation(-1, 0, &self->decorAnimator, true, 0);
             break;
 

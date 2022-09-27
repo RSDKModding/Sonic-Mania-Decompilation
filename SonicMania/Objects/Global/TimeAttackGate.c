@@ -266,14 +266,14 @@ void TimeAttackGate_AddRecord(void)
         if (UIWaitSpinner)
             UIWaitSpinner_StartWait();
 
-        EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+        EntityMenuParam *param = MenuParam_GetParam();
         int32 characterID      = param->characterID;
         int32 zoneID           = param->zoneID;
         int32 score            = SceneInfo->milliseconds + 100 * (SceneInfo->seconds + 60 * SceneInfo->minutes);
         int32 act              = param->actID;
         bool32 encore          = SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE);
 
-        param->timeAttackRank = TimeAttackData_AddTADBEntry(zoneID, act, characterID, encore, score, TimeAttackGate_WaitSave_Leaderboards);
+        param->timeAttackRank = TimeAttackData_AddRecord(zoneID, act, characterID, encore, score, TimeAttackGate_WaitSave_Leaderboards);
         TimeAttackData_AddLeaderboardEntry(zoneID, act, characterID, encore, score);
     }
 }

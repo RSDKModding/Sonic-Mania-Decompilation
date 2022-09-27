@@ -11,7 +11,7 @@ struct ObjectFBZStorm {
     Vector2 raindropPositions[0x100];
     uint16 aniFrames;
     uint16 sfxRain;
-    uint8 playingRainSfx;
+    bool32 playingRainSfx; // should be uint8 according to the static vars file, bool32 actually *breaks* outsideBank, but that's how mania is so..
     uint16 sfxThunder;
     STATIC(uint8 outsideBank, 1);
 };

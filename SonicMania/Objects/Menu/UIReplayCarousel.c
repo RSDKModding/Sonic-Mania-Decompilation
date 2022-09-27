@@ -300,9 +300,9 @@ void UIReplayCarousel_SetupVisibleReplayButtons(void)
             if (id >= self->sortedRowCount)
                 break;
             int32 row    = API.GetSortedUserDBRowID(globals->replayTableID, id);
-            int32 zoneID = 0xFF;
+            uint8 zoneID = 0xFF;
             API.GetUserDBValue(globals->replayTableID, row, DBVAR_UINT8, "zoneID", &zoneID);
-            API.GetUserDBRowCreationTime(globals->replayTableID, row, buffer, 31, "%D");
+            API.GetUserDBRowCreationTime(globals->replayTableID, row, buffer, sizeof(buffer) - 1, "%D");
             if (zoneID != 0xFF) {
                 RSDK.InitString(&self->zoneNameText[i], "", 0);
                 Localization_GetZoneName(&self->zoneNameText[i], zoneID);
@@ -527,11 +527,11 @@ void UIReplayCarousel_Draw_Carousel(void)
         if (id >= self->sortedRowCount)
             break;
 
-        int32 score        = 0;
-        uint16 zoneID      = 0;
-        uint16 act         = 0;
-        uint16 characterID = 0;
-        uint16 encore      = 0;
+        int32 score       = 0;
+        uint8 zoneID      = 0;
+        uint8 act         = 0;
+        uint8 characterID = 0;
+        uint8 encore      = 0;
 
         int32 row = API.GetSortedUserDBRowID(globals->replayTableID, id);
         API.GetUserDBValue(globals->replayTableID, row, DBVAR_UINT32, "score", &score);
@@ -558,21 +558,14 @@ void UIReplayCarousel_Draw_Carousel(void)
 void UIReplayCarousel_State_Init(void)
 {
     RSDK_THIS(UIReplayCarousel);
+
     EntityUIControl *parent = (EntityUIControl *)self->parent;
 
     foreach_all(UIButtonPrompt, prompt)
     {
-        Hitbox hitbox;
-        hitbox.left   = -(parent->size.x) >> 17;
-        hitbox.top    = -(parent->size.y) >> 17;
-        hitbox.right  = (parent->size.x) >> 17;
-        hitbox.bottom = (parent->size.y) >> 17;
-        if (MathHelpers_PointInHitbox(parent->startPos.x - parent->cameraOffset.x, parent->startPos.y - parent->cameraOffset.y, prompt->position.x,
-                                      prompt->position.y, FLIP_NONE, &hitbox)) {
-            if (prompt->buttonID == 3) {
-                UIReplayCarousel->prompt = prompt;
-                foreach_break;
-            }
+        if (UIControl_ContainsPos(parent, &prompt->position) && prompt->buttonID == 3) {
+            UIReplayCarousel->prompt = prompt;
+            foreach_break;
         }
     }
 

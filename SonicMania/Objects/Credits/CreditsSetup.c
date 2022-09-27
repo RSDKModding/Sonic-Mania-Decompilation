@@ -39,13 +39,13 @@ void CreditsSetup_StaticUpdate(void)
         }
         else {
             if (fade->state == FXFade_State_Wait && fade->wait == 1) {
-                EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+                EntityMenuParam *param = MenuParam_GetParam();
 
 #if MANIA_USE_PLUS
                 if (param->creditsReturnToMenu) {
                     RSDK.SetScene("Presentation", "Menu");
                 }
-                else if (SaveGame->saveRAM->chaosEmeralds < 0b01111111) {
+                else if (SaveGame_GetSaveRAM()->collectedEmeralds < 0b01111111) {
                     globals->gameMode == MODE_ENCORE ? RSDK.SetScene("Cutscenes", "Try Again Encore") : RSDK.SetScene("Cutscenes", "Try Again");
                 }
                 else if (globals->gameMode == MODE_ENCORE) {
@@ -57,7 +57,7 @@ void CreditsSetup_StaticUpdate(void)
 #else
                 if (param->creditsReturnToMenu)
                     RSDK.SetScene("Presentation", "Menu");
-                else if (SaveGame->saveRAM->chaosEmeralds < 0b01111111)
+                else if (SaveGame_GetSaveRAM()->collectedEmeralds < 0b01111111)
                     RSDK.SetScene("Cutscenes", "Try Again");
                 else
                     RSDK.SetScene("Presentation", "Menu");

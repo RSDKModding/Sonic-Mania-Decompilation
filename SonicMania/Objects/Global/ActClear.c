@@ -389,7 +389,7 @@ void ActClear_Create(void *data)
         globals->initCoolBonus = false;
 #if MANIA_USE_PLUS
         if (globals->gameMode == MODE_TIMEATTACK) {
-            EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+            EntityMenuParam *param = MenuParam_GetParam();
             self->time =
                 TimeAttackData_GetScore(param->zoneID, param->actID, param->characterID, SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE), 1);
             self->achievedRank = false;
@@ -554,7 +554,7 @@ void ActClear_SaveGameCallback(void)
 }
 #endif
 
-void ActClear_SetupForceOnScreenP2(void)
+void ActClear_SetupRecoverPlayers(void)
 {
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
@@ -594,7 +594,7 @@ void ActClear_State_EnterText(void)
         self->gotThroughPos.x += TO_FIXED(16);
 
     if (!self->timer && Zone->shouldRecoverPlayers)
-        ActClear_SetupForceOnScreenP2();
+        ActClear_SetupRecoverPlayers();
 
     if (++self->timer == 48) {
         self->timer = 0;
@@ -730,7 +730,7 @@ void ActClear_State_SaveGameProgress(void)
             }
 #if !MANIA_USE_PLUS
             else if (globals->gameMode == MODE_TIMEATTACK) {
-                EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+                EntityMenuParam *param = MenuParam_GetParam();
                 ActClear->isSavingGame = true;
                 uint8 characterID      = param->characterID;
                 uint8 zoneID           = param->zoneID;
@@ -747,7 +747,7 @@ void ActClear_State_SaveGameProgress(void)
 
                 if (rank < 3) {
                     rank++;
-                    TimeAttackData_SaveTATime(zoneID, act, characterID, rank, time);
+                    TimeAttackData_AddRecord(zoneID, act, characterID, rank, time);
                     APICallback_TrackTAClear(zoneID, act, characterID, time);
                     param->timeScore = rank;
                     SaveGame_SaveFile(ActClear_SaveGameCallback);
@@ -765,7 +765,7 @@ void ActClear_State_SaveGameProgress(void)
                 SaveGame_ClearRestartData();
                 StarPost_ResetStarPosts();
                 if (Zone->actID > 0)
-                    SaveGame->saveRAM->collectedSpecialRings = 0;
+                    SaveGame_ClearCollectedSpecialRings();
                 SaveGame_SaveProgress();
 #if MANIA_USE_PLUS
                 if (globals->saveSlotID != NO_SAVE_SLOT && !ActClear->forceNoSave) {

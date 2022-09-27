@@ -17,8 +17,6 @@ void UFO_Plasma_StaticUpdate(void) {}
 
 void UFO_Plasma_Draw(void)
 {
-    ScanlineInfo *scanlinePtr = UFO_Plasma->scanlines;
-
     int32 y          = (UFO_Setup->timer + 2 * ScreenInfo->position.y) << 14;
     uint8 scanlineID = ((ScreenInfo->position.y >> 1) + 2 * UFO_Setup->timer);
 

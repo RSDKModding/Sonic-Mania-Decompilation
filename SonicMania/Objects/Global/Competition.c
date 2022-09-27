@@ -139,7 +139,7 @@ void Competition_State_Manager(void)
 #if MANIA_USE_PLUS
 void Competition_ResetOptions(void)
 {
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
     session->inMatch                  = false;
     session->matchID                  = 0;
     session->matchCount               = 0;
@@ -167,7 +167,7 @@ void Competition_ResetOptions(void)
 
 void Competition_ClearMatchData(void)
 {
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
 
     session->matchWinner[session->matchID] = 0;
 
@@ -185,7 +185,7 @@ void Competition_ClearMatchData(void)
 
 void Competition_DeriveWinner(int32 playerID, uint8 finishType)
 {
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
     session->finishState[playerID]    = finishType;
 
     if (finishType == FINISHTYPE_GAMEOVER) {
@@ -283,7 +283,7 @@ void Competition_DeriveWinner(int32 playerID, uint8 finishType)
 
 void Competition_WinMatchFor(int32 playerID)
 {
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
 
     ++session->wins[playerID];
     session->matchWinner[session->matchID] |= 1 << playerID;

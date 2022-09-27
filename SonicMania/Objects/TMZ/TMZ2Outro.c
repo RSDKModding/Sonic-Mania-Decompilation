@@ -59,7 +59,7 @@ void TMZ2Outro_SetupCutscene(void)
 #if MANIA_USE_PLUS
     }
     else {
-        if (SaveGame->saveRAM->chaosEmeralds == 0b01111111) {
+        if (SaveGame_AllChaosEmeralds()) {
             CutsceneSeq_StartSequence(self, TMZ2Outro_Cutscene_SetupOutro, TMZ2Outro_Cutscene_WatchEggman, TMZ2Outro_Cutscene_EggmanFall,
                                       TMZ2Outro_Cutscene_StartRubyRampage, TMZ2Outro_Cutscene_OuttaHere, TMZ2Outro_Cutscene_TeamEscape,
                                       TMZ2Outro_Cutscene_FadeOut, TMZ2Outro_Cutscene_FinishSequence, StateMachine_None);
@@ -312,7 +312,7 @@ bool32 TMZ2Outro_Cutscene_StartRubyRampage(EntityCutsceneSeq *host)
     if (host->timer == 60) {
         foreach_active(PhantomRuby, ruby)
         {
-            int32 pos         = ScreenInfo->position.x + (SaveGame->saveRAM->chaosEmeralds == 0b01111111 ? 64 : 96);
+            int32 pos         = ScreenInfo->position.x + (SaveGame_AllChaosEmeralds() ? 64 : 96);
             ruby->startPos.x  = pos << 16;
             ruby->startPos.y  = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
             ruby->velocity.y  = 0;
@@ -351,7 +351,7 @@ bool32 TMZ2Outro_Cutscene_StartRubyRampage(EntityCutsceneSeq *host)
 
         for (int32 i = 0; i < 7; ++i) RSDK.SetPaletteEntry(2, i - 96, TMZ2Outro->colors[i]);
 
-        if (SaveGame->saveRAM->chaosEmeralds == 0b01111111) {
+        if (SaveGame_AllChaosEmeralds()) {
             CREATE_ENTITY(RubyPortal, RubyPortal_State_EncoreEnd, (ScreenInfo->position.x + 64) << 16,
                           (ScreenInfo->position.y + ScreenInfo->center.y) << 16);
         }
@@ -677,7 +677,7 @@ bool32 TMZ2Outro_Cutscene_FinishSequence(EntityCutsceneSeq *host)
     if (!(SceneInfo->filter & FILTER_ENCORE))
 #endif
         hasGoodEnding = (CHECK_CHARACTER_ID(ID_SONIC, 1) || (CHECK_CHARACTER_ID(ID_KNUCKLES, 1) && CHECK_CHARACTER_ID(ID_KNUCKLES, 2)))
-                        && SaveGame->saveRAM->chaosEmeralds == 0x7F;
+                        && SaveGame_AllChaosEmeralds();
 
     bool32 isSaveSlot = false;
     if (!hasGoodEnding)

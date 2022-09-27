@@ -198,8 +198,8 @@ bool32 GHZCutsceneST_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
             int32 x            = (player->position.x - player->position.x) >> 3;
             int32 y            = (0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->storedTimer)) + ruby->position.y - player->position.y) >> 3;
-            player->velocity.y = (y >> 8) * (y >> 8);
             player->velocity.x = (x >> 8) * (x >> 8);
+            player->velocity.y = (y >> 8) * (y >> 8);
             player->state      = Player_State_Air;
             player->up         = true;
             player->camera     = NULL;

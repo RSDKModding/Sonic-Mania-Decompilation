@@ -29,7 +29,7 @@ typedef struct {
     int32 lives;
     int32 score;
     int32 score1UP;
-    int32 chaosEmeralds;
+    int32 collectedEmeralds;
     int32 continues;
     int32 storedStageID;
     int32 nextSpecialStage;
@@ -89,13 +89,14 @@ void SaveGame_EditorLoad(void);
 void SaveGame_Serialize(void);
 
 // Funcs
+SaveRAM *SaveGame_GetSaveRAM(void);
 #if MANIA_USE_PLUS
 int32 *SaveGame_GetDataPtr(int32 slot, bool32 encore);
 #else
 int32 *SaveGame_GetDataPtr(int32 slot);
 #endif
 void SaveGame_LoadSaveData(void);
-void SaveGame_LoadFile(void);
+void SaveGame_LoadFile(void (*callback)(bool32 success));
 #if MANIA_USE_PLUS
 void SaveGame_SaveFile(void (*callback)(bool32 success));
 #else
@@ -110,5 +111,11 @@ void SaveGame_LoadPlayerState(void);
 void SaveGame_ResetPlayerState(void);
 void SaveGame_LoadFile_CB(int32 status);
 void SaveGame_SaveFile_CB(int32 status);
+bool32 SaveGame_AllChaosEmeralds(void);
+bool32 SaveGame_GetEmerald(uint8 emeraldID);
+void SaveGame_SetEmerald(uint8 emeraldID);
+void SaveGame_ClearCollectedSpecialRings(void);
+bool32 SaveGame_GetCollectedSpecialRing(uint8 id);
+void SaveGame_SetCollectedSpecialRing(uint8 id);
 
 #endif //! OBJ_SAVEGAME_H

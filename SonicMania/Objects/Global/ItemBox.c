@@ -240,8 +240,8 @@ void ItemBox_State_Broken(void)
 
     if (LRZConvItem)
         LRZConvItem_HandleLRZConvPhys(self);
-
-    ItemBox_HandleFallingCollision();
+    else
+        ItemBox_HandleFallingCollision();
 }
 void ItemBox_State_Break(void)
 {
@@ -798,7 +798,7 @@ void ItemBox_GivePowerup(void)
 void ItemBox_Break(EntityItemBox *itemBox, EntityPlayer *player)
 {
     if (globals->gameMode == MODE_COMPETITION) {
-        EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+        EntityCompetitionSession *session = CompetitionSession_GetSession();
         ++session->items[RSDK.GetEntitySlot(player)];
     }
 
@@ -915,22 +915,23 @@ bool32 ItemBox_HandleFallingCollision(void)
 
     ItemBox_HandleObjectCollisions();
 
-    if (self->velocity.y >= 0
-        && (self->direction == FLIP_Y && self->boxAnimator.animationID == 1
-                ? RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, TO_FIXED(0), true)
-                : RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, TO_FIXED(16), true))) {
-        self->velocity.y = 0;
-        if (self->state != ItemBox_State_IconFinish && self->state != ItemBox_State_Break)
-            self->active = ACTIVE_BOUNDS;
-        self->moveOffset.x += self->position.x;
-        self->moveOffset.y += self->position.y;
-        return true;
+    if (self->velocity.y >= 0) {
+        bool32 collided = (self->direction == FLIP_Y && self->boxAnimator.animationID == 1)
+                              ? RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, TO_FIXED(0), true)
+                              : RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, TO_FIXED(16), true);
+        if (collided) {
+            self->velocity.y = 0;
+            if (self->state != ItemBox_State_IconFinish && self->state != ItemBox_State_Break)
+                self->active = ACTIVE_BOUNDS;
+            self->moveOffset.x += self->position.x;
+            self->moveOffset.y += self->position.y;
+            return true;
+        }
     }
-    else {
-        self->moveOffset.x += self->position.x;
-        self->moveOffset.y += self->position.y;
-        return false;
-    }
+
+    self->moveOffset.x += self->position.x;
+    self->moveOffset.y += self->position.y;
+    return false;
 }
 bool32 ItemBox_HandlePlatformCollision(void *plat)
 {

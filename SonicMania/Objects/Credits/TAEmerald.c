@@ -44,7 +44,7 @@ void TAEmerald_Create(void *data)
         self->state = TAEmerald_State_Oscillate;
         RSDK.SetSpriteAnimation(TAEmerald->aniFrames, 7, &self->animator, true, self->color);
 
-        if (SaveGame->saveRAM && ((1 << self->color) & SaveGame->saveRAM->chaosEmeralds) > 0) {
+        if (SaveGame_GetSaveRAM() && SaveGame_GetEmerald(self->color)) {
             self->visible = false;
         }
     }

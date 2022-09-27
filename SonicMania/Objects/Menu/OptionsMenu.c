@@ -26,69 +26,69 @@ void OptionsMenu_Initialize(void)
 {
     LogHelpers_Print("ManiaModeMenu_Initialize()");
 
-    String string;
-    INIT_STRING(string);
+    String tag;
+    INIT_STRING(tag);
 
     foreach_all(UIControl, control)
     {
-        RSDK.SetString(&string, "Options");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Options");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->optionsControl = control;
 
-        RSDK.SetString(&string, "Language");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Language");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->languageControl = control;
 
-        RSDK.SetString(&string, "Language Old");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Language Old");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->languageControl_Legacy = control;
 
-        RSDK.SetString(&string, "Video");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Video");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->videoControl = control;
 
-        RSDK.SetString(&string, "Video WIN");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Video WIN");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->videoControl_Windows = control;
 
-        RSDK.SetString(&string, "Sound");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Sound");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->soundControl = control;
 
-        RSDK.SetString(&string, "Controls WIN");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Controls WIN");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->controlsControl_Windows = control;
 
-        RSDK.SetString(&string, "Controls KB");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Controls KB");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->controlsControl_KB = control;
 
-        RSDK.SetString(&string, "Controls PS4");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Controls PS4");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->controlsControl_PS4 = control;
 
-        RSDK.SetString(&string, "Controls XB1");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Controls XB1");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->controlsControl_XB1 = control;
 
-        RSDK.SetString(&string, "Controls NX");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Controls NX");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->controlsControl_NX = control;
 
-        RSDK.SetString(&string, "Controls NX Grip");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Controls NX Grip");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->controlsControl_NXGrip = control;
 
-        RSDK.SetString(&string, "Controls NX Joycon");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Controls NX Joycon");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->controlsControl_NXJoycon = control;
 
-        RSDK.SetString(&string, "Controls NX Pro");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Controls NX Pro");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->controlsControl_NXPro = control;
 
-        RSDK.SetString(&string, "Data Options");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Data Options");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             OptionsMenu->dataOptionsControl = control;
     }
 
@@ -96,28 +96,16 @@ void OptionsMenu_Initialize(void)
     foreach_all(UIButtonPrompt, prompt)
     {
         EntityUIControl *controller = OptionsMenu->optionsControl;
-        int32 x                  = controller->startPos.x - controller->cameraOffset.x;
-        int32 y                  = controller->startPos.y - controller->cameraOffset.y;
 
-        hitbox.right  = controller->size.x >> 17;
-        hitbox.left   = -(controller->size.x >> 17);
-        hitbox.bottom = controller->size.y >> 17;
-        hitbox.top    = -(controller->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox) && prompt->buttonID == 3)
+        if (UIControl_ContainsPos(controller, &prompt->position) && prompt->buttonID == 3)
             OptionsMenu->helpPrompt = prompt;
     }
 
     foreach_all(UIDiorama, diorama)
     {
         EntityUIControl *controller = OptionsMenu->videoControl;
-        int32 x                  = controller->startPos.x - controller->cameraOffset.x;
-        int32 y                  = controller->startPos.y - controller->cameraOffset.y;
 
-        hitbox.right  = controller->size.x >> 17;
-        hitbox.left   = -(controller->size.x >> 17);
-        hitbox.bottom = controller->size.y >> 17;
-        hitbox.top    = -(controller->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, diorama->position.x, diorama->position.y, FLIP_NONE, &hitbox)) {
+        if (UIControl_ContainsPos(controller, &diorama->position)) {
             OptionsMenu->diorama = diorama;
             diorama->parent      = OptionsMenu->videoControl;
         }
@@ -126,14 +114,8 @@ void OptionsMenu_Initialize(void)
     foreach_all(UIInfoLabel, label)
     {
         EntityUIControl *controller = OptionsMenu->dataOptionsControl;
-        int32 x                  = controller->startPos.x - controller->cameraOffset.x;
-        int32 y                  = controller->startPos.y - controller->cameraOffset.y;
 
-        hitbox.right  = controller->size.x >> 17;
-        hitbox.left   = -(controller->size.x >> 17);
-        hitbox.bottom = controller->size.y >> 17;
-        hitbox.top    = -(controller->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, label->position.x, label->position.y, FLIP_NONE, &hitbox))
+        if (UIControl_ContainsPos(controller, &label->position))
             OptionsMenu->selectDataToEraseLabel = label;
     }
 }
@@ -162,7 +144,7 @@ void OptionsMenu_SetupActions(void)
 {
     EntityUIControl *optionsControl      = OptionsMenu->optionsControl;
     EntityUIControl *languageControl     = OptionsMenu->languageControl;
-    EntityUIControl *languageControl_old = OptionsMenu->languageControl_Legacy;
+    EntityUIControl *languageControl_Legacy = OptionsMenu->languageControl_Legacy;
     EntityUIControl *videoControl        = OptionsMenu->videoControl;
     EntityUIControl *controlsControl_Win = OptionsMenu->controlsControl_Windows;
     EntityUIControl *videoControl_Win    = OptionsMenu->videoControl_Windows;
@@ -175,117 +157,39 @@ void OptionsMenu_SetupActions(void)
 
     foreach_all(UIButton, button)
     {
-        int32 x       = controlsControl_Win->startPos.x - controlsControl_Win->cameraOffset.x;
-        int32 y       = controlsControl_Win->startPos.y - controlsControl_Win->cameraOffset.y;
-        hitbox.right  = controlsControl_Win->size.x >> 17;
-        hitbox.left   = -(controlsControl_Win->size.x >> 17);
-        hitbox.bottom = controlsControl_Win->size.y >> 17;
-        hitbox.top    = -(controlsControl_Win->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, button->position.x, button->position.y, FLIP_NONE, &hitbox))
+        if (UIControl_ContainsPos(controlsControl_Win, &button->position))
             button->actionCB = OptionsMenu_KeyboardIDButton_Win_ActionCB;
 
-        x             = optionsControl->startPos.x - optionsControl->cameraOffset.x;
-        y             = optionsControl->startPos.y - optionsControl->cameraOffset.y;
-        hitbox.right  = optionsControl->size.x >> 17;
-        hitbox.left   = -(optionsControl->size.y >> 17);
-        hitbox.bottom = optionsControl->size.x >> 17;
-        hitbox.top    = -(optionsControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 3
-            && button->frameID == 3) {
-            button->actionCB = OptionsMenu_LanguageMenuButton_ActionCB;
-        }
+        if (UIControl_ContainsPos(optionsControl, &button->position) && button->listID == 3) {
 
-        x             = optionsControl->startPos.x - optionsControl->cameraOffset.x;
-        y             = optionsControl->startPos.y - optionsControl->cameraOffset.y;
-        hitbox.right  = optionsControl->size.x >> 17;
-        hitbox.left   = -(optionsControl->size.x >> 17);
-        hitbox.bottom = optionsControl->size.y >> 17;
-        hitbox.top    = -(optionsControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 3 && !button->frameID)
-            button->actionCB = OptionsMenu_VideoMenuButton_ActionCB;
+            switch (button->frameID) {
+                case 0: button->actionCB = OptionsMenu_VideoMenuButton_ActionCB; break;
+                case 1: button->actionCB = OptionsMenu_SoundMenuButton_ActionCB; break;
 
-        x             = optionsControl->startPos.x - optionsControl->cameraOffset.x;
-        y             = optionsControl->startPos.y - optionsControl->cameraOffset.y;
-        hitbox.right  = optionsControl->size.x >> 17;
-        hitbox.left   = -(optionsControl->size.x >> 17);
-        hitbox.bottom = optionsControl->size.y >> 17;
-        hitbox.top    = -(optionsControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 3
-            && button->frameID == 1) {
-            button->actionCB = OptionsMenu_SoundMenuButton_ActionCB;
-        }
+                case 2:
+                    button->actionCB = OptionsMenu_ControlsMenuButton_ActionCB;
+                    if (sku_platform == PLATFORM_DEV || sku_platform == PLATFORM_PC)
+                        button->transition = false;
+                    break;
 
-        x             = optionsControl->startPos.x - optionsControl->cameraOffset.x;
-        y             = optionsControl->startPos.y - optionsControl->cameraOffset.y;
-        hitbox.right  = optionsControl->size.x >> 17;
-        hitbox.left   = -(optionsControl->size.x >> 17);
-        hitbox.bottom = optionsControl->size.y >> 17;
-        hitbox.top    = -(optionsControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, button->position.x, button->position.y, FLIP_NONE, &hitbox)) {
-            if (button->listID == 3 && button->frameID == 2) {
-                button->actionCB = OptionsMenu_ControlsMenuButton_ActionCB;
-
-                if (sku_platform == PLATFORM_DEV || sku_platform == PLATFORM_PC)
-                    button->transition = false;
+                case 3: button->actionCB = OptionsMenu_LanguageMenuButton_ActionCB; break;
+                case 4: button->actionCB = OptionsMenu_DataOptionsMenuButton_ActionCB; break;
             }
         }
 
-        x             = optionsControl->startPos.x - optionsControl->cameraOffset.x;
-        y             = optionsControl->startPos.y - optionsControl->cameraOffset.y;
-        hitbox.right  = optionsControl->size.x >> 17;
-        hitbox.left   = -(optionsControl->size.x >> 17);
-        hitbox.bottom = optionsControl->size.y >> 17;
-        hitbox.top    = -(optionsControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 3
-            && button->frameID == 4) {
-            button->actionCB = OptionsMenu_DataOptionsMenuButton_ActionCB;
-        }
-
-        x             = languageControl->startPos.x - languageControl->cameraOffset.x;
-        y             = languageControl->startPos.y - languageControl->cameraOffset.y;
-        hitbox.right  = languageControl->size.x >> 17;
-        hitbox.left   = -(languageControl->size.x >> 17);
-        hitbox.bottom = languageControl->size.y >> 17;
-        hitbox.top    = -(languageControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, button->position.x, button->position.y, FLIP_NONE, &hitbox))
+        if (UIControl_ContainsPos(languageControl, &button->position))
             button->actionCB = OptionsMenu_LanguageButton_ActionCB;
 
-        x             = languageControl_old->startPos.x - languageControl_old->cameraOffset.x;
-        y             = languageControl_old->startPos.y - languageControl_old->cameraOffset.y;
-        hitbox.right  = languageControl_old->size.x >> 17;
-        hitbox.left   = -(languageControl_old->size.x >> 17);
-        hitbox.bottom = languageControl_old->size.y >> 17;
-        hitbox.top    = -(languageControl_old->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, button->position.x, button->position.y, FLIP_NONE, &hitbox))
+        if (UIControl_ContainsPos(languageControl_Legacy, &button->position))
             button->actionCB = OptionsMenu_LanguageButton_ActionCB;
 
-        x             = videoControl->startPos.x - videoControl->cameraOffset.x;
-        y             = videoControl->startPos.y - videoControl->cameraOffset.y;
-        hitbox.right  = videoControl->size.x >> 17;
-        hitbox.left   = -(videoControl->size.x >> 17);
-        hitbox.bottom = videoControl->size.y >> 17;
-        hitbox.top    = -(videoControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 3 && !button->frameID)
+        if (UIControl_ContainsPos(videoControl, &button->position) && button->listID == 3 && button->frameID == 0)
             button->choiceChangeCB = OptionsMenu_ShaderButton_ActionCB;
 
-        x             = controlsControl_Win->startPos.x - controlsControl_Win->cameraOffset.x;
-        y             = controlsControl_Win->startPos.y - controlsControl_Win->cameraOffset.y;
-        hitbox.right  = controlsControl_Win->size.x >> 17;
-        hitbox.left   = -(controlsControl_Win->size.x >> 17);
-        hitbox.bottom = controlsControl_Win->size.y >> 17;
-        hitbox.top    = -(controlsControl_Win->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 17
-            && button->frameID == 1) {
+        if (UIControl_ContainsPos(controlsControl_Win, &button->position) && button->listID == 17 && button->frameID == 1)
             button->actionCB = OptionsMenu_SetDefaultMappings;
-        }
 
-        x             = videoControl_Win->startPos.x - videoControl_Win->cameraOffset.x;
-        y             = videoControl_Win->startPos.y - videoControl_Win->cameraOffset.y;
-        hitbox.right  = videoControl_Win->size.x >> 17;
-        hitbox.left   = -(videoControl_Win->size.x >> 17);
-        hitbox.bottom = videoControl_Win->size.y >> 17;
-        hitbox.top    = -(videoControl_Win->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 17) {
+        if (UIControl_ContainsPos(videoControl_Win, &button->position) && button->listID == 17) {
             switch (button->frameID) {
                 case 2: button->choiceChangeCB = OptionsMenu_ShaderButton_ActionCB; break;
                 case 7: button->choiceChangeCB = OptionsMenu_WindowScaleButton_ActionCB; break;
@@ -296,13 +200,7 @@ void OptionsMenu_SetupActions(void)
             }
         }
 
-        x             = dataControl->startPos.x - dataControl->cameraOffset.x;
-        y             = dataControl->startPos.y - dataControl->cameraOffset.y;
-        hitbox.right  = dataControl->size.x >> 17;
-        hitbox.left   = -(dataControl->size.x >> 17);
-        hitbox.bottom = dataControl->size.y >> 17;
-        hitbox.top    = -(dataControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 18) {
+        if (UIControl_ContainsPos(dataControl, &button->position) && button->listID == 18) {
             switch (button->frameID) {
                 case 0: button->actionCB = OptionsMenu_EraseSaveGameButton_ActionCB; break;
                 case 1: button->actionCB = OptionsMenu_EraseMedallionsButton_ActionCB; break;
@@ -315,14 +213,7 @@ void OptionsMenu_SetupActions(void)
 
     foreach_all(UISlider, slider)
     {
-        int32 x = soundControl->startPos.x - soundControl->cameraOffset.x;
-        int32 y = soundControl->startPos.y - soundControl->cameraOffset.y;
-
-        hitbox.right  = soundControl->size.x >> 17;
-        hitbox.left   = -(soundControl->size.x >> 17);
-        hitbox.bottom = soundControl->size.y >> 17;
-        hitbox.top    = -(soundControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, slider->position.x, slider->position.y, FLIP_NONE, &hitbox) && slider->listID == 5)
+        if (UIControl_ContainsPos(soundControl, &slider->position) && slider->listID == 5)
             slider->sliderChangedCB = OptionsMenu_UISlider_ChangedCB;
     }
 
@@ -374,7 +265,7 @@ void OptionsMenu_InitVideoOptionsMenu(void)
 {
     if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV) {
         EntityUIControl *videoControl_Win = OptionsMenu->videoControl_Windows;
-        OptionsRAM *optionsRAM            = (OptionsRAM *)globals->optionsRAM;
+        OptionsRAM *optionsRAM            = Options_GetOptionsRAM();
 
         Options_GetWinSize();
 
@@ -598,17 +489,8 @@ void OptionsMenu_SetupKBControlsMenu(int32 playerID)
 
     foreach_all(UISubHeading, subHeading)
     {
-        int32 x = control->startPos.x - control->cameraOffset.x;
-        int32 y = control->startPos.y - control->cameraOffset.y;
-
-        Hitbox hitbox;
-        hitbox.right  = control->size.x >> 17;
-        hitbox.left   = -(control->size.x >> 17);
-        hitbox.bottom = control->size.y >> 17;
-        hitbox.top    = -(control->size.y >> 17);
-
-        if (MathHelpers_PointInHitbox(x, y, subHeading->position.x, subHeading->position.y, FLIP_NONE, &hitbox)) {
-            subHeading->frameID = playerID + 19;
+        if (UIControl_ContainsPos(control, &subHeading->position)) {
+            subHeading->frameID = 19 + playerID;
             foreach_break;
         }
     }
@@ -639,7 +521,7 @@ void OptionsMenu_MenuSetupCB(void)
 {
     if (Options->changed) {
         UIWaitSpinner_StartWait();
-        Options_SaveOptionsBin(OptionsMenu_SaveOptionsCB_Load);
+        Options_SaveFile(OptionsMenu_SaveOptionsCB_Load);
     }
 
     EntityUIControl *control = OptionsMenu->optionsControl;
@@ -661,7 +543,7 @@ void OptionsMenu_TransitionCB_ReloadScene(void)
 
 void OptionsMenu_SaveOptionsCB_Action(bool32 success)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     UIWaitSpinner_FinishWait();
 
@@ -686,14 +568,14 @@ void OptionsMenu_LanguageButton_ActionCB(void)
 
     UIWaitSpinner_StartWait();
 
-    Options_SaveOptionsBin(OptionsMenu_SaveOptionsCB_Action);
+    Options_SaveFile(OptionsMenu_SaveOptionsCB_Action);
 }
 
 void OptionsMenu_ShaderButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
 
-    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
+    OptionsRAM *options = Options_GetOptionsRAM();
 
     options->screenShader   = self->selection;
     options->overrideShader = true;
@@ -707,7 +589,7 @@ void OptionsMenu_WindowScaleButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
 
-    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
+    OptionsRAM *options = Options_GetOptionsRAM();
     if (self->selection != 4) {
         RSDK.SetVideoSetting(VIDEOSETTING_WINDOW_WIDTH, WIDE_SCR_XSIZE * (self->selection + 1));
         RSDK.SetVideoSetting(VIDEOSETTING_WINDOW_HEIGHT, SCREEN_YSIZE * (self->selection + 1));
@@ -721,7 +603,7 @@ void OptionsMenu_BorderlessButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
 
-    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
+    OptionsRAM *options = Options_GetOptionsRAM();
 
     options->windowBorder = self->selection;
     RSDK.SetVideoSetting(VIDEOSETTING_BORDERED, self->selection);
@@ -733,7 +615,7 @@ void OptionsMenu_FullScreenButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
 
-    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
+    OptionsRAM *options = Options_GetOptionsRAM();
 
     options->windowed = self->selection ^ 1;
     RSDK.SetVideoSetting(VIDEOSETTING_WINDOWED, self->selection ^ 1);
@@ -745,7 +627,7 @@ void OptionsMenu_VSyncButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
 
-    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
+    OptionsRAM *options = Options_GetOptionsRAM();
 
     options->vSync = self->selection;
     RSDK.SetVideoSetting(VIDEOSETTING_VSYNC, self->selection);
@@ -757,7 +639,7 @@ void OptionsMenu_TripleBufferButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
 
-    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
+    OptionsRAM *options = Options_GetOptionsRAM();
 
     options->tripleBuffering = self->selection;
     RSDK.SetVideoSetting(VIDEOSETTING_TRIPLEBUFFERED, self->selection);
@@ -769,7 +651,7 @@ void OptionsMenu_UISlider_ChangedCB(void)
 {
     RSDK_THIS(UISlider);
 
-    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
+    OptionsRAM *options = Options_GetOptionsRAM();
 
     // Bug Details (?):
     // what the hell is up with this???????
@@ -929,7 +811,7 @@ void OptionsMenu_AreYouSureDlg_YesCB_EraseTimeAttack(void)
     UIWaitSpinner_StartWait();
     API.RemoveAllDBRows(globals->taTableID);
 
-    TimeAttackData_SaveTimeAttackDB(OptionsMenu_EraseSaveDataCB);
+    TimeAttackData_SaveDB(OptionsMenu_EraseSaveDataCB);
     LogHelpers_Print("TimeAttack table ID = %d, status = %d", globals->taTableID, globals->taTableLoaded);
 }
 
@@ -955,15 +837,15 @@ void OptionsMenu_AreYouSureDlg_YesCB_EraseReplays(void)
     API.SetupUserDBRowSorting(globals->taTableID);
 
     if (API.GetSortedUserDBRowCount(globals->replayTableID) <= 0) {
-        ReplayRecorder_SaveReplayDB(OptionsMenu_EraseReplaysCB);
+        ReplayDB_SaveDB(OptionsMenu_EraseReplaysCB);
     }
     else {
         int32 row = API.GetSortedUserDBRowID(globals->replayTableID, 0);
-        ReplayRecorder_DeleteReplay(row, OptionsMenu_EraseReplaysCB, true);
+        ReplayDB_DeleteReplay(row, OptionsMenu_EraseReplaysCB, true);
     }
 }
 
-void OptionsMenu_EraseReplaysCB(bool32 success) { TimeAttackData_SaveTimeAttackDB(OptionsMenu_EraseSaveDataCB); }
+void OptionsMenu_EraseReplaysCB(bool32 success) { TimeAttackData_SaveDB(OptionsMenu_EraseSaveDataCB); }
 
 void OptionsMenu_EraseReplaysButton_ActionCB(void)
 {

@@ -156,22 +156,16 @@ void PBL_Flipper_HandlePlayerInteractions(void)
             angle    = angle;
         }
 
-        Vector2 pos2;
-        pos2.x = 0;
-        pos2.y = 0;
+        Vector2 originVel = { 0, 0 };
         foreach_active(PBL_Player, player)
         {
-            int32 distanceX = (player->position.x - self->position.x) >> 8;
-            int32 distanceY = (player->position.y - self->position.y) >> 8;
             int32 posX      = player->position.x;
             int32 posY      = player->position.y;
             int32 velStoreX = player->velocity.x;
             int32 velStoreY = player->velocity.y;
 
-            player->position.x = distanceY * RSDK.Sin256(angle) + distanceX * RSDK.Cos256(angle) + self->position.x;
-            player->position.y = distanceY * RSDK.Cos256(angle) - distanceX * RSDK.Sin256(angle) + self->position.y;
-            player->velocity.x = (player->velocity.y >> 8) * RSDK.Sin256(angle) + (player->velocity.x >> 8) * RSDK.Cos256(angle);
-            player->velocity.y = (player->velocity.y >> 8) * RSDK.Cos256(angle) - (player->velocity.x >> 8) * RSDK.Sin256(angle);
+            Zone_RotateOnPivot(&player->position, &self->position, angle);
+            Zone_RotateOnPivot(&player->velocity, &originVel, angle);
 
             int32 velX = player->velocity.x;
             int32 velY = player->velocity.y;
@@ -214,8 +208,8 @@ void PBL_Flipper_HandlePlayerInteractions(void)
                             player->angle    = 0;
                         }
 
-                        Zone_RotateOnPivot(&player->velocity, &pos2, negAngle);
                         Zone_RotateOnPivot(&player->position, &self->position, negAngle);
+                        Zone_RotateOnPivot(&player->velocity, &originVel, negAngle);
                     }
                     break;
 
@@ -238,7 +232,7 @@ void PBL_Flipper_HandlePlayerInteractions(void)
                         }
 
                         Zone_RotateOnPivot(&player->position, &self->position, negAngle);
-                        Zone_RotateOnPivot(&player->velocity, &pos2, negAngle);
+                        Zone_RotateOnPivot(&player->velocity, &originVel, negAngle);
                     }
                     break;
 
@@ -262,14 +256,14 @@ void PBL_Flipper_HandlePlayerInteractions(void)
                     }
 
                     Zone_RotateOnPivot(&player->position, &self->position, negAngle);
-                    Zone_RotateOnPivot(&player->velocity, &pos2, negAngle);
+                    Zone_RotateOnPivot(&player->velocity, &originVel, negAngle);
                     break;
 
                 case C_BOTTOM:
                     player->velocity.y = -(velY >> 2);
 
                     Zone_RotateOnPivot(&player->position, &self->position, negAngle);
-                    Zone_RotateOnPivot(&player->velocity, &pos2, negAngle);
+                    Zone_RotateOnPivot(&player->velocity, &originVel, negAngle);
                     break;
 
                 default: break;

@@ -97,7 +97,7 @@ void EncoreIntro_PhantomRuby_CapsuleFallDown(void);
 
 void EncoreIntro_PlayerState_BuddySel(void);
 void EncoreIntro_PlayerState_HandleAir(void);
-void EncoreIntro_PlayerInput_None(void);
+void EncoreIntro_PlayerInput_BuddySel(void);
 
 #endif
 

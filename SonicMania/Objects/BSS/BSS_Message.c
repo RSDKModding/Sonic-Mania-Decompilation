@@ -203,7 +203,7 @@ void BSS_Message_State_SaveGameProgress(void)
         self->color -= 0x80808;
     }
     else {
-        EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+        EntityMenuParam *param = MenuParam_GetParam();
 
         if (param->bssSelection == BSS_SELECTION_EXTRAS) {
             RSDK.SetScene("Presentation", "Menu");
@@ -232,7 +232,7 @@ void BSS_Message_State_LoadPrevScene(void)
         globals->blueSpheresInit = true;
         GameProgress_ShuffleBSSID();
 
-        SaveRAM *saveRAM = SaveGame->saveRAM;
+        SaveRAM *saveRAM = SaveGame_GetSaveRAM();
 #if MANIA_USE_PLUS
         if (globals->gameMode == MODE_ENCORE)
             RSDK.SetScene("Encore Mode", "");

@@ -40,8 +40,8 @@ struct EntityKleptoMobile {
     int32 invincibilityTimer;
     int32 health;
     Vector2 originPos;
-    int32 frameIDs[10];
-    Vector2 framePositions[10];
+    int32 armAngles[10]; // array of angles for the arm nodes, not actually used lol, possibly leftover from ERZ/PhantomKing?
+    Vector2 armPositions[10];
     Vector2 armBezierPos;
     Vector2 bashArmTargetPos;
     Vector2 bashArmStartPos;
@@ -51,7 +51,7 @@ struct EntityKleptoMobile {
     bool32 canBashAttack;
     Vector2 rubyPos;
     bool32 holdingRuby;
-    int32 angle2;
+    int32 armAngle;
     int32 circleRadius;
     int32 explosionVolume;
     EntityKleptoMobile *parent;
@@ -99,7 +99,7 @@ void KleptoMobile_State_CutsceneControlled(void);
 void KleptoMobile_State_MoveAround(void);
 void KleptoMobile_State_Hover(void);
 void KleptoMobile_HandleArmPositions(void);
-void KleptoMobile_State_HandleChargeFinish(void);
+void KleptoMobile_HandleChargeFinish(void);
 void KleptoMobile_State_FirstChargeAttack(void);
 void KleptoMobile_State_NextChargeAttacks(void);
 void KleptoMobile_State_Switch(void);

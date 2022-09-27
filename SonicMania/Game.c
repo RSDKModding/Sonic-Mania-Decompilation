@@ -805,7 +805,9 @@ void InitGameLogic(void)
     RSDK_REGISTER_OBJECT(UIRankButton);
     RSDK_REGISTER_OBJECT(UIReplayCarousel);
 #endif
+#if GAME_VERSION != VER_100
     RSDK_REGISTER_OBJECT(UIResPicker);
+#endif
     RSDK_REGISTER_OBJECT(UISaveSlot);
 #if MANIA_USE_PLUS
     RSDK_REGISTER_OBJECT(UIShifter);
@@ -827,7 +829,9 @@ void InitGameLogic(void)
     RSDK_REGISTER_OBJECT(UIVsZoneButton);
     RSDK_REGISTER_OBJECT(UIWaitSpinner);
     RSDK_REGISTER_OBJECT(UIWidgets);
+#if GAME_VERSION != VER_100
     RSDK_REGISTER_OBJECT(UIWinSize);
+#endif
     RSDK_REGISTER_OBJECT(UncurlPlant);
     RSDK_REGISTER_OBJECT(Valve);
     RSDK_REGISTER_OBJECT(VanishPlatform);

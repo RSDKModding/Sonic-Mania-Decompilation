@@ -24,88 +24,61 @@ void CompetitionMenu_StageLoad(void) { CompetitionMenu->timer = 120; }
 
 void CompetitionMenu_Initialize(void)
 {
-    String string;
-    INIT_STRING(string);
+    String tag;
+    INIT_STRING(tag);
 
     foreach_all(UIControl, control)
     {
-        RSDK.SetString(&string, "Competition");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Competition");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             CompetitionMenu->competitionControl = control;
 
-        RSDK.SetString(&string, "Competition Legacy");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Competition Legacy");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             CompetitionMenu->competitionControl_Legacy = control;
 
-        RSDK.SetString(&string, "Competition Rules");
-        if (RSDK.CompareStrings(&string, &control->tag, false)) {
+        RSDK.SetString(&tag, "Competition Rules");
+        if (RSDK.CompareStrings(&tag, &control->tag, false)) {
             CompetitionMenu->compRulesControl = control;
             control->backPressCB              = CompetitionMenu_CompRules_BackPressCB;
         }
 
-        RSDK.SetString(&string, "Competition Zones");
-        if (RSDK.CompareStrings(&string, &control->tag, false)) {
+        RSDK.SetString(&tag, "Competition Zones");
+        if (RSDK.CompareStrings(&tag, &control->tag, false)) {
             CompetitionMenu->compZoneControl = control;
             control->backPressCB             = CompetitionMenu_CompZones_BackPressCB;
         }
 
-        RSDK.SetString(&string, "Competition Round");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Competition Round");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             CompetitionMenu->compRoundControl = control;
 
-        RSDK.SetString(&string, "Competition Total");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Competition Total");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             CompetitionMenu->compTotalControl = control;
     }
 
-    Hitbox hitbox;
     foreach_all(UIInfoLabel, label)
     {
         EntityUIControl *roundControl = CompetitionMenu->compRoundControl;
-        int32 x                       = roundControl->startPos.x - roundControl->cameraOffset.x;
-        int32 y                       = roundControl->startPos.y - roundControl->cameraOffset.y;
+        EntityUIControl *totalControl = CompetitionMenu->compTotalControl;
 
-        hitbox.right  = roundControl->size.x >> 17;
-        hitbox.left   = -(roundControl->size.x >> 17);
-        hitbox.bottom = roundControl->size.y >> 17;
-        hitbox.top    = -(roundControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, label->position.x, label->position.y, FLIP_NONE, &hitbox))
+        if (UIControl_ContainsPos(roundControl, &label->position))
             CompetitionMenu->resultsLabel_Round = label;
 
-        EntityUIControl *totalControl = CompetitionMenu->compTotalControl;
-        x                             = totalControl->startPos.x - totalControl->cameraOffset.x;
-        y                             = totalControl->startPos.y - totalControl->cameraOffset.y;
-
-        hitbox.right  = totalControl->size.x >> 17;
-        hitbox.left   = -(totalControl->size.x >> 17);
-        hitbox.bottom = totalControl->size.y >> 17;
-        hitbox.top    = -(totalControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, label->position.x, label->position.y, FLIP_NONE, &hitbox))
+        if (UIControl_ContainsPos(totalControl, &label->position))
             CompetitionMenu->resultsLabel_Total = label;
     }
 
     foreach_all(UIButtonPrompt, prompt)
     {
-        EntityUIControl *compControl = CompetitionMenu->competitionControl;
-        int32 x                      = compControl->startPos.x - compControl->cameraOffset.x;
-        int32 y                      = compControl->startPos.y - compControl->cameraOffset.y;
+        EntityUIControl *compControl        = CompetitionMenu->competitionControl;
+        EntityUIControl *compControl_Legacy = CompetitionMenu->competitionControl_Legacy;
 
-        hitbox.right  = compControl->size.x >> 17;
-        hitbox.left   = -(compControl->size.x >> 17);
-        hitbox.bottom = compControl->size.y >> 17;
-        hitbox.top    = -(compControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox) && prompt->buttonID == 5)
+        if (UIControl_ContainsPos(compControl, &prompt->position) && prompt->buttonID == 5)
             CompetitionMenu->startCompPrompt = prompt;
 
-        EntityUIControl *compControl_Legacy = CompetitionMenu->competitionControl_Legacy;
-        x                                   = compControl_Legacy->startPos.x - compControl_Legacy->cameraOffset.x;
-        y                                   = compControl_Legacy->startPos.y - compControl_Legacy->cameraOffset.y;
-
-        hitbox.right  = compControl_Legacy->size.x >> 17;
-        hitbox.left   = -(compControl_Legacy->size.x >> 17);
-        hitbox.bottom = compControl_Legacy->size.y >> 17;
-        hitbox.top    = -(compControl_Legacy->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox) && prompt->buttonID == 5)
+        if (UIControl_ContainsPos(compControl_Legacy, &prompt->position) && prompt->buttonID == 5)
             CompetitionMenu->startCompPrompt_Legacy = prompt;
     }
 }
@@ -120,16 +93,7 @@ void CompetitionMenu_SetupActions(void)
 
     foreach_all(UIButton, button)
     {
-        int32 x = rulesControl->startPos.x - rulesControl->cameraOffset.x;
-        int32 y = rulesControl->startPos.y - rulesControl->cameraOffset.y;
-
-        Hitbox hitbox;
-        hitbox.right  = rulesControl->size.x >> 17;
-        hitbox.left   = -(rulesControl->size.x >> 17);
-        hitbox.bottom = rulesControl->size.y >> 17;
-        hitbox.top    = -(rulesControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(x, y, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 9
-            && button->frameID == 2)
+        if (UIControl_ContainsPos(rulesControl, &button->position) && button->listID == 9 && button->frameID == 2)
             button->actionCB = CompetitionMenu_RulesButton_ActionCB;
     }
 
@@ -165,7 +129,7 @@ void CompetitionMenu_SetupActions(void)
 
 void CompetitionMenu_HandleMenuReturn(void)
 {
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
 
     if (session->inMatch) {
         foreach_all(UIControl, control)
@@ -346,7 +310,7 @@ void CompetitionMenu_SetupSplitScreenChoices(int32 playerCount)
 }
 void CompetitionMenu_SetupSplitScreen(int32 mode)
 {
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
     int32 startVert_3P[15];
     uint8 startVert_2P[10];
 
@@ -417,7 +381,7 @@ void CompetitionMenu_SetupSplitScreen(int32 mode)
 
 void CompetitionMenu_SetupResultsUI(EntityUIControl *roundControl)
 {
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
 
     int32 offsets[] = { -580000, 0x580000, 0x0, 0x0, -0x7A0000, 0x000000, 0x7A0000, 0x000000, -0x9C0000, -0x340000, 0x340000, 0x9C0000 };
 
@@ -515,8 +479,8 @@ void CompetitionMenu_Rules_MenuSetupCB(void)
 
 void CompetitionMenu_StartMatch(void)
 {
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
-    EntityMenuParam *param            = (EntityMenuParam *)globals->menuParam;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
+    EntityMenuParam *param            = MenuParam_GetParam();
 
     sprintf_s(param->menuTag, (int32)sizeof(param->menuTag), "Competition Round");
     session->stageIndex  = CompetitionMenu->compZoneControl->buttonID;
@@ -565,7 +529,7 @@ void CompetitionMenu_RulesButton_ActionCB(void)
         control = CompetitionMenu->competitionControl_Legacy;
 
     EntityUIControl *rulesControl     = CompetitionMenu->compRulesControl;
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
 
     int32 matchCount = 0;
     foreach_all(UIVsRoundPicker, picker)
@@ -627,7 +591,7 @@ void CompetitionMenu_GotoCompTotal(void) { UIControl_MatchMenuTag("Competition T
 
 void CompetitionMenu_Round_ProcessInputCB(void)
 {
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
     if (UIControl->anyConfirmPress) {
         bool32 toCompTotal = false;
 
@@ -662,7 +626,7 @@ void CompetitionMenu_Round_ProcessInputCB(void)
 
 void CompetitionMenu_Round_MenuSetupCB(void)
 {
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
     EntityUIControl *roundControl     = CompetitionMenu->compRoundControl;
     CompetitionMenu_SetupResultsUI(roundControl);
 
@@ -791,7 +755,7 @@ void CompetitionMenu_GotoCompetition(void) { UIControl_MatchMenuTag(API.CheckDLC
 
 void CompetitionMenu_Results_ProcessInputCB(void)
 {
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
     if (UIControl->anyConfirmPress) {
         int32 mostWins = 0;
         for (int32 p = 0; p < session->playerCount; ++p) {
@@ -821,7 +785,7 @@ void CompetitionMenu_Results_ProcessInputCB(void)
 void CompetitionMenu_Results_MenuSetupCB(void)
 {
     EntityUIControl *totalControl     = CompetitionMenu->compTotalControl;
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
 
     CompetitionMenu_SetupResultsUI(totalControl);
     CompetitionMenu->timer = 120;
@@ -955,7 +919,7 @@ bool32 CompetitionMenu_CompZones_BackPressCB(void)
 
 void CompetitionMenu_GotoPuyoVS(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     TimeAttackData_Clear();
 

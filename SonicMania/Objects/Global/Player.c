@@ -19,9 +19,10 @@ void Player_Update(void)
     // Cheat prevention, you can't play as mighty or ray if you don't have plus installed & active
     if (!API.CheckDLC(DLC_PLUS) && self->characterID > ID_KNUCKLES)
         Player_ChangeCharacter(self, ID_SONIC);
-#endif
 
     StateMachine_Run(self->stateInputReplay);
+#endif
+
     StateMachine_Run(self->stateInput);
 
     if (self->classID == Player->classID) {
@@ -120,8 +121,10 @@ void Player_Update(void)
         if (self->forceRespawn)
             self->state = Player_State_HoldRespawn;
 
+#if GAME_VERSION != VER_100
         if (self->isTransforming)
             self->state = Player_State_Transform;
+#endif
 
         StateMachine_Run(self->state);
 
@@ -654,7 +657,7 @@ void Player_Create(void *data)
         Player->powerups = 0;
 
         // Handle Lives/Score setup
-        EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+        EntityCompetitionSession *session = CompetitionSession_GetSession();
         if (globals->gameMode == MODE_COMPETITION) {
             self->lives    = session->lives[self->playerID];
             self->score    = 0;
@@ -725,7 +728,7 @@ void Player_StageLoad(void)
     // Handle Sidekick stuff setup
     Player->nextLeaderPosID = 1;
     Player->lastLeaderPosID = 0;
-#if MANIA_USE_PLUS
+#if GAME_VERSION != VER_100
     Player->disableP2KeyCheck = false;
 #endif
 
@@ -852,7 +855,7 @@ void Player_LoadSprites(void)
 }
 void Player_LoadSpritesVS(void)
 {
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
 
     foreach_all(Player, spawn)
     {
@@ -914,7 +917,7 @@ void Player_GiveScore(EntityPlayer *player, int32 score)
 }
 void Player_GiveRings(EntityPlayer *player, int32 amount, bool32 playSfx)
 {
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
 
     if (globals->gameMode == MODE_COMPETITION)
         session->totalRings[player->playerID] += amount;
@@ -1166,23 +1169,26 @@ bool32 Player_TryTransform(EntityPlayer *player, uint8 emeraldMasks)
         return false;
 
     uint8 emeralds = emeraldMasks;
+#if MANIA_USE_PLUS
     if (emeraldMasks == 0xFF) // 0xFF seems to be the "force transform" flag
         emeralds = 0x7F;
 
-#if MANIA_USE_PLUS
     if (Player->canSuperCB) {
         if (!Player->canSuperCB(false))
             return false;
     }
 #endif
 
+#if MANIA_USE_PLUS
     if ((player->superState >= SUPERSTATE_SUPER || emeralds != 0x7F || player->rings < 50) && emeraldMasks != 0xFF)
         return false;
 
-#if MANIA_USE_PLUS
     RSDK.StopSfx(Player->sfxSwapFail);
     if (globals->secrets & SECRET_SUPERDASH)
         player->stateAbility = ERZStart_Player_StartSuperFly;
+#else
+    if (player->superState >= SUPERSTATE_SUPER || emeralds != 0x7F || player->rings < 50)
+        return false;
 #endif
 
     switch (player->characterID) {
@@ -1229,17 +1235,21 @@ bool32 Player_TryTransform(EntityPlayer *player, uint8 emeraldMasks)
     if (player->characterID == ID_SONIC && !player->isChibi)
         player->aniFrames = Player->superFrames;
 
+#if MANIA_USE_PLUS
     if (emeraldMasks == 0xFF) {
         player->superState = SUPERSTATE_SUPER;
         Player_UpdatePhysicsState(player);
     }
     else {
+#endif
         if (player->isChibi)
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, true, 0);
         else
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_TRANSFORM, &player->animator, true, 0);
 
+#if GAME_VERSION != VER_100
         player->invincibleTimer = 60;
+#endif
         player->velocity.x      = 0;
         player->velocity.y      = 0;
         player->groundVel       = 0;
@@ -1248,18 +1258,24 @@ bool32 Player_TryTransform(EntityPlayer *player, uint8 emeraldMasks)
         player->nextGroundState = StateMachine_None;
         player->interaction     = false;
         player->state           = Player_State_Transform;
+#if GAME_VERSION != VER_100
         player->isTransforming  = true;
+#endif
 
 #if MANIA_USE_PLUS
         if (!ERZStart && globals->superMusicEnabled)
+            Music_FadeOut(0.8);
 #else
         if (!ERZStart)
+            Music_TransitionTrack(TRACK_SUPER, 0.04);
 #endif
-            Music_FadeOut(0.8);
 
         player->jumpAbilityState = 0;
         player->superState       = SUPERSTATE_FADEIN;
+
+#if MANIA_USE_PLUS
     }
+#endif
 
     player->superBlendAmount   = 0;
     player->superBlendState    = 0;
@@ -1645,10 +1661,14 @@ void Player_HandleSuperForm(void)
     if (self->superState == SUPERSTATE_SUPER) {
         bool32 canStopSuper = false;
         if (!SceneInfo->timeEnabled && !ERZStart) {
+#if GAME_VERSION != VER_100
             if (!PhantomEgg || PhantomEgg->disableSuperForm) {
+#endif
                 self->superState = SUPERSTATE_FADEOUT;
                 canStopSuper     = true;
+#if GAME_VERSION != VER_100
             }
+#endif
         }
 
         if (!canStopSuper) {
@@ -1731,11 +1751,11 @@ bool32 Player_CheckP2KeyPress(void)
         return false;
 #endif
 
-#if MANIA_USE_PLUS
-    if (self->controllerID > PLAYER_COUNT || Player->disableP2KeyCheck)
+#if GAME_VERSION != VER_100
+    if (self->controllerID > CONT_P4 || Player->disableP2KeyCheck)
         return false;
 #else
-    if (self->controllerID > PLAYER_COUNT)
+    if (self->controllerID > CONT_P4)
         return false;
 #endif
 
@@ -1938,7 +1958,7 @@ void Player_HandleDeath(EntityPlayer *player)
 #endif
             globals->coolBonus[player->playerID] = 0;
 
-            EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+            EntityCompetitionSession *session = CompetitionSession_GetSession();
             if (globals->gameMode == MODE_COMPETITION)
                 session->lives[player->playerID] = player->lives;
 
@@ -1951,7 +1971,7 @@ void Player_HandleDeath(EntityPlayer *player)
                         player->classID = TYPE_BLANK;
                         RSDK.ResetEntitySlot(SLOT_GAMEOVER, GameOver->classID, INT_TO_VOID(true));
 
-                        SaveRAM *saveRAM = SaveGame->saveRAM;
+                        SaveRAM *saveRAM = SaveGame_GetSaveRAM();
                         if (globals->gameMode == MODE_COMPETITION) {
                             int32 playerID                    = RSDK.GetEntitySlot(player);
                             if (!session->finishState[playerID]) {
@@ -1989,7 +2009,7 @@ void Player_HandleDeath(EntityPlayer *player)
                     }
                     else if (globals->gameMode != MODE_COMPETITION) {
                         // Regular Death, fade out and respawn
-                        SaveRAM *saveRAM = SaveGame->saveRAM;
+                        SaveRAM *saveRAM = SaveGame_GetSaveRAM();
                         if (saveRAM) {
                             saveRAM->lives    = player->lives;
                             saveRAM->score    = player->score;
@@ -3543,9 +3563,9 @@ void Player_HandleFlyCarry(EntityPlayer *leader)
 
     int32 off;
     if (leader->animator.animationID == ANI_JUMP)
-        off = self->position.y + 0x210000;
+        off = self->position.y + TO_FIXED(33);
     else
-        off = self->position.y + 0x1C0000;
+        off = self->position.y + TO_FIXED(28);
 
     if (leader->state != Player_State_FlyCarried && (!leader->onGround || self->velocity.y < 0)) {
         bool32 canFlyCarry = (leader->state == Player_State_Roll || leader->state == Player_State_LookUp || leader->state == Player_State_Crouch
@@ -3554,7 +3574,7 @@ void Player_HandleFlyCarry(EntityPlayer *leader)
             canFlyCarry = canFlyCarry && (!((1 << RSDK.GetEntitySlot(leader)) & LottoMachine->activePlayers));
 
         if (canFlyCarry && (leader->animator.animationID != ANI_FAN)) {
-            if (abs(self->position.x - leader->position.x) < 0xC0000 && abs(off - leader->position.y) < 0xC0000 && !self->flyCarryTimer
+            if (abs(self->position.x - leader->position.x) < TO_FIXED(12) && abs(off - leader->position.y) < TO_FIXED(12) && !self->flyCarryTimer
                 && !leader->down && !leader->onGround) {
                 RSDK.SetSpriteAnimation(leader->aniFrames, ANI_HANG, &leader->animator, false, 0);
                 leader->state           = Player_State_FlyCarried;
@@ -3592,8 +3612,8 @@ void Player_HandleFlyCarry(EntityPlayer *leader)
         self->velocity.x = entityXVel;
         self->velocity.y = entityYVel;
 
-        leader->position.y = entityYPos + 0x1C0000;
         leader->position.x = entityXPos;
+        leader->position.y = entityYPos + TO_FIXED(28);
         leader->velocity.x = entityXVel;
         leader->velocity.y = entityYVel;
 
@@ -3766,7 +3786,9 @@ void Player_State_Air(void)
 {
     RSDK_THIS(Player);
 
+#if GAME_VERSION != VER_100
     self->tileCollisions = TILECOLLISION_DOWN;
+#endif
     Player_HandleAirFriction();
 
     if (self->onGround) {
@@ -4201,28 +4223,13 @@ void Player_State_Transform(void)
 
     self->position.x += Zone->autoScrollSpeed;
 
+#if GAME_VERSION != VER_100
     self->invincibleTimer = 60;
-
-    RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x140000, true);
-
-    if (++self->timer != 36) {
-        if (!self->isChibi) {
-            if (self->animator.frameID == self->animator.frameCount - 1) {
-                self->isTransforming = false;
-                self->interaction    = true;
-                self->state          = Player_State_Air;
-                RSDK.SetSpriteAnimation(self->aniFrames, ANI_WALK, &self->animator, false, 3);
-
-#if MANIA_USE_PLUS
-                if (!ERZStart && globals->superMusicEnabled)
-#else
-                if (!ERZStart)
 #endif
-                    Music_PlayJingle(TRACK_SUPER);
-            }
-        }
-    }
-    else {
+
+    RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, TO_FIXED(20), true);
+
+    if (++self->timer == 36) {
         EntityImageTrail *trail = RSDK_GET_ENTITY(2 * Player->playerCount + self->playerID, ImageTrail);
         RSDK.ResetEntity(trail, ImageTrail->classID, self);
 
@@ -4233,29 +4240,36 @@ void Player_State_Transform(void)
         EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + self->playerID, Shield);
         RSDK.ResetEntity(shield, SuperSparkle->classID, self);
         self->superState = SUPERSTATE_SUPER;
+#if GAME_VERSION == VER_100
+        self->invincibleTimer = 60;
+#endif
         Player_UpdatePhysicsState(self);
 
-        if (!self->isChibi) {
-            if (self->animator.frameID == self->animator.frameCount - 1) {
-                self->isTransforming = false;
-                self->interaction    = true;
-                self->state          = Player_State_Air;
+        if (self->isChibi) {
+#if GAME_VERSION != VER_100
+            self->isTransforming = false;
+#endif
+            self->interaction = true;
+            self->state       = Player_State_Air;
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_WALK, &self->animator, false, 3);
+#if MANIA_USE_PLUS
+            Music_PlayJingle(TRACK_SUPER);
+#endif
+        }
+    }
+
+    if (!self->isChibi && self->animator.frameID == self->animator.frameCount - 1) {
+#if GAME_VERSION != VER_100
+        self->isTransforming = false;
+#endif
+        self->interaction = true;
+        self->state       = Player_State_Air;
+        RSDK.SetSpriteAnimation(self->aniFrames, ANI_WALK, &self->animator, false, 3);
 
 #if MANIA_USE_PLUS
-                if (!ERZStart && globals->superMusicEnabled)
-#else
-                if (!ERZStart)
-#endif
-                    Music_PlayJingle(TRACK_SUPER);
-            }
-        }
-        else {
-            self->isTransforming = false;
-            self->interaction    = true;
-            self->state          = Player_State_Air;
-            RSDK.SetSpriteAnimation(self->aniFrames, ANI_WALK, &self->animator, false, 3);
+        if (!ERZStart && globals->superMusicEnabled)
             Music_PlayJingle(TRACK_SUPER);
-        }
+#endif
     }
 }
 void Player_State_Hurt(void)
@@ -6008,22 +6022,17 @@ void Player_JumpAbility_Sonic(void)
 {
     RSDK_THIS(Player);
 
-    bool32 dropdashAllowed = false;
+    bool32 dropdashDisabled = self->jumpAbilityState <= 1;
 
     if (self->jumpAbilityState == 1) {
 #if MANIA_USE_PLUS
-        if (self->stateInput != Player_Input_P2_AI
-            || (self->up
-#if MANIA_USE_PLUS
-                && globals->gameMode != MODE_ENCORE
-#endif
-                )) {
+        if (self->stateInput != Player_Input_P2_AI || (self->up && globals->gameMode != MODE_ENCORE)) {
 #else
         if (self->stateInput != Player_Input_P2_AI) {
 #endif
             if (self->jumpPress
 #if GAME_VERSION == VER_100
-                && !Player_TryTransform(self, SaveGame->saveRAM->chaosEmeralds)
+                && !Player_TryTransform(self, SaveGame_GetSaveRAM()->collectedEmeralds)
 #endif
             ) {
                 EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(self), Shield);
@@ -6049,10 +6058,8 @@ void Player_JumpAbility_Sonic(void)
                             // [Fallthrough]
                         case SHIELD_BLUE:
                             // returns 0 if dropdash (bit 4) is disabled
-                            // returns 1 if dropdash is enabled and instashield (bit 3) is disabled
-                            // returns 2 if dropdash AND instashield are enabled
-                            if (!(globals->medalMods & MEDAL_NODROPDASH))
-                                self->jumpAbilityState = (~(globals->medalMods & 0xFF) >> 3) & 2;
+                            // returns 2 if dropdash is enabled
+                            self->jumpAbilityState = (~(globals->medalMods & 0xFF) >> 3) & 2;
                             break;
 
                         case SHIELD_BUBBLE:
@@ -6095,16 +6102,16 @@ void Player_JumpAbility_Sonic(void)
 #if GAME_VERSION != VER_100
             else {
                 if (ControllerInfo[self->controllerID].keyY.press)
-                    Player_TryTransform(self, SaveGame->saveRAM->chaosEmeralds);
+                    Player_TryTransform(self, SaveGame_GetSaveRAM()->collectedEmeralds);
             }
 #endif
             return;
         }
 
-        dropdashAllowed = true;
+        dropdashDisabled = true;
     }
 
-    if ((self->jumpAbilityState >= 2 || dropdashAllowed) && self->jumpHold) {
+    if (!dropdashDisabled && self->jumpHold) {
         if (++self->jumpAbilityState >= 22) {
             self->state           = Player_State_DropDash;
             self->nextGroundState = StateMachine_None;
@@ -6126,7 +6133,7 @@ void Player_JumpAbility_Tails(void)
 #endif
                 ))
 #if GAME_VERSION == VER_100
-        && !Player_TryTransform(self, SaveGame->saveRAM->chaosEmeralds)
+        && !Player_TryTransform(self, SaveGame_GetSaveRAM()->collectedEmeralds)
 #endif
     ) {
         if (!self->invertGravity) {
@@ -6144,7 +6151,7 @@ void Player_JumpAbility_Tails(void)
     }
 #if GAME_VERSION != VER_100
     else if (ControllerInfo[self->controllerID].keyY.press)
-        Player_TryTransform(self, SaveGame->saveRAM->chaosEmeralds);
+        Player_TryTransform(self, SaveGame_GetSaveRAM()->collectedEmeralds);
 #endif
 }
 void Player_JumpAbility_Knux(void)
@@ -6159,7 +6166,7 @@ void Player_JumpAbility_Knux(void)
 #endif
                 ))
 #if GAME_VERSION == VER_100
-        && !Player_TryTransform(self, SaveGame->saveRAM->chaosEmeralds)
+        && !Player_TryTransform(self, SaveGame_GetSaveRAM()->collectedEmeralds)
 #endif
     ) {
         if (!self->invertGravity) {
@@ -6187,7 +6194,7 @@ void Player_JumpAbility_Knux(void)
     }
 #if GAME_VERSION != VER_100
     else if (ControllerInfo[self->controllerID].keyY.press)
-        Player_TryTransform(self, SaveGame->saveRAM->chaosEmeralds);
+        Player_TryTransform(self, SaveGame_GetSaveRAM()->collectedEmeralds);
 #endif
 }
 #if MANIA_USE_PLUS
@@ -6219,7 +6226,7 @@ void Player_JumpAbility_Mighty(void)
             }
         }
         else if (ControllerInfo[self->controllerID].keyY.press)
-            Player_TryTransform(self, SaveGame->saveRAM->chaosEmeralds);
+            Player_TryTransform(self, SaveGame_GetSaveRAM()->collectedEmeralds);
     }
     else if (--self->jumpAbilityState == 1)
         self->jumpAbilityState = 0;
@@ -6270,7 +6277,7 @@ void Player_JumpAbility_Ray(void)
         }
     }
     else if (ControllerInfo[self->controllerID].keyY.press)
-        Player_TryTransform(self, SaveGame->saveRAM->chaosEmeralds);
+        Player_TryTransform(self, SaveGame_GetSaveRAM()->collectedEmeralds);
 }
 
 bool32 Player_SfxCheck_RayDive(void) { return Player->rayDiveTimer > 0; }
@@ -6290,7 +6297,7 @@ void Player_Input_P1(void)
 {
     RSDK_THIS(Player);
 
-    if (self->controllerID < PLAYER_COUNT) {
+    if (self->controllerID <= CONT_P4) {
         if (globals->gameMode != MODE_COMPETITION || Announcer->finishedCountdown) {
             RSDKControllerState *controller = &ControllerInfo[self->controllerID];
             RSDKAnalogState *stick          = &AnalogStickInfoL[self->controllerID];

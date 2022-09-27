@@ -71,6 +71,7 @@ void Batbrain_DebugSpawn(void)
 void Batbrain_CheckPlayerCollisions(void)
 {
     RSDK_THIS(Batbrain);
+
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, &Batbrain->hitboxBadnik))
@@ -81,6 +82,7 @@ void Batbrain_CheckPlayerCollisions(void)
 void Batbrain_CheckOffScreen(void)
 {
     RSDK_THIS(Batbrain);
+
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
         self->position.x = self->startPos.x;
         self->position.y = self->startPos.y;
@@ -91,6 +93,7 @@ void Batbrain_CheckOffScreen(void)
 void Batbrain_State_Init(void)
 {
     RSDK_THIS(Batbrain);
+
     self->active     = ACTIVE_NORMAL;
     self->velocity.x = 0;
     self->velocity.y = 0;
@@ -101,6 +104,7 @@ void Batbrain_State_Init(void)
 void Batbrain_State_CheckPlayerInRange(void)
 {
     RSDK_THIS(Batbrain);
+
     int32 targetDistance       = 0x7FFFFFFF;
     EntityPlayer *backupPlayer = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *targetPlayer = NULL;
@@ -122,21 +126,20 @@ void Batbrain_State_CheckPlayerInRange(void)
         }
     }
 
+    EntityPlayer *playerPtr = backupPlayer;
     if (targetPlayer) {
-        player         = targetPlayer;
+        playerPtr      = targetPlayer;
         int32 distance = targetPlayer->position.y - self->position.y;
         if (distance >= 0 && distance <= 0x800000 && !RSDK.Rand(0, 8)) {
             self->state   = Batbrain_State_DropToPlayer;
-            self->targetY = player->position.y;
-            self->target  = player;
+            self->targetY = playerPtr->position.y;
+            self->target  = playerPtr;
             RSDK.SetSpriteAnimation(Batbrain->aniFrames, 1, &self->animator, true, 0);
         }
     }
-    else {
-        player = backupPlayer;
-    }
 
-    self->direction = player->position.x >= self->position.x;
+    self->direction = playerPtr->position.x >= self->position.x;
+
     Batbrain_CheckPlayerCollisions();
     Batbrain_CheckOffScreen();
 }
@@ -179,6 +182,7 @@ void Batbrain_State_Fly(void)
         RSDK.PlaySfx(Batbrain->sfxFlap, false, 255);
 
     RSDK.ProcessAnimation(&self->animator);
+
     Batbrain_CheckPlayerCollisions();
     Batbrain_CheckOffScreen();
 }
@@ -191,6 +195,7 @@ void Batbrain_State_FlyToCeiling(void)
     self->position.y += self->velocity.y;
     self->velocity.y -= 0x1800;
 
+    // RWALL? shouldn't this be ROOF? is this a holdover from v4's weird id system?
     if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, 0, -0xC0000, true)) {
         self->velocity.x = 0;
         self->velocity.y = 0;
@@ -202,6 +207,7 @@ void Batbrain_State_FlyToCeiling(void)
         RSDK.PlaySfx(Batbrain->sfxFlap, false, 255);
 
     RSDK.ProcessAnimation(&self->animator);
+
     Batbrain_CheckPlayerCollisions();
     Batbrain_CheckOffScreen();
 }

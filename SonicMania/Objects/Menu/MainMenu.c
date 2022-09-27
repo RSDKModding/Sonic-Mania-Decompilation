@@ -50,13 +50,13 @@ void MainMenu_StageLoad(void) {}
 
 void MainMenu_Initialize(void)
 {
-    String text;
-    INIT_STRING(text);
+    String tag;
+    INIT_STRING(tag);
+    RSDK.SetString(&tag, "Main Menu");
 
     foreach_all(UIControl, control)
     {
-        RSDK.SetString(&text, "Main Menu");
-        if (RSDK.CompareStrings(&text, &control->tag, false)) {
+        if (RSDK.CompareStrings(&tag, &control->tag, false)) {
             MainMenu->menuControl = control;
             control->backPressCB  = MainMenu_BackPressCB_ReturnToTitle;
         }
@@ -66,31 +66,13 @@ void MainMenu_Initialize(void)
 
     foreach_all(UIButtonPrompt, prompt)
     {
-        int32 x = menuControl->startPos.x - menuControl->cameraOffset.x;
-        int32 y = menuControl->startPos.y - menuControl->cameraOffset.y;
-
-        Hitbox hitbox;
-        hitbox.right  = (menuControl->size.x >> 17);
-        hitbox.left   = -(menuControl->size.x >> 17);
-        hitbox.bottom = (menuControl->size.y >> 17);
-        hitbox.top    = -(menuControl->size.y >> 17);
-
-        if (MathHelpers_PointInHitbox(x, y, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox) && !prompt->buttonID)
+        if (UIControl_ContainsPos(menuControl, &prompt->position) && prompt->buttonID == 0)
             MainMenu->confirmPrompt = prompt;
     }
 
     foreach_all(UIDiorama, diorama)
     {
-        int32 x = menuControl->startPos.x - menuControl->cameraOffset.x;
-        int32 y = menuControl->startPos.y - menuControl->cameraOffset.y;
-
-        Hitbox hitbox;
-        hitbox.right  = (menuControl->size.x >> 17);
-        hitbox.left   = -(menuControl->size.x >> 17);
-        hitbox.bottom = (menuControl->size.y >> 17);
-        hitbox.top    = -(menuControl->size.y >> 17);
-
-        if (MathHelpers_PointInHitbox(x, y, diorama->position.x, diorama->position.y, FLIP_NONE, &hitbox)) {
+        if (UIControl_ContainsPos(menuControl, &diorama->position)) {
             MainMenu->diorama = diorama;
             diorama->parent   = MainMenu->menuControl;
         }

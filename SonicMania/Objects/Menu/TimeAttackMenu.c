@@ -62,35 +62,35 @@ void TimeAttackMenu_StageLoad(void)
 
 void TimeAttackMenu_Initialize(void)
 {
-    String string;
-    INIT_STRING(string);
+    String tag;
+    INIT_STRING(tag);
 
     foreach_all(UIControl, control)
     {
-        RSDK.SetString(&string, "Time Attack");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Time Attack");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             TimeAttackMenu->timeAttackControl = control;
 
-        RSDK.SetString(&string, "Time Attack Legacy");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Time Attack Legacy");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             TimeAttackMenu->timeAttackControl_Legacy = control;
 
-        RSDK.SetString(&string, "Time Attack Zones");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Time Attack Zones");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             TimeAttackMenu->taZoneSelControl = control;
 
-        RSDK.SetString(&string, "Time Attack Detail");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Time Attack Detail");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             TimeAttackMenu->taDetailsControl = control;
 
-        RSDK.SetString(&string, "Leaderboards");
-        if (RSDK.CompareStrings(&string, &control->tag, false)) {
+        RSDK.SetString(&tag, "Leaderboards");
+        if (RSDK.CompareStrings(&tag, &control->tag, false)) {
             TimeAttackMenu->leaderboardsControl = control;
             control->backPressCB                = TimeAttackMenu_LeaderboardsBackPressCB;
         }
 
-        RSDK.SetString(&string, "Replays");
-        if (RSDK.CompareStrings(&string, &control->tag, false))
+        RSDK.SetString(&tag, "Replays");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             TimeAttackMenu->replaysControl = control;
     }
 
@@ -99,37 +99,15 @@ void TimeAttackMenu_Initialize(void)
     EntityUIControl *replayControl  = TimeAttackMenu->replaysControl;
     EntityUIControl *detailsControl = TimeAttackMenu->taDetailsControl;
 
-    Hitbox hitbox;
     foreach_all(UIButtonPrompt, prompt)
     {
-        int32 x       = zoneControl->startPos.x - zoneControl->cameraOffset.x;
-        int32 y       = zoneControl->startPos.y - zoneControl->cameraOffset.y;
-        hitbox.right  = zoneControl->size.x >> 17;
-        hitbox.left   = -(zoneControl->size.x >> 17);
-        hitbox.bottom = zoneControl->size.y >> 17;
-        hitbox.top    = -(zoneControl->size.y >> 17);
-
-        if (MathHelpers_PointInHitbox(x, y, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox) && prompt->buttonID == 3)
+        if (UIControl_ContainsPos(zoneControl, &prompt->position) && prompt->buttonID == 3)
             TimeAttackMenu->switchModePrompt = prompt;
 
-        x             = lbControl->startPos.x - lbControl->cameraOffset.x;
-        y             = lbControl->startPos.y - lbControl->cameraOffset.y;
-        hitbox.right  = lbControl->size.x >> 17;
-        hitbox.left   = -(lbControl->size.x >> 17);
-        hitbox.bottom = lbControl->size.y >> 17;
-        hitbox.top    = -(lbControl->size.y >> 17);
-
-        if (MathHelpers_PointInHitbox(x, y, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox) && prompt->buttonID == 3)
+        if (UIControl_ContainsPos(lbControl, &prompt->position) && prompt->buttonID == 3)
             TimeAttackMenu->topRankPrompt = prompt;
 
-        x             = replayControl->startPos.x - replayControl->cameraOffset.x;
-        y             = replayControl->startPos.y - replayControl->cameraOffset.y;
-        hitbox.right  = replayControl->size.x >> 17;
-        hitbox.left   = -(replayControl->size.x >> 17);
-        hitbox.bottom = replayControl->size.y >> 17;
-        hitbox.top    = -(replayControl->size.y >> 17);
-
-        if (MathHelpers_PointInHitbox(x, y, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox) && prompt->buttonID == 2)
+        if (UIControl_ContainsPos(replayControl, &prompt->position) && prompt->buttonID == 2)
             TimeAttackMenu->replayPrompt = prompt;
     }
 
@@ -139,26 +117,12 @@ void TimeAttackMenu_Initialize(void)
 
     foreach_all(UITABanner, banner)
     {
-        int32 x       = detailsControl->startPos.x - detailsControl->cameraOffset.x;
-        int32 y       = detailsControl->startPos.y - detailsControl->cameraOffset.y;
-        hitbox.right  = detailsControl->size.x >> 17;
-        hitbox.left   = -(detailsControl->size.x >> 17);
-        hitbox.bottom = detailsControl->size.y >> 17;
-        hitbox.top    = -(detailsControl->size.y >> 17);
-
-        if (MathHelpers_PointInHitbox(x, y, banner->position.x, banner->position.y, FLIP_NONE, &hitbox)) {
+        if (UIControl_ContainsPos(detailsControl, &banner->position)) {
             TimeAttackMenu->detailsBanner = banner;
             banner->parent                = TimeAttackMenu->taDetailsControl;
         }
 
-        x             = lbControl->startPos.x - lbControl->cameraOffset.x;
-        y             = lbControl->startPos.y - lbControl->cameraOffset.y;
-        hitbox.right  = lbControl->size.x >> 17;
-        hitbox.left   = -(lbControl->size.x >> 17);
-        hitbox.bottom = lbControl->size.y >> 17;
-        hitbox.top    = -(lbControl->size.y >> 17);
-
-        if (MathHelpers_PointInHitbox(x, y, banner->position.x, banner->position.y, FLIP_NONE, &hitbox)) {
+        if (UIControl_ContainsPos(lbControl, &banner->position)) {
             TimeAttackMenu->leaderboardsBanner = banner;
             banner->parent                     = TimeAttackMenu->leaderboardsControl;
         }
@@ -234,7 +198,7 @@ void TimeAttackMenu_SetupActions(void)
 
 void TimeAttackMenu_HandleMenuReturn(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     if (param->inTimeAttack)
         TimeAttackMenu_SetEncoreLayouts(param->isEncoreMode);
@@ -264,7 +228,7 @@ void TimeAttackMenu_HandleMenuReturn(void)
 
     EntityUIControl *detailsControl = TimeAttackMenu->taDetailsControl;
     if (param->inTimeAttack) {
-        UITABanner_SetupDetails(param->characterID, TimeAttackMenu->detailsBanner, param->zoneID, param->actID, param->isEncoreMode);
+        UITABanner_SetupDetails(TimeAttackMenu->detailsBanner, param->zoneID, param->actID, param->characterID, param->isEncoreMode);
         TimeAttackMenu_SetupDetailsView();
 
         UIButton_SetChoiceSelectionWithCB(detailsControl->buttons[0], param->actID);
@@ -326,7 +290,7 @@ void TimeAttackMenu_ConfirmDeleteReplay_Yes_CB(void)
     EntityUIReplayCarousel *carousel = TimeAttackMenu->replayCarousel;
 
     int32 row = API.GetSortedUserDBRowID(globals->replayTableID, carousel->curReplayID);
-    ReplayRecorder_DeleteReplay(row, TimeAttackMenu_DeleteReplayCB, false);
+    ReplayDB_DeleteReplay(row, TimeAttackMenu_DeleteReplayCB, false);
 }
 
 void TimeAttackMenu_DeleteReplayCB(bool32 success)
@@ -403,7 +367,7 @@ void TimeAttackMenu_SetupLeaderboards(int32 zoneID, int32 characterID, int32 act
         LeaderboardID *leaderboardInfo = TimeAttackData_GetLeaderboardInfo(zoneID, act, characterID, isEncore);
         API.FetchLeaderboard(leaderboardInfo, TimeAttackMenu->prevIsUser);
 
-        UITABanner_SetupDetails(characterID, TimeAttackMenu->leaderboardsBanner, zoneID, act, isEncore);
+        UITABanner_SetupDetails(TimeAttackMenu->leaderboardsBanner, zoneID, act, characterID, isEncore);
     }
 }
 
@@ -426,7 +390,7 @@ void TimeAttackMenu_ReplayCarousel_ActionCB(void)
 
 void TimeAttackMenu_WatchReplay(int32 row, bool32 showGhost)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     int32 id = API_GetFilteredInputDeviceID(false, false, 0);
     API_ResetInputSlotAssignments();
@@ -437,10 +401,10 @@ void TimeAttackMenu_WatchReplay(int32 row, bool32 showGhost)
     LogHelpers_Print("uuid: %08X", uuid);
 
     int32 score       = 0;
-    int32 zoneID      = 0;
-    int32 act         = 0;
-    int32 characterID = 0;
-    int32 encore      = 0;
+    uint8 zoneID      = 0;
+    uint8 act         = 0;
+    uint8 characterID = 0;
+    uint8 encore      = 0;
     API.GetUserDBValue(globals->replayTableID, row, DBVAR_UINT32, "score", &score);
     API.GetUserDBValue(globals->replayTableID, row, DBVAR_UINT8, "zoneID", &zoneID);
     API.GetUserDBValue(globals->replayTableID, row, DBVAR_UINT8, "act", &act);
@@ -521,7 +485,7 @@ void TimeAttackMenu_ReplayLoad_CB(bool32 success)
 
 void TimeAttackMenu_WatchReplayActionCB_ReplaysMenu(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     EntityUIControl *control         = TimeAttackMenu->replaysControl;
     EntityUIReplayCarousel *carousel = TimeAttackMenu->replayCarousel;
@@ -537,7 +501,7 @@ void TimeAttackMenu_WatchReplayActionCB_ReplaysMenu(void)
 
 void TimeAttackMenu_ChallengeReplayActionCB_ReplaysMenu(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     EntityUIControl *control         = TimeAttackMenu->replaysControl;
     EntityUIReplayCarousel *carousel = TimeAttackMenu->replayCarousel;
@@ -553,7 +517,7 @@ void TimeAttackMenu_ChallengeReplayActionCB_ReplaysMenu(void)
 
 void TimeAttackMenu_WatchReplayCB_RanksMenu(void)
 {
-    EntityMenuParam *param     = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param     = MenuParam_GetParam();
     EntityUIPopover *popover   = UIPopover->activePopover;
     EntityUIRankButton *button = (EntityUIRankButton *)popover->storedEntity;
     EntityUIControl *parent    = (EntityUIControl *)button->parent;
@@ -569,7 +533,7 @@ void TimeAttackMenu_WatchReplayCB_RanksMenu(void)
 
 void TimeAttackMenu_ChallengeReplayCB_RanksMenu(void)
 {
-    EntityMenuParam *param     = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param     = MenuParam_GetParam();
     EntityUIPopover *popover   = UIPopover->activePopover;
     EntityUIRankButton *button = (EntityUIRankButton *)popover->storedEntity;
     EntityUIControl *parent    = (EntityUIControl *)button->parent;
@@ -663,7 +627,7 @@ void TimeAttackMenu_SortReplayChoiceCB(void)
 
 void TimeAttackMenu_SetupDetailsView(void)
 {
-    EntityMenuParam *param   = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param   = MenuParam_GetParam();
     EntityUIControl *control = TimeAttackMenu->taDetailsControl;
     EntityUITABanner *banner = TimeAttackMenu->detailsBanner;
 
@@ -687,14 +651,14 @@ void TimeAttackMenu_TAModule_ActionCB(void)
 {
     RSDK_THIS(UITAZoneModule);
 
-    EntityMenuParam *param   = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param   = MenuParam_GetParam();
     EntityUITABanner *banner = TimeAttackMenu->detailsBanner;
     EntityUIControl *control = TimeAttackMenu->taDetailsControl;
 
     param->zoneID     = self->zoneID;
     control->buttonID = 0;
 
-    UITABanner_SetupDetails(self->characterID, banner, self->zoneID, 0, TimeAttackMenu->encoreMode);
+    UITABanner_SetupDetails(banner, self->zoneID, 0, self->characterID, TimeAttackMenu->encoreMode);
     TimeAttackMenu_SetupDetailsView();
 
     UITransition_SetNewTag("Time Attack Detail");
@@ -702,7 +666,7 @@ void TimeAttackMenu_TAModule_ActionCB(void)
 
 void TimeAttackMenu_StartTAAttempt(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     sprintf_s(param->menuTag, (int32)sizeof(param->menuTag), "Time Attack Detail");
     param->menuSelection = 0;
@@ -718,7 +682,7 @@ void TimeAttackMenu_StartTAAttempt(void)
 
 void TimeAttackMenu_LoadScene(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param = MenuParam_GetParam();
 
     SaveGame_ResetPlayerState();
 
@@ -796,7 +760,7 @@ void TimeAttackMenu_ResetTimes_YesCB(void)
     }
 
     control->buttonID = 0;
-    TimeAttackData_SaveTimeAttackDB(NULL);
+    TimeAttackData_SaveDB(NULL);
 
     TimeAttackMenu_TAZoneModule_ChoiceChangeCB();
 }
@@ -814,7 +778,7 @@ void TimeAttackMenu_TAZoneModule_ActionCB(void)
 {
     RSDK_THIS(UIButton);
 
-    EntityMenuParam *param  = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param  = MenuParam_GetParam();
     EntityUIControl *parent = (EntityUIControl *)self->parent;
 
     parent->selectionDisabled = true;
@@ -841,12 +805,12 @@ void TimeAttackMenu_MenuSetupCB_Details(void) { TimeAttackMenu_TAZoneModule_Choi
 
 void TimeAttackMenu_TAZoneModule_ChoiceChangeCB(void)
 {
-    EntityMenuParam *param   = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param   = MenuParam_GetParam();
     EntityUIControl *control = TimeAttackMenu->taDetailsControl;
 
     int32 act = control->buttons[0]->selection;
 
-    UITABanner_SetupDetails(param->characterID, TimeAttackMenu->detailsBanner, param->zoneID, act, TimeAttackMenu->encoreMode);
+    UITABanner_SetupDetails(TimeAttackMenu->detailsBanner, param->zoneID, act, param->characterID, TimeAttackMenu->encoreMode);
     TimeAttackData_ConfigureTableView(param->zoneID, act, param->characterID, TimeAttackMenu->encoreMode);
 
     int32 rowCount = 1;
@@ -874,7 +838,7 @@ void TimeAttackMenu_CharButton_ActionCB(void)
 {
     RSDK_THIS(UICharButton);
 
-    EntityMenuParam *param   = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param   = MenuParam_GetParam();
     EntityUIControl *control = TimeAttackMenu->taZoneSelControl;
 
     TimeAttackData_Clear();

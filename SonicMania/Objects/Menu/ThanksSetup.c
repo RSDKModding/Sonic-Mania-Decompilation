@@ -165,7 +165,7 @@ void ThanksSetup_Draw_Fade(void)
 {
     RSDK_THIS(ThanksSetup);
 
-    RSDK.FillScreen(0, self->timer, self->timer - 128, self->timer - 256);
+    RSDK.FillScreen(0x000000, self->timer, self->timer - 128, self->timer - 256);
 }
 
 #if RETRO_INCLUDE_EDITOR

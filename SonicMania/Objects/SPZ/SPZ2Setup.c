@@ -80,7 +80,7 @@ void SPZ2Setup_Draw(void)
 {
     RSDK_THIS(SPZ2Setup);
 
-    RSDK.FillScreen(0xF0F0F0, self->fadeTimer, self->fadeTimer - 0x80, self->fadeTimer - 0x100);
+    RSDK.FillScreen(0xF0F0F0, self->fadeTimer, self->fadeTimer - 128, self->fadeTimer - 256);
 }
 
 void SPZ2Setup_Create(void *data)

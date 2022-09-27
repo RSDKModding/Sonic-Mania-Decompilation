@@ -706,7 +706,7 @@ void MeterDroid_State_Destroyed(void)
             MeterDroid->debrisSpeeds[15] = -MeterDroid->debrisSpeeds[15];
         }
 
-        Debris_FallFlickerAnimSetup(MeterDroid->aniFrames, MeterDroid->debrisSpeeds, 10);
+        Debris_CreateFromEntries(MeterDroid->aniFrames, MeterDroid->debrisSpeeds, 10);
         self->visible = false;
     }
     else if (self->timer == 90) {

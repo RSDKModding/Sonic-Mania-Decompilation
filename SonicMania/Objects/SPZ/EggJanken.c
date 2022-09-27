@@ -364,7 +364,7 @@ void EggJanken_State_StartFight(void)
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->position.x) {
         self->visible               = true;
         Zone->playerBoundActiveL[0] = true;
-        Zone->cameraBoundsR[0]      = (self->position.x >> 16) - ScreenInfo->center.x;
+        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->center.x;
 
         self->state     = EggJanken_State_EnterJanken;
         self->stateDraw = EggJanken_Draw_Closed;

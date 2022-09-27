@@ -146,5 +146,6 @@ void UIControl_SetTargetPos(EntityUIControl *entity, int32 x, int32 y);
 void UIControl_HandlePosition(void);
 void UIControl_ProcessInputs(void);
 void UIControl_ProcessButtonInput(void);
+bool32 UIControl_ContainsPos(EntityUIControl *control, Vector2 *pos);
 
 #endif //! OBJ_UICONTROL_H

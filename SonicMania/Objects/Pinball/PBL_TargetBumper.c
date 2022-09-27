@@ -109,22 +109,17 @@ void PBL_TargetBumper_HandlePlayerInteractions(void)
         int32 angle    = self->angle >> 2;
         int32 negAngle = -angle;
 
-        Vector2 pivotPos;
-        pivotPos.x = 0;
-        pivotPos.y = 0;
+        Vector2 originVel = { 0, 0 };
         foreach_active(PBL_Player, player)
         {
-            int32 distanceX = (player->position.x - self->position.x) >> 8;
-            int32 distanceY = (player->position.y - self->position.y) >> 8;
             int32 posX      = player->position.x;
             int32 posY      = player->position.y;
             int32 velStoreX = player->velocity.x;
             int32 velStoreY = player->velocity.y;
 
-            player->position.x = distanceY * RSDK.Sin256(angle) + distanceX * RSDK.Cos256(angle) + self->position.x;
-            player->position.y = distanceY * RSDK.Cos256(angle) - distanceX * RSDK.Sin256(angle) + self->position.y;
-            player->velocity.x = (player->velocity.y >> 8) * RSDK.Sin256(angle) + (player->velocity.x >> 8) * RSDK.Cos256(angle);
-            player->velocity.y = (player->velocity.y >> 8) * RSDK.Cos256(angle) - (player->velocity.x >> 8) * RSDK.Sin256(angle);
+
+            Zone_RotateOnPivot(&player->position, &self->position, angle);
+            Zone_RotateOnPivot(&player->velocity, &originVel, angle);
 
             int32 velX = player->velocity.x;
             int32 velY = player->velocity.y;
@@ -144,7 +139,7 @@ void PBL_TargetBumper_HandlePlayerInteractions(void)
 
                     player->velocity.y = -velY;
                     Zone_RotateOnPivot(&player->position, &self->position, negAngle);
-                    Zone_RotateOnPivot(&player->velocity, &pivotPos, negAngle);
+                    Zone_RotateOnPivot(&player->velocity, &originVel, negAngle);
 
                     self->state      = PBL_TargetBumper_State_Reced;
                     self->velocity.y = -8;
@@ -172,7 +167,7 @@ void PBL_TargetBumper_HandlePlayerInteractions(void)
                         }
 
                         Zone_RotateOnPivot(&player->position, &self->position, negAngle);
-                        Zone_RotateOnPivot(&player->velocity, &pivotPos, negAngle);
+                        Zone_RotateOnPivot(&player->velocity, &originVel, negAngle);
                         player->onGround = false;
                     }
                     break;
@@ -197,7 +192,7 @@ void PBL_TargetBumper_HandlePlayerInteractions(void)
                     }
 
                     Zone_RotateOnPivot(&player->position, &self->position, negAngle);
-                    Zone_RotateOnPivot(&player->velocity, &pivotPos, negAngle);
+                    Zone_RotateOnPivot(&player->velocity, &originVel, negAngle);
                     player->onGround = false;
                     break;
 

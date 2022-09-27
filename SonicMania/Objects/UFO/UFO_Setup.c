@@ -17,7 +17,7 @@ void UFO_Setup_Update(void)
 
 #if MANIA_USE_PLUS
     if (self->state != UFO_Setup_State_FinishFadeout && globals->gameMode < MODE_TIMEATTACK)
-        ++SaveGame->saveRAM->zoneTimes[29];
+        ++SaveGame_GetSaveRAM()->zoneTimes[29];
 #endif
 }
 
@@ -299,9 +299,9 @@ void UFO_Setup_Finish_Win(void)
 {
     EntityUFO_Setup *setup = RSDK_GET_ENTITY(SLOT_UFO_SETUP, UFO_Setup);
 
-    SaveRAM *saveRAM = SaveGame->saveRAM;
-    saveRAM->chaosEmeralds |= 1 << UFO_Setup->specialStageID;
+    SaveGame_SetEmerald(UFO_Setup->specialStageID);
 
+    SaveRAM *saveRAM = SaveGame_GetSaveRAM();
     if (globals->saveSlotID != NO_SAVE_SLOT)
         GameProgress_GiveEmerald(saveRAM->nextSpecialStage);
 

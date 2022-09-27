@@ -68,14 +68,15 @@ void Options_EditorLoad(void);
 void Options_Serialize(void);
 
 // Extra Entity Functions
+OptionsRAM *Options_GetOptionsRAM(void);
 void Options_Reload(void);
 void Options_GetWinSize(void);
 void Options_LoadCallback(bool32 success);
-void Options_LoadOptionsBin(void);
+void Options_LoadFile(void (*callback)(bool32 success));
 #if MANIA_USE_PLUS
-void Options_SaveOptionsBin(void (*callback)(bool32 success));
+void Options_SaveFile(void (*callback)(bool32 success));
 #else
-void Options_SaveOptionsBin(void (*callback)(void));
+void Options_SaveFile(void (*callback)(void));
 #endif
 void Options_SetLanguage(int32 language);
 void Options_LoadValuesFromSettings(OptionsRAM *options);

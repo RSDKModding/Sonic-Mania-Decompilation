@@ -43,7 +43,7 @@ void HUD_LateUpdate(void)
     if (globals->gameMode < MODE_TIMEATTACK) {
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (SceneInfo->timeEnabled && player->rings >= 50 && player->superState < SUPERSTATE_SUPER
-            && SaveGame->saveRAM->chaosEmeralds >= 0b01111111) {
+            && SaveGame_GetSaveRAM()->collectedEmeralds >= 0b01111111) {
             if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_SWITCH || sku_platform == PLATFORM_DEV)
                 HUD_GetActionButtonFrames();
 
@@ -491,7 +491,7 @@ void HUD_StageLoad(void)
 
     HUD->showTAPrompt = false;
 
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
     if (globals->gameMode == MODE_COMPETITION) {
         HUD->screenBorderType[0] = session->screenBorderType[0];
         HUD->screenBorderType[1] = session->screenBorderType[1];
@@ -634,7 +634,7 @@ void HUD_State_MoveIn(void)
         timePos   = &self->vsTimePos[SceneInfo->currentScreenID];
         ringsPos  = &self->vsRingsPos[SceneInfo->currentScreenID];
         lifePos   = &self->vsLifePos[SceneInfo->currentScreenID];
-        targetPos = &self->vsMaxOffsets[SceneInfo->currentScreenID];
+        targetPos = &self->vsTargetPos[SceneInfo->currentScreenID];
     }
     else {
         state     = &self->state;

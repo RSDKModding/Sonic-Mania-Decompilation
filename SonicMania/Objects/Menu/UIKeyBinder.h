@@ -32,10 +32,12 @@ struct ObjectUIKeyBinder {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxFail;
+#if GAME_VERSION != VER_100
     EntityUIKeyBinder *activeBinder;
     int32 activeInputID;
     int32 activeButtonID;
     bool32 isSelected;
+#endif
 };
 
 // Entity Class
@@ -94,7 +96,9 @@ void UIKeyBinder_State_HandleButtonLeave(void);
 void UIKeyBinder_State_HandleButtonEnter(void);
 void UIKeyBinder_State_Selected(void);
 
+#if GAME_VERSION != VER_100
 void UIKeyBinder_MoveKeyToActionCB_No(void);
 void UIKeyBinder_MoveKeyToActionCB_Yes(void);
+#endif
 
 #endif //! OBJ_UIKEYBINDER_H

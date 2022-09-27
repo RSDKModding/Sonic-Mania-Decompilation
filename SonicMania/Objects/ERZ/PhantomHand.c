@@ -316,7 +316,7 @@ void PhantomHand_State_BreakApart(void)
 {
     RSDK_THIS(PhantomHand);
 
-    Debris_FallFlickerAnimSetup(PhantomHand->aniFrames, PhantomHand->debrisInfo, 4);
+    Debris_CreateFromEntries(PhantomHand->aniFrames, PhantomHand->debrisInfo, 4);
     RSDK.PlaySfx(PhantomEgg->sfxExplosion2, false, 255);
 
     foreach_active(Player, player)
