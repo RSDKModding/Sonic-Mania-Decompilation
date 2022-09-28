@@ -203,18 +203,19 @@ void Flamethrower_HandleAngles(void)
 
             switch (self->orientation) {
                 default:
-                case FLAMETHROWER_ORIENTATION_RIGHT: self->rotation = (rot & 0x1FF); break;
-                case FLAMETHROWER_ORIENTATION_DOWN: self->rotation = ((rot + 0x180) & 0x1FF); break;
-                case FLAMETHROWER_ORIENTATION_LEFT: self->rotation = ((rot + 0x100) & 0x1FF); break;
-                case FLAMETHROWER_ORIENTATION_UP: self->rotation = ((rot + 0x180) & 0x1FF); break;
+                case FLAMETHROWER_ORIENTATION_RIGHT: self->rotation = rot; break;
+                case FLAMETHROWER_ORIENTATION_DOWN: self->rotation = rot + 0x180; break;
+                case FLAMETHROWER_ORIENTATION_LEFT: self->rotation = rot + 0x100; break;
+                case FLAMETHROWER_ORIENTATION_UP: self->rotation = rot + 0x180; break;
             }
+            self->rotation &= 0x1FF;
         }
         else {
             self->rotation = 0;
         }
     }
     else {
-        self->rotation = self->orientation == FLAMETHROWER_ORIENTATION_UP ? 0x100 : 0;
+        self->rotation = self->orientation == FLAMETHROWER_ORIENTATION_UP ? 0x100 : 0x00;
     }
 }
 
@@ -336,7 +337,7 @@ void Flamethrower_State_EmittingFlames(void)
         case FLAMETHROWER_ORIENTATION_RIGHT: angle = 0x00; break;
         case FLAMETHROWER_ORIENTATION_DOWN: angle = 0x80; break;
         case FLAMETHROWER_ORIENTATION_LEFT: angle = 0x100; break;
-        case FLAMETHROWER_ORIENTATION_UP: angle = MANIA_USE_PLUS ? 0x180 : 0x00; break;
+        case FLAMETHROWER_ORIENTATION_UP: angle = 0x180; break;
     }
 
     self->angle = (angle + (((self->spread >> 1) * RSDK.Sin512(8 * self->flameAngle)) >> 9)) & 0x1FF;
