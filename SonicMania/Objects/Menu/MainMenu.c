@@ -74,7 +74,7 @@ void MainMenu_Initialize(void)
     {
         if (UIControl_ContainsPos(menuControl, &diorama->position)) {
             MainMenu->diorama = diorama;
-            diorama->parent   = MainMenu->menuControl;
+            diorama->parent   = menuControl;
         }
     }
 
