@@ -793,7 +793,7 @@ void Zone_State_FadeOut(void)
 
                 globals->gameMode = MODE_MANIA;
             }
-            SceneInfo->filter ^= 6;
+            SceneInfo->filter ^= (FILTER_MANIA | FILTER_ENCORE);
 
             globals->enableIntro         = true;
             globals->suppressAutoMusic   = true;

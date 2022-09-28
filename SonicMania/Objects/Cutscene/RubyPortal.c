@@ -268,6 +268,8 @@ void RubyPortal_State_Opened(void)
 
 #if MANIA_USE_PLUS
                 self->state = RubyPortal_State_SaveGameState;
+#else
+                self->state = StateMachine_None;
 #endif
 
                 int32 sfx     = RSDK.Rand(0, RUBYSFX_ATTACK6);
