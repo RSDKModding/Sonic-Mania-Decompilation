@@ -66,34 +66,31 @@ void UIButtonPrompt_LateUpdate(void)
     RSDK_THIS(UIButtonPrompt);
 
     EntityUIControl *control = (EntityUIControl *)self->parent;
-    if (control && self->headingAnchor) {
+    EntityUIHeading *heading = (EntityUIHeading *)control->heading;
+    if (control && heading && self->headingAnchor) {
+        switch (self->headingAnchor) {
+            default:
+            case UIBUTTONPROMPT_ANCHOR_NONE: break;
 
-        EntityUIHeading *heading = (EntityUIHeading *)control->heading;
-        if (heading) {
-            switch (self->headingAnchor) {
-                default:
-                case UIBUTTONPROMPT_ANCHOR_NONE: break;
+            case UIBUTTONPROMPT_ANCHOR_TOPLEFT_ROW1:
+                self->position.x = heading->position.x - TO_FIXED(188);
+                self->position.y = heading->position.y - TO_FIXED(8);
+                break;
 
-                case UIBUTTONPROMPT_ANCHOR_TOPLEFT:
-                    self->position.x = heading->position.x - 0xBC0000;
-                    self->position.y = heading->position.y - 0x80000;
-                    break;
+            case UIBUTTONPROMPT_ANCHOR_TOPRIGHT_ROW1:
+                self->position.x = heading->position.x + TO_FIXED(124);
+                self->position.y = heading->position.y - TO_FIXED(8);
+                break;
 
-                case UIBUTTONPROMPT_ANCHOR_TOPRIGHT:
-                    self->position.x = heading->position.x + 0x7C0000;
-                    self->position.y = heading->position.y - 0x80000;
-                    break;
+            case UIBUTTONPROMPT_ANCHOR_TOPLEFT_ROW2:
+                self->position.x = heading->position.x - TO_FIXED(188);
+                self->position.y = heading->position.y + TO_FIXED(16);
+                break;
 
-                case UIBUTTONPROMPT_ANCHOR_BOTTOMRIGHT:
-                    self->position.x = heading->position.x + 0x7C0000;
-                    self->position.y = heading->position.y + 0x100000;
-                    break;
-
-                case UIBUTTONPROMPT_ANCHOR_BOTTOMLEFT:
-                    self->position.x = heading->position.x - 0xBC0000;
-                    self->position.y = heading->position.y + 0x100000;
-                    break;
-            }
+            case UIBUTTONPROMPT_ANCHOR_TOPRIGHT_ROW2:
+                self->position.x = heading->position.x + TO_FIXED(124);
+                self->position.y = heading->position.y + TO_FIXED(16);
+                break;
         }
     }
 }
@@ -553,10 +550,10 @@ void UIButtonPrompt_EditorLoad(void)
 
     RSDK_ACTIVE_VAR(UIButtonPrompt, headingAnchor);
     RSDK_ENUM_VAR("None", UIBUTTONPROMPT_ANCHOR_NONE);
-    RSDK_ENUM_VAR("Top-Left", UIBUTTONPROMPT_ANCHOR_TOPLEFT);
-    RSDK_ENUM_VAR("Top-Right", UIBUTTONPROMPT_ANCHOR_TOPRIGHT);
-    RSDK_ENUM_VAR("Bottom-Right", UIBUTTONPROMPT_ANCHOR_BOTTOMRIGHT);
-    RSDK_ENUM_VAR("Bottom-Left", UIBUTTONPROMPT_ANCHOR_BOTTOMLEFT);
+    RSDK_ENUM_VAR("Top-Left (Row 1)", UIBUTTONPROMPT_ANCHOR_TOPLEFT_ROW1);
+    RSDK_ENUM_VAR("Top-Right (Row 1)", UIBUTTONPROMPT_ANCHOR_TOPRIGHT_ROW1);
+    RSDK_ENUM_VAR("Top-Left (Row 2)", UIBUTTONPROMPT_ANCHOR_TOPLEFT_ROW2);
+    RSDK_ENUM_VAR("Top-Right (Row 2)", UIBUTTONPROMPT_ANCHOR_TOPRIGHT_ROW2);
 }
 #endif
 
