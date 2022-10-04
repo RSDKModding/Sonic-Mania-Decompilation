@@ -756,7 +756,8 @@ void UIControl_ProcessButtonInput(void)
 #endif
                 ) {
                     if (!button->checkSelectedCB || !button->checkSelectedCB()) {
-                        if (allowAction || button->touchCB()) {
+                        bool32 wasTouched = button->touchCB();
+                        if (allowAction || wasTouched) {
                             allowAction = true;
                             if (button->touchCB && !activeButton)
                                 activeButton = button;

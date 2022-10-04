@@ -101,8 +101,8 @@ void UIButton_Create(void *data)
         self->drawGroup     = 2;
         self->visible       = !self->invisible;
         self->active        = ACTIVE_BOUNDS;
-        self->updateRange.x = 0x800000;
-        self->updateRange.y = 0x400000;
+        self->updateRange.x = TO_FIXED(128);
+        self->updateRange.y = TO_FIXED(64);
         self->bgEdgeSize    = self->size.y >> 16;
         self->size.y        = abs(self->size.y);
 
@@ -459,7 +459,7 @@ bool32 UIButton_ProcessTouchCB_Multi(void)
     self->touchPosID   = lastTouchID;
     self->touchPressed = touched;
 
-    return self->touchPressed;
+    return touched;
 }
 
 bool32 UIButton_ProcessTouchCB_Single(void)
@@ -521,20 +521,20 @@ bool32 UIButton_ProcessTouchCB_Single(void)
         }
     }
 
-    bool32 childTouchFlag = false;
-    self->touchPressed    = touched;
+    bool32 childTouched = false;
+    self->touchPressed  = touched;
     if (self->classID == UIButton->classID && self->choiceCount > 0) {
         EntityUIButton *entPtr = UIButton_GetChoicePtr(self, self->selection);
         if (entPtr) {
             Entity *entStore  = SceneInfo->entity;
             SceneInfo->entity = (Entity *)entPtr;
             if (entPtr->touchCB)
-                childTouchFlag = entPtr->touchCB();
+                childTouched = entPtr->touchCB();
             SceneInfo->entity = entStore;
         }
     }
 
-    return self->touchPressed || childTouchFlag;
+    return touched || childTouched;
 }
 
 void UIButton_ProcessButtonCB(void)
