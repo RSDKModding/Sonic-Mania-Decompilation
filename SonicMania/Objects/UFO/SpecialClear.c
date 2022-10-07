@@ -674,7 +674,7 @@ void SpecialClear_State_ExitFadeOut(void)
     RSDK_THIS(SpecialClear);
 
     if (self->fillColor) {
-        self->fillColor -= 0x80808;
+        self->fillColor -= 0x080808;
     }
     else if (!self->saveInProgress) {
         EntityMenuParam *param = MenuParam_GetParam();

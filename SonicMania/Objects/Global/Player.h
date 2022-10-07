@@ -3,6 +3,20 @@
 
 #include "Game.h"
 
+// Helper Constants
+#define PLAYER_PALETTE_INDEX_SONIC_OLD (2) // sonic's original palette indices, here for legacy reasons. Only exists in a few places in the final game.
+
+#define PLAYER_PALETTE_INDEX_SONIC     (64)
+#define PLAYER_PALETTE_INDEX_TAILS     (70)
+#define PLAYER_PALETTE_INDEX_KNUX      (80)
+#if MANIA_USE_PLUS
+#define PLAYER_PALETTE_INDEX_MIGHTY (96)
+#define PLAYER_PALETTE_INDEX_RAY    (113)
+#endif
+
+#define PLAYER_PRIMARY_COLOR_COUNT (6)
+
+// Helper Enums
 typedef enum {
     ANI_IDLE,
     ANI_BORED_1,
