@@ -3364,11 +3364,11 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(OptionsMenu_VideoControl_Win_YPressCB);
     ADD_PUBLIC_FUNC(OptionsMenu_DlgRunnerCB_RevertVideoChanges);
     ADD_PUBLIC_FUNC(OptionsMenu_VideoControl_Win_BackPressCB);
-    ADD_PUBLIC_FUNC(OptionsMenu_ApplyChangesDlg_BackPress_NoCB);
+    ADD_PUBLIC_FUNC(OptionsMenu_ApplyChangesDlg_BackPress_YesCB);
     ADD_PUBLIC_FUNC(OptionsMenu_ApplyChangesDlg_Win_NoCB);
     ADD_PUBLIC_FUNC(OptionsMenu_ApplyChangesDlg_NoCB);
     ADD_PUBLIC_FUNC(OptionsMenu_ApplyChangesDlg_Win_YesCB);
-    ADD_PUBLIC_FUNC(OptionsMenu_ApplyChangesDlg_YesCB);
+    ADD_PUBLIC_FUNC(OptionsMenu_ApplyChangesDlg_BackPress_NoCB);
     ADD_PUBLIC_FUNC(OptionsMenu_VideoMenuButton_ActionCB);
     ADD_PUBLIC_FUNC(OptionsMenu_SoundMenuButton_ActionCB);
     ADD_PUBLIC_FUNC(OptionsMenu_LanguageMenuButton_ActionCB);
