@@ -327,7 +327,9 @@ void OptionsMenu_DlgRunnerCB_RevertVideoChanges(void)
     RSDK.UpdateWindow();
 
     Localization_GetString(&message, STR_VIDEOCHANGESAPPLIED);
-    EntityUIDialog *dialog = UIDialog_CreateDialogYesNo(&message, OptionsMenu_ApplyChangesDlg_YesCB, OptionsMenu_ApplyChangesDlg_NoCB, true, true);
+    // This is bugged! Using `OptionsMenu_ApplyChangesDlg_BackPress_NoCB` causes the settings to be reverted instead of saved!
+    // This should have called a modified version of `OptionsMenu_ApplyChangesDlg_Win_YesCB` which also transitions to the previous menu!
+    EntityUIDialog *dialog = UIDialog_CreateDialogYesNo(&message, OptionsMenu_ApplyChangesDlg_BackPress_NoCB, OptionsMenu_ApplyChangesDlg_NoCB, true, true);
     if (dialog)
         dialog->closeDelay = 15 * 60; // 15 seconds at 60 FPS
 }
@@ -340,7 +342,7 @@ bool32 OptionsMenu_VideoControl_Win_BackPressCB(void)
     if (RSDK.GetVideoSetting(VIDEOSETTING_CHANGED)) {
         Localization_GetString(&message, STR_APPLYCHANGEDSETTINGS);
         EntityUIDialog *dialog =
-            UIDialog_CreateDialogYesNo(&message, OptionsMenu_ApplyChangesDlg_YesCB, OptionsMenu_ApplyChangesDlg_BackPress_NoCB, true, true);
+            UIDialog_CreateDialogYesNo(&message, OptionsMenu_ApplyChangesDlg_BackPress_YesCB, OptionsMenu_ApplyChangesDlg_BackPress_NoCB, true, true);
         if (dialog)
             return true;
     }
@@ -351,7 +353,7 @@ bool32 OptionsMenu_VideoControl_Win_BackPressCB(void)
     return false;
 }
 
-void OptionsMenu_ApplyChangesDlg_BackPress_NoCB(void)
+void OptionsMenu_ApplyChangesDlg_BackPress_YesCB(void)
 {
     EntityDialogRunner *dialogRunner = CREATE_ENTITY(DialogRunner, DialogRunner_HandleCallback, 0, 0);
 
@@ -388,7 +390,7 @@ void OptionsMenu_ApplyChangesDlg_Win_YesCB(void)
     RSDK.SetVideoSetting(VIDEOSETTING_STORE, false);
 }
 
-void OptionsMenu_ApplyChangesDlg_YesCB(void)
+void OptionsMenu_ApplyChangesDlg_BackPress_NoCB(void)
 {
     RSDK.SetVideoSetting(VIDEOSETTING_RELOAD, false);
 
@@ -582,7 +584,6 @@ void OptionsMenu_ShaderButton_ActionCB(void)
 
     RSDK.SetVideoSetting(VIDEOSETTING_SHADERID, self->selection);
     RSDK.SetVideoSetting(VIDEOSETTING_CHANGED, false);
-    Options->changed = true;
 }
 
 void OptionsMenu_WindowScaleButton_ActionCB(void)
