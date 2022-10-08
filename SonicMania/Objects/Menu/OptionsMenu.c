@@ -584,7 +584,6 @@ void OptionsMenu_ShaderButton_ActionCB(void)
 
     RSDK.SetVideoSetting(VIDEOSETTING_SHADERID, self->selection);
     RSDK.SetVideoSetting(VIDEOSETTING_CHANGED, false);
-    Options->changed = true;
 }
 
 void OptionsMenu_WindowScaleButton_ActionCB(void)
