@@ -231,24 +231,23 @@ bool32 PSZ2Outro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
 
             if (host->timer >= host->storedTimer + 52) {
                 int32 id = 0;
-		EntityPlayer *players[2] = {player1, player2};
+                EntityPlayer *players[2] = {player1, player2};
                 for (int32 i = 0; i < 2; ++i) {
                     EntityPlayer *player = players[i];
-                    if (player->classID != Player->classID)
-                        break;
+                    if (player->classID == Player->classID) {
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
 
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
+                        int32 valX = (player->position.x - player->position.x) >> 3;
+                        int32 valY =
+                            (0xA00 * RSDK.Sin256(2 * ((i * 0x40) + host->timer - host->storedTimer)) + (eggman->position.y - 0x200000) - player->position.y)
+                            >> 3;
 
-                    int32 valX = (player->position.x - player->position.x) >> 3;
-                    int32 valY =
-                        (0xA00 * RSDK.Sin256(2 * ((i * 0x40) + host->timer - host->storedTimer)) + (eggman->position.y - 0x200000) - player->position.y)
-                        >> 3;
-
-                    player->position.x += valX;
-                    player->position.y += valY;
-                    player->state          = Player_State_Static;
-                    player->tileCollisions = TILECOLLISION_NONE;
-                    player->onGround       = false;
+                        player->position.x += valX;
+                        player->position.y += valY;
+                        player->state          = Player_State_Static;
+                        player->tileCollisions = TILECOLLISION_NONE;
+                        player->onGround       = false;
+                    }
                 }
             }
         }
