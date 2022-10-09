@@ -188,8 +188,8 @@ bool32 PSZ2Outro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
 {
     RSDK_THIS(PSZ2Outro);
 
-    MANIA_GET_PLAYER(player1, player2, camera);
-    UNUSED(camera);
+    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);                                                                                       \
+    EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);                                                                                       \
 
     EntityPSZEggman *eggman = self->eggman;
     EntityFXRuby *fxRuby    = NULL;
@@ -231,8 +231,9 @@ bool32 PSZ2Outro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
 
             if (host->timer >= host->storedTimer + 52) {
                 int32 id = 0;
-                for (int32 angle = 0; angle < 0x80; angle += 0x40) {
-                    EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
+		EntityPlayer *players[2] = {player1, player2};
+                for (int32 i = 0; i < 2; ++i) {
+                    EntityPlayer *player = players[i];
                     if (player->classID != Player->classID)
                         break;
 
@@ -240,7 +241,7 @@ bool32 PSZ2Outro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
 
                     int32 valX = (player->position.x - player->position.x) >> 3;
                     int32 valY =
-                        (0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->storedTimer)) + (eggman->position.y - 0x200000) - player->position.y)
+                        (0xA00 * RSDK.Sin256(2 * ((i * 0x40) + host->timer - host->storedTimer)) + (eggman->position.y - 0x200000) - player->position.y)
                         >> 3;
 
                     player->position.x += valX;
