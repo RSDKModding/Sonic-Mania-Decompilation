@@ -124,8 +124,8 @@ void UITAZoneModule_Create(void *data)
     self->state           = UITAZoneModule_State_Init;
 
     if (!SceneInfo->inEditor) {
-        RSDK.InitString(&self->text1Store, "", false);
-        RSDK.InitString(&self->text2Store, "", false);
+        RSDK.InitString(&self->text1Store, "", 0);
+        RSDK.InitString(&self->text2Store, "", 0);
         RSDK.CopyString(&self->text1Store, &self->text1);
         RSDK.CopyString(&self->text2Store, &self->text2);
     }
