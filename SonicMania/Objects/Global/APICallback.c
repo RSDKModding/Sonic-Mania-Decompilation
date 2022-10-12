@@ -720,7 +720,7 @@ bool32 APICallback_GetUsername(String *userName)
     else {
         if (sku_platform == PLATFORM_DEV) {
             LogHelpers_Print("DUMMY GetUsername()");
-            RSDK.InitString(userName, "IntegerGeorge802", false);
+            RSDK.InitString(userName, "IntegerGeorge802", 0);
             return true;
         }
         else {

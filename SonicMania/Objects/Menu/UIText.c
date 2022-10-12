@@ -63,7 +63,7 @@ void UIText_Create(void *data)
         self->drawGroup = 2;
 
         if (!self->text.chars)
-            RSDK.InitString(&self->text, "UNTITLED", false);
+            RSDK.InitString(&self->text, "UNTITLED", 0);
 
         if (!UIWidgets || UIText->aniFrames)
             RSDK.SetSpriteString(UIText->aniFrames, self->listID, &self->text);

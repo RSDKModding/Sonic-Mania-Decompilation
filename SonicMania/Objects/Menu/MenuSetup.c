@@ -1304,7 +1304,7 @@ void MenuSetup_State_SetupLeaderboards(void)
     if (status == STATUS_CONTINUE) {
         String message;
         INIT_STRING(message);
-        RSDK.InitString(&message, "", false);
+        RSDK.InitString(&message, "", 0);
 
         Localization_GetString(&message, STR_CONNECTING);
         UIDialog_SetupText(dialog, &message);
@@ -1316,7 +1316,7 @@ void MenuSetup_State_SetupLeaderboards(void)
 
         String message;
         INIT_STRING(message);
-        RSDK.InitString(&message, "", false);
+        RSDK.InitString(&message, "", 0);
         Localization_GetString(&message, strID);
 
         UIDialog_SetupText(dialog, &message);
