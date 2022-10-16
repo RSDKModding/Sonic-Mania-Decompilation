@@ -25,7 +25,7 @@ void PuyoGame_Update(void)
 
     if ((ControllerInfo->keyStart.press || Unknown_pausePress) && !RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->classID) {
         RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
-        RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->triggerPlayer = 1;
+        RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->disableRestart = true;
         RSDK.PlaySfx(PauseMenu->sfxAccept, false, 0xFF);
         RSDK.SetEngineState(ENGINESTATE_FROZEN);
     }
