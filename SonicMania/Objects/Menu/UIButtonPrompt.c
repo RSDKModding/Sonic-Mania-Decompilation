@@ -66,8 +66,9 @@ void UIButtonPrompt_LateUpdate(void)
     RSDK_THIS(UIButtonPrompt);
 
     EntityUIControl *control = (EntityUIControl *)self->parent;
-    EntityUIHeading *heading = (EntityUIHeading *)control->heading;
-    if (control && heading && self->headingAnchor) {
+    if (control && control->heading && self->headingAnchor) {
+        EntityUIHeading *heading = (EntityUIHeading *)control->heading;
+
         switch (self->headingAnchor) {
             default:
             case UIBUTTONPROMPT_ANCHOR_NONE: break;
