@@ -5405,7 +5405,7 @@ void Player_State_RayGlide(void)
         }
     }
     else {
-        self->velocity.y += self->gravityStrength * RSDK.Cos512(self->abilityValue) >> 9;
+        self->velocity.y += (self->gravityStrength * RSDK.Cos512(self->abilityValue)) >> 9;
     }
 
     if (self->velocity.y < -0x60000)
@@ -5413,11 +5413,11 @@ void Player_State_RayGlide(void)
 
     if (self->rotation == 1) {
         if (self->velocity.y > 0x10000)
-            self->velocity.y = self->velocity.y - (self->velocity.y >> 2);
+            self->velocity.y -= (self->velocity.y >> 2);
     }
 
     if (self->velocity.y <= 0) {
-        self->abilityValues[0] -= 22 * RSDK.Sin256(80 - self->abilityValue);
+        self->abilityValues[0] -= 22 * RSDK.Sin256(0x50 - self->abilityValue);
         if (self->abilityValues[0] < 0x40000)
             self->abilityValues[0] = 0x40000;
     }
@@ -5428,7 +5428,7 @@ void Player_State_RayGlide(void)
     if (self->velocity.x) {
         int32 angle = 0x50 - self->abilityValue;
         if (self->direction) {
-            self->velocity.x -= 22 * RSDK.Sin256(angle) >> (uint8)(self->underwater != 0);
+            self->velocity.x -= (22 * RSDK.Sin256(angle)) >> (uint8)(self->underwater != 0);
 
             if (self->velocity.x > -0x10000)
                 self->velocity.x = -0x10000;
@@ -5437,29 +5437,28 @@ void Player_State_RayGlide(void)
                 self->velocity.x = -self->abilityValues[0];
         }
         else {
-            self->velocity.x += 22 * RSDK.Sin256(angle) >> (uint8)(self->underwater != 0);
+            self->velocity.x += (22 * RSDK.Sin256(angle)) >> (uint8)(self->underwater != 0);
 
             if (self->velocity.x < 0x10000)
                 self->velocity.x = 0x10000;
 
-            if (self->velocity.x > self->abilityValues[0]) {
+            if (self->velocity.x > self->abilityValues[0]) 
                 self->velocity.x = self->abilityValues[0];
-            }
         }
     }
 
     if (self->controlLock) {
         self->controlLock--;
     }
-    else if ((!self->right || self->abilityValue != 16) && self->direction == FLIP_X) {
-        if (self->left && self->abilityValue == 112 && self->rotation == 1) {
+    else if (self->direction == FLIP_X && (!self->right || self->abilityValue != 16)) {
+        if (self->left && self->abilityValue == 0x70 && self->rotation == 1) {
             self->abilitySpeed = 0;
             self->rotation     = 0;
             RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLY_DOWN, &self->animator, false, 0);
         }
     }
-    else if ((!self->left || self->abilityValue != 16) && self->direction == FLIP_NONE) {
-        if (self->right && self->abilityValue == 112 && self->rotation == 1) {
+    else if (self->direction == FLIP_NONE && (!self->left || self->abilityValue != 16)) {
+        if (self->right && self->abilityValue == 0x70 && self->rotation == 1) {
             self->abilitySpeed = 0;
             self->rotation     = 0;
             RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLY_DOWN, &self->animator, false, 0);
@@ -5474,8 +5473,10 @@ void Player_State_RayGlide(void)
             self->abilitySpeed = -(self->abilityTimer * ((xVel >> 1) + (xVel >> 2) + (xVel >> 4)) >> 8);
             if (self->underwater)
                 self->abilitySpeed = (self->abilitySpeed >> 1) + (self->abilitySpeed >> 3);
+
             if (self->abilityTimer > 16)
-                self->abilityTimer = self->abilityTimer - 32;
+                self->abilityTimer -= 32;
+
             if (self->abilitySpeed < -0x60000)
                 self->abilitySpeed = -0x60000;
         }
@@ -5511,7 +5512,7 @@ void Player_State_RayGlide(void)
         }
     }
 
-    if (RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_ROOF, self->collisionPlane, 0, -0x100000, false))
+    if (RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_ROOF, self->collisionPlane, 0, -TO_FIXED(16), false))
         self->abilitySpeed = 0;
 }
 #endif
@@ -6303,7 +6304,15 @@ void Player_JumpAbility_Ray(void)
             else
                 self->velocity.x = MAX(newXVel, self->underwater ? 0x18000 : 0x30000);
 
-            if ((self->direction || !self->right) && (self->direction != FLIP_X || !self->left)) {
+            if ((self->direction == FLIP_NONE && self->right) || (self->direction == FLIP_X && self->left)) {
+                if (!self->underwater)
+                    Player->rayDiveTimer = 256;
+
+                RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLY_DOWN, &self->animator, false, 3);
+                self->rotation     = 0;
+                self->abilitySpeed = 0;
+            }
+            else {
                 if (!self->underwater)
                     Player->raySwoopTimer = 256;
 
@@ -6312,15 +6321,8 @@ void Player_JumpAbility_Ray(void)
 
                 self->velocity.x >>= 1;
                 int32 vel          = abs(self->velocity.x);
-                self->abilitySpeed = MIN(-((vel >> 1) + (vel >> 2) + (vel >> 4)) >> (uint8)(self->underwater != 0), 0x40000);
-            }
-            else {
-                if (!self->underwater)
-                    Player->rayDiveTimer = 256;
-
-                RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLY_DOWN, &self->animator, false, 3);
-                self->rotation     = 0;
-                self->abilitySpeed = 0;
+                int32 speed        = -((vel >> 1) + (vel >> 2) + (vel >> 4)) >> (uint8)(self->underwater != 0);
+                self->abilitySpeed = MIN(speed, 0x40000);
             }
 
             self->velocity.y >>= 1;
