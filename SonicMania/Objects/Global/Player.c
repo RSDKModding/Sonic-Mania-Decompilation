@@ -5467,7 +5467,7 @@ void Player_State_RayGlide(void)
     else if (!self->rotation) {
         self->rotation = 1;
 
-        if ((self->velocity.y > 0x28000 || self->abilityTimer == 256 || self->underwater) && self->velocity.y > 0x18000) {
+        if (self->velocity.y > 0x28000 || self->abilityTimer == 256 || self->underwater && self->velocity.y > 0x18000) {
             int32 xVel = abs(self->velocity.x);
 
             self->abilitySpeed = -((self->abilityTimer * ((xVel >> 1) + (xVel >> 2) + (xVel >> 4))) >> 8);
