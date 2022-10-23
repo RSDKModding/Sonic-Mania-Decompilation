@@ -92,7 +92,6 @@ void OptionsMenu_Initialize(void)
             OptionsMenu->dataOptionsControl = control;
     }
 
-    Hitbox hitbox;
     foreach_all(UIButtonPrompt, prompt)
     {
         EntityUIControl *controller = OptionsMenu->optionsControl;
@@ -151,7 +150,6 @@ void OptionsMenu_SetupActions(void)
     EntityUIControl *soundControl        = OptionsMenu->soundControl;
     EntityUIControl *dataControl         = OptionsMenu->dataOptionsControl;
 
-    Hitbox hitbox;
     String string;
     INIT_STRING(string);
 

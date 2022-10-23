@@ -230,7 +230,6 @@ bool32 PSZ2Outro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
             }
 
             if (host->timer >= host->storedTimer + 52) {
-                int32 id = 0;
                 EntityPlayer *players[2] = {player1, player2};
                 for (int32 i = 0; i < 2; ++i) {
                     EntityPlayer *player = players[i];
