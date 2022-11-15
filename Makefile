@@ -22,7 +22,8 @@ GAME_POSTLINK =
 
 DEFINES      =
 
-RSDK_REVISION ?= 2
+RETRO_REVISION ?= 2
+RSDK_REVISION  ?= $(RETRO_REVISION)
 
 # =============================================================================
 # Detect default platform if not explicitly specified
