@@ -162,8 +162,8 @@ void PBL_Crane_HandlePrizes(void)
         case PBL_CRANE_PRIZE_SHIELD_BUBBLE:
         case PBL_CRANE_PRIZE_SHIELD_FIRE:
         case PBL_CRANE_PRIZE_SHIELD_ELECTRIC:
-            globals->restartPowerups &= ~0x40;
-            globals->restartPowerups |= self->displayAnimator.frameID - 6;
+            globals->restartPowerups &= ~0x3F;
+            globals->restartPowerups |= self->displayAnimator.frameID - PBL_CRANE_PRIZE_SHIELD_BLUE + SHIELD_BLUE; // Converts the frame ID to a shield ID
 
             PBL_Crane->prizeID = PBL_CRANE_PRIZEID_ITEM;
             break;
@@ -287,7 +287,7 @@ void PBL_Crane_State_CreatePrizes(void)
                 prize->displayAnimator.frameID = i;
             }
             else {
-                prize->displayAnimator.frameID = RSDK.Rand(PBL_CRANE_PRIZE_RINGS, PBL_CRANE_PRIZE_1UP);
+                prize->displayAnimator.frameID = RSDK.Rand(PBL_CRANE_PRIZE_RINGS, PBL_CRANE_PRIZE_TABLE_RESTORE + 1);
             }
         }
         else {
@@ -295,7 +295,7 @@ void PBL_Crane_State_CreatePrizes(void)
                 prize->displayAnimator.frameID = PBL_CRANE_PRIZE_EGGMAN;
             }
             else {
-                prize->displayAnimator.frameID = RSDK.Rand(PBL_CRANE_PRIZE_RINGS, PBL_CRANE_PRIZE_1UP);
+                prize->displayAnimator.frameID = RSDK.Rand(PBL_CRANE_PRIZE_RINGS, PBL_CRANE_PRIZE_1UP + 1);
             }
         }
 
