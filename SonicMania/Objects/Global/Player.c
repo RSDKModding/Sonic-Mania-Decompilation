@@ -2470,8 +2470,8 @@ bool32 Player_CheckBadnikTouch(EntityPlayer *player, void *e, Hitbox *entityHitb
 #endif
 
     EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + player->playerID, Shield);
+    Hitbox tempHitbox;
     if (shield->classID == Shield->classID && shield->state == Shield_State_Insta) {
-        Hitbox tempHitbox;
 
         tempHitbox.left   = (playerHitbox->left << 1) - (playerHitbox->left >> 1);
         tempHitbox.top    = (playerHitbox->top << 1) - (playerHitbox->top >> 1);
