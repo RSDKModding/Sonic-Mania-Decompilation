@@ -54,7 +54,7 @@
 #define VER_106 (6) // 1.06 (steam denuvo removal update)
 #define VER_107 (7) // 1.07 (EGS/Origin releases)
 
-#ifdef MANIA_PREPLUS
+#if MANIA_PREPLUS
 
 #ifdef MANIA_FIRST_RELEASE
 #define GAME_VERSION VER_100

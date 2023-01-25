@@ -1418,7 +1418,7 @@ void Platform_Collision_Hurt(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionBox(player, self, &self->hitbox)) {
+        if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
 #if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x400, self->type == PLATFORM_CIRCULAR, &player->uncurlTimer))
 #endif

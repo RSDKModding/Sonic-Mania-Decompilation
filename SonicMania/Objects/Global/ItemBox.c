@@ -952,6 +952,9 @@ bool32 ItemBox_HandlePlatformCollision(void *plat)
                 break;
 
             case PLATFORM_C_TILED:
+                if (!RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, self, &ItemBox->hitboxItemBox))
+                    break;
+
                 if (self->collisionLayers & Zone->moveLayerMask) {
                     TileLayer *move  = RSDK.GetTileLayer(Zone->moveLayer);
                     move->position.x = -(platform->drawPos.x + platform->tileOrigin.x) >> 16;
@@ -968,8 +971,6 @@ bool32 ItemBox_HandlePlatformCollision(void *plat)
                 break;
 
             default:
-                if (RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, self, &ItemBox->hitboxItemBox))
-                    collided = true;
                 break;
         }
 

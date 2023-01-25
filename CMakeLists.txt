@@ -16,6 +16,8 @@ target_include_directories(SonicMania PRIVATE
     ${GAME_NAME}/Objects/
 )
 
+target_compile_options(SonicMania PRIVATE -DRETRO_REVISION=3 -DMANIA_PREPLUS=0)
+
 set_target_properties(SonicMania PROPERTIES OUTPUT_NAME ${OUTPUT_NAME})
 
 unset(GAME_NAME CACHE)

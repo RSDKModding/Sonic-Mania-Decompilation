@@ -22,7 +22,7 @@ GAME_POSTLINK =
 
 DEFINES      =
 
-RETRO_REVISION ?= 2
+RETRO_REVISION ?= 3
 RSDK_REVISION  ?= $(RETRO_REVISION)
 
 # =============================================================================
