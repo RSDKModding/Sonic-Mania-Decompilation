@@ -24,13 +24,8 @@ void UIPicture_Draw(void)
 {
     RSDK_THIS(UIPicture);
 
-    // Bug Details:
-    // This should use zoneID in the CopyPalette params right?
-    // using zonePalette would just be 0 or 1 instead of 0-12 or so that you'd expect...
-
-    if (self->zonePalette)
-        RSDK.CopyPalette((self->zonePalette >> 3) + 1, 32 * self->zonePalette, 0, 224, 32);
-
+    RSDK.CopyPalette((self->zonePalette >> 3) + 1, 32 * self->zoneID, 0, 224, 32);
+    
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
