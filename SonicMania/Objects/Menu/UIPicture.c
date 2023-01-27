@@ -24,8 +24,11 @@ void UIPicture_Draw(void)
 {
     RSDK_THIS(UIPicture);
 
-    RSDK.CopyPalette((self->zonePalette >> 3) + 1, 32 * self->zoneID, 0, 224, 32);
-    
+    if (self->zoneID)
+        RSDK.CopyPalette((self->zonePalette >> 3) + 1, 32 * self->zonePalette, 0, 224, 32);
+    else if (self->zonePalette)
+        RSDK.CopyPalette((self->zonePalette >> 3) + 1, 32 * self->zoneID, 0, 224, 32);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
