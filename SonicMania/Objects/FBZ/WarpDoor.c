@@ -388,6 +388,7 @@ void WarpDoor_DrawDebug(void)
         }
     }
 
+#if RETRO_INCLUDE_EDITOR
     if (SceneInfo->inEditor) {
         // added for RE2, it makes the scene a mess without this
         if (!showGizmos())
@@ -420,6 +421,7 @@ void WarpDoor_DrawDebug(void)
 
         RSDK_DRAWING_OVERLAY(false); // added for RE2
     }
+#endif
 }
 
 void WarpDoor_SetupHitbox(void)

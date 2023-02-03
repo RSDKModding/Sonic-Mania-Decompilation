@@ -454,6 +454,7 @@ void MatryoshkaBom_State_Shrapnel(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void MatryoshkaBom_EditorDraw(void)
 {
     RSDK_THIS(MatryoshkaBom);
@@ -506,6 +507,7 @@ void MatryoshkaBom_EditorLoad(void)
     RSDK_ENUM_VAR("Medium", MATRYOSHKA_SIZE_MED);
     RSDK_ENUM_VAR("Small", MATRYOSHKA_SIZE_SMALL);
 }
+#endif
 
 void MatryoshkaBom_Serialize(void)
 {
