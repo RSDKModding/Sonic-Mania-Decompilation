@@ -1511,7 +1511,7 @@ typedef struct {
 #endif
 
     // Spritesheets
-    uint16 (*LoadSpriteSheet)(const char *filePath, int32 scope);
+    uint16 (*LoadSpriteSheet)(const char *filePath, uint8 scope);
 
     // Palettes & Colors
 #if RETRO_REV02
@@ -1543,7 +1543,7 @@ typedef struct {
     void (*DrawBlendedFace)(Vector2 *vertices, color *vertColors, int32 vertCount, int32 alpha, int32 inkEffect);
     void (*DrawSprite)(Animator *animator, Vector2 *position, bool32 screenRelative);
     void (*DrawDeformedSprite)(uint16 sheetID, int32 inkEffect, bool32 screenRelative);
-    void (*DrawText)(Animator *animator, Vector2 *position, String *string, int32 startFrame, int32 endFrame, int32 align, int32 spacing, void *unused,
+    void (*DrawText)(Animator *animator, Vector2 *position, String *string, int32 endFrame, int32 textLength, int32 align, int32 spacing, void *unused,
                      Vector2 *charOffsets, bool32 screenRelative);
     void (*DrawTile)(uint16 *tiles, int32 countX, int32 countY, Vector2 *position, Vector2 *offset, bool32 screenRelative);
     void (*CopyTile)(uint16 dest, uint16 src, uint16 count);
@@ -1560,15 +1560,15 @@ typedef struct {
     void (*SetDiffuseColor)(uint16 sceneIndex, uint8 x, uint8 y, uint8 z);
     void (*SetDiffuseIntensity)(uint16 sceneIndex, uint8 x, uint8 y, uint8 z);
     void (*SetSpecularIntensity)(uint16 sceneIndex, uint8 x, uint8 y, uint8 z);
-    void (*AddModelTo3DScene)(uint16 modelFrames, uint16 sceneIndex, uint8 drawMode, Matrix *matWorld, Matrix *matNormal, color color);
+    void (*AddModelTo3DScene)(uint16 modelFrames, uint16 sceneIndex, uint8 drawMode, Matrix *matWorld, Matrix *matView, color color);
     void (*SetModelAnimation)(uint16 modelFrames, Animator *animator, int16 speed, uint8 loopIndex, bool32 forceApply, int16 frameID);
-    void (*AddMeshFrameTo3DScene)(uint16 modelFrames, uint16 sceneIndex, Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matNormal,
+    void (*AddMeshFrameTo3DScene)(uint16 modelFrames, uint16 sceneIndex, Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matView,
                                   color color);
     void (*Draw3DScene)(uint16 sceneIndex);
 
     // Sprite Animations & Frames
-    uint16 (*LoadSpriteAnimation)(const char *filePath, int32 scope);
-    uint16 (*CreateSpriteAnimation)(const char *filePath, uint32 frameCount, uint32 listCount, int32 scope);
+    uint16 (*LoadSpriteAnimation)(const char *filePath, uint8 scope);
+    uint16 (*CreateSpriteAnimation)(const char *filePath, uint32 frameCount, uint32 listCount, uint8 scope);
     void (*SetSpriteAnimation)(uint16 aniFrames, uint16 listID, Animator *animator, bool32 forceApply, int16 frameID);
     void (*EditSpriteAnimation)(uint16 aniFrames, uint16 listID, const char *name, int32 frameOffset, uint16 frameCount, int16 speed, uint8 loopIndex,
                                 uint8 rotationStyle);
@@ -1731,6 +1731,7 @@ typedef struct {
         RSDK.SetEditableVar(type, buffer, (uint8)object->classID, offsetof(Entity##object, var) + sizeof(arrType) * i);                              \
     }
 
+#if RETRO_INCLUDE_EDITOR
 // Some extra precaution to prevent crashes in editor
 #define RSDK_ACTIVE_VAR(object, var)                                                                                                                 \
     if (object) {                                                                                                                                    \
@@ -1741,7 +1742,6 @@ typedef struct {
     }
 #define RSDK_ENUM_VAR(name, var) RSDK.AddVarEnumValue(name)
 
-#if RETRO_INCLUDE_EDITOR
 #define RSDK_DRAWING_OVERLAY(isDrawingOverlay) SceneInfo->debugMode = isDrawingOverlay
 
 #if RETRO_REV0U
