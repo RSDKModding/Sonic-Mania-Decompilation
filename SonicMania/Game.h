@@ -25,6 +25,7 @@
 // enabling this will add the RSDKv5U funcs and allow this to run properly on that engine ver
 #define RETRO_REV0U (RETRO_REVISION >= 3)
 
+
 // Controls whether EditorLoad & EditorDraw should be included in the final product or not
 // This is a copy of what the original game likely had, as the original game does not include EditorLoad or EditorDraw funcs for any objects
 #ifndef RETRO_INCLUDE_EDITOR

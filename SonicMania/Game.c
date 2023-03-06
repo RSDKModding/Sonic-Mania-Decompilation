@@ -67,14 +67,12 @@ void GlobalVariables_InitCB(GlobalVariables *globals)
 }
 #endif
 
-// -------------------------
-// LINK GAME/MOD LOGIC
-// -------------------------
-
 void InitGameLogic(void);
 #if RETRO_USE_MOD_LOADER
 void InitModAPI(void);
 #endif
+
+#include "GameMain.h"
 
 #if MANIA_USE_PLUS
 void LinkGameLogicDLL(EngineInfo *info)
@@ -878,14 +876,4 @@ bool32 LinkModLogic(EngineInfo *info, const char *id)
 #endif
     return true;
 }
-#endif
-
-// -------------------------
-// ENTRY POINT
-// -------------------------
-
-#if !RETRO_STANDALONE
-int32 RSDK_main(int32 argc, char **argv, void *linkLogicPtr); // make sure other side has a void* too
-
-int32 GAME_MAIN(int32 argc, char *argv[]) { return RSDK_main(argc, argv, LinkGameLogicDLL); }
 #endif
