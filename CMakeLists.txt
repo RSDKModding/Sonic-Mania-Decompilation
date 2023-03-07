@@ -10,13 +10,13 @@ if(NOT DEFINED GAME_STATIC)
     if(WIN32)
         set(GAME_STATIC OFF)
     elseif(ANDROID)
-        set(GAME_STATIC OFF)
+        set(GAME_STATIC ON) # just to keep the libraries uncluttered
     elseif(SWITCH)
         set(GAME_STATIC ON)
     endif()
 endif()
 
-option(GAME_STATIC "Whether or not to build the game statically linked." $<IF:WITH_RSDK,ON,OFF>)
+option(GAME_STATIC "Whether or not to build the game as a static library." $<IF:WITH_RSDK,ON,OFF>)
 
 option(MANIA_PREPLUS "Whether or not to build Mania pre-plus. Defaults to false" OFF)
 
