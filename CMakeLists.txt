@@ -55,7 +55,9 @@ set_target_properties(${GAME_NAME} PROPERTIES OUTPUT_NAME ${GAME_OUTPUT_NAME})
 message(NOTICE "static " ${GAME_STATIC})
 
 if(WITH_RSDK)
-    add_subdirectory(dependencies/RSDKv5)
+    set(RSDK_PATH dependencies/RSDKv5 CACHE STRING "The path to look for RSDKv5 if using WITH_RSDK.")
+
+    add_subdirectory(${RSDK_PATH})
 
     if(GAME_STATIC)
         target_include_directories(RetroEngine PRIVATE ${GAME_NAME}/)
