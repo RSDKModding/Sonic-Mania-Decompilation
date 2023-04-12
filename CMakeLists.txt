@@ -11,7 +11,7 @@ if(NOT DEFINED GAME_STATIC)
         set(GAME_STATIC OFF)
     elseif(ANDROID)
         set(GAME_STATIC ON) # just to keep the libraries uncluttered
-    elseif(SWITCH)
+    elseif(CMAKE_SYSTEM_NAME STREQUAL NintendoSwitch)
         set(GAME_STATIC ON)
     endif()
 endif()
