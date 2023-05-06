@@ -82,7 +82,7 @@ void UISaveSlot_StaticUpdate(void);
 void UISaveSlot_Draw(void);
 void UISaveSlot_Create(void *data);
 void UISaveSlot_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UISaveSlot_EditorDraw(void);
 void UISaveSlot_EditorLoad(void);
 #endif

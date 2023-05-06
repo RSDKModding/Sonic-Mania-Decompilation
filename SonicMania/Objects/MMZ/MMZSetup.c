@@ -129,7 +129,7 @@ void MMZSetup_StageFinish_EndAct1(void)
 void MMZSetup_StageFinish_EndAct2(void) { CREATE_ENTITY(MMZ2Outro, NULL, 0, 0); }
 #endif
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MMZSetup_EditorDraw(void) {}
 
 void MMZSetup_EditorLoad(void) {}

@@ -68,7 +68,7 @@ void Valve_StageLoad(void)
     Valve->sfxClick = RSDK.GetSfx("Stage/Click.wav");
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Valve_EditorDraw(void)
 {
     RSDK_THIS(Valve);

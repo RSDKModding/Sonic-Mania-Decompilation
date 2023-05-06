@@ -569,7 +569,7 @@ void RollerMKII_State_Bumped(void)
     RollerMKII_CheckOffScreen();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void RollerMKII_EditorDraw(void) { RollerMKII_Draw(); }
 
 void RollerMKII_EditorLoad(void)

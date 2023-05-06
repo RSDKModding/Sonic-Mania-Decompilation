@@ -990,7 +990,7 @@ void PauseMenu_Draw_ForcePause(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PauseMenu_EditorDraw(void) {}
 
 void PauseMenu_EditorLoad(void) {}

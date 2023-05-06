@@ -60,7 +60,7 @@ void RotatingStair_StaticUpdate(void);
 void RotatingStair_Draw(void);
 void RotatingStair_Create(void *data);
 void RotatingStair_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void RotatingStair_EditorDraw(void);
 void RotatingStair_EditorLoad(void);
 #endif

@@ -74,7 +74,7 @@ void BurningLog_StageLoad(void)
     BurningLog->hitboxFlame.bottom = 8;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BurningLog_EditorDraw(void) { BurningLog_Draw(); }
 
 void BurningLog_EditorLoad(void) { BurningLog->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Fireball.bin", SCOPE_STAGE); }

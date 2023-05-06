@@ -114,7 +114,7 @@ void UFO_Springboard_StageLoad(void)
     UFO_Springboard->sceneIndex = RSDK.Create3DScene("View:Special", 4096, SCOPE_STAGE);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UFO_Springboard_EditorDraw(void) {}
 
 void UFO_Springboard_EditorLoad(void) {}

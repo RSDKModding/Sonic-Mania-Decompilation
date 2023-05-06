@@ -543,7 +543,7 @@ void DiveEggman_StateBomb_Falling(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void DiveEggman_EditorDraw(void)
 {
     RSDK_THIS(DiveEggman);

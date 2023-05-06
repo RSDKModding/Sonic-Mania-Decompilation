@@ -357,7 +357,7 @@ void Clucker_State_Egg(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Clucker_EditorDraw(void)
 {
     RSDK_THIS(Clucker);

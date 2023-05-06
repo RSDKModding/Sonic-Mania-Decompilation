@@ -56,7 +56,7 @@ void TwistingDoor_StaticUpdate(void);
 void TwistingDoor_Draw(void);
 void TwistingDoor_Create(void *data);
 void TwistingDoor_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TwistingDoor_EditorDraw(void);
 void TwistingDoor_EditorLoad(void);
 #endif

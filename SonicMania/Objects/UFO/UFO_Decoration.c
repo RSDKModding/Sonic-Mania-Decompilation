@@ -115,7 +115,7 @@ void UFO_Decoration_StageLoad(void)
     UFO_Decoration->drawType = S3D_SOLIDCOLOR_SHADED_BLENDED_SCREEN;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UFO_Decoration_EditorDraw(void) {}
 
 void UFO_Decoration_EditorLoad(void)

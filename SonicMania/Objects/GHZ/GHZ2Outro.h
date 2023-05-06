@@ -31,7 +31,7 @@ void GHZ2Outro_StaticUpdate(void);
 void GHZ2Outro_Draw(void);
 void GHZ2Outro_Create(void *data);
 void GHZ2Outro_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void GHZ2Outro_EditorDraw(void);
 void GHZ2Outro_EditorLoad(void);
 #endif

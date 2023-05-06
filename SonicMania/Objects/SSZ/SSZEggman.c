@@ -154,7 +154,7 @@ void SSZEggman_State_FlyAway(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SSZEggman_EditorDraw(void)
 {
     RSDK_THIS(SSZEggman);

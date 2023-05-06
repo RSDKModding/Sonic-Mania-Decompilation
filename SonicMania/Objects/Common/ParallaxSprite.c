@@ -237,7 +237,7 @@ void ParallaxSprite_State_FadeOut(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ParallaxSprite_EditorDraw(void)
 {
     RSDK_THIS(ParallaxSprite);

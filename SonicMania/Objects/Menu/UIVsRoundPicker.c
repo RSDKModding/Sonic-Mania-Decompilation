@@ -341,7 +341,7 @@ void UIVsRoundPicker_State_HandleButtonEnter(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIVsRoundPicker_EditorDraw(void)
 {
     RSDK_THIS(UIVsRoundPicker);

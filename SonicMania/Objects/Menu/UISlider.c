@@ -362,7 +362,7 @@ void UISlider_State_HandleButtonEnter(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UISlider_EditorDraw(void)
 {
     RSDK_THIS(UISlider);

@@ -313,7 +313,7 @@ void UITransition_State_TransitionOut(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UITransition_EditorDraw(void) {}
 
 void UITransition_EditorLoad(void) {}

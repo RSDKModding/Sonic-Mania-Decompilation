@@ -28,7 +28,7 @@ void TMZ3Setup_StaticUpdate(void);
 void TMZ3Setup_Draw(void);
 void TMZ3Setup_Create(void *data);
 void TMZ3Setup_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TMZ3Setup_EditorDraw(void);
 void TMZ3Setup_EditorLoad(void);
 #endif

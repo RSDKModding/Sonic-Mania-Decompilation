@@ -264,7 +264,7 @@ void TetherBall_State_FinishedSwing(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TetherBall_EditorDraw(void)
 {
     RSDK_THIS(TetherBall);

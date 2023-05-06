@@ -43,7 +43,7 @@ void CircleBumper_StaticUpdate(void);
 void CircleBumper_Draw(void);
 void CircleBumper_Create(void *data);
 void CircleBumper_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void CircleBumper_EditorDraw(void);
 void CircleBumper_EditorLoad(void);
 #endif

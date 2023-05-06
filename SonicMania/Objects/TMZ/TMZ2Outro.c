@@ -755,7 +755,7 @@ void TMZ2Outro_SaveFileCB(bool32 success) { TMZ2Outro->finishedSaving = true; }
 void TMZ2Outro_SaveFileCB(void) { TMZ2Outro->finishedSaving = true; }
 #endif
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TMZ2Outro_EditorDraw(void) {}
 
 void TMZ2Outro_EditorLoad(void) {}

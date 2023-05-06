@@ -106,7 +106,7 @@ void SideBarrel_StageLoad(void)
     SideBarrel->sfxDrop = RSDK.GetSfx("Stage/Drop.wav");
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SideBarrel_EditorDraw(void)
 {
     RSDK_THIS(SideBarrel);

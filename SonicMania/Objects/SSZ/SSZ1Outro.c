@@ -154,7 +154,7 @@ void SSZ1Outro_Trigger_DestroyHotarus(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SSZ1Outro_EditorDraw(void)
 {
     RSDK_THIS(SSZ1Outro);

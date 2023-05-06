@@ -498,7 +498,7 @@ void Beanstalk_State_Chomper(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Beanstalk_EditorDraw(void)
 {
     RSDK_THIS(Beanstalk);

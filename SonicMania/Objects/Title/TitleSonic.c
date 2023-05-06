@@ -52,7 +52,7 @@ void TitleSonic_Create(void *data)
 
 void TitleSonic_StageLoad(void) { TitleSonic->aniFrames = RSDK.LoadSpriteAnimation("Title/Sonic.bin", SCOPE_STAGE); }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TitleSonic_EditorDraw(void)
 {
     RSDK_THIS(TitleSonic);

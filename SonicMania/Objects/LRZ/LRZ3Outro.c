@@ -213,7 +213,7 @@ bool32 LRZ3Outro_Cutscene_LightUpLittlePlanet(EntityCutsceneSeq *host)
     return false;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LRZ3Outro_EditorDraw(void) {}
 
 void LRZ3Outro_EditorLoad(void) {}

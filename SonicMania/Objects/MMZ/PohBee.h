@@ -40,7 +40,7 @@ void PohBee_StaticUpdate(void);
 void PohBee_Draw(void);
 void PohBee_Create(void *data);
 void PohBee_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PohBee_EditorDraw(void);
 void PohBee_EditorLoad(void);
 #endif

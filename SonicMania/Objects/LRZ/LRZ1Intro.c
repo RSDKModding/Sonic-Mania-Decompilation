@@ -265,7 +265,7 @@ void LRZ1Intro_State_SubSinking(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LRZ1Intro_EditorDraw(void) {}
 
 void LRZ1Intro_EditorLoad(void) {}

@@ -114,7 +114,7 @@ void HangGlider_State_Glide(void)
     RSDK.ProcessAnimation(&self->playerAnimator);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void HangGlider_EditorDraw(void)
 {
     RSDK_THIS(HangGlider);

@@ -47,7 +47,7 @@ void Press_StaticUpdate(void);
 void Press_Draw(void);
 void Press_Create(void *data);
 void Press_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Press_EditorDraw(void);
 void Press_EditorLoad(void);
 #endif

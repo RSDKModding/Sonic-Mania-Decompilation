@@ -86,7 +86,7 @@ void UFO_Message_State_Exit(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UFO_Message_EditorDraw(void) {}
 
 void UFO_Message_EditorLoad(void) {}

@@ -335,7 +335,7 @@ void Shutterbug_HandleBodyAnim(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Shutterbug_EditorDraw(void)
 {
     RSDK_THIS(Shutterbug);

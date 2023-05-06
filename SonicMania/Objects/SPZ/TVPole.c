@@ -143,7 +143,7 @@ void TVPole_State_ForceRelease(void)
     self->activePlayers = 0;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TVPole_EditorDraw(void)
 {
     RSDK_THIS(TVPole);

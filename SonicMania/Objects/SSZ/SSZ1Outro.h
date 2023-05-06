@@ -26,7 +26,7 @@ void SSZ1Outro_StaticUpdate(void);
 void SSZ1Outro_Draw(void);
 void SSZ1Outro_Create(void *data);
 void SSZ1Outro_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SSZ1Outro_EditorDraw(void);
 void SSZ1Outro_EditorLoad(void);
 #endif

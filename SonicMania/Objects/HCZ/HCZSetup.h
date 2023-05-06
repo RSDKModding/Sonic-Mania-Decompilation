@@ -39,7 +39,7 @@ void HCZSetup_StaticUpdate(void);
 void HCZSetup_Draw(void);
 void HCZSetup_Create(void *data);
 void HCZSetup_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void HCZSetup_EditorDraw(void);
 void HCZSetup_EditorLoad(void);
 #endif

@@ -1128,7 +1128,7 @@ void DrillerdroidO_Draw_FireballEmitter(void)
 { /* Yeah :) */
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void DrillerdroidO_EditorDraw(void)
 {
     RSDK_THIS(DrillerdroidO);

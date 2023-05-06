@@ -169,7 +169,7 @@ void Flipper_StageLoad(void)
     Flipper->sfxFlipper = RSDK.GetSfx("Stage/Flipper.wav");
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Flipper_EditorDraw(void)
 {
     RSDK_THIS(Flipper);

@@ -35,7 +35,7 @@ void TippingPlatform_StaticUpdate(void);
 void TippingPlatform_Draw(void);
 void TippingPlatform_Create(void *data);
 void TippingPlatform_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TippingPlatform_EditorDraw(void);
 void TippingPlatform_EditorLoad(void);
 #endif

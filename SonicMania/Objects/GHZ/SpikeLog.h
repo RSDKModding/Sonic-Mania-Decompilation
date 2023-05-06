@@ -31,7 +31,7 @@ void SpikeLog_StaticUpdate(void);
 void SpikeLog_Draw(void);
 void SpikeLog_Create(void *data);
 void SpikeLog_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SpikeLog_EditorDraw(void);
 void SpikeLog_EditorLoad(void);
 #endif

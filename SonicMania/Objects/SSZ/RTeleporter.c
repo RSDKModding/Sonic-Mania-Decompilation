@@ -154,7 +154,7 @@ void RTeleporter_Draw_Destroyed(void)
     RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void RTeleporter_EditorDraw(void)
 {
     RSDK_THIS(RTeleporter);

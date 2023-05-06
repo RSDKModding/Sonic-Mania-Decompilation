@@ -833,7 +833,7 @@ void Tuesday_State_Debris(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Tuesday_EditorDraw(void)
 {
     RSDK_THIS(Tuesday);

@@ -82,7 +82,7 @@ void PBL_Crane_StaticUpdate(void);
 void PBL_Crane_Draw(void);
 void PBL_Crane_Create(void *data);
 void PBL_Crane_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PBL_Crane_EditorDraw(void);
 void PBL_Crane_EditorLoad(void);
 #endif

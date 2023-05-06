@@ -84,7 +84,7 @@ void DERobot_StaticUpdate(void);
 void DERobot_Draw(void);
 void DERobot_Create(void *data);
 void DERobot_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void DERobot_EditorDraw(void);
 void DERobot_EditorLoad(void);
 #endif

@@ -33,7 +33,7 @@ void LRZ2Setup_StaticUpdate(void);
 void LRZ2Setup_Draw(void);
 void LRZ2Setup_Create(void *data);
 void LRZ2Setup_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LRZ2Setup_EditorDraw(void);
 void LRZ2Setup_EditorLoad(void);
 #endif

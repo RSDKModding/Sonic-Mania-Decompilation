@@ -781,7 +781,7 @@ int32 HUD_CharacterIndexFromID(int32 characterID)
     return id;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void HUD_EditorDraw(void)
 {
     RSDK_THIS(HUD);

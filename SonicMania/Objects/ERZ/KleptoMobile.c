@@ -1158,7 +1158,7 @@ void KleptoMobile_State_CutsceneExplode(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void KleptoMobile_EditorDraw(void)
 {
     RSDK_THIS(KleptoMobile);

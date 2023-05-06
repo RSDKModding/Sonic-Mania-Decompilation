@@ -91,7 +91,7 @@ void TAEmerald_State_MoveCircle(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TAEmerald_EditorDraw(void)
 {
     RSDK_THIS(TAEmerald);

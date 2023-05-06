@@ -151,7 +151,7 @@ void AIZTornado_State_Move(void)
         AIZTornado_HandlePlayerCollisions();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void AIZTornado_EditorDraw(void)
 {
     RSDK_THIS(AIZTornado);

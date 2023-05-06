@@ -258,7 +258,7 @@ void Iwamodoki_State_Debris(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Iwamodoki_EditorDraw(void) { Iwamodoki_Draw(); }
 
 void Iwamodoki_EditorLoad(void)

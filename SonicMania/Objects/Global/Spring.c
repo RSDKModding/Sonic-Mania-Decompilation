@@ -353,7 +353,7 @@ void Spring_State_Diagonal(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Spring_EditorDraw(void)
 {
     RSDK_THIS(Spring);

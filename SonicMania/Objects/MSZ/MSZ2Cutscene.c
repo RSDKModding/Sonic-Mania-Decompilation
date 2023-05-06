@@ -268,7 +268,7 @@ bool32 MSZ2Cutscene_Cutscene_AppearInBG(EntityCutsceneSeq *host)
     return false;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MSZ2Cutscene_EditorDraw(void)
 {
     RSDK_THIS(MSZ2Cutscene);

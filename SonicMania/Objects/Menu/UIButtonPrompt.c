@@ -517,7 +517,7 @@ void UIButtonPrompt_State_Selected(void)
     self->textVisible = !((self->timer >> 1) & 1);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIButtonPrompt_EditorDraw(void)
 {
     RSDK_THIS(UIButtonPrompt);

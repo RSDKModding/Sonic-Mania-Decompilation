@@ -398,7 +398,7 @@ bool32 CPZ1Intro_Cutscene_ReadyStage(EntityCutsceneSeq *host)
     return false;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void CPZ1Intro_EditorDraw(void)
 {
     RSDK_THIS(CPZ1Intro);

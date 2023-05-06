@@ -743,7 +743,7 @@ void LottoMachine_State_StopSpinning(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LottoMachine_EditorDraw(void)
 {
     RSDK_THIS(LottoMachine);

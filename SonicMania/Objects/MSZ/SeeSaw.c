@@ -342,7 +342,7 @@ void SeeSaw_State_OrbLaunched(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SeeSaw_EditorDraw(void)
 {
     RSDK_THIS(SeeSaw);

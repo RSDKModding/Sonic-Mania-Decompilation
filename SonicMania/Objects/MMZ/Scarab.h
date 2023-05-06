@@ -43,7 +43,7 @@ void Scarab_StaticUpdate(void);
 void Scarab_Draw(void);
 void Scarab_Create(void *data);
 void Scarab_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Scarab_EditorDraw(void);
 void Scarab_EditorLoad(void);
 #endif

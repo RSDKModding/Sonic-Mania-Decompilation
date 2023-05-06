@@ -290,7 +290,7 @@ void Competition_WinMatchFor(int32 playerID)
 }
 #endif
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Competition_EditorDraw(void) {}
 
 void Competition_EditorLoad(void) {}

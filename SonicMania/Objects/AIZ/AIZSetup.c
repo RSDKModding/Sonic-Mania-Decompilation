@@ -903,7 +903,7 @@ bool32 AIZSetup_Cutscene_LoadGHZ(EntityCutsceneSeq *host)
     return true;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void AIZSetup_EditorDraw(void) {}
 
 void AIZSetup_EditorLoad(void)

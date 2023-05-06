@@ -116,7 +116,7 @@ void SPZ1Setup_StageFinish_EndAct1(void)
     RSDK.LoadScene();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SPZ1Setup_EditorDraw(void) {}
 
 void SPZ1Setup_EditorLoad(void) {}

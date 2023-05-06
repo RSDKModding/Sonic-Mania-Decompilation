@@ -632,7 +632,7 @@ bool32 MSZCutsceneST_Cutscene_SetupMSZ2(EntityCutsceneSeq *host)
     return false;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MSZCutsceneST_EditorDraw(void)
 {
     RSDK_THIS(MSZCutsceneST);

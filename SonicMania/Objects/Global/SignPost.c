@@ -597,7 +597,7 @@ void SignPost_State_Done(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SignPost_EditorDraw(void)
 {
     RSDK_THIS(SignPost);

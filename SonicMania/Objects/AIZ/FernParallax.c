@@ -67,7 +67,7 @@ void FernParallax_StageLoad(void)
     memset(FernParallax->entityBuffer, 0, 2 * ENTITY_SIZE);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FernParallax_EditorDraw(void)
 {
     RSDK_THIS(FernParallax);

@@ -62,7 +62,7 @@ void Spikes_StaticUpdate(void);
 void Spikes_Draw(void);
 void Spikes_Create(void *data);
 void Spikes_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Spikes_EditorDraw(void);
 void Spikes_EditorLoad(void);
 #endif

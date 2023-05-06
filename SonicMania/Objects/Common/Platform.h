@@ -70,7 +70,7 @@ void Platform_StaticUpdate(void);
 void Platform_Draw(void);
 void Platform_Create(void *data);
 void Platform_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Platform_EditorDraw(void);
 void Platform_EditorLoad(void);
 #endif

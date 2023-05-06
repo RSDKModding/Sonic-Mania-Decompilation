@@ -85,7 +85,7 @@ void PBL_Sector_Create(void *data)
 
 void PBL_Sector_StageLoad(void) {}
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PBL_Sector_EditorDraw(void)
 {
     RSDK_THIS(PBL_Sector);

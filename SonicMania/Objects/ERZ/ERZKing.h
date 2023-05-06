@@ -69,7 +69,7 @@ void ERZKing_StaticUpdate(void);
 void ERZKing_Draw(void);
 void ERZKing_Create(void *data);
 void ERZKing_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ERZKing_EditorDraw(void);
 void ERZKing_EditorLoad(void);
 #endif

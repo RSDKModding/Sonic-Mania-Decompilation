@@ -23,7 +23,7 @@ void MathHelpers_StaticUpdate(void);
 void MathHelpers_Draw(void);
 void MathHelpers_Create(void *data);
 void MathHelpers_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MathHelpers_EditorDraw(void);
 void MathHelpers_EditorLoad(void);
 #endif

@@ -926,7 +926,7 @@ void TitleCard_Draw_SlideAway(void)
     RSDK.DrawText(&self->nameLetterAnimator, &drawPos, &self->zoneName, self->titleCardWord2, 0, ALIGN_CENTER, 1, 0, 0, true);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TitleCard_EditorDraw(void)
 {
     RSDK_THIS(TitleCard);

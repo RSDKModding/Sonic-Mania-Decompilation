@@ -186,7 +186,7 @@ void SeltzerBottle_State_TryReset(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SeltzerBottle_EditorDraw(void)
 {
     RSDK_THIS(SeltzerBottle);

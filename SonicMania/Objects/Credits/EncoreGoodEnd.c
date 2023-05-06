@@ -511,7 +511,7 @@ bool32 EncoreGoodEnd_Cutscene_FinishCutscene(EntityCutsceneSeq *host)
 
 void EncoreGoodEnd_Cutscene_SkipCB(void) { EncoreGoodEnd_Cutscene_FinishCutscene(NULL); }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void EncoreGoodEnd_EditorDraw(void) {}
 
 void EncoreGoodEnd_EditorLoad(void)

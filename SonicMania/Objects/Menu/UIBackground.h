@@ -38,7 +38,7 @@ void UIBackground_StaticUpdate(void);
 void UIBackground_Draw(void);
 void UIBackground_Create(void *data);
 void UIBackground_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIBackground_EditorDraw(void);
 void UIBackground_EditorLoad(void);
 #endif

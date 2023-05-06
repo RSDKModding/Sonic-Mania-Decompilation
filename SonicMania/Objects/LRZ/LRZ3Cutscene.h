@@ -25,7 +25,7 @@ void LRZ3Cutscene_StaticUpdate(void);
 void LRZ3Cutscene_Draw(void);
 void LRZ3Cutscene_Create(void *data);
 void LRZ3Cutscene_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LRZ3Cutscene_EditorDraw(void);
 void LRZ3Cutscene_EditorLoad(void);
 #endif

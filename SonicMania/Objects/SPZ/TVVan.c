@@ -957,7 +957,7 @@ void TVVan_StateRadio_EnterTV(void)
     destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TVVan_EditorDraw(void)
 {
     RSDK_THIS(TVVan);

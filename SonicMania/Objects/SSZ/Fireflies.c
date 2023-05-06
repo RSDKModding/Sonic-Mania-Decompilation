@@ -165,7 +165,7 @@ void Fireflies_State_Firefly(void)
     ++self->timer;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Fireflies_EditorDraw(void)
 {
     RSDK_THIS(Fireflies);

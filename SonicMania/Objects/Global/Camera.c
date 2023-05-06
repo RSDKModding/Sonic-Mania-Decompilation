@@ -456,7 +456,7 @@ void Camera_State_HandleLerp(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Camera_EditorDraw(void)
 {
     RSDK_THIS(Camera);

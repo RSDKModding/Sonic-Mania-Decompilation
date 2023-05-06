@@ -560,7 +560,7 @@ void CutsceneHBH_State_KingTMZ2_Land(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void CutsceneHBH_EditorDraw(void)
 {
     RSDK_THIS(CutsceneHBH);

@@ -205,7 +205,7 @@ void FlowerPod_State_Flower(void)
     RSDK.ProcessAnimation(&self->podAnimator);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FlowerPod_EditorDraw(void)
 {
     RSDK_THIS(FlowerPod);

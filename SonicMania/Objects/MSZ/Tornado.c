@@ -444,7 +444,7 @@ void Tornado_State_FlyAway_Left(void)
     self->active = ACTIVE_BOUNDS;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Tornado_EditorDraw(void)
 {
     RSDK_THIS(Tornado);

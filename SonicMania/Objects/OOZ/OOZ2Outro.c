@@ -235,7 +235,7 @@ void OOZ2Outro_State_SubLaunch(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void OOZ2Outro_EditorDraw(void)
 {
     RSDK_THIS(OOZ2Outro);

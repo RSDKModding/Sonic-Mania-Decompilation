@@ -44,7 +44,7 @@ void ButtonDoor_StaticUpdate(void);
 void ButtonDoor_Draw(void);
 void ButtonDoor_Create(void *data);
 void ButtonDoor_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ButtonDoor_EditorDraw(void);
 void ButtonDoor_EditorLoad(void);
 #endif

@@ -177,7 +177,7 @@ void DashLift_State_HandleDash(void)
     DashLift_CheckOffScreen();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void DashLift_EditorDraw(void)
 {
     RSDK_THIS(DashLift);

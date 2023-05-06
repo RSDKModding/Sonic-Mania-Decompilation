@@ -28,7 +28,7 @@ void LogoSetup_StaticUpdate(void);
 void LogoSetup_Draw(void);
 void LogoSetup_Create(void *data);
 void LogoSetup_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LogoSetup_EditorDraw(void);
 void LogoSetup_EditorLoad(void);
 #endif

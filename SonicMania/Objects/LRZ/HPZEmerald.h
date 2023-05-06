@@ -37,7 +37,7 @@ void HPZEmerald_StaticUpdate(void);
 void HPZEmerald_Draw(void);
 void HPZEmerald_Create(void *data);
 void HPZEmerald_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void HPZEmerald_EditorDraw(void);
 void HPZEmerald_EditorLoad(void);
 #endif

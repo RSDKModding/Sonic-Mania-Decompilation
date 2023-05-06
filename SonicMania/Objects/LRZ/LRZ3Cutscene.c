@@ -92,7 +92,7 @@ bool32 LRZ3Cutscene_Cutscene_RunRight(EntityCutsceneSeq *host)
 
 void LRZ3Cutscene_StageLoad(void) {}
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LRZ3Cutscene_EditorDraw(void) {}
 
 void LRZ3Cutscene_EditorLoad(void) {}

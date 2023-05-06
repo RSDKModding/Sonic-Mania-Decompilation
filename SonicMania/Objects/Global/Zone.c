@@ -1393,7 +1393,7 @@ void Zone_State_HandleSwapFadeIn(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Zone_EditorDraw(void)
 {
     RSDK_THIS(Zone);

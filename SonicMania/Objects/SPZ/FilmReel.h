@@ -45,7 +45,7 @@ void FilmReel_StaticUpdate(void);
 void FilmReel_Draw(void);
 void FilmReel_Create(void *data);
 void FilmReel_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FilmReel_EditorDraw(void);
 void FilmReel_EditorLoad(void);
 #endif

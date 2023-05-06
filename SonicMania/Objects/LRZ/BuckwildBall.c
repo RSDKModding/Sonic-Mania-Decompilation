@@ -370,7 +370,7 @@ void BuckwildBall_State_Debris(void)
     BuckwildBall_CheckOffScreen();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BuckwildBall_EditorDraw(void)
 {
     RSDK_THIS(BuckwildBall);

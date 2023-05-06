@@ -28,7 +28,7 @@ void PlayerProbe_StaticUpdate(void);
 void PlayerProbe_Draw(void);
 void PlayerProbe_Create(void *data);
 void PlayerProbe_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PlayerProbe_EditorDraw(void);
 void PlayerProbe_EditorLoad(void);
 #endif

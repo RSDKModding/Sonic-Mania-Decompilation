@@ -276,7 +276,7 @@ void SpeedGate_State_HandleFinished(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SpeedGate_EditorDraw(void)
 {
     RSDK_THIS(SpeedGate);

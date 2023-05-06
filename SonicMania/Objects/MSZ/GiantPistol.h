@@ -47,7 +47,7 @@ void GiantPistol_StaticUpdate(void);
 void GiantPistol_Draw(void);
 void GiantPistol_Create(void *data);
 void GiantPistol_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void GiantPistol_EditorDraw(void);
 void GiantPistol_EditorLoad(void);
 #endif

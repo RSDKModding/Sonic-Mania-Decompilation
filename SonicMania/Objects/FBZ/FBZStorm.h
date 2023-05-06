@@ -38,7 +38,7 @@ void FBZStorm_StaticUpdate(void);
 void FBZStorm_Draw(void);
 void FBZStorm_Create(void *data);
 void FBZStorm_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FBZStorm_EditorDraw(void);
 void FBZStorm_EditorLoad(void);
 #endif

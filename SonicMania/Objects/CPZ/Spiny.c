@@ -317,7 +317,7 @@ void Spiny_State_ShotDisappear(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Spiny_EditorDraw(void)
 {
     RSDK_THIS(Spiny);

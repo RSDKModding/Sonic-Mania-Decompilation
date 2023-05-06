@@ -24,7 +24,7 @@ void COverlay_StaticUpdate(void);
 void COverlay_Draw(void);
 void COverlay_Create(void *data);
 void COverlay_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void COverlay_EditorDraw(void);
 void COverlay_EditorLoad(void);
 #endif

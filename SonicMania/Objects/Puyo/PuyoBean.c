@@ -1116,7 +1116,7 @@ void PuyoBean_State_MatchLoseFall(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PuyoBean_EditorDraw(void) { RSDK.DrawSprite(&PuyoBean->junkBeanAnimator, NULL, false); }
 
 void PuyoBean_EditorLoad(void)

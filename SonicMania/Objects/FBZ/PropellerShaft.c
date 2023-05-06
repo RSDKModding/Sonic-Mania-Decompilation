@@ -117,7 +117,7 @@ void PropellerShaft_Create(void *data)
 
 void PropellerShaft_StageLoad(void) {}
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PropellerShaft_EditorDraw(void)
 {
     RSDK_THIS(PropellerShaft);

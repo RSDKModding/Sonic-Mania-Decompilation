@@ -49,7 +49,7 @@ void InkWipe_StageLoad(void)
         InkWipe->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/InkWipe.bin", SCOPE_STAGE);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void InkWipe_EditorDraw(void)
 {
     RSDK_THIS(InkWipe);

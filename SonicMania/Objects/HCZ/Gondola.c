@@ -290,7 +290,7 @@ void Gondola_HandlePlayerInteractions(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Gondola_EditorDraw(void) { Gondola_Draw(); }
 
 void Gondola_EditorLoad(void)

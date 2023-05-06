@@ -220,7 +220,7 @@ void PhantomRuby_State_RotateToOrigin(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PhantomRuby_EditorDraw(void)
 {
     RSDK_THIS(PhantomRuby);

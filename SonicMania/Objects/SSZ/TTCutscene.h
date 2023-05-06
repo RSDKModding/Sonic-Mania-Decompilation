@@ -25,7 +25,7 @@ void TTCutscene_StaticUpdate(void);
 void TTCutscene_Draw(void);
 void TTCutscene_Create(void *data);
 void TTCutscene_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TTCutscene_EditorDraw(void);
 void TTCutscene_EditorLoad(void);
 #endif

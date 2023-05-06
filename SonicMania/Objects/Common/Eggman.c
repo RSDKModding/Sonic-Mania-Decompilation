@@ -163,7 +163,7 @@ void Eggman_State_WalkOffScreen(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Eggman_EditorDraw(void)
 {
     RSDK_THIS(Eggman);

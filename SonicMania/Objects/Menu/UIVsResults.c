@@ -293,7 +293,7 @@ void UIVsResults_State_Blank(void)
     // Everyone loses
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIVsResults_EditorDraw(void)
 {
     UIVsResults_SetupSprites();

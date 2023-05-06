@@ -239,7 +239,7 @@ void WallCrawl_State_Projectile(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void WallCrawl_EditorDraw(void)
 {
     RSDK_THIS(WallCrawl);

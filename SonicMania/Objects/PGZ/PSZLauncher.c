@@ -157,7 +157,7 @@ void PSZLauncher_State_Active(void)
     PSZLauncher_HandlePlayerInteractions();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PSZLauncher_EditorDraw(void)
 {
     RSDK_THIS(PSZLauncher);

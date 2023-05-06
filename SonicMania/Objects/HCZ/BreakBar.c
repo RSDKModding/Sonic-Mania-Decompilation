@@ -277,7 +277,7 @@ void BreakBar_State_Main(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BreakBar_EditorDraw(void) { BreakBar_DrawSprites(); }
 
 void BreakBar_EditorLoad(void)

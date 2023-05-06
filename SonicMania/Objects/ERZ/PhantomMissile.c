@@ -296,7 +296,7 @@ void PhantomMissile_State_Destroyed(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PhantomMissile_EditorDraw(void)
 {
     RSDK_THIS(PhantomMissile);

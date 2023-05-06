@@ -534,7 +534,7 @@ void Hatch_State_SubExitHatch(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Hatch_EditorDraw(void)
 {
     RSDK_THIS(Hatch);

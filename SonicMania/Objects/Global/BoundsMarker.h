@@ -35,7 +35,7 @@ void BoundsMarker_StaticUpdate(void);
 void BoundsMarker_Draw(void);
 void BoundsMarker_Create(void *data);
 void BoundsMarker_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BoundsMarker_EditorDraw(void);
 void BoundsMarker_EditorLoad(void);
 #endif

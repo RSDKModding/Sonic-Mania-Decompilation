@@ -37,7 +37,7 @@ void BSS_Palette_StaticUpdate(void);
 void BSS_Palette_Draw(void);
 void BSS_Palette_Create(void *data);
 void BSS_Palette_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BSS_Palette_EditorDraw(void);
 void BSS_Palette_EditorLoad(void);
 #endif

@@ -443,7 +443,7 @@ void PopcornMachine_StateController_HandleFinish(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PopcornMachine_EditorDraw(void)
 {
     RSDK_THIS(PopcornMachine);

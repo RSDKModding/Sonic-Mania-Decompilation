@@ -83,7 +83,7 @@ void TimeTravelSetup_Particle_TimeSparkle(EntityDebris *debris)
     debris->drawGroup     = Zone->objectDrawGroup[1];
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TimeTravelSetup_EditorDraw(void) {}
 
 void TimeTravelSetup_EditorLoad(void) {}

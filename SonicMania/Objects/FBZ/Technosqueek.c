@@ -300,7 +300,7 @@ void Technosqueek_State_Fall(void)
     Technosqueek_HandlePlayerCollisions();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Technosqueek_EditorDraw(void)
 {
     RSDK_THIS(Technosqueek);

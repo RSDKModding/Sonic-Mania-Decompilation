@@ -160,7 +160,7 @@ void Jawz_State_Triggered(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Jawz_EditorDraw(void)
 {
     RSDK_THIS(Jawz);

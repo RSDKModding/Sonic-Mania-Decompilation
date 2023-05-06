@@ -32,7 +32,7 @@ void FilmProjector_StaticUpdate(void);
 void FilmProjector_Draw(void);
 void FilmProjector_Create(void *data);
 void FilmProjector_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FilmProjector_EditorDraw(void);
 void FilmProjector_EditorLoad(void);
 #endif

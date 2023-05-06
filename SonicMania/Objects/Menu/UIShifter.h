@@ -32,7 +32,7 @@ void UIShifter_StaticUpdate(void);
 void UIShifter_Draw(void);
 void UIShifter_Create(void *data);
 void UIShifter_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIShifter_EditorDraw(void);
 void UIShifter_EditorLoad(void);
 #endif

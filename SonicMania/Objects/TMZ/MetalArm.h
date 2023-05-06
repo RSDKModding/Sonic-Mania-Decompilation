@@ -44,7 +44,7 @@ void MetalArm_StaticUpdate(void);
 void MetalArm_Draw(void);
 void MetalArm_Create(void *data);
 void MetalArm_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MetalArm_EditorDraw(void);
 void MetalArm_EditorLoad(void);
 #endif

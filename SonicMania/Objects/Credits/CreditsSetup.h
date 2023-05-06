@@ -31,7 +31,7 @@ void CreditsSetup_StaticUpdate(void);
 void CreditsSetup_Draw(void);
 void CreditsSetup_Create(void *data);
 void CreditsSetup_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void CreditsSetup_EditorDraw(void);
 void CreditsSetup_EditorLoad(void);
 #endif

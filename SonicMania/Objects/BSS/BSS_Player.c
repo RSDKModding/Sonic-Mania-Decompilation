@@ -229,7 +229,7 @@ void BSS_Player_Input_P2(void)
     self->jumpPress = BSS_Player->jumpPressState >> 15;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BSS_Player_EditorDraw(void)
 {
     RSDK_THIS(BSS_Player);

@@ -1268,7 +1268,7 @@ void Shiversaw_StateDust_Debris(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Shiversaw_EditorDraw(void)
 {
     RSDK_THIS(Shiversaw);

@@ -248,7 +248,7 @@ bool32 TTCutscene_Cutscene_NextScene(EntityCutsceneSeq *host)
     return false;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TTCutscene_EditorDraw(void)
 {
     RSDK_THIS(TTCutscene);

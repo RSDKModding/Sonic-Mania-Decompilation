@@ -74,7 +74,7 @@ void UIText_Create(void *data)
 
 void UIText_StageLoad(void) {}
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIText_EditorDraw(void)
 {
     RSDK_THIS(UIText);

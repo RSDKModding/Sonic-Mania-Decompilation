@@ -232,7 +232,7 @@ void Redz_Flame_State(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Redz_EditorDraw(void)
 {
     RSDK_THIS(Redz);

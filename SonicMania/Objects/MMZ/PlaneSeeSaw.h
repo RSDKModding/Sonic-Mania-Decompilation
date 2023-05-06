@@ -32,7 +32,7 @@ void PlaneSeeSaw_StaticUpdate(void);
 void PlaneSeeSaw_Draw(void);
 void PlaneSeeSaw_Create(void *data);
 void PlaneSeeSaw_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PlaneSeeSaw_EditorDraw(void);
 void PlaneSeeSaw_EditorLoad(void);
 #endif

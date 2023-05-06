@@ -295,7 +295,7 @@ void TMZ1Setup_State_FadeIntoOutsideBGs(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TMZ1Setup_EditorDraw(void) {}
 
 void TMZ1Setup_EditorLoad(void)

@@ -156,7 +156,7 @@ void PBL_Bumper_State_FinishedBump(void)
     PBL_Bumper_HandlePlayerInteractions();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PBL_Bumper_EditorDraw(void) {}
 
 void PBL_Bumper_EditorLoad(void) {}

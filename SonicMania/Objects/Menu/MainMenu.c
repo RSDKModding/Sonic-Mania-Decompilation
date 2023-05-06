@@ -313,7 +313,7 @@ void MainMenu_SetupActions(void)
 
 void MainMenu_MenuSetupCB(void) { MainMenu->diorama->lastDioramaID = -1; }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MainMenu_EditorDraw(void) {}
 
 void MainMenu_EditorLoad(void) {}

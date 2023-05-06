@@ -43,7 +43,7 @@ void PhantomShinobi_StaticUpdate(void);
 void PhantomShinobi_Draw(void);
 void PhantomShinobi_Create(void *data);
 void PhantomShinobi_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PhantomShinobi_EditorDraw(void);
 void PhantomShinobi_EditorLoad(void);
 #endif

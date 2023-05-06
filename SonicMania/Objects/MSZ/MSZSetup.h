@@ -71,7 +71,7 @@ void MSZSetup_StaticUpdate(void);
 void MSZSetup_Draw(void);
 void MSZSetup_Create(void *data);
 void MSZSetup_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MSZSetup_EditorDraw(void);
 void MSZSetup_EditorLoad(void);
 #endif

@@ -35,7 +35,7 @@ void Fireflies_StaticUpdate(void);
 void Fireflies_Draw(void);
 void Fireflies_Create(void *data);
 void Fireflies_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Fireflies_EditorDraw(void);
 void Fireflies_EditorLoad(void);
 #endif

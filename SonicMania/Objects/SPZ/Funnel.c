@@ -318,7 +318,7 @@ void Funnel_State_None(void)
     // this is never used actually LOL
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Funnel_EditorDraw(void)
 {
     RSDK_THIS(Funnel);

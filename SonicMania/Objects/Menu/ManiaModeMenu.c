@@ -308,7 +308,7 @@ void ManiaModeMenu_HandleMenuReturn(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ManiaModeMenu_EditorDraw(void) {}
 
 void ManiaModeMenu_EditorLoad(void) {}

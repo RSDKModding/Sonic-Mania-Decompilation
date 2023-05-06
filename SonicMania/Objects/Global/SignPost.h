@@ -72,7 +72,7 @@ void SignPost_StaticUpdate(void);
 void SignPost_Draw(void);
 void SignPost_Create(void *data);
 void SignPost_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SignPost_EditorDraw(void);
 void SignPost_EditorLoad(void);
 #endif

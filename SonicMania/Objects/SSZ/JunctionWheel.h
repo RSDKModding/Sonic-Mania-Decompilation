@@ -33,7 +33,7 @@ void JunctionWheel_StaticUpdate(void);
 void JunctionWheel_Draw(void);
 void JunctionWheel_Create(void *data);
 void JunctionWheel_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void JunctionWheel_EditorDraw(void);
 void JunctionWheel_EditorLoad(void);
 #endif

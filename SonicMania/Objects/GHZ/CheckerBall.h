@@ -36,7 +36,7 @@ void CheckerBall_StaticUpdate(void);
 void CheckerBall_Draw(void);
 void CheckerBall_Create(void *data);
 void CheckerBall_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void CheckerBall_EditorDraw(void);
 void CheckerBall_EditorLoad(void);
 #endif

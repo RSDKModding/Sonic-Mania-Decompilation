@@ -29,7 +29,7 @@ void ThanksSetup_StaticUpdate(void);
 void ThanksSetup_Draw(void);
 void ThanksSetup_Create(void *data);
 void ThanksSetup_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ThanksSetup_EditorDraw(void);
 void ThanksSetup_EditorLoad(void);
 #endif

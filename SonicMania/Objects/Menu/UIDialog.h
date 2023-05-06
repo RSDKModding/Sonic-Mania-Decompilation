@@ -55,7 +55,7 @@ void UIDialog_StaticUpdate(void);
 void UIDialog_Draw(void);
 void UIDialog_Create(void *data);
 void UIDialog_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIDialog_EditorDraw(void);
 void UIDialog_EditorLoad(void);
 #endif

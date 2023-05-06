@@ -144,7 +144,7 @@ void LRZ1Setup_DrawHook_ApplyBGSmoothing(void)
     LRZ1Setup->background2->scrollPos = scroll;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LRZ1Setup_EditorDraw(void) {}
 
 void LRZ1Setup_EditorLoad(void) {}

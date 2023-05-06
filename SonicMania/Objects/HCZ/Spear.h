@@ -44,7 +44,7 @@ void Spear_StaticUpdate(void);
 void Spear_Draw(void);
 void Spear_Create(void *data);
 void Spear_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Spear_EditorDraw(void);
 void Spear_EditorLoad(void);
 #endif

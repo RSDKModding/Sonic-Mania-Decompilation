@@ -320,7 +320,7 @@ void SpinSign_Draw_ManiaV(void)
     RSDK.DrawSprite(&self->sidesAnimator, &drawPos, false);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SpinSign_EditorDraw(void)
 {
     RSDK_THIS(SpinSign);

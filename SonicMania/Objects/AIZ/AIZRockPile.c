@@ -158,7 +158,7 @@ void AIZRockPile_SpawnRocks(int32 *speeds)
     destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void AIZRockPile_EditorDraw(void)
 {
     RSDK_THIS(AIZRockPile);

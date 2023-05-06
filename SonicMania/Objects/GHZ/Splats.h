@@ -52,7 +52,7 @@ void Splats_StaticUpdate(void);
 void Splats_Draw(void);
 void Splats_Create(void *data);
 void Splats_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Splats_EditorDraw(void);
 void Splats_EditorLoad(void);
 #endif

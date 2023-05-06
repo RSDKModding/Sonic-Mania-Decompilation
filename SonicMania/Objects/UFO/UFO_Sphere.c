@@ -273,7 +273,7 @@ void UFO_Sphere_State_AnimateAndDestroy(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UFO_Sphere_EditorDraw(void)
 {
     RSDK_THIS(UFO_Sphere);

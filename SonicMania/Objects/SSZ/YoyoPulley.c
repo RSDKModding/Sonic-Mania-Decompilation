@@ -257,7 +257,7 @@ int32 YoyoPulley_GetLength(void)
     return self->pulleyLength;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void YoyoPulley_EditorDraw(void)
 {
     RSDK_THIS(YoyoPulley);

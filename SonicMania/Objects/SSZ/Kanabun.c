@@ -192,7 +192,7 @@ void Kanabun_State_Turning(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Kanabun_EditorDraw(void)
 {
     RSDK_THIS(Kanabun);

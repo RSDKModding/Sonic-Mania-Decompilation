@@ -178,7 +178,7 @@ void SpearBlock_State_RetractSpears(void)
         self->state = SpearBlock_State_SpearRetracted;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SpearBlock_EditorDraw(void)
 {
     RSDK_THIS(SpearBlock);

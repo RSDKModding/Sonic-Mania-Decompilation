@@ -63,7 +63,7 @@ void Hotaru_StaticUpdate(void);
 void Hotaru_Draw(void);
 void Hotaru_Create(void *data);
 void Hotaru_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Hotaru_EditorDraw(void);
 void Hotaru_EditorLoad(void);
 #endif

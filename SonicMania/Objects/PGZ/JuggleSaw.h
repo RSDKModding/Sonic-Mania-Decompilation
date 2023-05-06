@@ -47,7 +47,7 @@ void JuggleSaw_StaticUpdate(void);
 void JuggleSaw_Draw(void);
 void JuggleSaw_Create(void *data);
 void JuggleSaw_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void JuggleSaw_EditorDraw(void);
 void JuggleSaw_EditorLoad(void);
 #endif

@@ -47,7 +47,7 @@ void CPZSetup_StaticUpdate(void);
 void CPZSetup_Draw(void);
 void CPZSetup_Create(void *data);
 void CPZSetup_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void CPZSetup_EditorDraw(void);
 void CPZSetup_EditorLoad(void);
 #endif

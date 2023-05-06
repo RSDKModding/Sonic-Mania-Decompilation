@@ -31,7 +31,7 @@ void Batbrain_StaticUpdate(void);
 void Batbrain_Draw(void);
 void Batbrain_Create(void *data);
 void Batbrain_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Batbrain_EditorDraw(void);
 void Batbrain_EditorLoad(void);
 #endif

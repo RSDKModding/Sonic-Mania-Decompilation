@@ -74,7 +74,7 @@ void Constellation_SetupInfo(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Constellation_EditorDraw(void)
 {
     RSDK_THIS(Constellation);

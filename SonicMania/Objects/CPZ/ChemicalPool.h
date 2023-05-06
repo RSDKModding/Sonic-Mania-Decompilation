@@ -53,7 +53,7 @@ void ChemicalPool_StaticUpdate(void);
 void ChemicalPool_Draw(void);
 void ChemicalPool_Create(void *data);
 void ChemicalPool_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ChemicalPool_EditorDraw(void);
 void ChemicalPool_EditorLoad(void);
 #endif

@@ -35,7 +35,7 @@ void TargetBumper_StaticUpdate(void);
 void TargetBumper_Draw(void);
 void TargetBumper_Create(void *data);
 void TargetBumper_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TargetBumper_EditorDraw(void);
 void TargetBumper_EditorLoad(void);
 #endif

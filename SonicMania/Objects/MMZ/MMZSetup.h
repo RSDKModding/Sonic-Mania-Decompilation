@@ -34,7 +34,7 @@ void MMZSetup_StaticUpdate(void);
 void MMZSetup_Draw(void);
 void MMZSetup_Create(void *data);
 void MMZSetup_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MMZSetup_EditorDraw(void);
 void MMZSetup_EditorLoad(void);
 #endif

@@ -35,7 +35,7 @@ void SwitchDoor_StaticUpdate(void);
 void SwitchDoor_Draw(void);
 void SwitchDoor_Create(void *data);
 void SwitchDoor_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SwitchDoor_EditorDraw(void);
 void SwitchDoor_EditorLoad(void);
 #endif

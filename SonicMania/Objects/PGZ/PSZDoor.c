@@ -259,7 +259,7 @@ int32 PSZDoor_GetRemainingDistance(void)
     return 0;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PSZDoor_EditorDraw(void)
 {
     RSDK_THIS(PSZDoor);

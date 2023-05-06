@@ -817,7 +817,7 @@ void Music_State_1UPJingle(void)
 }
 #endif
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Music_EditorDraw(void)
 {
     RSDK_THIS(Music);

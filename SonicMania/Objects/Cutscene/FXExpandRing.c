@@ -93,7 +93,7 @@ void FXExpandRing_State_FadeOut(void)
         self->alpha -= 0x10;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FXExpandRing_EditorDraw(void) {}
 
 void FXExpandRing_EditorLoad(void) {}

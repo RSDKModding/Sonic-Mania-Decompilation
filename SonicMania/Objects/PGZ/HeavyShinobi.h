@@ -67,7 +67,7 @@ void HeavyShinobi_StaticUpdate(void);
 void HeavyShinobi_Draw(void);
 void HeavyShinobi_Create(void *data);
 void HeavyShinobi_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void HeavyShinobi_EditorDraw(void);
 void HeavyShinobi_EditorLoad(void);
 #endif

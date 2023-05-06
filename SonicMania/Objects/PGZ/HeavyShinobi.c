@@ -1080,7 +1080,7 @@ void HeavyShinobi_Draw_Bounds(void)
     self->direction = FLIP_NONE;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void HeavyShinobi_EditorDraw(void)
 {
     RSDK_THIS(HeavyShinobi);

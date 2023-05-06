@@ -25,7 +25,7 @@ void FBZ2Outro_StaticUpdate(void);
 void FBZ2Outro_Draw(void);
 void FBZ2Outro_Create(void *data);
 void FBZ2Outro_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FBZ2Outro_EditorDraw(void);
 void FBZ2Outro_EditorLoad(void);
 #endif

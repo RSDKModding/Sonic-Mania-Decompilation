@@ -188,7 +188,7 @@ void HCZOneWayDoor_DrawSprites(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void HCZOneWayDoor_EditorDraw(void) { HCZOneWayDoor_DrawSprites(); }
 
 void HCZOneWayDoor_EditorLoad(void)

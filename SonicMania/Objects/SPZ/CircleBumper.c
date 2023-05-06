@@ -257,7 +257,7 @@ void CircleBumper_Move_Track(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void CircleBumper_EditorDraw(void)
 {
     RSDK_THIS(CircleBumper);

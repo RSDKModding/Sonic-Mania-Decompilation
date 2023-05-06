@@ -66,7 +66,7 @@ void BSS_Horizon_StageLoad(void)
     RSDK.ResetEntitySlot(SLOT_BSS_HORIZON, BSS_Horizon->classID, NULL);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BSS_Horizon_EditorDraw(void) {}
 
 void BSS_Horizon_EditorLoad(void) {}

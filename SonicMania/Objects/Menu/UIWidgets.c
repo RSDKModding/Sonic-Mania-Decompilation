@@ -329,7 +329,7 @@ void UIWidgets_DrawTime(int32 x, int32 y, int32 minutes, int32 seconds, int32 mi
 }
 #endif
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIWidgets_EditorDraw(void) {}
 
 void UIWidgets_EditorLoad(void)

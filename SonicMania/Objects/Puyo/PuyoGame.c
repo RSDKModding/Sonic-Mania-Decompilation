@@ -389,7 +389,7 @@ void PuyoGame_State_FadeToMenu(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PuyoGame_EditorDraw(void)
 {
     RSDK_THIS(PuyoGame);

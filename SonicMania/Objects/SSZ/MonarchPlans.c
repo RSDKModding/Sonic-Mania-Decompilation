@@ -79,7 +79,7 @@ void MonarchPlans_StageLoad(void)
     RSDK.SetSpecularIntensity(MonarchPlans->sceneIndex, 14, 14, 14);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MonarchPlans_EditorDraw(void) {}
 
 void MonarchPlans_EditorLoad(void) {}

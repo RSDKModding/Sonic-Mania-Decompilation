@@ -323,7 +323,7 @@ void Announcer_State_AnnounceWinPlayer(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Announcer_EditorDraw(void) {}
 
 void Announcer_EditorLoad(void) {}

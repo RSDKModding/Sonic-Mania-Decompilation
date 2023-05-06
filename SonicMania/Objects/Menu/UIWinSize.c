@@ -352,7 +352,7 @@ void UIWinSize_State_HandleButtonEnter(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIWinSize_EditorDraw(void)
 {
     RSDK_THIS(UIWinSize);

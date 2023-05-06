@@ -270,7 +270,7 @@ void PuyoAI_Input_AI(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PuyoAI_EditorDraw(void) {}
 
 void PuyoAI_EditorLoad(void) {}

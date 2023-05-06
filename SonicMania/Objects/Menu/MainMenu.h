@@ -27,7 +27,7 @@ void MainMenu_StaticUpdate(void);
 void MainMenu_Draw(void);
 void MainMenu_Create(void *data);
 void MainMenu_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MainMenu_EditorDraw(void);
 void MainMenu_EditorLoad(void);
 #endif

@@ -133,7 +133,7 @@ void FXFade_State_FadeInBlack(void)
     self->color = (MAX(r, 0) << 16) | (MAX(g, 0) << 8) | (MAX(b, 0) << 0);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FXFade_EditorDraw(void)
 {
     RSDK_THIS(FXFade);

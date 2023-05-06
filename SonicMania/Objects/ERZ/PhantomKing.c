@@ -873,7 +873,7 @@ void PhantomKing_State_Destroyed(void)
     PhantomKing_HandleFrames();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PhantomKing_EditorDraw(void)
 {
     RSDK_THIS(PhantomKing);

@@ -212,7 +212,7 @@ void MSBomb_State_Projectile(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MSBomb_EditorDraw(void)
 {
     RSDK_THIS(MSBomb);

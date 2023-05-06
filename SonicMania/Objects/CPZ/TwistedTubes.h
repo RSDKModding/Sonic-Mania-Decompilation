@@ -38,7 +38,7 @@ void TwistedTubes_StaticUpdate(void);
 void TwistedTubes_Draw(void);
 void TwistedTubes_Create(void *data);
 void TwistedTubes_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TwistedTubes_EditorDraw(void);
 void TwistedTubes_EditorLoad(void);
 #endif

@@ -26,7 +26,7 @@ void Launcher_StaticUpdate(void);
 void Launcher_Draw(void);
 void Launcher_Create(void *data);
 void Launcher_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Launcher_EditorDraw(void);
 void Launcher_EditorLoad(void);
 #endif

@@ -34,7 +34,7 @@ void Kanabun_StaticUpdate(void);
 void Kanabun_Draw(void);
 void Kanabun_Create(void *data);
 void Kanabun_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Kanabun_EditorDraw(void);
 void Kanabun_EditorLoad(void);
 #endif

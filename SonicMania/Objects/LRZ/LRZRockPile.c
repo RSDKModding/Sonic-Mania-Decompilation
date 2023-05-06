@@ -532,7 +532,7 @@ void LRZRockPile_State_Broken(void)
     --self->destroyTimer;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LRZRockPile_EditorDraw(void)
 {
     RSDK_THIS(LRZRockPile);

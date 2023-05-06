@@ -69,7 +69,7 @@ void UIBackground_DrawNormal(void)
     RSDK.DrawCircle(drawPos.x + ScreenInfo->center.x, drawPos.y + ScreenInfo->center.y, 26, colorPtrs[0], 0xFF, INK_NONE, true);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIBackground_EditorDraw(void)
 {
     RSDK_THIS(UIBackground);

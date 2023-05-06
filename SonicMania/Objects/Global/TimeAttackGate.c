@@ -522,7 +522,7 @@ void TimeAttackGate_Draw_Restarter(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TimeAttackGate_EditorDraw(void)
 {
     RSDK_THIS(TimeAttackGate);

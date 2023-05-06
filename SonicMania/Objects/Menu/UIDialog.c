@@ -488,7 +488,7 @@ EntityUIDialog *UIDialog_CreateDialogOkCancel(String *text, void (*callbackOk)(v
     return dialog;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIDialog_EditorDraw(void) {}
 
 void UIDialog_EditorLoad(void) {}

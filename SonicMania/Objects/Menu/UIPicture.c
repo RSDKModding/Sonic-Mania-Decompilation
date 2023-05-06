@@ -77,7 +77,7 @@ void UIPicture_StageLoad(void)
         UIPicture->aniFrames = RSDK.LoadSpriteAnimation("Logos/Logos.bin", SCOPE_STAGE);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIPicture_EditorDraw(void)
 {
     RSDK_THIS(UIPicture);

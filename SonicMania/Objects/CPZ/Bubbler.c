@@ -240,7 +240,7 @@ void Bubbler_StateProjectile_Bubbler(void)
         Bubbler_HandleProjectileInteractions();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Bubbler_EditorDraw(void)
 {
     RSDK_THIS(Bubbler);

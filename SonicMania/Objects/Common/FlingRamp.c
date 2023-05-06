@@ -75,7 +75,7 @@ void FlingRamp_StageLoad(void)
     FlingRamp->hitboxRamp.bottom = 16;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FlingRamp_EditorDraw(void)
 {
     RSDK_THIS(FlingRamp);

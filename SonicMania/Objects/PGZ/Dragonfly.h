@@ -38,7 +38,7 @@ void Dragonfly_StaticUpdate(void);
 void Dragonfly_Draw(void);
 void Dragonfly_Create(void *data);
 void Dragonfly_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Dragonfly_EditorDraw(void);
 void Dragonfly_EditorLoad(void);
 #endif

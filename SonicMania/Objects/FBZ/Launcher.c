@@ -124,7 +124,7 @@ void Launcher_State_ReturnToStart(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Launcher_EditorDraw(void)
 {
     RSDK_THIS(Launcher);

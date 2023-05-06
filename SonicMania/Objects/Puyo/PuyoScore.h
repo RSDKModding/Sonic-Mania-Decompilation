@@ -30,7 +30,7 @@ void PuyoScore_StaticUpdate(void);
 void PuyoScore_Draw(void);
 void PuyoScore_Create(void *data);
 void PuyoScore_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PuyoScore_EditorDraw(void);
 void PuyoScore_EditorLoad(void);
 #endif

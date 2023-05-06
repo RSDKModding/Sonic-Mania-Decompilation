@@ -37,7 +37,7 @@ void Springboard_StaticUpdate(void);
 void Springboard_Draw(void);
 void Springboard_Create(void *data);
 void Springboard_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Springboard_EditorDraw(void);
 void Springboard_EditorLoad(void);
 #endif

@@ -103,7 +103,7 @@ void GameProgress_StaticUpdate(void);
 void GameProgress_Draw(void);
 void GameProgress_Create(void *data);
 void GameProgress_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void GameProgress_EditorDraw(void);
 void GameProgress_EditorLoad(void);
 #endif

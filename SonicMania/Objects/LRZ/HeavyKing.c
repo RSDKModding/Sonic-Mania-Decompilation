@@ -1240,7 +1240,7 @@ void HeavyKing_State_Finish(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void HeavyKing_EditorDraw(void)
 {
     RSDK_THIS(HeavyKing);

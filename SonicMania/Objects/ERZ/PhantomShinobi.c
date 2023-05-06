@@ -369,7 +369,7 @@ bool32 PhantomShinobi_SfxCheck_ShinobiBlade(void)
     return false;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PhantomShinobi_EditorDraw(void)
 {
     RSDK_THIS(PhantomShinobi);

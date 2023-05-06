@@ -139,7 +139,7 @@ void ImageTrail_Create(void *data)
 
 void ImageTrail_StageLoad(void) {}
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ImageTrail_EditorDraw(void) {}
 
 void ImageTrail_EditorLoad(void) {}

@@ -42,7 +42,7 @@ void LRZConvControl_StaticUpdate(void);
 void LRZConvControl_Draw(void);
 void LRZConvControl_Create(void *data);
 void LRZConvControl_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LRZConvControl_EditorDraw(void);
 void LRZConvControl_EditorLoad(void);
 #endif

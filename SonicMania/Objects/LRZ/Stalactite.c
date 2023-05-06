@@ -148,7 +148,7 @@ void Stalactite_State_Debris(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Stalactite_EditorDraw(void) { Stalactite_Draw(); }
 
 void Stalactite_EditorLoad(void) { Stalactite->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/Stalactite.bin", SCOPE_STAGE); }

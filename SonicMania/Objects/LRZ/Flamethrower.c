@@ -451,7 +451,7 @@ void Flamethrower_State_Fireball(void)
     self->lastPos = self->position;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Flamethrower_EditorDraw(void)
 {
     RSDK_THIS(Flamethrower);

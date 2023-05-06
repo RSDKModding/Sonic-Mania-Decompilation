@@ -131,7 +131,7 @@ void GreenScreen_DrawSprites(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void GreenScreen_EditorDraw(void)
 {
     RSDK_THIS(GreenScreen);

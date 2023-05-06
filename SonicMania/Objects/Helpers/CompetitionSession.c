@@ -184,7 +184,7 @@ void CompetitionSession_WinMatchFor(int32 player)
 }
 #endif
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void CompetitionSession_EditorDraw(void) {}
 
 void CompetitionSession_EditorLoad(void) {}

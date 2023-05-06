@@ -42,7 +42,7 @@ void JacobsLadder_StaticUpdate(void);
 void JacobsLadder_Draw(void);
 void JacobsLadder_Create(void *data);
 void JacobsLadder_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void JacobsLadder_EditorDraw(void);
 void JacobsLadder_EditorLoad(void);
 #endif

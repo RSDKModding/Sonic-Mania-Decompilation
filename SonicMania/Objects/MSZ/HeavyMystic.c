@@ -1723,7 +1723,7 @@ void HeavyMystic_Draw_BoxClosed(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void HeavyMystic_EditorDraw(void)
 {
     RSDK_THIS(HeavyMystic);

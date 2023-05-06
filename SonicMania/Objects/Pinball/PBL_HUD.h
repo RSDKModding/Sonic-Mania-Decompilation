@@ -46,7 +46,7 @@ void PBL_HUD_StaticUpdate(void);
 void PBL_HUD_Draw(void);
 void PBL_HUD_Create(void *data);
 void PBL_HUD_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PBL_HUD_EditorDraw(void);
 void PBL_HUD_EditorLoad(void);
 #endif

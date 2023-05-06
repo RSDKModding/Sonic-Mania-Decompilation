@@ -589,7 +589,7 @@ void Bumpalo_State_Falling(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Bumpalo_EditorDraw(void)
 {
     RSDK_THIS(Bumpalo);

@@ -153,7 +153,7 @@ void InvincibleStars_Create(void *data)
 
 void InvincibleStars_StageLoad(void) { InvincibleStars->aniFrames = RSDK.LoadSpriteAnimation("Global/Invincible.bin", SCOPE_STAGE); }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void InvincibleStars_EditorDraw(void) {}
 
 void InvincibleStars_EditorLoad(void) {}

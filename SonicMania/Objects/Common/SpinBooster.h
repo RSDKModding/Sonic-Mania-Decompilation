@@ -35,7 +35,7 @@ void SpinBooster_StaticUpdate(void);
 void SpinBooster_Draw(void);
 void SpinBooster_Create(void *data);
 void SpinBooster_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SpinBooster_EditorDraw(void);
 void SpinBooster_EditorLoad(void);
 #endif

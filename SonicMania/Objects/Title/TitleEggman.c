@@ -116,7 +116,7 @@ void TitleEggman_State_Move(void)
     RSDK.ProcessAnimation(&self->capsuleAnimator);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TitleEggman_EditorDraw(void)
 {
     RSDK_THIS(TitleEggman);

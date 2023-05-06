@@ -173,7 +173,7 @@ void ContinuePlayer_State_DashRelease(void)
     self->position.x += self->groundVel;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ContinuePlayer_EditorDraw(void)
 {
     RSDK_THIS(ContinuePlayer);

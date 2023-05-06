@@ -33,7 +33,7 @@ void NoSwap_StaticUpdate(void);
 void NoSwap_Draw(void);
 void NoSwap_Create(void *data);
 void NoSwap_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void NoSwap_EditorDraw(void);
 void NoSwap_EditorLoad(void);
 #endif

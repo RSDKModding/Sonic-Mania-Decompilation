@@ -44,7 +44,7 @@ void Debris_StaticUpdate(void);
 void Debris_Draw(void);
 void Debris_Create(void *data);
 void Debris_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Debris_EditorDraw(void);
 void Debris_EditorLoad(void);
 #endif

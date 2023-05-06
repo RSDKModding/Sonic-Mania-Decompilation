@@ -40,7 +40,7 @@ void FBZSinkTrash_StaticUpdate(void);
 void FBZSinkTrash_Draw(void);
 void FBZSinkTrash_Create(void *data);
 void FBZSinkTrash_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FBZSinkTrash_EditorDraw(void);
 void FBZSinkTrash_EditorLoad(void);
 #endif

@@ -143,7 +143,7 @@ void Pointdexter_State_Swimming(void)
     Pointdexter_CheckOffScreen();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Pointdexter_EditorDraw(void) { Pointdexter_Draw(); }
 
 void Pointdexter_EditorLoad(void)

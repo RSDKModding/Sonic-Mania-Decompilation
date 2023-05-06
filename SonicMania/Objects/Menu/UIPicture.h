@@ -30,7 +30,7 @@ void UIPicture_StaticUpdate(void);
 void UIPicture_Draw(void);
 void UIPicture_Create(void *data);
 void UIPicture_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIPicture_EditorDraw(void);
 void UIPicture_EditorLoad(void);
 #endif

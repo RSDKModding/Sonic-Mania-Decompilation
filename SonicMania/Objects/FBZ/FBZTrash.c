@@ -271,7 +271,7 @@ void FBZTrash_State_OrbinautMove(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FBZTrash_EditorDraw(void)
 {
     RSDK_THIS(FBZTrash);

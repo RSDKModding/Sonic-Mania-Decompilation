@@ -57,7 +57,7 @@ void DNARiser_StaticUpdate(void);
 void DNARiser_Draw(void);
 void DNARiser_Create(void *data);
 void DNARiser_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void DNARiser_EditorDraw(void);
 void DNARiser_EditorLoad(void);
 #endif

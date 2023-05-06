@@ -62,7 +62,7 @@ void Beanstalk_StaticUpdate(void);
 void Beanstalk_Draw(void);
 void Beanstalk_Create(void *data);
 void Beanstalk_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Beanstalk_EditorDraw(void);
 void Beanstalk_EditorLoad(void);
 #endif

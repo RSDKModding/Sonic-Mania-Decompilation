@@ -198,7 +198,7 @@ void MagnetSphere_MovePlayer(EntityPlayer *player, int32 playerID)
         RSDK.PlaySfx(MagnetSphere->sfxPlasmaBall, false, 255);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MagnetSphere_EditorDraw(void) { MagnetSphere_Draw(); }
 
 void MagnetSphere_EditorLoad(void) { MagnetSphere->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/MagnetSphere.bin", SCOPE_STAGE); }

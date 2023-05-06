@@ -46,7 +46,7 @@ void AIZTornadoPath_StaticUpdate(void);
 void AIZTornadoPath_Draw(void);
 void AIZTornadoPath_Create(void *data);
 void AIZTornadoPath_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void AIZTornadoPath_EditorDraw(void);
 void AIZTornadoPath_EditorLoad(void);
 #endif

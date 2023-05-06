@@ -398,7 +398,7 @@ void Splats_State_InkSplat(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Splats_EditorDraw(void)
 {
     RSDK_THIS(Splats);

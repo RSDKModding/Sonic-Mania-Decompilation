@@ -48,7 +48,7 @@ void GenericTrigger_Create(void *data)
 
 void GenericTrigger_StageLoad(void) {}
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void GenericTrigger_EditorDraw(void)
 {
     RSDK_THIS(GenericTrigger);

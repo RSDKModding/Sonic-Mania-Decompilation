@@ -38,7 +38,7 @@ void MagnetSphere_StaticUpdate(void);
 void MagnetSphere_Draw(void);
 void MagnetSphere_Create(void *data);
 void MagnetSphere_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MagnetSphere_EditorDraw(void);
 void MagnetSphere_EditorLoad(void);
 #endif

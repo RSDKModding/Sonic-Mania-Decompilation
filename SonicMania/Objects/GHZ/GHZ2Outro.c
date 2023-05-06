@@ -477,7 +477,7 @@ void GHZ2Outro_Cutscene_SkipCB(void)
 }
 #endif
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void GHZ2Outro_EditorDraw(void)
 {
     RSDK_THIS(GHZ2Outro);

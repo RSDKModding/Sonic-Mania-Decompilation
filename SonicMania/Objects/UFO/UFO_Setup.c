@@ -442,7 +442,7 @@ void UFO_Setup_State_TimedOver(void)
         UFO_Setup_Finish_Fail();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UFO_Setup_EditorDraw(void) {}
 
 void UFO_Setup_EditorLoad(void) {}

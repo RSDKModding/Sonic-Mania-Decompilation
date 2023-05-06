@@ -190,7 +190,7 @@ void TryAgainE_State_Stinger(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TryAgainE_EditorDraw(void) {}
 
 void TryAgainE_EditorLoad(void) {}

@@ -42,7 +42,7 @@ void CPZBoss_StaticUpdate(void);
 void CPZBoss_Draw(void);
 void CPZBoss_Create(void *data);
 void CPZBoss_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void CPZBoss_EditorDraw(void);
 void CPZBoss_EditorLoad(void);
 #endif

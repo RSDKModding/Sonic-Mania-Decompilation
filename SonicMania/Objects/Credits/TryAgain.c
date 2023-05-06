@@ -176,7 +176,7 @@ void TryAgain_State_Stinger(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TryAgain_EditorDraw(void) {}
 
 void TryAgain_EditorLoad(void) {}

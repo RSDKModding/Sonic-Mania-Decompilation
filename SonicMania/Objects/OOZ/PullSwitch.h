@@ -39,7 +39,7 @@ void PullSwitch_StaticUpdate(void);
 void PullSwitch_Draw(void);
 void PullSwitch_Create(void *data);
 void PullSwitch_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PullSwitch_EditorDraw(void);
 void PullSwitch_EditorLoad(void);
 #endif

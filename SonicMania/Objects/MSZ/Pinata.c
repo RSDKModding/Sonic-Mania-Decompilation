@@ -149,7 +149,7 @@ void Pinata_State_Destroyed(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Pinata_EditorDraw(void) { Pinata_Draw(); }
 
 void Pinata_EditorLoad(void)

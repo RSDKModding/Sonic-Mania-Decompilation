@@ -28,7 +28,7 @@ void Mine_StaticUpdate(void);
 void Mine_Draw(void);
 void Mine_Create(void *data);
 void Mine_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Mine_EditorDraw(void);
 void Mine_EditorLoad(void);
 #endif

@@ -147,7 +147,7 @@ void PlayerProbe_DrawArrow(int32 x1, int32 y1, int32 x2, int32 y2, uint32 color)
     RSDK.DrawLine(x2, y2, (RSDK.Cos256(angle - 12) << 12) + x2, (RSDK.Sin256(angle - 12) << 12) + y2, color, 0x7F, INK_ADD, false);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PlayerProbe_EditorDraw(void)
 {
     RSDK_THIS(PlayerProbe);

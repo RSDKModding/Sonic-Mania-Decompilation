@@ -74,7 +74,7 @@ void UIShifter_HandleShift(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIShifter_EditorDraw(void) {}
 
 void UIShifter_EditorLoad(void) {}

@@ -62,7 +62,7 @@ void SPZ2Setup_StaticUpdate(void);
 void SPZ2Setup_Draw(void);
 void SPZ2Setup_Create(void *data);
 void SPZ2Setup_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SPZ2Setup_EditorDraw(void);
 void SPZ2Setup_EditorLoad(void);
 #endif

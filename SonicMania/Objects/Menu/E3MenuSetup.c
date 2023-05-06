@@ -193,7 +193,7 @@ void E3MenuSetup_State_FadeOut(void)
     self->fadeTimer = CLAMP(self->timer << (self->fadeSpeed - 1), 0, 0x200);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void E3MenuSetup_EditorDraw(void) {}
 
 void E3MenuSetup_EditorLoad(void) {}

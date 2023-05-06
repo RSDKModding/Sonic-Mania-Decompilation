@@ -124,7 +124,7 @@ bool32 TubeSpring_HandleInteractions(bool32 setState)
     return sprung;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TubeSpring_EditorDraw(void)
 {
     RSDK_THIS(TubeSpring);

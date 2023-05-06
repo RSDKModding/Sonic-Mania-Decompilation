@@ -87,7 +87,7 @@ void MSOrb_Draw_Orb(void)
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MSOrb_EditorDraw(void)
 {
     RSDK_THIS(MSOrb);

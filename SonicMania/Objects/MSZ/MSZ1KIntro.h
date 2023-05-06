@@ -26,7 +26,7 @@ void MSZ1KIntro_StaticUpdate(void);
 void MSZ1KIntro_Draw(void);
 void MSZ1KIntro_Create(void *data);
 void MSZ1KIntro_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MSZ1KIntro_EditorDraw(void);
 void MSZ1KIntro_EditorLoad(void);
 #endif

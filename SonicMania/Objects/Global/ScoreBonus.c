@@ -45,7 +45,7 @@ void ScoreBonus_Create(void *data)
 
 void ScoreBonus_StageLoad(void) { ScoreBonus->aniFrames = RSDK.LoadSpriteAnimation("Global/ScoreBonus.bin", SCOPE_STAGE); }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ScoreBonus_EditorDraw(void) { ScoreBonus_Draw(); }
 
 void ScoreBonus_EditorLoad(void) { ScoreBonus->aniFrames = RSDK.LoadSpriteAnimation("Global/ScoreBonus.bin", SCOPE_STAGE); }

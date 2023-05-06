@@ -23,7 +23,7 @@ void BadnikHelpers_StaticUpdate(void);
 void BadnikHelpers_Draw(void);
 void BadnikHelpers_Create(void *data);
 void BadnikHelpers_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BadnikHelpers_EditorDraw(void);
 void BadnikHelpers_EditorLoad(void);
 #endif

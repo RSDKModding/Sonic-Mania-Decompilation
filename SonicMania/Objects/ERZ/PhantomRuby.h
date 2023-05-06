@@ -47,7 +47,7 @@ void PhantomRuby_StaticUpdate(void);
 void PhantomRuby_Draw(void);
 void PhantomRuby_Create(void *data);
 void PhantomRuby_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PhantomRuby_EditorDraw(void);
 void PhantomRuby_EditorLoad(void);
 #endif

@@ -459,7 +459,7 @@ void RockDrill_State_Explode(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void RockDrill_EditorDraw(void)
 {
     RSDK_THIS(RockDrill);

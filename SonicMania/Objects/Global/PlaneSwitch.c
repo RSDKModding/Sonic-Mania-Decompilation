@@ -112,7 +112,7 @@ void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *self, void *o, int32 flags, 
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PlaneSwitch_EditorDraw(void)
 {
     RSDK_THIS(PlaneSwitch);

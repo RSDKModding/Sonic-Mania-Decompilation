@@ -255,7 +255,7 @@ void Shield_State_Insta(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Shield_EditorDraw(void)
 {
     RSDK_THIS(Shield);

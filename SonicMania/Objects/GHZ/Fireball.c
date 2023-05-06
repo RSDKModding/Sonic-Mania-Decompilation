@@ -224,7 +224,7 @@ void Fireball_Draw_Simple(void)
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Fireball_EditorDraw(void)
 {
     RSDK_THIS(Fireball);

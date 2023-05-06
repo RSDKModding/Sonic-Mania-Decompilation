@@ -489,7 +489,7 @@ void SpinBooster_HandleForceRoll(EntityPlayer *player)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SpinBooster_EditorDraw(void) { SpinBooster_DrawSprites(); }
 
 void SpinBooster_EditorLoad(void)

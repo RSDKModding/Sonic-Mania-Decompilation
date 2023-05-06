@@ -56,7 +56,7 @@ void ConveyorPlatform_StaticUpdate(void);
 void ConveyorPlatform_Draw(void);
 void ConveyorPlatform_Create(void *data);
 void ConveyorPlatform_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ConveyorPlatform_EditorDraw(void);
 void ConveyorPlatform_EditorLoad(void);
 #endif

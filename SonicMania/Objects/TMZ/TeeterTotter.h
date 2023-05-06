@@ -45,7 +45,7 @@ void TeeterTotter_StaticUpdate(void);
 void TeeterTotter_Draw(void);
 void TeeterTotter_Create(void *data);
 void TeeterTotter_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TeeterTotter_EditorDraw(void);
 void TeeterTotter_EditorLoad(void);
 #endif

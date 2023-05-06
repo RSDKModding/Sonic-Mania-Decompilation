@@ -27,7 +27,7 @@ void ForceSpin_StaticUpdate(void);
 void ForceSpin_Draw(void);
 void ForceSpin_Create(void *data);
 void ForceSpin_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ForceSpin_EditorDraw(void);
 void ForceSpin_EditorLoad(void);
 #endif

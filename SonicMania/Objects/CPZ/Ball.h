@@ -40,7 +40,7 @@ void Ball_StaticUpdate(void);
 void Ball_Draw(void);
 void Ball_Create(void *data);
 void Ball_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Ball_EditorDraw(void);
 void Ball_EditorLoad(void);
 #endif

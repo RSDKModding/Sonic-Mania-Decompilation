@@ -293,7 +293,7 @@ bool32 LRZ1Outro_CutsceneAct2_ExitDashLift(EntityCutsceneSeq *host)
     return false;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LRZ1Outro_EditorDraw(void) {}
 
 void LRZ1Outro_EditorLoad(void) {}

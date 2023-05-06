@@ -271,7 +271,7 @@ void PKingAttack_State_SmallBullet(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PKingAttack_EditorDraw(void)
 {
     RSDK_THIS(PKingAttack);

@@ -32,7 +32,7 @@ void FXExpandRing_StaticUpdate(void);
 void FXExpandRing_Draw(void);
 void FXExpandRing_Create(void *data);
 void FXExpandRing_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FXExpandRing_EditorDraw(void);
 void FXExpandRing_EditorLoad(void);
 #endif

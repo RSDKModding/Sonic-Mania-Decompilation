@@ -377,7 +377,7 @@ void PuyoMatch_State_Lose(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PuyoMatch_EditorDraw(void)
 {
     RSDK_THIS(PuyoMatch);

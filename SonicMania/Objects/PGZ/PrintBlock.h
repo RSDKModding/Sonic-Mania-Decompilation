@@ -45,7 +45,7 @@ void PrintBlock_StaticUpdate(void);
 void PrintBlock_Draw(void);
 void PrintBlock_Create(void *data);
 void PrintBlock_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PrintBlock_EditorDraw(void);
 void PrintBlock_EditorLoad(void);
 #endif

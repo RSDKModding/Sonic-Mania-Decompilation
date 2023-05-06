@@ -224,7 +224,7 @@ void HCZSpikeBall_HandleConveyorMovement(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void HCZSpikeBall_EditorDraw(void) { HCZSpikeBall_Draw(); }
 
 void HCZSpikeBall_EditorLoad(void) { HCZSpikeBall->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Platform.bin", SCOPE_STAGE); }

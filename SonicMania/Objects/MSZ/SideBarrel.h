@@ -33,7 +33,7 @@ void SideBarrel_StaticUpdate(void);
 void SideBarrel_Draw(void);
 void SideBarrel_Create(void *data);
 void SideBarrel_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SideBarrel_EditorDraw(void);
 void SideBarrel_EditorLoad(void);
 #endif

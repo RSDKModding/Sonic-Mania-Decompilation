@@ -444,7 +444,7 @@ void TornadoPath_State_FinishCrash(void)
     TornadoPath->crashFinished = true;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TornadoPath_EditorDraw(void)
 {
     RSDK_THIS(TornadoPath);

@@ -641,7 +641,7 @@ void LoveTester_StateLights_FlashFast(void)
     ++self->lightsID;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LoveTester_EditorDraw(void)
 {
     RSDK_THIS(LoveTester);

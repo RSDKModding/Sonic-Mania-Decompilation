@@ -75,7 +75,7 @@ void MenuParam_StaticUpdate(void);
 void MenuParam_Draw(void);
 void MenuParam_Create(void *data);
 void MenuParam_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MenuParam_EditorDraw(void);
 void MenuParam_EditorLoad(void);
 #endif

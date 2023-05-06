@@ -29,7 +29,7 @@ void Stalactite_StaticUpdate(void);
 void Stalactite_Draw(void);
 void Stalactite_Create(void *data);
 void Stalactite_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Stalactite_EditorDraw(void);
 void Stalactite_EditorLoad(void);
 #endif

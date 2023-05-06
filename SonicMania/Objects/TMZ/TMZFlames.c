@@ -93,7 +93,7 @@ void TMZFlames_State_FlamesEnlarge(void)
         self->scale.x += 16;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TMZFlames_EditorDraw(void) {}
 
 void TMZFlames_EditorLoad(void) {}

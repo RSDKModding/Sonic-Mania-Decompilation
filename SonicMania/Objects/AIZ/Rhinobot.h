@@ -40,7 +40,7 @@ void Rhinobot_StaticUpdate(void);
 void Rhinobot_Draw(void);
 void Rhinobot_Create(void *data);
 void Rhinobot_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Rhinobot_EditorDraw(void);
 void Rhinobot_EditorLoad(void);
 #endif

@@ -70,7 +70,7 @@ void UFO_Player_StaticUpdate(void);
 void UFO_Player_Draw(void);
 void UFO_Player_Create(void *data);
 void UFO_Player_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UFO_Player_EditorDraw(void);
 void UFO_Player_EditorLoad(void);
 #endif

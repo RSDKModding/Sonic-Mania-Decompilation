@@ -412,7 +412,7 @@ void DCEvent_State_BombExplode(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void DCEvent_EditorDraw(void)
 {
     RSDK_THIS(DCEvent);

@@ -480,7 +480,7 @@ void PaperRoller_HandlePrintCollisions(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PaperRoller_EditorDraw(void)
 {
     RSDK_THIS(PaperRoller);

@@ -42,7 +42,7 @@ void RollerMKII_StaticUpdate(void);
 void RollerMKII_Draw(void);
 void RollerMKII_Create(void *data);
 void RollerMKII_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void RollerMKII_EditorDraw(void);
 void RollerMKII_EditorLoad(void);
 #endif

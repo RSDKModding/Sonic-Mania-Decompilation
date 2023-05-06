@@ -50,7 +50,7 @@ void KingAttack_StaticUpdate(void);
 void KingAttack_Draw(void);
 void KingAttack_Create(void *data);
 void KingAttack_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void KingAttack_EditorDraw(void);
 void KingAttack_EditorLoad(void);
 #endif

@@ -317,7 +317,7 @@ void CollapsingPlatform_State_LeftRightCenter(void)
         CollapsingPlatform_State_Right();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void CollapsingPlatform_EditorDraw(void)
 {
     RSDK_THIS(CollapsingPlatform);

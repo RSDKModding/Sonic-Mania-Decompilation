@@ -279,7 +279,7 @@ void BuzzBomber_State_ProjectileShot(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BuzzBomber_EditorDraw(void)
 {
     RSDK_THIS(BuzzBomber);

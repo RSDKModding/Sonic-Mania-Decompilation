@@ -42,7 +42,7 @@ void AIZTornado_StaticUpdate(void);
 void AIZTornado_Draw(void);
 void AIZTornado_Create(void *data);
 void AIZTornado_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void AIZTornado_EditorDraw(void);
 void AIZTornado_EditorLoad(void);
 #endif

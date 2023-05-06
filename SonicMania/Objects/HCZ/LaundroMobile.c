@@ -1843,7 +1843,7 @@ void LaundroMobile_State_DelayedSplash(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LaundroMobile_EditorDraw(void)
 {
     RSDK_THIS(LaundroMobile);

@@ -280,7 +280,7 @@ void PBL_Player_State_Air(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PBL_Player_EditorDraw(void)
 {
     RSDK_THIS(PBL_Player);

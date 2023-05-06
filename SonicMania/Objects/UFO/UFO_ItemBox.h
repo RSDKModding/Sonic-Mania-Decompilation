@@ -56,7 +56,7 @@ void UFO_ItemBox_StaticUpdate(void);
 void UFO_ItemBox_Draw(void);
 void UFO_ItemBox_Create(void *data);
 void UFO_ItemBox_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UFO_ItemBox_EditorDraw(void);
 void UFO_ItemBox_EditorLoad(void);
 #endif

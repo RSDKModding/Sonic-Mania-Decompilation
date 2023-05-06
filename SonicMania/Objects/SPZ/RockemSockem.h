@@ -41,7 +41,7 @@ void RockemSockem_StaticUpdate(void);
 void RockemSockem_Draw(void);
 void RockemSockem_Create(void *data);
 void RockemSockem_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void RockemSockem_EditorDraw(void);
 void RockemSockem_EditorLoad(void);
 #endif

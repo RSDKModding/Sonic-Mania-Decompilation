@@ -135,7 +135,7 @@ void SSZSpotlight_Create(void *data)
 
 void SSZSpotlight_StageLoad(void) {}
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SSZSpotlight_EditorDraw(void)
 {
     RSDK_THIS(SSZSpotlight);

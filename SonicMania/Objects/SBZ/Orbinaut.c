@@ -313,7 +313,7 @@ void Orbinaut_State_OrbDebris(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Orbinaut_EditorDraw(void)
 {
     RSDK_THIS(Orbinaut);

@@ -523,7 +523,7 @@ void HotaruMKII_State_LaserStrike(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void HotaruMKII_EditorDraw(void)
 {
     RSDK_THIS(HotaruMKII);

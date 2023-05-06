@@ -94,7 +94,7 @@ void HUD_StaticUpdate(void);
 void HUD_Draw(void);
 void HUD_Create(void *data);
 void HUD_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void HUD_EditorDraw(void);
 void HUD_EditorLoad(void);
 #endif

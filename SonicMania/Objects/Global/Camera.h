@@ -53,7 +53,7 @@ void Camera_StaticUpdate(void);
 void Camera_Draw(void);
 void Camera_Create(void *data);
 void Camera_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Camera_EditorDraw(void);
 void Camera_EditorLoad(void);
 #endif

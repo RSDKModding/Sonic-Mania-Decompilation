@@ -132,7 +132,7 @@ void Honkytonk_StageLoad(void)
     Honkytonk->sfxPiano = RSDK.GetSfx("MSZ/Piano00C2.wav");
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Honkytonk_EditorDraw(void)
 {
     RSDK_THIS(Honkytonk);

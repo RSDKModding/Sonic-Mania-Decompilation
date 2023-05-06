@@ -145,7 +145,7 @@ void SDashWheel_SfxUpdate_MGZDoor(int32 sfx)
         Camera_ShakeScreen(0, 0, 2);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SDashWheel_EditorDraw(void)
 {
     RSDK_THIS(SDashWheel);

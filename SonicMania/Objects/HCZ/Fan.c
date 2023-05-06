@@ -535,7 +535,7 @@ void Fan_Activate(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Fan_EditorDraw(void)
 {
     RSDK_THIS(Fan);

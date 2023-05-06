@@ -316,7 +316,7 @@ void UIChoice_State_HandleButtonEnter(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIChoice_EditorDraw(void)
 {
     RSDK_THIS(UIChoice);

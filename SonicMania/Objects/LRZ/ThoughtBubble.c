@@ -166,7 +166,7 @@ void ThoughtBubble_DestroyBubble(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ThoughtBubble_EditorDraw(void)
 {
     RSDK_THIS(ThoughtBubble);

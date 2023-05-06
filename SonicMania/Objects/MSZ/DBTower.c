@@ -502,7 +502,7 @@ void DBTower_State_BodyRolling(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void DBTower_EditorDraw(void)
 {
     RSDK_THIS(DBTower);

@@ -2157,7 +2157,7 @@ void MetalSonic_StateWall_Move(void)
 }
 #endif
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MetalSonic_EditorDraw(void)
 {
     RSDK_THIS(MetalSonic);

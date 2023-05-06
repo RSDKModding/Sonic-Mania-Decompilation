@@ -30,7 +30,7 @@ void MSFactory_StaticUpdate(void);
 void MSFactory_Draw(void);
 void MSFactory_Create(void *data);
 void MSFactory_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MSFactory_EditorDraw(void);
 void MSFactory_EditorLoad(void);
 #endif

@@ -133,7 +133,7 @@ void WaterfallSound_SfxUpdate_WaterfallLoop(int32 sfxID)
     RSDK.SetChannelAttributes(Soundboard->sfxChannel[sfxID], (volume / -640.0f) + 1.0, CLAMP(pan, -1.0, 1.0), 1.0f);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void WaterfallSound_EditorDraw(void)
 {
     RSDK_THIS(WaterfallSound);

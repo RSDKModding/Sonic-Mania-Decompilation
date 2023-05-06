@@ -176,7 +176,7 @@ Vector2 Snowflakes_HandleWrap(int32 id)
     return pos;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Snowflakes_EditorDraw(void)
 {
     RSDK_THIS(Snowflakes);

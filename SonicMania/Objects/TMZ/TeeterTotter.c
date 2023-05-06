@@ -217,7 +217,7 @@ void TeeterTotter_State_Fall(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TeeterTotter_EditorDraw(void)
 {
     RSDK_THIS(TeeterTotter);

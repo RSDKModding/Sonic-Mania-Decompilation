@@ -98,7 +98,7 @@ void OrbitSpike_StageLoad(void)
     OrbitSpike->hitbox.bottom = 12;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void OrbitSpike_EditorDraw(void)
 {
     RSDK_THIS(OrbitSpike);

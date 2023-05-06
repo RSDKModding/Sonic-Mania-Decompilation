@@ -92,7 +92,7 @@ void NoSwap_Create(void *data)
 
 void NoSwap_StageLoad(void) { NoSwap->active = ACTIVE_ALWAYS; }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void NoSwap_EditorDraw(void)
 {
     RSDK_THIS(NoSwap);

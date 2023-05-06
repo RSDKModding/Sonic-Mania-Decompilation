@@ -63,7 +63,7 @@ void Announcer_StaticUpdate(void);
 void Announcer_Draw(void);
 void Announcer_Create(void *data);
 void Announcer_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Announcer_EditorDraw(void);
 void Announcer_EditorLoad(void);
 #endif

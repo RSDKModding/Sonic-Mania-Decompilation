@@ -212,7 +212,7 @@ void ContinueSetup_State_ReturnToMenu(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ContinueSetup_EditorDraw(void) {}
 
 void ContinueSetup_EditorLoad(void) {}

@@ -325,7 +325,7 @@ void HangConveyor_HandlePlayerInteractions(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void HangConveyor_EditorDraw(void) { HangConveyor_DrawSprites(); }
 
 void HangConveyor_EditorLoad(void)

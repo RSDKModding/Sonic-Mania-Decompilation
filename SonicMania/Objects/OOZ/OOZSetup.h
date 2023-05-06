@@ -59,7 +59,7 @@ void OOZSetup_StaticUpdate(void);
 void OOZSetup_Draw(void);
 void OOZSetup_Create(void *data);
 void OOZSetup_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void OOZSetup_EditorDraw(void);
 void OOZSetup_EditorLoad(void);
 #endif

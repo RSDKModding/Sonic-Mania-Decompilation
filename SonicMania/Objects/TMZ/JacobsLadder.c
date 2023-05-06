@@ -208,7 +208,7 @@ void JacobsLadder_StageLoad(void)
     JacobsLadder->sfxLadder = RSDK.GetSfx("TMZ1/JacobsLadder.wav");
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void JacobsLadder_EditorDraw(void)
 {
     JacobsLadder_Create(NULL);

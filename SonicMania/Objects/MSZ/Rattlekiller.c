@@ -353,7 +353,7 @@ void Rattlekiller_HandleSorting(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Rattlekiller_EditorDraw(void)
 {
     RSDK_THIS(Rattlekiller);

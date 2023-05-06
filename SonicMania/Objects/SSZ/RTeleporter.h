@@ -36,7 +36,7 @@ void RTeleporter_StaticUpdate(void);
 void RTeleporter_Draw(void);
 void RTeleporter_Create(void *data);
 void RTeleporter_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void RTeleporter_EditorDraw(void);
 void RTeleporter_EditorLoad(void);
 #endif

@@ -71,7 +71,7 @@ void MonarchBG_StageLoad(void)
     RSDK.SetSpecularIntensity(MonarchBG->sceneIndex, 16, 16, 16);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MonarchBG_EditorDraw(void)
 {
     RSDK_THIS(MonarchBG);

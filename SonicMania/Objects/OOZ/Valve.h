@@ -28,7 +28,7 @@ void Valve_StaticUpdate(void);
 void Valve_Draw(void);
 void Valve_Create(void *data);
 void Valve_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Valve_EditorDraw(void);
 void Valve_EditorLoad(void);
 #endif

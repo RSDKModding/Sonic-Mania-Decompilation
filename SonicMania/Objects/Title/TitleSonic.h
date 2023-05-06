@@ -26,7 +26,7 @@ void TitleSonic_StaticUpdate(void);
 void TitleSonic_Draw(void);
 void TitleSonic_Create(void *data);
 void TitleSonic_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TitleSonic_EditorDraw(void);
 void TitleSonic_EditorLoad(void);
 #endif

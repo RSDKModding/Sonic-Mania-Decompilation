@@ -36,7 +36,7 @@ void Turbine_StaticUpdate(void);
 void Turbine_Draw(void);
 void Turbine_Create(void *data);
 void Turbine_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Turbine_EditorDraw(void);
 void Turbine_EditorLoad(void);
 #endif

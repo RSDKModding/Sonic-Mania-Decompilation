@@ -27,7 +27,7 @@ void SparkRail_StaticUpdate(void);
 void SparkRail_Draw(void);
 void SparkRail_Create(void *data);
 void SparkRail_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SparkRail_EditorDraw(void);
 void SparkRail_EditorLoad(void);
 #endif

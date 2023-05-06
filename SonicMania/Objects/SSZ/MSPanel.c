@@ -131,7 +131,7 @@ void MSPanel_State_Rumbling(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MSPanel_EditorDraw(void)
 {
     RSDK_THIS(MSPanel);

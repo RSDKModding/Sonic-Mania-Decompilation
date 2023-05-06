@@ -37,7 +37,7 @@ void DebugMode_StaticUpdate(void);
 void DebugMode_Draw(void);
 void DebugMode_Create(void *data);
 void DebugMode_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void DebugMode_EditorDraw(void);
 void DebugMode_EditorLoad(void);
 #endif

@@ -32,7 +32,7 @@ void TMZ2Setup_StaticUpdate(void);
 void TMZ2Setup_Draw(void);
 void TMZ2Setup_Create(void *data);
 void TMZ2Setup_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TMZ2Setup_EditorDraw(void);
 void TMZ2Setup_EditorLoad(void);
 #endif

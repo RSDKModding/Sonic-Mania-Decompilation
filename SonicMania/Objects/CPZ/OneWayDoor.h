@@ -31,7 +31,7 @@ void OneWayDoor_StaticUpdate(void);
 void OneWayDoor_Draw(void);
 void OneWayDoor_Create(void *data);
 void OneWayDoor_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void OneWayDoor_EditorDraw(void);
 void OneWayDoor_EditorLoad(void);
 #endif

@@ -23,7 +23,7 @@ void HCZ1Intro_StaticUpdate(void);
 void HCZ1Intro_Draw(void);
 void HCZ1Intro_Create(void *data);
 void HCZ1Intro_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void HCZ1Intro_EditorDraw(void);
 void HCZ1Intro_EditorLoad(void);
 #endif

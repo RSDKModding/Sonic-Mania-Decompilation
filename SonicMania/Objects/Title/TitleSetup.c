@@ -408,7 +408,7 @@ void TitleSetup_Draw_Flash(void)
     RSDK.FillScreen(0xF0F0F0, self->timer, self->timer - 128, self->timer - 256);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TitleSetup_EditorDraw(void) {}
 
 void TitleSetup_EditorLoad(void) {}

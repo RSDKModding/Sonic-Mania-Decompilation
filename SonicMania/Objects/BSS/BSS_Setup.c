@@ -1600,7 +1600,7 @@ void BSS_Setup_ProcessChain(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BSS_Setup_EditorDraw(void) {}
 
 void BSS_Setup_EditorLoad(void)

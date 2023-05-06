@@ -29,7 +29,7 @@ void SSZ3Cutscene_StaticUpdate(void);
 void SSZ3Cutscene_Draw(void);
 void SSZ3Cutscene_Create(void *data);
 void SSZ3Cutscene_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SSZ3Cutscene_EditorDraw(void);
 void SSZ3Cutscene_EditorLoad(void);
 #endif

@@ -146,7 +146,7 @@ void ColorHelpers_HSLToRGB(uint32 hue, uint32 saturation, uint32 luminance, uint
         *b = blue;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ColorHelpers_EditorDraw(void) {}
 
 void ColorHelpers_EditorLoad(void) {}

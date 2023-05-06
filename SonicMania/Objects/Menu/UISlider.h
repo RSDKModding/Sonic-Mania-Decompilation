@@ -44,7 +44,7 @@ void UISlider_StaticUpdate(void);
 void UISlider_Draw(void);
 void UISlider_Create(void *data);
 void UISlider_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UISlider_EditorDraw(void);
 void UISlider_EditorLoad(void);
 #endif

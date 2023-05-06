@@ -28,7 +28,7 @@ void Dust_StaticUpdate(void);
 void Dust_Draw(void);
 void Dust_Create(void *data);
 void Dust_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Dust_EditorDraw(void);
 void Dust_EditorLoad(void);
 #endif

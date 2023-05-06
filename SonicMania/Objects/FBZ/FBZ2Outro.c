@@ -141,7 +141,7 @@ bool32 FBZ2Outro_Cutscene_GlideAway(EntityCutsceneSeq *host)
     return false;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FBZ2Outro_EditorDraw(void) {}
 
 void FBZ2Outro_EditorLoad(void) {}

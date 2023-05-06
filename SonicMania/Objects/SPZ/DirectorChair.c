@@ -316,7 +316,7 @@ void DirectorChair_State_Retract(void)
     self->drawPos.y = self->centerPos.y + (sin << 8) + (sin << 12) * (self->size + 1);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void DirectorChair_EditorDraw(void)
 {
     RSDK_THIS(DirectorChair);

@@ -442,7 +442,7 @@ void MonkeyDude_State_Coconut(void)
 }
 #endif
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MonkeyDude_EditorDraw(void) { MonkeyDude_Draw(); }
 
 void MonkeyDude_EditorLoad(void)

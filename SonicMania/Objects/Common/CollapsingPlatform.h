@@ -53,7 +53,7 @@ void CollapsingPlatform_StaticUpdate(void);
 void CollapsingPlatform_Draw(void);
 void CollapsingPlatform_Create(void *data);
 void CollapsingPlatform_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void CollapsingPlatform_EditorDraw(void);
 void CollapsingPlatform_EditorLoad(void);
 #endif

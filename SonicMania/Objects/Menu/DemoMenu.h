@@ -38,7 +38,7 @@ void DemoMenu_StaticUpdate(void);
 void DemoMenu_Draw(void);
 void DemoMenu_Create(void *data);
 void DemoMenu_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void DemoMenu_EditorDraw(void);
 void DemoMenu_EditorLoad(void);
 #endif

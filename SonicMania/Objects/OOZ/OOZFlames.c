@@ -79,7 +79,7 @@ void OOZFlames_State_Rise(void)
         self->scale.y += 0x10;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void OOZFlames_EditorDraw(void) {}
 
 void OOZFlames_EditorLoad(void) {}

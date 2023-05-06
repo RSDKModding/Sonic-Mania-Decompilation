@@ -466,7 +466,7 @@ void Dango_StateTaunt_RollOut(void)
 }
 #endif
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Dango_EditorDraw(void) { Dango_Draw(); }
 
 void Dango_EditorLoad(void)

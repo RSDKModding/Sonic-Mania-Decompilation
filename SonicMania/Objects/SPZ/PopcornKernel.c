@@ -122,7 +122,7 @@ void PopcornKernel_State_FallDown(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PopcornKernel_EditorDraw(void)
 {
     RSDK_THIS(PopcornKernel);

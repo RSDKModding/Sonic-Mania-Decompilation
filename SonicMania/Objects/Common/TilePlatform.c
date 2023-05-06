@@ -61,7 +61,7 @@ void TilePlatform_Create(void *data)
 
 void TilePlatform_StageLoad(void) {}
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TilePlatform_EditorDraw(void)
 {
     RSDK_THIS(TilePlatform);

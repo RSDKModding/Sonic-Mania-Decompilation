@@ -36,7 +36,7 @@ void Clucker_StaticUpdate(void);
 void Clucker_Draw(void);
 void Clucker_Create(void *data);
 void Clucker_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Clucker_EditorDraw(void);
 void Clucker_EditorLoad(void);
 #endif

@@ -41,7 +41,7 @@ void Shuriken_StaticUpdate(void);
 void Shuriken_Draw(void);
 void Shuriken_Create(void *data);
 void Shuriken_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Shuriken_EditorDraw(void);
 void Shuriken_EditorLoad(void);
 #endif

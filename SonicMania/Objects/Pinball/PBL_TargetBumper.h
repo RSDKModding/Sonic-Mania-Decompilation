@@ -40,7 +40,7 @@ void PBL_TargetBumper_StaticUpdate(void);
 void PBL_TargetBumper_Draw(void);
 void PBL_TargetBumper_Create(void *data);
 void PBL_TargetBumper_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PBL_TargetBumper_EditorDraw(void);
 void PBL_TargetBumper_EditorLoad(void);
 #endif

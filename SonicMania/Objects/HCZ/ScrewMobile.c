@@ -623,7 +623,7 @@ void ScrewMobile_Draw_DepthCharge(void)
     RSDK.DrawSprite(&self->mobileAnimator, NULL, false);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ScrewMobile_EditorDraw(void)
 {
     RSDK_THIS(ScrewMobile);

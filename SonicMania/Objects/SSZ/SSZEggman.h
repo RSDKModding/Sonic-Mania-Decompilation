@@ -35,7 +35,7 @@ void SSZEggman_StaticUpdate(void);
 void SSZEggman_Draw(void);
 void SSZEggman_Create(void *data);
 void SSZEggman_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SSZEggman_EditorDraw(void);
 void SSZEggman_EditorLoad(void);
 #endif

@@ -50,7 +50,7 @@ void ERZMystic_StaticUpdate(void);
 void ERZMystic_Draw(void);
 void ERZMystic_Create(void *data);
 void ERZMystic_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ERZMystic_EditorDraw(void);
 void ERZMystic_EditorLoad(void);
 #endif

@@ -156,7 +156,7 @@ void Debris_State_FallAndFlicker(void)
     self->visible = Zone->timer & 1;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Debris_EditorDraw(void) {}
 
 void Debris_EditorLoad(void) {}

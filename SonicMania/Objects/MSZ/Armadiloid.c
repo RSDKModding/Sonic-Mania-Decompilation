@@ -222,7 +222,7 @@ void Armadiloid_State_Rider(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Armadiloid_EditorDraw(void)
 {
     RSDK_THIS(Armadiloid);

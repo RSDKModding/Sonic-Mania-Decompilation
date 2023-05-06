@@ -36,7 +36,7 @@ void Bomb_StaticUpdate(void);
 void Bomb_Draw(void);
 void Bomb_Create(void *data);
 void Bomb_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Bomb_EditorDraw(void);
 void Bomb_EditorLoad(void);
 #endif

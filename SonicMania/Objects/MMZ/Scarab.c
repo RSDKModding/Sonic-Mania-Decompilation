@@ -311,7 +311,7 @@ void Scarab_State_Wait(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Scarab_EditorDraw(void)
 {
     RSDK_THIS(Scarab);

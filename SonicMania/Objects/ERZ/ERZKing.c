@@ -493,7 +493,7 @@ void ERZKing_State_Explode(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ERZKing_EditorDraw(void)
 {
     RSDK_THIS(ERZKing);

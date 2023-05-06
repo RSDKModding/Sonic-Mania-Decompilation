@@ -24,7 +24,7 @@ void TMZ1Outro_StaticUpdate(void);
 void TMZ1Outro_Draw(void);
 void TMZ1Outro_Create(void *data);
 void TMZ1Outro_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TMZ1Outro_EditorDraw(void);
 void TMZ1Outro_EditorLoad(void);
 #endif

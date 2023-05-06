@@ -683,7 +683,7 @@ void CheckerBall_HandleObjectCollisions(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void CheckerBall_EditorDraw(void) { CheckerBall_Draw(); }
 
 void CheckerBall_EditorLoad(void)

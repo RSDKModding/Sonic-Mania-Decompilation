@@ -186,7 +186,7 @@ void SwingRope_DebugSpawn(void)
     rope->ropeSize        = 6;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SwingRope_EditorDraw(void)
 {
     RSDK_THIS(SwingRope);

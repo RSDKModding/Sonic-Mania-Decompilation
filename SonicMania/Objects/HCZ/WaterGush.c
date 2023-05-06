@@ -440,7 +440,7 @@ void WaterGush_SpawnBrickDebris(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void WaterGush_EditorDraw(void)
 {
     RSDK_THIS(WaterGush);

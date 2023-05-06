@@ -39,7 +39,7 @@ void Whirlpool_StaticUpdate(void);
 void Whirlpool_Draw(void);
 void Whirlpool_Create(void *data);
 void Whirlpool_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Whirlpool_EditorDraw(void);
 void Whirlpool_EditorLoad(void);
 #endif

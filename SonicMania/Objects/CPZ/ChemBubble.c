@@ -112,7 +112,7 @@ void ChemBubble_State_Surfaced(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ChemBubble_EditorDraw(void)
 {
     RSDK_THIS(ChemBubble);

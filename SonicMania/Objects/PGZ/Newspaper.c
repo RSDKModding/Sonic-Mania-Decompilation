@@ -121,7 +121,7 @@ void Newspaper_HandleInteractions(void)
 }
 #endif
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Newspaper_EditorDraw(void)
 {
     RSDK_THIS(Newspaper);

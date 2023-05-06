@@ -30,7 +30,7 @@ void InvincibleStars_StaticUpdate(void);
 void InvincibleStars_Draw(void);
 void InvincibleStars_Create(void *data);
 void InvincibleStars_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void InvincibleStars_EditorDraw(void);
 void InvincibleStars_EditorLoad(void);
 #endif

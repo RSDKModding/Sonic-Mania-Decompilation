@@ -319,7 +319,7 @@ void Crate_State_Fall(void)
     self->position.y = y;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Crate_EditorDraw(void)
 {
     RSDK_THIS(Crate);

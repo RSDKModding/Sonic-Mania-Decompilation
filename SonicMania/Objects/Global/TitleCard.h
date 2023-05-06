@@ -69,7 +69,7 @@ void TitleCard_StaticUpdate(void);
 void TitleCard_Draw(void);
 void TitleCard_Create(void *data);
 void TitleCard_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TitleCard_EditorDraw(void);
 void TitleCard_EditorLoad(void);
 #endif

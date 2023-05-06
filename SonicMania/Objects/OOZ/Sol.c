@@ -485,7 +485,7 @@ void Sol_State_OilFlame(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Sol_EditorDraw(void)
 {
     RSDK_THIS(Sol);

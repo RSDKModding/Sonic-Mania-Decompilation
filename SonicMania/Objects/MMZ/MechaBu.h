@@ -39,7 +39,7 @@ void MechaBu_StaticUpdate(void);
 void MechaBu_Draw(void);
 void MechaBu_Create(void *data);
 void MechaBu_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MechaBu_EditorDraw(void);
 void MechaBu_EditorLoad(void);
 #endif

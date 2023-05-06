@@ -6701,7 +6701,7 @@ void Player_Input_P2_Player(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Player_EditorDraw(void)
 {
     RSDK_THIS(Player);

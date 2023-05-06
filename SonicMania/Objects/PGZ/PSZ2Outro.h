@@ -27,7 +27,7 @@ void PSZ2Outro_StaticUpdate(void);
 void PSZ2Outro_Draw(void);
 void PSZ2Outro_Create(void *data);
 void PSZ2Outro_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PSZ2Outro_EditorDraw(void);
 void PSZ2Outro_EditorLoad(void);
 #endif

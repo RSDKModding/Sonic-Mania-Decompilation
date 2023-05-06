@@ -97,7 +97,7 @@ void TMZ2Setup_DrawDynTiles_Ruby(void)
     RSDK.DrawAniTiles(TMZ2Setup->dynTiles, 1010, 16, 240, 48, 16);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TMZ2Setup_EditorDraw(void) {}
 
 void TMZ2Setup_EditorLoad(void)

@@ -66,7 +66,7 @@ void ChemicalBall_StaticUpdate(void);
 void ChemicalBall_Draw(void);
 void ChemicalBall_Create(void *data);
 void ChemicalBall_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ChemicalBall_EditorDraw(void);
 void ChemicalBall_EditorLoad(void);
 #endif

@@ -1219,7 +1219,7 @@ void PhantomEgg_SaveGameCB(bool32 success) { PhantomEgg->savedGameProgress = tru
 void PhantomEgg_SaveGameCB(void) { PhantomEgg->savedGameProgress = true; }
 #endif
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PhantomEgg_EditorDraw(void)
 {
     RSDK_THIS(PhantomEgg);

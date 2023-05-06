@@ -182,7 +182,7 @@ void Turbine_State_Spikes(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Turbine_EditorDraw(void)
 {
     RSDK_THIS(Turbine);

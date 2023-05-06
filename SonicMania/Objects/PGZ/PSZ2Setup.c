@@ -149,7 +149,7 @@ void PSZ2Setup_ActTransitionLoad(void)
 
 void PSZ2Setup_StageFinish_EndAct2(void) { CREATE_ENTITY(PSZ2Outro, NULL, 0, 0); }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PSZ2Setup_EditorDraw(void) {}
 
 void PSZ2Setup_EditorLoad(void)

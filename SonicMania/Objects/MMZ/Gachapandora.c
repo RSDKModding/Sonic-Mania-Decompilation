@@ -1852,7 +1852,7 @@ void Gachapandora_StateEggman_RunAway(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Gachapandora_EditorDraw(void)
 {
     RSDK_THIS(Gachapandora);

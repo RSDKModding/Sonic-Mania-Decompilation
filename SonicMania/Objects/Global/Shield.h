@@ -54,7 +54,7 @@ void Shield_StaticUpdate(void);
 void Shield_Draw(void);
 void Shield_Create(void *data);
 void Shield_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Shield_EditorDraw(void);
 void Shield_EditorLoad(void);
 #endif

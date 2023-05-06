@@ -136,7 +136,7 @@ void RotatingStair_State_Move_Intervals(void)
     self->velocity.y = drawY + self->drawPos.y;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void RotatingStair_EditorDraw(void)
 {
     RSDK_THIS(RotatingStair);

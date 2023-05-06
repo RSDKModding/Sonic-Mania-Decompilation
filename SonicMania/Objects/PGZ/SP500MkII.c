@@ -344,7 +344,7 @@ void SP500MkII_State_NextPrintRow(void)
     SP500MkII_CheckPlayerCollisions();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SP500MkII_EditorDraw(void)
 {
     RSDK_THIS(SP500MkII);

@@ -55,7 +55,7 @@ void UIButton_StaticUpdate(void);
 void UIButton_Draw(void);
 void UIButton_Create(void *data);
 void UIButton_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIButton_EditorDraw(void);
 void UIButton_EditorLoad(void);
 #endif

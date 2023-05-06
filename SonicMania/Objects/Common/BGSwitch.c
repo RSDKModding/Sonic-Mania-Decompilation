@@ -56,7 +56,7 @@ void BGSwitch_StageLoad(void)
     BGSwitch->layerIDs[7] = -1;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BGSwitch_EditorDraw(void)
 {
     RSDK_THIS(BGSwitch);

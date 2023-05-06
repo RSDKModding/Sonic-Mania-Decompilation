@@ -38,7 +38,7 @@ void GreenScreen_StaticUpdate(void);
 void GreenScreen_Draw(void);
 void GreenScreen_Create(void *data);
 void GreenScreen_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void GreenScreen_EditorDraw(void);
 void GreenScreen_EditorLoad(void);
 #endif

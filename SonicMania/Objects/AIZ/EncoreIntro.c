@@ -1221,7 +1221,7 @@ void EncoreIntro_PlayerInput_BuddySel(void)
     self->jumpHold  = false;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void EncoreIntro_EditorDraw(void)
 {
     RSDK_THIS(EncoreIntro);

@@ -197,7 +197,7 @@ void TippingPlatform_State_Tipping_Delay(void)
         self->state = TippingPlatform_State_Tipping_Boss;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TippingPlatform_EditorDraw(void)
 {
     RSDK_THIS(TippingPlatform);

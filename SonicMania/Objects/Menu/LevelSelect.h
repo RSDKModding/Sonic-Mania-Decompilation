@@ -89,7 +89,7 @@ void LevelSelect_StaticUpdate(void);
 void LevelSelect_Draw(void);
 void LevelSelect_Create(void *data);
 void LevelSelect_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LevelSelect_EditorDraw(void);
 void LevelSelect_EditorLoad(void);
 #endif

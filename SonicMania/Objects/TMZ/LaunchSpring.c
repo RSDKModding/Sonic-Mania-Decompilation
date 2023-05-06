@@ -453,7 +453,7 @@ void LaunchSpring_State_Rotating_FiredPlayer(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LaunchSpring_EditorDraw(void)
 {
     RSDK_THIS(LaunchSpring);

@@ -505,7 +505,7 @@ void SP500_State_MoveToTarget(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SP500_EditorDraw(void)
 {
     RSDK_THIS(SP500);

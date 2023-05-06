@@ -161,7 +161,7 @@ void MSHologram_State_Destroyed(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MSHologram_EditorDraw(void)
 {
     RSDK_THIS(MSHologram);

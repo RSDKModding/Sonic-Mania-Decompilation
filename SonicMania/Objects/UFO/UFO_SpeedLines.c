@@ -101,7 +101,7 @@ void UFO_SpeedLines_Create(void *data)
 
 void UFO_SpeedLines_StageLoad(void) { RSDK.ResetEntitySlot(SLOT_UFO_SPEEDLINES, UFO_SpeedLines->classID, NULL); }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UFO_SpeedLines_EditorDraw(void) {}
 
 void UFO_SpeedLines_EditorLoad(void) {}

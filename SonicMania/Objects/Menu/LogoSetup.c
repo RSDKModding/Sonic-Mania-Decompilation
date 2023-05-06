@@ -149,7 +149,7 @@ void LogoSetup_Draw_Fade(void)
     RSDK.FillScreen(0x000000, self->timer, self->timer - 128, self->timer - 256);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LogoSetup_EditorDraw(void) {}
 
 void LogoSetup_EditorLoad(void) {}

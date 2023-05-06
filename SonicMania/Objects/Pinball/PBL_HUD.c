@@ -335,7 +335,7 @@ void PBL_HUD_State_HideCrane(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PBL_HUD_EditorDraw(void)
 {
     RSDK_THIS(PBL_HUD);

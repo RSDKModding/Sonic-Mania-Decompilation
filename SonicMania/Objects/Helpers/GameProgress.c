@@ -512,7 +512,7 @@ bool32 GameProgress_CheckUnlock(uint8 id)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void GameProgress_EditorDraw(void) {}
 
 void GameProgress_EditorLoad(void) {}

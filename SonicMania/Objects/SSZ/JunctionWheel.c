@@ -180,7 +180,7 @@ void JunctionWheel_StageLoad(void)
     JunctionWheel->hitboxEntryL.bottom = 40;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void JunctionWheel_EditorDraw(void)
 {
     RSDK_THIS(JunctionWheel);

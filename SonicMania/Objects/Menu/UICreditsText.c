@@ -253,7 +253,7 @@ void UICreditsText_State_FadeOut(void)
         self->alpha -= 8;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UICreditsText_EditorDraw(void)
 {
     RSDK_THIS(UICreditsText);

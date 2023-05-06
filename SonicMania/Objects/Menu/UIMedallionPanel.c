@@ -60,7 +60,7 @@ void UIMedallionPanel_DrawPanel(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIMedallionPanel_EditorDraw(void) { UIMedallionPanel_DrawPanel(); }
 
 void UIMedallionPanel_EditorLoad(void) { UIMedallionPanel->aniFrames = RSDK.LoadSpriteAnimation("UI/MedallionPanel.bin", SCOPE_STAGE); }

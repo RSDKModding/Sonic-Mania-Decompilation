@@ -164,7 +164,7 @@ void UICarousel_HandleButtonPositions(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UICarousel_EditorDraw(void)
 {
     RSDK_THIS(UICarousel);

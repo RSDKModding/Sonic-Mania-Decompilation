@@ -235,7 +235,7 @@ void RockemSockem_HandleJointPositions(void)
     self->jointPositions[5].y = 0x2AAB * (posY + y + 4 * posY);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void RockemSockem_EditorDraw(void)
 {
     RSDK_THIS(RockemSockem);

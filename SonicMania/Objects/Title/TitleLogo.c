@@ -267,7 +267,7 @@ void TitleLogo_State_PlusShine(void)
 }
 #endif
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TitleLogo_EditorDraw(void)
 {
     RSDK_THIS(TitleLogo);

@@ -25,7 +25,7 @@ void LRZ1Outro_StaticUpdate(void);
 void LRZ1Outro_Draw(void);
 void LRZ1Outro_Create(void *data);
 void LRZ1Outro_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LRZ1Outro_EditorDraw(void);
 void LRZ1Outro_EditorLoad(void);
 #endif

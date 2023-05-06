@@ -74,7 +74,7 @@ void UIVsResults_StaticUpdate(void);
 void UIVsResults_Draw(void);
 void UIVsResults_Create(void *data);
 void UIVsResults_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIVsResults_EditorDraw(void);
 void UIVsResults_EditorLoad(void);
 #endif

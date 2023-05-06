@@ -119,7 +119,7 @@ void ForceSpin_SetPlayerState(EntityPlayer *player)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ForceSpin_EditorDraw(void)
 {
     RSDK_THIS(ForceSpin);

@@ -156,7 +156,7 @@ void MagPlatform_State_Fall(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MagPlatform_EditorDraw(void)
 {
     RSDK_THIS(MagPlatform);

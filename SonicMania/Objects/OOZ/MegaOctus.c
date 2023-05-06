@@ -1552,7 +1552,7 @@ void MegaOctus_TilePlatformState_RiseOuttaOil(void)
 }
 #endif
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MegaOctus_EditorDraw(void)
 {
     RSDK_THIS(MegaOctus);

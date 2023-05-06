@@ -37,7 +37,7 @@ void Chopper_StaticUpdate(void);
 void Chopper_Draw(void);
 void Chopper_Create(void *data);
 void Chopper_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Chopper_EditorDraw(void);
 void Chopper_EditorLoad(void);
 #endif

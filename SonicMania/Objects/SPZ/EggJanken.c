@@ -1269,7 +1269,7 @@ void EggJanken_Draw_Destroyed(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void EggJanken_EditorDraw(void)
 {
     RSDK_THIS(EggJanken);

@@ -339,7 +339,7 @@ void WoodChipper_State_Debris(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void WoodChipper_EditorDraw(void)
 {
     RSDK_THIS(WoodChipper);

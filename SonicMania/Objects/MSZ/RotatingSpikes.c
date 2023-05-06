@@ -88,7 +88,7 @@ void RotatingSpikes_StageLoad(void)
         RotatingSpikes->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/RotatingSpikes.bin", SCOPE_STAGE);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void RotatingSpikes_EditorDraw(void)
 {
     RSDK_THIS(RotatingSpikes);

@@ -144,7 +144,7 @@ void RingField_GetRingSpawnPos(Vector2 *pos)
     pos->y = y + ((ScreenInfo->position.y + ScreenInfo->center.y) << 16);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void RingField_EditorDraw(void)
 {
     RSDK_THIS(RingField);

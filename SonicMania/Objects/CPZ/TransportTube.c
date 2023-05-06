@@ -291,7 +291,7 @@ void TransportTube_State_Exit(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TransportTube_EditorDraw(void)
 {
     RSDK_THIS(TransportTube);

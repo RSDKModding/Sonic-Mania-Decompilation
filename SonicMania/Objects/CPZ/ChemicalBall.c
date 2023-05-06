@@ -163,7 +163,7 @@ void ChemicalBall_State_MoveVertical(void)
     ChemicalBall_CheckHit();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ChemicalBall_EditorDraw(void)
 {
     RSDK_THIS(ChemicalBall);

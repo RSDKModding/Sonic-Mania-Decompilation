@@ -101,7 +101,7 @@ void TMZAlert_State_ShuttingDown(void)
         self->alpha -= 8;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TMZAlert_EditorDraw(void)
 {
     RSDK_THIS(TMZAlert);

@@ -224,7 +224,7 @@ void IceSpring_Shatter(int32 velX, int32 velY)
         self->animator.frameID = 7;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void IceSpring_EditorDraw(void)
 {
     RSDK_THIS(IceSpring);

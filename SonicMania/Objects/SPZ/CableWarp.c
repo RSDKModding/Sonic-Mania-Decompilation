@@ -359,7 +359,7 @@ void CableWarp_StateTransport_Exit(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void CableWarp_EditorDraw(void)
 {
     RSDK_THIS(CableWarp);

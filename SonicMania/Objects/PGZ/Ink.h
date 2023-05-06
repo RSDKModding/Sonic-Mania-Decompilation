@@ -39,7 +39,7 @@ void Ink_StaticUpdate(void);
 void Ink_Draw(void);
 void Ink_Create(void *data);
 void Ink_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Ink_EditorDraw(void);
 void Ink_EditorLoad(void);
 #endif

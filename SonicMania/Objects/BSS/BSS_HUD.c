@@ -74,7 +74,7 @@ void BSS_HUD_DrawNumbers(int32 value, Vector2 *drawPos)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BSS_HUD_EditorDraw(void) {}
 
 void BSS_HUD_EditorLoad(void) {}

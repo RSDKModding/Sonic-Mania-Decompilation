@@ -83,7 +83,7 @@ void UIInfoLabel_DrawSprites(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIInfoLabel_EditorDraw(void) { UIInfoLabel_DrawSprites(); }
 
 void UIInfoLabel_EditorLoad(void) { UIInfoLabel->aniFrames = RSDK.LoadSpriteAnimation("UI/TextEN.bin", SCOPE_STAGE); }

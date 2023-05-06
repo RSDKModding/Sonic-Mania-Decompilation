@@ -64,7 +64,7 @@ void AmoebaDroid_StaticUpdate(void);
 void AmoebaDroid_Draw(void);
 void AmoebaDroid_Create(void *data);
 void AmoebaDroid_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void AmoebaDroid_EditorDraw(void);
 void AmoebaDroid_EditorLoad(void);
 #endif

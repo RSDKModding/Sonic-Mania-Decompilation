@@ -144,7 +144,7 @@ void UIWaitSpinner_State_Hide(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIWaitSpinner_EditorDraw(void) {}
 
 void UIWaitSpinner_EditorLoad(void) {}

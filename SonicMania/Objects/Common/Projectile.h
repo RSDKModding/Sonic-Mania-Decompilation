@@ -43,7 +43,7 @@ void Projectile_StaticUpdate(void);
 void Projectile_Draw(void);
 void Projectile_Create(void *data);
 void Projectile_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Projectile_EditorDraw(void);
 void Projectile_EditorLoad(void);
 #endif

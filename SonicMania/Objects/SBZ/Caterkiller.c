@@ -417,7 +417,7 @@ void Caterkiller_StateSplit_Body(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Caterkiller_EditorDraw(void)
 {
     RSDK_THIS(Caterkiller);

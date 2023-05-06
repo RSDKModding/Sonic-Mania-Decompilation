@@ -321,7 +321,7 @@ void LRZSpiral_State_C_Curve(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LRZSpiral_EditorDraw(void)
 {
     RSDK_THIS(LRZSpiral);

@@ -1366,7 +1366,7 @@ void Water_Draw_Bubble(void)
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Water_EditorDraw(void)
 {
     RSDK_THIS(Water);

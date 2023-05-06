@@ -117,7 +117,7 @@ void Reagent_State_ChangingPoolType(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Reagent_EditorDraw(void)
 {
     RSDK_THIS(Reagent);

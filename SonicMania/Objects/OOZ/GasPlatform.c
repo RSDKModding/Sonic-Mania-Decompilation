@@ -214,7 +214,7 @@ void GasPlatform_State_Shaking(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void GasPlatform_EditorDraw(void)
 {
     RSDK_THIS(GasPlatform);

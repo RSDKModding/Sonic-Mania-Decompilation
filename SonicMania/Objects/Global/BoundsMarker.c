@@ -103,7 +103,7 @@ void BoundsMarker_ApplyAllBounds(EntityPlayer *player, bool32 setPos)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BoundsMarker_EditorDraw(void)
 {
     RSDK_THIS(BoundsMarker);

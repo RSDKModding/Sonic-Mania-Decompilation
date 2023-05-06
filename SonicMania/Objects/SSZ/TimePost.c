@@ -201,7 +201,7 @@ void TimePost_State_Spinning(void)
 
 void TimePost_State_FinishedSpin(void) { TimePost_HandleTimeSparkles(); }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TimePost_EditorDraw(void)
 {
     RSDK_THIS(TimePost);

@@ -78,7 +78,7 @@ void LogHelpers_PrintVector2(const char *message, Vector2 value)
 }
 #endif
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LogHelpers_EditorDraw(void) {}
 
 void LogHelpers_EditorLoad(void) {}

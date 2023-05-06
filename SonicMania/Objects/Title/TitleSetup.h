@@ -37,7 +37,7 @@ void TitleSetup_StaticUpdate(void);
 void TitleSetup_Draw(void);
 void TitleSetup_Create(void *data);
 void TitleSetup_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TitleSetup_EditorDraw(void);
 void TitleSetup_EditorLoad(void);
 #endif

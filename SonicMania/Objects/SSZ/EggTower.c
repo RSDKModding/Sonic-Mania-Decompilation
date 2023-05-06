@@ -59,7 +59,7 @@ void EggTower_StageLoad(void)
     RSDK.SetSpecularIntensity(EggTower->sceneIndex, 16, 16, 16);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void EggTower_EditorDraw(void) {}
 
 void EggTower_EditorLoad(void) {}

@@ -48,7 +48,7 @@ void UFO_Decoration_StaticUpdate(void);
 void UFO_Decoration_Draw(void);
 void UFO_Decoration_Create(void *data);
 void UFO_Decoration_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UFO_Decoration_EditorDraw(void);
 void UFO_Decoration_EditorLoad(void);
 #endif

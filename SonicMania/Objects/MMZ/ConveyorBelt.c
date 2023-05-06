@@ -63,7 +63,7 @@ void ConveyorBelt_StageLoad(void)
         ConveyorBelt->aniFrames = RSDK.LoadSpriteAnimation("MMZ/ConveyorWheel.bin", SCOPE_STAGE);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ConveyorBelt_EditorDraw(void)
 {
     RSDK_THIS(ConveyorBelt);

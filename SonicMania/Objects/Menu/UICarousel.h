@@ -43,7 +43,7 @@ void UICarousel_StaticUpdate(void);
 void UICarousel_Draw(void);
 void UICarousel_Create(void *data);
 void UICarousel_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UICarousel_EditorDraw(void);
 void UICarousel_EditorLoad(void);
 #endif

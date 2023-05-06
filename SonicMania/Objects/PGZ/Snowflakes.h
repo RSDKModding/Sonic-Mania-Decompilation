@@ -35,7 +35,7 @@ void Snowflakes_StaticUpdate(void);
 void Snowflakes_Draw(void);
 void Snowflakes_Create(void *data);
 void Snowflakes_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Snowflakes_EditorDraw(void);
 void Snowflakes_EditorLoad(void);
 #endif

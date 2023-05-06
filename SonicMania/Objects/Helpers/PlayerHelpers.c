@@ -25,7 +25,7 @@ void PlayerHelpers_Create(void *data) {}
 
 void PlayerHelpers_StageLoad(void) {}
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PlayerHelpers_EditorDraw(void) {}
 
 void PlayerHelpers_EditorLoad(void) {}

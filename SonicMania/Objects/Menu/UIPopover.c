@@ -303,7 +303,7 @@ void UIPopover_State_Idle(void) {}
 
 void UIPopover_State_Close(void) { UIPopover_Close(); }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIPopover_EditorDraw(void) { UIPopover_DrawSprites(); }
 
 void UIPopover_EditorLoad(void) {}

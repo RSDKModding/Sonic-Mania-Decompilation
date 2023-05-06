@@ -343,7 +343,7 @@ void BallCannon_State_CorkDebris(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BallCannon_EditorDraw(void)
 {
     RSDK_THIS(BallCannon);

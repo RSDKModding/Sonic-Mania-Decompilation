@@ -806,7 +806,7 @@ void EggPistonsMKII_StateBarrier_Explode(void)
         EggPistonsMKII_Explode();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void EggPistonsMKII_EditorDraw(void)
 {
     RSDK_THIS(EggPistonsMKII);

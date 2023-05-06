@@ -258,7 +258,7 @@ void ExtrasMenu_Start_BSS_Mania(void)
 
 void ExtrasMenu_BSS_Mania_ActionCB(void) { MenuSetup_StartTransition(ExtrasMenu_Start_BSS_Mania, 32); }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ExtrasMenu_EditorDraw(void) {}
 
 void ExtrasMenu_EditorLoad(void) {}

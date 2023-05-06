@@ -154,7 +154,7 @@ void PhantomShield_State_Disappear(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PhantomShield_EditorDraw(void)
 {
     RSDK_THIS(PhantomShield);

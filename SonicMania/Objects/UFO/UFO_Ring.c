@@ -173,7 +173,7 @@ void UFO_Ring_State_LoseRing(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UFO_Ring_EditorDraw(void)
 {
     RSDK_THIS(UFO_Ring);

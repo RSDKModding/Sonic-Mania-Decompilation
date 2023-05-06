@@ -37,7 +37,7 @@ void Palette_StageLoad(void)
         Palette->count++;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Palette_EditorDraw(void)
 {
     RSDK_THIS(Palette);

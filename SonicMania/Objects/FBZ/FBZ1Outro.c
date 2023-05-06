@@ -289,7 +289,7 @@ bool32 FBZ1Outro_Cutscene_PrepareFBZ2(EntityCutsceneSeq *host)
     return false;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FBZ1Outro_EditorDraw(void)
 {
     RSDK_THIS(FBZ1Outro);

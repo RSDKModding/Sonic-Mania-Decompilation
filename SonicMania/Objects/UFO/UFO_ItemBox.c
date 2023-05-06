@@ -213,7 +213,7 @@ void UFO_ItemBox_State_ShowContents(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UFO_ItemBox_EditorDraw(void)
 {
     RSDK_THIS(UFO_ItemBox);

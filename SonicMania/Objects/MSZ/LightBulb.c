@@ -158,7 +158,7 @@ void LightBulb_State_Destroyed(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LightBulb_EditorDraw(void) { LightBulb_Draw(); }
 
 void LightBulb_EditorLoad(void)

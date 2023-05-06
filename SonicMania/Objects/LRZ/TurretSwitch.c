@@ -181,7 +181,7 @@ void TurretSwitch_State_Projectile(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TurretSwitch_EditorDraw(void)
 {
     RSDK_THIS(TurretSwitch);

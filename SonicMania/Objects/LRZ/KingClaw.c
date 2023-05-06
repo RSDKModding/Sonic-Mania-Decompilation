@@ -199,7 +199,7 @@ void KingClaw_State_RaiseClaw(void)
     self->position.y += self->velocity.y;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void KingClaw_EditorDraw(void)
 {
     RSDK_THIS(KingClaw);

@@ -129,7 +129,7 @@ void PuyoLevelSelect_HandleMenuMovement(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PuyoLevelSelect_EditorDraw(void) { PuyoLevelSelect_DrawSprites(); }
 
 void PuyoLevelSelect_EditorLoad(void)

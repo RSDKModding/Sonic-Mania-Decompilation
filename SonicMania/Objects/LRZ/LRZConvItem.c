@@ -300,7 +300,7 @@ void LRZConvItem_State_SpikeBall(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LRZConvItem_EditorDraw(void)
 {
     RSDK_THIS(LRZConvItem);

@@ -36,7 +36,7 @@ void MSZSpotlight_StaticUpdate(void);
 void MSZSpotlight_Draw(void);
 void MSZSpotlight_Create(void *data);
 void MSZSpotlight_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MSZSpotlight_EditorDraw(void);
 void MSZSpotlight_EditorLoad(void);
 #endif

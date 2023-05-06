@@ -269,7 +269,7 @@ void Acetone_State_StopDispensing(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Acetone_EditorDraw(void)
 {
     RSDK_THIS(Acetone);

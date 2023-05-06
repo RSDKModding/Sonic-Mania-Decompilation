@@ -34,7 +34,7 @@ void UIButtonLabel_StaticUpdate(void);
 void UIButtonLabel_Draw(void);
 void UIButtonLabel_Create(void *data);
 void UIButtonLabel_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIButtonLabel_EditorDraw(void);
 void UIButtonLabel_EditorLoad(void);
 #endif

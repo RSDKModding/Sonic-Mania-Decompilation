@@ -81,7 +81,7 @@ void UIButtonPrompt_StaticUpdate(void);
 void UIButtonPrompt_Draw(void);
 void UIButtonPrompt_Create(void *data);
 void UIButtonPrompt_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIButtonPrompt_EditorDraw(void);
 void UIButtonPrompt_EditorLoad(void);
 #endif

@@ -229,7 +229,7 @@ void MetalArm_State_MoveToStart(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MetalArm_EditorDraw(void)
 {
     RSDK_THIS(MetalArm);

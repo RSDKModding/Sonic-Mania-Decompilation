@@ -225,7 +225,7 @@ void UITABanner_DrawBannerInfo(int32 drawX, int32 drawY, uint8 zoneID, uint8 act
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UITABanner_EditorDraw(void)
 {
     RSDK_THIS(UITABanner);

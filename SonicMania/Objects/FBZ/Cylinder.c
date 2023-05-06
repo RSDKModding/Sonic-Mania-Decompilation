@@ -827,7 +827,7 @@ void Cylinder_PlayerState_Spiral(void)
     Player_State_Ground();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Cylinder_EditorDraw(void)
 {
     RSDK_THIS(Cylinder);

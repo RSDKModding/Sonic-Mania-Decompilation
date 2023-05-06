@@ -174,7 +174,7 @@ bool32 PSZ1Intro_Cutscene_HandleLanding(EntityCutsceneSeq *host)
     return true;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PSZ1Intro_EditorDraw(void) {}
 
 void PSZ1Intro_EditorLoad(void) {}

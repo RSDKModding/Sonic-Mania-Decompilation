@@ -31,7 +31,7 @@ void MSBomb_StaticUpdate(void);
 void MSBomb_Draw(void);
 void MSBomb_Create(void *data);
 void MSBomb_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MSBomb_EditorDraw(void);
 void MSBomb_EditorLoad(void);
 #endif

@@ -466,7 +466,7 @@ void PimPom_Move_Track(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PimPom_EditorDraw(void)
 {
     RSDK_THIS(PimPom);

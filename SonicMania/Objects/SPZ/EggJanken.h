@@ -78,7 +78,7 @@ void EggJanken_StaticUpdate(void);
 void EggJanken_Draw(void);
 void EggJanken_Create(void *data);
 void EggJanken_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void EggJanken_EditorDraw(void);
 void EggJanken_EditorLoad(void);
 #endif

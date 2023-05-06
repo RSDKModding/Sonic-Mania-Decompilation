@@ -40,7 +40,7 @@ void Competition_StaticUpdate(void);
 void Competition_Draw(void);
 void Competition_Create(void *data);
 void Competition_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Competition_EditorDraw(void);
 void Competition_EditorLoad(void);
 #endif

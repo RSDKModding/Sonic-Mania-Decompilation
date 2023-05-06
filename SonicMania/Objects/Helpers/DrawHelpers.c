@@ -151,7 +151,7 @@ void DrawHelpers_DrawArenaBounds(int32 left, int32 top, int32 right, int32 botto
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void DrawHelpers_EditorDraw(void) {}
 
 void DrawHelpers_EditorLoad(void) {}

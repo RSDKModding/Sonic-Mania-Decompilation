@@ -316,7 +316,7 @@ void Rhinobot_State_Fall(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Rhinobot_EditorDraw(void) { Rhinobot_Draw(); }
 
 void Rhinobot_EditorLoad(void) { Rhinobot->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Rhinobot.bin", SCOPE_STAGE); }

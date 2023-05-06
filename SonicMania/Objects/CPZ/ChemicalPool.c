@@ -386,7 +386,7 @@ void ChemicalPool_State_Changing(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ChemicalPool_EditorDraw(void)
 {
     RSDK_THIS(ChemicalPool);

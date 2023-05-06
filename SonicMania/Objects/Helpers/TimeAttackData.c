@@ -742,7 +742,7 @@ void TimeAttackData_AddRecord(uint8 zone, uint8 act, uint8 characterID, uint8 ra
 }
 #endif
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TimeAttackData_EditorDraw(void) {}
 
 void TimeAttackData_EditorLoad(void) {}

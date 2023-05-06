@@ -616,7 +616,7 @@ void UIReplayCarousel_State_StartAction(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIReplayCarousel_EditorDraw(void)
 {
     RSDK_THIS(UIReplayCarousel);

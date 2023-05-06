@@ -2164,7 +2164,7 @@ void Platform_HandleStood_Sticky(EntityPlatform *self, EntityPlayer *player, int
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Platform_EditorDraw_Normal(void)
 {
     RSDK_THIS(Platform);

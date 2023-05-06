@@ -60,7 +60,7 @@ void Animals_StaticUpdate(void);
 void Animals_Draw(void);
 void Animals_Create(void *data);
 void Animals_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Animals_EditorDraw(void);
 void Animals_EditorLoad(void);
 #endif

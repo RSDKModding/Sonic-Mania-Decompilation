@@ -59,7 +59,7 @@ void MeterDroid_StaticUpdate(void);
 void MeterDroid_Draw(void);
 void MeterDroid_Create(void *data);
 void MeterDroid_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MeterDroid_EditorDraw(void);
 void MeterDroid_EditorLoad(void);
 #endif

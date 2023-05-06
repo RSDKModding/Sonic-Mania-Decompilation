@@ -178,7 +178,7 @@ void Smog_StageLoad(void)
 
 void Smog_DrawHook_ApplySmogPalette(void) { RSDK.CopyPalette(1, 0, 0, 0, 128); }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Smog_EditorDraw(void) {}
 
 void Smog_EditorLoad(void) {}

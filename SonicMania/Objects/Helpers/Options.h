@@ -61,7 +61,7 @@ void Options_StaticUpdate(void);
 void Options_Draw(void);
 void Options_Create(void *data);
 void Options_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Options_EditorDraw(void);
 void Options_EditorLoad(void);
 #endif

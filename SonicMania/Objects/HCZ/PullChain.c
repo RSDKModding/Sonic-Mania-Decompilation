@@ -225,7 +225,7 @@ bool32 PullChain_HandleDunkeyCode(EntityPlayer *player)
 }
 #endif
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PullChain_EditorDraw(void)
 {
     RSDK_THIS(PullChain);

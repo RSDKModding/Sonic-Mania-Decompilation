@@ -35,7 +35,7 @@ void FXSpinRay_StaticUpdate(void);
 void FXSpinRay_Draw(void);
 void FXSpinRay_Create(void *data);
 void FXSpinRay_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FXSpinRay_EditorDraw(void);
 void FXSpinRay_EditorLoad(void);
 #endif

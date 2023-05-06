@@ -194,7 +194,7 @@ Vector2 SpikeFlail_GetScale(int32 ballPos, int32 angle)
     return scale;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SpikeFlail_EditorDraw(void)
 {
     RSDK_THIS(SpikeFlail);

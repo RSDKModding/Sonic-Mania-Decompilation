@@ -476,7 +476,7 @@ void PhantomMystic_State_MoveCupsToMystic(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PhantomMystic_EditorDraw(void)
 {
     RSDK_THIS(PhantomMystic);

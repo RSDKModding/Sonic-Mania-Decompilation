@@ -185,7 +185,7 @@ void PathInverter_State_Vertical(void)
     // Nothing !
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PathInverter_EditorDraw(void)
 {
     RSDK_THIS(PathInverter);

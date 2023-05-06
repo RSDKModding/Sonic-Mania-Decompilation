@@ -39,7 +39,7 @@ void TetherBall_StaticUpdate(void);
 void TetherBall_Draw(void);
 void TetherBall_Create(void *data);
 void TetherBall_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TetherBall_EditorDraw(void);
 void TetherBall_EditorLoad(void);
 #endif

@@ -34,7 +34,7 @@ void SpeedBooster_StaticUpdate(void);
 void SpeedBooster_Draw(void);
 void SpeedBooster_Create(void *data);
 void SpeedBooster_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SpeedBooster_EditorDraw(void);
 void SpeedBooster_EditorLoad(void);
 #endif

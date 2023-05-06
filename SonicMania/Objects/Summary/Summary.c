@@ -266,7 +266,7 @@ void Summary_LoadTimes(void)
     Summary_SetTextString(0, self->totalTime, playTime);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Summary_EditorDraw(void) {}
 
 void Summary_EditorLoad(void)

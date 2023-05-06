@@ -141,7 +141,7 @@ void Ice_StaticUpdate(void);
 void Ice_Draw(void);
 void Ice_Create(void *data);
 void Ice_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Ice_EditorDraw(void);
 void Ice_EditorLoad(void);
 #endif

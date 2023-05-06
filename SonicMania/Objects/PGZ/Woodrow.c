@@ -396,7 +396,7 @@ void Woodrow_State_BombSpawner(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Woodrow_EditorDraw(void)
 {
     RSDK_THIS(Woodrow);

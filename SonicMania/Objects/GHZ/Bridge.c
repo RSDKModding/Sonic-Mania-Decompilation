@@ -278,7 +278,7 @@ bool32 Bridge_HandleCollisions(void *e, EntityBridge *self, Hitbox *entityHitbox
     return bridgeCollided;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Bridge_EditorDraw(void)
 {
     RSDK_THIS(Bridge);

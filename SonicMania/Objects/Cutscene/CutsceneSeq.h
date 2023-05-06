@@ -50,7 +50,7 @@ void CutsceneSeq_StaticUpdate(void);
 void CutsceneSeq_Draw(void);
 void CutsceneSeq_Create(void *data);
 void CutsceneSeq_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void CutsceneSeq_EditorDraw(void);
 void CutsceneSeq_EditorLoad(void);
 #endif

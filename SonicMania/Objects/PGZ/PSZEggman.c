@@ -88,7 +88,7 @@ void PSZEggman_State_TurnRound(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PSZEggman_EditorDraw(void)
 {
     RSDK_THIS(PSZEggman);

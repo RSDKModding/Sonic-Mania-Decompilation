@@ -317,7 +317,7 @@ void Piston_StateActive_ReturnToStartPos(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Piston_EditorDraw(void)
 {
     RSDK_THIS(Piston);

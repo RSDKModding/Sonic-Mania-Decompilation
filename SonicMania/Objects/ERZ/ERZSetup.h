@@ -26,7 +26,7 @@ void ERZSetup_StaticUpdate(void);
 void ERZSetup_Draw(void);
 void ERZSetup_Create(void *data);
 void ERZSetup_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ERZSetup_EditorDraw(void);
 void ERZSetup_EditorLoad(void);
 #endif

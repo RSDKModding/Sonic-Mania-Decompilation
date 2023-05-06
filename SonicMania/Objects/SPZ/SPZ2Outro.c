@@ -302,7 +302,7 @@ bool32 SPZ2Outro_Cutscene_FBZFlyAway(EntityCutsceneSeq *host)
     return false;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SPZ2Outro_EditorDraw(void)
 {
     RSDK_THIS(SPZ2Outro);

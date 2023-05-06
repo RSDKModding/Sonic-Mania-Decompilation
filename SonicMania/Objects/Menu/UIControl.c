@@ -838,7 +838,7 @@ bool32 UIControl_ContainsPos(EntityUIControl *control, Vector2 *pos) {
     return false;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIControl_EditorDraw(void)
 {
     RSDK_THIS(UIControl);

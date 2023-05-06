@@ -273,7 +273,7 @@ void LRZConveyor_DrawConveyorLines(void)
     LRZConveyor_DrawDeformedLine(endX, startY, startX, slopeY + 0xF0000, 0, -0x20000, len, &color);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LRZConveyor_EditorDraw(void)
 {
     RSDK_THIS(LRZConveyor);

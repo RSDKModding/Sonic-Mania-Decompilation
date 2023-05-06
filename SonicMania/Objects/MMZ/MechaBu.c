@@ -291,7 +291,7 @@ void MechaBu_State_Falling(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MechaBu_EditorDraw(void)
 {
     RSDK_THIS(MechaBu);

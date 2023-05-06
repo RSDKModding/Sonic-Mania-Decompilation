@@ -293,7 +293,7 @@ void Kabasira_State_LaunchedAttack(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Kabasira_EditorDraw(void)
 {
     RSDK_THIS(Kabasira);

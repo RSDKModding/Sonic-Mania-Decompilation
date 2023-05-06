@@ -35,7 +35,7 @@ void WallCrawl_StaticUpdate(void);
 void WallCrawl_Draw(void);
 void WallCrawl_Create(void *data);
 void WallCrawl_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void WallCrawl_EditorDraw(void);
 void WallCrawl_EditorLoad(void);
 #endif

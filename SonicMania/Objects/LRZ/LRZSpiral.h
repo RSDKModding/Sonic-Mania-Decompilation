@@ -55,7 +55,7 @@ void LRZSpiral_StaticUpdate(void);
 void LRZSpiral_Draw(void);
 void LRZSpiral_Create(void *data);
 void LRZSpiral_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LRZSpiral_EditorDraw(void);
 void LRZSpiral_EditorLoad(void);
 #endif

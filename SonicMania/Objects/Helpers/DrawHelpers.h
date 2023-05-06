@@ -23,7 +23,7 @@ void DrawHelpers_StaticUpdate(void);
 void DrawHelpers_Draw(void);
 void DrawHelpers_Create(void *data);
 void DrawHelpers_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void DrawHelpers_EditorDraw(void);
 void DrawHelpers_EditorLoad(void);
 #endif

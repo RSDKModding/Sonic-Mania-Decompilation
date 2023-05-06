@@ -152,7 +152,7 @@ void Localization_GetZoneInitials(String *string, uint8 zone)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Localization_EditorDraw(void) {}
 
 void Localization_EditorLoad(void) {}

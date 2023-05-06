@@ -42,7 +42,7 @@ void UncurlPlant_StaticUpdate(void);
 void UncurlPlant_Draw(void);
 void UncurlPlant_Create(void *data);
 void UncurlPlant_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UncurlPlant_EditorDraw(void);
 void UncurlPlant_EditorLoad(void);
 #endif

@@ -779,7 +779,7 @@ void AmoebaDroid_State_DropSignPost(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void AmoebaDroid_EditorDraw(void)
 {
     RSDK_THIS(AmoebaDroid);

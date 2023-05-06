@@ -42,7 +42,7 @@ void UITABanner_StaticUpdate(void);
 void UITABanner_Draw(void);
 void UITABanner_Create(void *data);
 void UITABanner_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UITABanner_EditorDraw(void);
 void UITABanner_EditorLoad(void);
 #endif

@@ -84,7 +84,7 @@ void SuperSparkle_Create(void *data)
 
 void SuperSparkle_StageLoad(void) { SuperSparkle->aniFrames = RSDK.LoadSpriteAnimation("Global/SuperSparkle.bin", SCOPE_STAGE); }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SuperSparkle_EditorDraw(void)
 {
     Animator animator;

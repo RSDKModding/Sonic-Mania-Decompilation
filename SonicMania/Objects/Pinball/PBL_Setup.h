@@ -41,7 +41,7 @@ void PBL_Setup_StaticUpdate(void);
 void PBL_Setup_Draw(void);
 void PBL_Setup_Create(void *data);
 void PBL_Setup_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PBL_Setup_EditorDraw(void);
 void PBL_Setup_EditorLoad(void);
 #endif

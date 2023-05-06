@@ -51,7 +51,7 @@ void StarPost_StaticUpdate(void);
 void StarPost_Draw(void);
 void StarPost_Create(void *data);
 void StarPost_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void StarPost_EditorDraw(void);
 void StarPost_EditorLoad(void);
 #endif

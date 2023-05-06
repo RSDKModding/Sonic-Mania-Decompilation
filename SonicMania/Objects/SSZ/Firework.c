@@ -583,7 +583,7 @@ void Firework_State_Spark(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Firework_EditorDraw(void)
 {
     RSDK_THIS(Firework);

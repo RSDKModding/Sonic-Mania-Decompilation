@@ -367,7 +367,7 @@ void SpikeCorridor_Draw_Spikes(void)
     SpikeCorridor_HandleDrawing(&animator, 0, self->size, false);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SpikeCorridor_EditorDraw(void)
 {
     RSDK_THIS(SpikeCorridor);

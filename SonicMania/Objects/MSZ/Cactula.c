@@ -170,7 +170,7 @@ void Cactula_State_DropBomb(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Cactula_EditorDraw(void) { Cactula_Draw(); }
 
 void Cactula_EditorLoad(void) { Cactula->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Cactula.bin", SCOPE_STAGE); }

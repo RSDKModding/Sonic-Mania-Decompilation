@@ -142,7 +142,7 @@ void LRZConvControl_HandleButtonTrigger(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LRZConvControl_EditorDraw(void)
 {
     RSDK_THIS(LRZConvControl);

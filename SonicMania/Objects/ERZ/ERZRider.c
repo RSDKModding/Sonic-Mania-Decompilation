@@ -66,7 +66,7 @@ void ERZRider_Draw_Rider(void)
     // thats all folks!
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ERZRider_EditorDraw(void)
 {
     RSDK_THIS(ERZRider);

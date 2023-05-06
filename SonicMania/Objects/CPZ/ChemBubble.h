@@ -31,7 +31,7 @@ void ChemBubble_StaticUpdate(void);
 void ChemBubble_Draw(void);
 void ChemBubble_Create(void *data);
 void ChemBubble_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ChemBubble_EditorDraw(void);
 void ChemBubble_EditorLoad(void);
 #endif

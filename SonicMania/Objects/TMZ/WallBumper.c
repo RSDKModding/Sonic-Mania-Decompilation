@@ -170,7 +170,7 @@ void WallBumper_HandleInteractions(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void WallBumper_EditorDraw(void)
 {
     RSDK_THIS(WallBumper);

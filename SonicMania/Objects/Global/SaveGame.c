@@ -494,7 +494,7 @@ void SaveGame_SetCollectedSpecialRing(uint8 id)
     saveRAM->collectedSpecialRings |= 1 << (16 * Zone->actID - 1 + id);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SaveGame_EditorDraw(void) {}
 
 void SaveGame_EditorLoad(void) {}

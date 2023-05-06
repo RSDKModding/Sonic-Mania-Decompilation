@@ -940,7 +940,7 @@ void ERZStart_State_PlayerRebound(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ERZStart_EditorDraw(void)
 {
     RSDK_THIS(ERZStart);

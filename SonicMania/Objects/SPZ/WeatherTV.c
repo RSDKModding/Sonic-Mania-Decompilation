@@ -1045,7 +1045,7 @@ void WeatherTV_State_Outro(void)
     self->liveScale.y = 0x200;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void WeatherTV_EditorDraw(void)
 {
     RSDK_THIS(WeatherTV);

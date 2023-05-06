@@ -203,7 +203,7 @@ void Wisp_State_FlyAway(void)
     Wisp_CheckOffScreen();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Wisp_EditorDraw(void) { Wisp_Draw(); }
 
 void Wisp_EditorLoad(void)

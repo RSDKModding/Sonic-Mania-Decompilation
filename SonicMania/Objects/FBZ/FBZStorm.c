@@ -232,7 +232,7 @@ void FBZStorm_State_Thunder(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FBZStorm_EditorDraw(void) {}
 
 void FBZStorm_EditorLoad(void) {}

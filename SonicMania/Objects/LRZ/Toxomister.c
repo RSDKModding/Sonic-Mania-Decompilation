@@ -351,7 +351,7 @@ void Toxomister_StateCloud_Dissipate(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Toxomister_EditorDraw(void)
 {
     RSDK_THIS(Toxomister);

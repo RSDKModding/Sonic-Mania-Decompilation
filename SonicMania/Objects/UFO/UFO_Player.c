@@ -673,7 +673,7 @@ void UFO_Player_State_UFOCaught_Released(void)
         UFO_Setup_Finish_Win();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UFO_Player_EditorDraw(void)
 {
     RSDK_THIS(UFO_Player);

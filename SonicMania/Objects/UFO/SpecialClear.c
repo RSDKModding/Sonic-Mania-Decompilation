@@ -716,7 +716,7 @@ void SpecialClear_State_ExitResults(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SpecialClear_EditorDraw(void) {}
 
 void SpecialClear_EditorLoad(void) {}

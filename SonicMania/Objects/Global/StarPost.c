@@ -389,7 +389,7 @@ void StarPost_State_Spinning(void)
     RSDK.ProcessAnimation(&self->ballAnimator);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void StarPost_EditorDraw(void) { StarPost_DebugDraw(); }
 
 void StarPost_EditorLoad(void)

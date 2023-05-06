@@ -93,7 +93,7 @@ void CorkscrewPath_Create(void *data)
 
 void CorkscrewPath_StageLoad(void) {}
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void CorkscrewPath_EditorDraw(void)
 {
     RSDK_THIS(CorkscrewPath);

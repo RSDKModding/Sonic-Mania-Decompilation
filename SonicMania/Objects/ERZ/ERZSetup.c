@@ -69,7 +69,7 @@ void ERZSetup_Scanline_Sky(ScanlineInfo *scanlines)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ERZSetup_EditorDraw(void) {}
 
 void ERZSetup_EditorLoad(void) {}

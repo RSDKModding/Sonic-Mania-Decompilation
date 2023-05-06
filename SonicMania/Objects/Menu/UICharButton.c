@@ -251,7 +251,7 @@ void UICharButton_State_Selected(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UICharButton_EditorDraw(void)
 {
     RSDK_THIS(UICharButton);

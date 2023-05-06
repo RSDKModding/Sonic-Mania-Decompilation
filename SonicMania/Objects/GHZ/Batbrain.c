@@ -212,7 +212,7 @@ void Batbrain_State_FlyToCeiling(void)
     Batbrain_CheckOffScreen();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Batbrain_EditorDraw(void) { Batbrain_Draw(); }
 
 void Batbrain_EditorLoad(void) { Batbrain->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Batbrain.bin", SCOPE_STAGE); }

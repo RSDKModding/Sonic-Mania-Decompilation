@@ -189,7 +189,7 @@ void UncurlPlant_CalculatePositions(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UncurlPlant_EditorDraw(void)
 {
     RSDK_THIS(UncurlPlant);

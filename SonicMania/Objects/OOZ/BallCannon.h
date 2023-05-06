@@ -62,7 +62,7 @@ void BallCannon_StaticUpdate(void);
 void BallCannon_Draw(void);
 void BallCannon_Create(void *data);
 void BallCannon_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BallCannon_EditorDraw(void);
 void BallCannon_EditorLoad(void);
 #endif

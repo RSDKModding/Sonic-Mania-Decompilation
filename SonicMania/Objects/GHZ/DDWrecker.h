@@ -69,7 +69,7 @@ void DDWrecker_StaticUpdate(void);
 void DDWrecker_Draw(void);
 void DDWrecker_Create(void *data);
 void DDWrecker_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void DDWrecker_EditorDraw(void);
 void DDWrecker_EditorLoad(void);
 #endif

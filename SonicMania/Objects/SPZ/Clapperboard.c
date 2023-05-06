@@ -298,7 +298,7 @@ void Clapperboard_State_ClapReboundR(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Clapperboard_EditorDraw(void)
 {
     RSDK_THIS(Clapperboard);

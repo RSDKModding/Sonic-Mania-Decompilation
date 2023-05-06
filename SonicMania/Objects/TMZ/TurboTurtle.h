@@ -57,7 +57,7 @@ void TurboTurtle_StaticUpdate(void);
 void TurboTurtle_Draw(void);
 void TurboTurtle_Create(void *data);
 void TurboTurtle_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TurboTurtle_EditorDraw(void);
 void TurboTurtle_EditorLoad(void);
 #endif

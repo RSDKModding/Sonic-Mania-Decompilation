@@ -464,7 +464,7 @@ void TurboTurtle_State_FanLeft(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TurboTurtle_EditorDraw(void)
 {
     RSDK_THIS(TurboTurtle);

@@ -311,7 +311,7 @@ void SchrodingersCapsule_State_SetupActClear(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SchrodingersCapsule_EditorDraw(void)
 {
     RSDK_THIS(SchrodingersCapsule);

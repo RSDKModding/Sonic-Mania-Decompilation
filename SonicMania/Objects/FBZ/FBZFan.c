@@ -121,7 +121,7 @@ void FBZFan_StageLoad(void)
     FBZFan->hitboxPlayer.bottom = 1;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FBZFan_EditorDraw(void) { FBZFan_Draw(); }
 
 void FBZFan_EditorLoad(void)

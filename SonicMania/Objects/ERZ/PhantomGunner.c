@@ -684,7 +684,7 @@ void PhantomGunner_State_MortarExplosion(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PhantomGunner_EditorDraw(void)
 {
     RSDK_THIS(PhantomGunner);

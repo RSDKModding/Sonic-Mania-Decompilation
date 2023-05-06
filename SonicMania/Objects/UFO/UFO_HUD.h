@@ -31,7 +31,7 @@ void UFO_HUD_StaticUpdate(void);
 void UFO_HUD_Draw(void);
 void UFO_HUD_Create(void *data);
 void UFO_HUD_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UFO_HUD_EditorDraw(void);
 void UFO_HUD_EditorLoad(void);
 #endif

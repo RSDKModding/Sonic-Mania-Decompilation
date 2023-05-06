@@ -30,7 +30,7 @@ void UIWaitSpinner_StaticUpdate(void);
 void UIWaitSpinner_Draw(void);
 void UIWaitSpinner_Create(void *data);
 void UIWaitSpinner_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIWaitSpinner_EditorDraw(void);
 void UIWaitSpinner_EditorLoad(void);
 #endif

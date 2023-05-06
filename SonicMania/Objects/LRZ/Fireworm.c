@@ -338,7 +338,7 @@ void Fireworm_State_FlyAround(void)
     Fireworm_CheckOffScreen();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Fireworm_EditorDraw(void)
 {
     RSDK_THIS(Fireworm);

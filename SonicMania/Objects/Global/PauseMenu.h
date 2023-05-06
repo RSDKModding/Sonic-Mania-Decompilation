@@ -59,7 +59,7 @@ void PauseMenu_StaticUpdate(void);
 void PauseMenu_Draw(void);
 void PauseMenu_Create(void *data);
 void PauseMenu_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PauseMenu_EditorDraw(void);
 void PauseMenu_EditorLoad(void);
 #endif

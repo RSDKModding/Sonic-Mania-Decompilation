@@ -270,7 +270,7 @@ void SpecialRing_State_Warp(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SpecialRing_EditorDraw(void)
 {
     RSDK_THIS(SpecialRing);

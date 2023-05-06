@@ -34,7 +34,7 @@ void RingField_StaticUpdate(void);
 void RingField_Draw(void);
 void RingField_Create(void *data);
 void RingField_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void RingField_EditorDraw(void);
 void RingField_EditorLoad(void);
 #endif

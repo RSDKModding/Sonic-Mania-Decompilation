@@ -54,7 +54,7 @@ void Explosion_StageLoad(void)
     Explosion->sfxDestroy = RSDK.GetSfx("Global/Destroy.wav");
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Explosion_EditorDraw(void)
 {
     RSDK_THIS(Explosion);

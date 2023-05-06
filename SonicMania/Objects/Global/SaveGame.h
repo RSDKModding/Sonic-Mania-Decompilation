@@ -82,7 +82,7 @@ void SaveGame_StaticUpdate(void);
 void SaveGame_Draw(void);
 void SaveGame_Create(void *data);
 void SaveGame_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SaveGame_EditorDraw(void);
 void SaveGame_EditorLoad(void);
 #endif

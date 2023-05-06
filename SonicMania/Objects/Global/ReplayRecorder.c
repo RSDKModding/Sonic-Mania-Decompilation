@@ -1396,7 +1396,7 @@ void ReplayRecorder_Late_RecordFrames(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ReplayRecorder_EditorDraw(void) {}
 
 void ReplayRecorder_EditorLoad(void) {}

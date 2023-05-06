@@ -218,7 +218,7 @@ void HiLoSign_Draw_Vertical(void)
     RSDK.DrawSprite(&self->sidesAnimator, &drawPos, false);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void HiLoSign_EditorDraw(void)
 {
     RSDK_THIS(HiLoSign);

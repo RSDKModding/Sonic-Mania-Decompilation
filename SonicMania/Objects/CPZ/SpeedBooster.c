@@ -229,7 +229,7 @@ void SpeedBooster_State_SSZBullet(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SpeedBooster_EditorDraw(void)
 {
     RSDK_THIS(SpeedBooster);

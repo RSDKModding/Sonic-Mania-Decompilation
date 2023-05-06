@@ -358,7 +358,7 @@ void PushSpring_State_PushRecoil(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PushSpring_EditorDraw(void)
 {
     RSDK_THIS(PushSpring);

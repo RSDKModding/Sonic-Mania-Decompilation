@@ -239,7 +239,7 @@ bool32 LRZ3OutroK_Cutscene_TeleporterActivated(EntityCutsceneSeq *host)
     return false;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LRZ3OutroK_EditorDraw(void)
 {
     RSDK_THIS(LRZ3OutroK);

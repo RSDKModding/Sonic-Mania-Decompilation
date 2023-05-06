@@ -37,7 +37,7 @@ void UFO_Camera_StaticUpdate(void);
 void UFO_Camera_Draw(void);
 void UFO_Camera_Create(void *data);
 void UFO_Camera_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UFO_Camera_EditorDraw(void);
 void UFO_Camera_EditorLoad(void);
 #endif

@@ -32,7 +32,7 @@ void TitleEggman_StaticUpdate(void);
 void TitleEggman_Draw(void);
 void TitleEggman_Create(void *data);
 void TitleEggman_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TitleEggman_EditorDraw(void);
 void TitleEggman_EditorLoad(void);
 #endif

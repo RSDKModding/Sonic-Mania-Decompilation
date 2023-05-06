@@ -38,7 +38,7 @@ void GHZSetup_StaticUpdate(void);
 void GHZSetup_Draw(void);
 void GHZSetup_Create(void *data);
 void GHZSetup_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void GHZSetup_EditorDraw(void);
 void GHZSetup_EditorLoad(void);
 #endif

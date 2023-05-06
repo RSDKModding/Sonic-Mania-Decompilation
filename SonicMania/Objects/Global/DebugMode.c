@@ -168,7 +168,7 @@ void DebugMode_AddObject(uint16 id, void (*draw)(void), void (*spawn)(void))
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void DebugMode_EditorDraw(void) {}
 
 void DebugMode_EditorLoad(void) {}

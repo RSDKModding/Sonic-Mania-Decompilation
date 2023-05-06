@@ -279,7 +279,7 @@ bool32 PSZ2Outro_Cutscene_LoadSSZ1(EntityCutsceneSeq *host)
     return false;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PSZ2Outro_EditorDraw(void)
 {
     RSDK_THIS(PSZ2Outro);

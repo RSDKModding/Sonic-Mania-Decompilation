@@ -233,7 +233,7 @@ void PBL_TargetBumper_State_Rise(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PBL_TargetBumper_EditorDraw(void) {}
 
 void PBL_TargetBumper_EditorLoad(void) {}

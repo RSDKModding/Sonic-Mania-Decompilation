@@ -34,7 +34,7 @@ void Bubbler_StaticUpdate(void);
 void Bubbler_Draw(void);
 void Bubbler_Create(void *data);
 void Bubbler_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Bubbler_EditorDraw(void);
 void Bubbler_EditorLoad(void);
 #endif

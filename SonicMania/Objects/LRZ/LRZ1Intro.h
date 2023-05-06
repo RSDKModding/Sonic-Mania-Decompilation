@@ -34,7 +34,7 @@ void LRZ1Intro_StaticUpdate(void);
 void LRZ1Intro_Draw(void);
 void LRZ1Intro_Create(void *data);
 void LRZ1Intro_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LRZ1Intro_EditorDraw(void);
 void LRZ1Intro_EditorLoad(void);
 #endif

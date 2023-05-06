@@ -29,7 +29,7 @@ void LRZ3OutroK_StaticUpdate(void);
 void LRZ3OutroK_Draw(void);
 void LRZ3OutroK_Create(void *data);
 void LRZ3OutroK_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LRZ3OutroK_EditorDraw(void);
 void LRZ3OutroK_EditorLoad(void);
 #endif

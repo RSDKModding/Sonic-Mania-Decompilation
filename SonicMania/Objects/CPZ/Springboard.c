@@ -222,7 +222,7 @@ void Springboard_DebugDraw(void)
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Springboard_EditorDraw(void)
 {
     RSDK_THIS(Springboard);

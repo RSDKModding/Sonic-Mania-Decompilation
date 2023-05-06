@@ -119,7 +119,7 @@ void Ink_StageLoad(void)
     for (int32 p = 0; p < PLAYER_COUNT; ++p) Ink->playerColors[p] = 0;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Ink_EditorDraw(void)
 {
     RSDK_THIS(Ink);

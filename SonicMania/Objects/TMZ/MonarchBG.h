@@ -34,7 +34,7 @@ void MonarchBG_StaticUpdate(void);
 void MonarchBG_Draw(void);
 void MonarchBG_Create(void *data);
 void MonarchBG_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MonarchBG_EditorDraw(void);
 void MonarchBG_EditorLoad(void);
 #endif

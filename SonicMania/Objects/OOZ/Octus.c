@@ -251,7 +251,7 @@ void Octus_State_Shot(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Octus_EditorDraw(void) { Octus_Draw(); }
 
 void Octus_EditorLoad(void)

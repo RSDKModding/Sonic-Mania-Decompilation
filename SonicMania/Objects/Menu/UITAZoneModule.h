@@ -71,7 +71,7 @@ void UITAZoneModule_StaticUpdate(void);
 void UITAZoneModule_Draw(void);
 void UITAZoneModule_Create(void *data);
 void UITAZoneModule_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UITAZoneModule_EditorDraw(void);
 void UITAZoneModule_EditorLoad(void);
 #endif

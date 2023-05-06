@@ -261,7 +261,7 @@ void PlaneSeeSaw_PlayerState_ToFG(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PlaneSeeSaw_EditorDraw(void)
 {
     RSDK_THIS(PlaneSeeSaw);

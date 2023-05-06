@@ -246,7 +246,7 @@ void CaterkillerJr_State_Move(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void CaterkillerJr_EditorDraw(void)
 {
     RSDK_THIS(CaterkillerJr);

@@ -32,7 +32,7 @@ void SpearBlock_StaticUpdate(void);
 void SpearBlock_Draw(void);
 void SpearBlock_Create(void *data);
 void SpearBlock_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SpearBlock_EditorDraw(void);
 void SpearBlock_EditorLoad(void);
 #endif

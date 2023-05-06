@@ -1392,7 +1392,7 @@ void Drillerdroid_Draw_Target(void)
     RSDK.DrawSprite(&self->targetLockAnimator, NULL, false);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Drillerdroid_EditorDraw(void)
 {
     RSDK_THIS(Drillerdroid);

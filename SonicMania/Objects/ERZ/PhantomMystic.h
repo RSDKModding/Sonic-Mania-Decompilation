@@ -53,7 +53,7 @@ void PhantomMystic_StaticUpdate(void);
 void PhantomMystic_Draw(void);
 void PhantomMystic_Create(void *data);
 void PhantomMystic_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PhantomMystic_EditorDraw(void);
 void PhantomMystic_EditorLoad(void);
 #endif

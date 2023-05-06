@@ -111,7 +111,7 @@ void FoldingPlatform_State_Disappear(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FoldingPlatform_EditorDraw(void)
 {
     RSDK_THIS(FoldingPlatform);

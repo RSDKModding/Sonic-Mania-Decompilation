@@ -53,7 +53,7 @@ void EggJankenPart_Create(void *data)
 
 void EggJankenPart_StageLoad(void) { EggJankenPart->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/EggJanken.bin", SCOPE_STAGE); }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void EggJankenPart_EditorDraw(void)
 {
     RSDK_THIS(EggJankenPart);

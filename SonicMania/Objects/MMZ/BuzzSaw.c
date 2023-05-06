@@ -192,7 +192,7 @@ void BuzzSaw_State_FreeMove_Reset(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BuzzSaw_EditorDraw(void)
 {
     RSDK_THIS(BuzzSaw);

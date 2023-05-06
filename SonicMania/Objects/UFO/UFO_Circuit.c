@@ -342,7 +342,7 @@ void UFO_Circuit_State_Caught(void)
     self->position.y += self->velocity.y;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UFO_Circuit_EditorDraw(void)
 {
     RSDK_THIS(UFO_Circuit);

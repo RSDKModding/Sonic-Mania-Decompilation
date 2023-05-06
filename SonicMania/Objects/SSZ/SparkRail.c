@@ -70,7 +70,7 @@ void SparkRail_StageLoad(void)
     SparkRail->sfxPon = RSDK.GetSfx("Stage/Pon.wav");
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SparkRail_EditorDraw(void)
 {
     RSDK_THIS(SparkRail);

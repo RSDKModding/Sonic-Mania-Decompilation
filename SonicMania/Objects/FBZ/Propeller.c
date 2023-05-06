@@ -97,7 +97,7 @@ void Propeller_StageLoad(void)
     Propeller->sfxFan = RSDK.GetSfx("FBZ/FBZFan.wav");
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Propeller_EditorDraw(void)
 {
     RSDK_THIS(Propeller);

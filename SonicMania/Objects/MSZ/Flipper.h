@@ -30,7 +30,7 @@ void Flipper_StaticUpdate(void);
 void Flipper_Draw(void);
 void Flipper_Create(void *data);
 void Flipper_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Flipper_EditorDraw(void);
 void Flipper_EditorLoad(void);
 #endif

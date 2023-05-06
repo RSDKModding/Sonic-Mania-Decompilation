@@ -448,7 +448,7 @@ void SentryBug_State_ReturnToSlots(void)
     SentryBug_CheckPlayerCollisions();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SentryBug_EditorDraw(void)
 {
     RSDK_THIS(SentryBug);

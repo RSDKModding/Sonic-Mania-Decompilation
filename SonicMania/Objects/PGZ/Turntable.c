@@ -164,7 +164,7 @@ void Turntable_SetupSize(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Turntable_EditorDraw(void) { Turntable_Draw(); }
 
 void Turntable_EditorLoad(void)

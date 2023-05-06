@@ -354,7 +354,7 @@ void RPlaneShifter_State_FinishSpin(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void RPlaneShifter_EditorDraw(void) { RPlaneShifter_DrawSprites(); }
 
 void RPlaneShifter_EditorLoad(void)

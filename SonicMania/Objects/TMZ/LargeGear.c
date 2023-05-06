@@ -154,7 +154,7 @@ void LargeGear_StageLoad(void)
     LargeGear->hitboxBase.bottom = 64;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LargeGear_EditorDraw(void)
 {
     RSDK_THIS(LargeGear);

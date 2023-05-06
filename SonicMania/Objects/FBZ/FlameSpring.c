@@ -220,7 +220,7 @@ void FlameSpring_Draw_Flame(void)
     RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FlameSpring_EditorDraw(void)
 {
     RSDK_THIS(FlameSpring);

@@ -27,7 +27,7 @@ void SuperSparkle_StaticUpdate(void);
 void SuperSparkle_Draw(void);
 void SuperSparkle_Create(void *data);
 void SuperSparkle_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SuperSparkle_EditorDraw(void);
 void SuperSparkle_EditorLoad(void);
 #endif

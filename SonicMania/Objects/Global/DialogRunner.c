@@ -321,7 +321,7 @@ void DialogRunner_PromptSavePreference(int32 id)
 }
 void DialogRunner_CheckUserAuth_OK(void) { DialogRunner->signedOut = true; }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void DialogRunner_EditorDraw(void) {}
 
 void DialogRunner_EditorLoad(void) {}

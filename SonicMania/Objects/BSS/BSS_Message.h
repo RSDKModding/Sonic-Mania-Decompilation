@@ -38,7 +38,7 @@ void BSS_Message_StaticUpdate(void);
 void BSS_Message_Draw(void);
 void BSS_Message_Create(void *data);
 void BSS_Message_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BSS_Message_EditorDraw(void);
 void BSS_Message_EditorLoad(void);
 #endif

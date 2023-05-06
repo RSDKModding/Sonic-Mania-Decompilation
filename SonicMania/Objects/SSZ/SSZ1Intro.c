@@ -174,7 +174,7 @@ bool32 SSZ1Intro_Cutscene_BeginAct1(EntityCutsceneSeq *host)
     return false;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SSZ1Intro_EditorDraw(void)
 {
     RSDK_THIS(SSZ1Intro);

@@ -1222,7 +1222,7 @@ bool32 SpiderMobile_SfxCheck_Elevator(void)
     return elevatorActive;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SpiderMobile_EditorDraw(void)
 {
     RSDK_THIS(SpiderMobile);

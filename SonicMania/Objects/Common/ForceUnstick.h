@@ -29,7 +29,7 @@ void ForceUnstick_StaticUpdate(void);
 void ForceUnstick_Draw(void);
 void ForceUnstick_Create(void *data);
 void ForceUnstick_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ForceUnstick_EditorDraw(void);
 void ForceUnstick_EditorLoad(void);
 #endif

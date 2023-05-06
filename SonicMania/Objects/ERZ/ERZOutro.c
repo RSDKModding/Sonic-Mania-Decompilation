@@ -495,7 +495,7 @@ void ERZOutro_SaveFileCB(bool32 success) { ERZOutro->savedGame = true; }
 void ERZOutro_SaveFileCB(void) { ERZOutro->savedGame = true; }
 #endif
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ERZOutro_EditorDraw(void)
 {
     RSDK_THIS(ERZOutro);

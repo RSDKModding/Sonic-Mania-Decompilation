@@ -27,7 +27,7 @@ void FoldingPlatform_StaticUpdate(void);
 void FoldingPlatform_Draw(void);
 void FoldingPlatform_Create(void *data);
 void FoldingPlatform_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FoldingPlatform_EditorDraw(void);
 void FoldingPlatform_EditorLoad(void);
 #endif

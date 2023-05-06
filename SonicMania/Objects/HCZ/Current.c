@@ -793,7 +793,7 @@ void Current_PlayerState_Down(void)
     RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_LWALL, self->collisionPlane, hitbox->right << 16, hitbox->bottom << 16, true);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Current_EditorDraw(void)
 {
     RSDK_THIS(Current);

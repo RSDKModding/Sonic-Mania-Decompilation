@@ -131,7 +131,7 @@ void SpikeLog_State_Burn(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SpikeLog_EditorDraw(void)
 {
     RSDK_THIS(SpikeLog);

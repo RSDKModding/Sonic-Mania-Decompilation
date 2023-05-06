@@ -34,7 +34,7 @@ void FBZFan_StaticUpdate(void);
 void FBZFan_Draw(void);
 void FBZFan_Create(void *data);
 void FBZFan_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FBZFan_EditorDraw(void);
 void FBZFan_EditorLoad(void);
 #endif

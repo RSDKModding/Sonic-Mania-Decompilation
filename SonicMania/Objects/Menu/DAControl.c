@@ -92,7 +92,7 @@ void DAControl_Create(void *data)
 
 void DAControl_StageLoad(void) { DAControl->aniFrames = RSDK.LoadSpriteAnimation("UI/DAGarden.bin", SCOPE_STAGE); }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void DAControl_EditorDraw(void)
 {
     RSDK_THIS(DAControl);

@@ -331,7 +331,7 @@ void PBL_Flipper_State_LowerFlipper(void)
     PBL_Flipper_HandlePlayerInteractions();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PBL_Flipper_EditorDraw(void) {}
 
 void PBL_Flipper_EditorLoad(void)

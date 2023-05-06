@@ -37,7 +37,7 @@ void BuzzBomber_StaticUpdate(void);
 void BuzzBomber_Draw(void);
 void BuzzBomber_Create(void *data);
 void BuzzBomber_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BuzzBomber_EditorDraw(void);
 void BuzzBomber_EditorLoad(void);
 #endif

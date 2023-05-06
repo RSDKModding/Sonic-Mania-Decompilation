@@ -295,7 +295,7 @@ void PohBee_State_Move(void)
     self->chainAngle[1] = (0x70 * ((RSDK.Sin512(self->chainPos[1] >> 2) >> 2) + 0x90)) >> 7;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PohBee_EditorDraw(void)
 {
     RSDK_THIS(PohBee);

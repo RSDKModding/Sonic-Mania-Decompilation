@@ -372,7 +372,7 @@ void Buggernaut_State_Child(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Buggernaut_EditorDraw(void)
 {
     RSDK_THIS(Buggernaut);

@@ -198,7 +198,7 @@ bool32 MSZCutsceneK_Cutscene_KnockedOffTornado(EntityCutsceneSeq *host)
     return false;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MSZCutsceneK_EditorDraw(void)
 {
     RSDK_THIS(MSZCutsceneK);

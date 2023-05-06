@@ -37,7 +37,7 @@ void HiLoSign_StaticUpdate(void);
 void HiLoSign_Draw(void);
 void HiLoSign_Create(void *data);
 void HiLoSign_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void HiLoSign_EditorDraw(void);
 void HiLoSign_EditorLoad(void);
 #endif

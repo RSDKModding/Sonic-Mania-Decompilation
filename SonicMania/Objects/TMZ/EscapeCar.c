@@ -276,7 +276,7 @@ void EscapeCar_StateEncore_GoodEnd(void)
 }
 #endif
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void EscapeCar_EditorDraw(void)
 {
     RSDK_THIS(EscapeCar);

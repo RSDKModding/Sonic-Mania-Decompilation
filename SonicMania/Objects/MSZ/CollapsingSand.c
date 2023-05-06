@@ -258,7 +258,7 @@ void CollapsingSand_State_CollapseRight(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void CollapsingSand_EditorDraw(void) { CollapsingSand_Draw(); }
 
 void CollapsingSand_EditorLoad(void)

@@ -295,7 +295,7 @@ void Chopper_State_Charge(void)
     Chopper_CheckOffScreen();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Chopper_EditorDraw(void)
 {
     RSDK_THIS(Chopper);

@@ -168,7 +168,7 @@ void BladePole_State_BottomBladeActive(void)
     ++self->timer;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BladePole_EditorDraw(void) { BladePole_DrawSprites(); }
 
 void BladePole_EditorLoad(void) { BladePole->aniFrames = RSDK.LoadSpriteAnimation("MMZ/BladePole.bin", SCOPE_STAGE); }

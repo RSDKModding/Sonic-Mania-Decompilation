@@ -396,7 +396,7 @@ void Jellygnite_State_Explode(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Jellygnite_EditorDraw(void)
 {
     Jellygnite_SetupAnimations(JELLYGNITE_ANI_FLOATING);

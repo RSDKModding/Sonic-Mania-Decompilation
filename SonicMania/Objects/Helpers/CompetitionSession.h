@@ -86,7 +86,7 @@ void CompetitionSession_StaticUpdate(void);
 void CompetitionSession_Draw(void);
 void CompetitionSession_Create(void *data);
 void CompetitionSession_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void CompetitionSession_EditorDraw(void);
 void CompetitionSession_EditorLoad(void);
 #endif

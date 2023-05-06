@@ -156,7 +156,7 @@ void AIZEncoreTutorial_State_ReturnToCutscene(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void AIZEncoreTutorial_EditorDraw(void) {}
 
 void AIZEncoreTutorial_EditorLoad(void) {}

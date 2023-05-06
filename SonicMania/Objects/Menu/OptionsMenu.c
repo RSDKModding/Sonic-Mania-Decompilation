@@ -870,7 +870,7 @@ void OptionsMenu_EraseAllButton_ActionCB(void)
     UIDialog_CreateDialogYesNo(&message, OptionsMenu_AreYouSureDlg_YesCB_EraseAllData, StateMachine_None, true, true);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void OptionsMenu_EditorDraw(void) {}
 
 void OptionsMenu_EditorLoad(void) {}

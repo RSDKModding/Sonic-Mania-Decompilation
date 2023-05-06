@@ -521,7 +521,7 @@ void UILeaderboard_ProcessButtonCB(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UILeaderboard_EditorDraw(void)
 {
     RSDK_THIS(UILeaderboard);

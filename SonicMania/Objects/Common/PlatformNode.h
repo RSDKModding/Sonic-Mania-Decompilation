@@ -26,7 +26,7 @@ void PlatformNode_StaticUpdate(void);
 void PlatformNode_Draw(void);
 void PlatformNode_Create(void *data);
 void PlatformNode_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PlatformNode_EditorDraw(void);
 void PlatformNode_EditorLoad(void);
 #endif

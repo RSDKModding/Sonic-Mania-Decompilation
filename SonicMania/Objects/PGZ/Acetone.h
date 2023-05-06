@@ -38,7 +38,7 @@ void Acetone_StaticUpdate(void);
 void Acetone_Draw(void);
 void Acetone_Create(void *data);
 void Acetone_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Acetone_EditorDraw(void);
 void Acetone_EditorLoad(void);
 #endif

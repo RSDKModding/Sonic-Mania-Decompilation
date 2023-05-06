@@ -740,7 +740,7 @@ void MeterDroid_State_FinishAct(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MeterDroid_EditorDraw(void)
 {
     RSDK_THIS(MeterDroid);

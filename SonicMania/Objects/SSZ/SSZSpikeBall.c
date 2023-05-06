@@ -299,7 +299,7 @@ void SSZSpikeBall_State_Ball_MoveBack(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SSZSpikeBall_EditorDraw(void)
 {
     RSDK_THIS(SSZSpikeBall);

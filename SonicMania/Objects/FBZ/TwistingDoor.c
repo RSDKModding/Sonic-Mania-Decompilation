@@ -216,7 +216,7 @@ void TwistingDoor_State_Closing(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TwistingDoor_EditorDraw(void)
 {
     RSDK_THIS(TwistingDoor);

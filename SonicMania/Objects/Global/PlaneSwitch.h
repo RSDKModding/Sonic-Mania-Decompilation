@@ -40,7 +40,7 @@ void PlaneSwitch_StaticUpdate(void);
 void PlaneSwitch_Draw(void);
 void PlaneSwitch_Create(void *data);
 void PlaneSwitch_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PlaneSwitch_EditorDraw(void);
 void PlaneSwitch_EditorLoad(void);
 #endif

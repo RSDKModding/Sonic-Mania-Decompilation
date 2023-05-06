@@ -65,7 +65,7 @@ void Newspaper_StaticUpdate(void);
 void Newspaper_Draw(void);
 void Newspaper_Create(void *data);
 void Newspaper_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Newspaper_EditorDraw(void);
 void Newspaper_EditorLoad(void);
 #endif

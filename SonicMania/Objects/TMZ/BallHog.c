@@ -288,7 +288,7 @@ void BallHog_State_Bomb(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BallHog_EditorDraw(void) { BallHog_Draw(); }
 
 void BallHog_EditorLoad(void)

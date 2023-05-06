@@ -206,7 +206,7 @@ void Crabmeat_State_Projectile(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Crabmeat_EditorDraw(void) { Crabmeat_Draw(); }
 
 void Crabmeat_EditorLoad(void) { Crabmeat->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Crabmeat.bin", SCOPE_STAGE); }

@@ -156,7 +156,7 @@ void TitleBG_Scanline_Island(ScanlineInfo *scanlines)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TitleBG_EditorDraw(void)
 {
     RSDK_THIS(TitleBG);

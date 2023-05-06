@@ -166,7 +166,7 @@ void LRZConvDropper_HandleButtonDrop(EntityLRZConvDropper *entity)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LRZConvDropper_EditorDraw(void)
 {
     RSDK_THIS(LRZConvDropper);

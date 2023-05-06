@@ -193,7 +193,7 @@ void FXRuby_State_ShrinkAndDestroy(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FXRuby_EditorDraw(void) {}
 
 void FXRuby_EditorLoad(void) {}

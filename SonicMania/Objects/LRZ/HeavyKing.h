@@ -62,7 +62,7 @@ void HeavyKing_StaticUpdate(void);
 void HeavyKing_Draw(void);
 void HeavyKing_Create(void *data);
 void HeavyKing_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void HeavyKing_EditorDraw(void);
 void HeavyKing_EditorLoad(void);
 #endif

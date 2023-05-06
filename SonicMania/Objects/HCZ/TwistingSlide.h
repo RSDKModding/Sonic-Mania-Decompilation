@@ -42,7 +42,7 @@ void TwistingSlide_StaticUpdate(void);
 void TwistingSlide_Draw(void);
 void TwistingSlide_Create(void *data);
 void TwistingSlide_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TwistingSlide_EditorDraw(void);
 void TwistingSlide_EditorLoad(void);
 #endif

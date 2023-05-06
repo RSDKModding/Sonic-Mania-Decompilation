@@ -33,7 +33,7 @@ void FlowerPod_StaticUpdate(void);
 void FlowerPod_Draw(void);
 void FlowerPod_Create(void *data);
 void FlowerPod_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FlowerPod_EditorDraw(void);
 void FlowerPod_EditorLoad(void);
 #endif

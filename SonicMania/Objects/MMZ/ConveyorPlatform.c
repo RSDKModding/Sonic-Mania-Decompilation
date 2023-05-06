@@ -84,7 +84,7 @@ void ConveyorPlatform_Create(void *data)
 
 void ConveyorPlatform_StageLoad(void) {}
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ConveyorPlatform_EditorDraw(void)
 {
     RSDK_THIS(ConveyorPlatform);

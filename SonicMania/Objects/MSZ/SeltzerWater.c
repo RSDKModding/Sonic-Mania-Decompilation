@@ -114,7 +114,7 @@ void SeltzerWater_State_Splash(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SeltzerWater_EditorDraw(void)
 {
     RSDK_THIS(SeltzerWater);

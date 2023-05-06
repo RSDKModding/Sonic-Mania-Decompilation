@@ -215,7 +215,7 @@ void CutsceneSeq_StartSequence(void *manager, ...)
     LogHelpers_Print("Starting sequence with %d states", count);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void CutsceneSeq_EditorDraw(void) {}
 
 void CutsceneSeq_EditorLoad(void) {}

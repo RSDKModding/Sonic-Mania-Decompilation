@@ -107,7 +107,7 @@ void HPZEmerald_Create(void *data)
 
 void HPZEmerald_StageLoad(void) { HPZEmerald->aniFrames = RSDK.LoadSpriteAnimation("LRZ3/Emerald.bin", SCOPE_STAGE); }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void HPZEmerald_EditorDraw(void)
 {
     RSDK_THIS(HPZEmerald);

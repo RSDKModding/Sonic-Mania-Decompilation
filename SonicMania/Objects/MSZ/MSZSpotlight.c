@@ -155,7 +155,7 @@ void MSZSpotlight_State_Disappear(void)
         self->alpha -= 0x10;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MSZSpotlight_EditorDraw(void)
 {
     RSDK_THIS(MSZSpotlight);

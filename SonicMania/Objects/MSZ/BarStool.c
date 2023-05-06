@@ -184,7 +184,7 @@ void BarStool_StageLoad(void)
     BarStool->sfxHop  = RSDK.GetSfx("MSZ/StoolHop.wav");
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BarStool_EditorDraw(void)
 {
     RSDK_THIS(BarStool);

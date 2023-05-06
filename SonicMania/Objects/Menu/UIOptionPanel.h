@@ -39,7 +39,7 @@ void UIOptionPanel_StaticUpdate(void);
 void UIOptionPanel_Draw(void);
 void UIOptionPanel_Create(void *data);
 void UIOptionPanel_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIOptionPanel_EditorDraw(void);
 void UIOptionPanel_EditorLoad(void);
 #endif

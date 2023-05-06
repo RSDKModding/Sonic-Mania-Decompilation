@@ -406,7 +406,7 @@ void Crane_State_ToStart2ndHalf(void)
     Crane_CheckOffScreen();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Crane_EditorDraw(void)
 {
     RSDK_THIS(Crane);

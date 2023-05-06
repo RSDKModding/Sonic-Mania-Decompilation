@@ -343,7 +343,7 @@ void Blaster_State_Shell(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Blaster_EditorDraw(void)
 {
     RSDK_THIS(Blaster);

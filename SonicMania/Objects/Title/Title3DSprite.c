@@ -63,7 +63,7 @@ void Title3DSprite_StageLoad(void)
     Title3DSprite->baseDepth  = 0xA000;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Title3DSprite_EditorDraw(void)
 {
     RSDK_THIS(Title3DSprite);

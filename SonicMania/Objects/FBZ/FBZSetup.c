@@ -273,7 +273,7 @@ void FBZSetup_StageFinish_EndAct1(void) { FBZSetup->outro->active = ACTIVE_NORMA
 void FBZSetup_StageFinish_EndAct2(void) { CREATE_ENTITY(FBZ2Outro, NULL, 0, 0); }
 #endif
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FBZSetup_EditorDraw(void) {}
 
 void FBZSetup_EditorLoad(void)

@@ -454,7 +454,7 @@ void MatryoshkaBom_State_Shrapnel(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MatryoshkaBom_EditorDraw(void)
 {
     RSDK_THIS(MatryoshkaBom);

@@ -265,7 +265,7 @@ void Options_SaveOptionsCallback(int32 status)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Options_EditorDraw(void) {}
 
 void Options_EditorLoad(void) {}

@@ -38,7 +38,7 @@ void CaterkillerJr_StaticUpdate(void);
 void CaterkillerJr_Draw(void);
 void CaterkillerJr_Create(void *data);
 void CaterkillerJr_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void CaterkillerJr_EditorDraw(void);
 void CaterkillerJr_EditorLoad(void);
 #endif

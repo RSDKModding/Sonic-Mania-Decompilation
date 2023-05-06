@@ -51,7 +51,7 @@ void FBZSetup_StaticUpdate(void);
 void FBZSetup_Draw(void);
 void FBZSetup_Create(void *data);
 void FBZSetup_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FBZSetup_EditorDraw(void);
 void FBZSetup_EditorLoad(void);
 #endif

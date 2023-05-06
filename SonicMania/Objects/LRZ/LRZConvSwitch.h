@@ -38,7 +38,7 @@ void LRZConvSwitch_StaticUpdate(void);
 void LRZConvSwitch_Draw(void);
 void LRZConvSwitch_Create(void *data);
 void LRZConvSwitch_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LRZConvSwitch_EditorDraw(void);
 void LRZConvSwitch_EditorLoad(void);
 #endif

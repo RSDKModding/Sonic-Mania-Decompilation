@@ -36,7 +36,7 @@ void Funnel_StaticUpdate(void);
 void Funnel_Draw(void);
 void Funnel_Create(void *data);
 void Funnel_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Funnel_EditorDraw(void);
 void Funnel_EditorLoad(void);
 #endif

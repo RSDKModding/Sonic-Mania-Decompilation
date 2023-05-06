@@ -53,7 +53,7 @@ void ParallaxSprite_StaticUpdate(void);
 void ParallaxSprite_Draw(void);
 void ParallaxSprite_Create(void *data);
 void ParallaxSprite_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ParallaxSprite_EditorDraw(void);
 void ParallaxSprite_EditorLoad(void);
 #endif

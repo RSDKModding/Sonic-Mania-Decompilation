@@ -54,7 +54,7 @@ void SeeSaw_StaticUpdate(void);
 void SeeSaw_Draw(void);
 void SeeSaw_Create(void *data);
 void SeeSaw_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SeeSaw_EditorDraw(void);
 void SeeSaw_EditorLoad(void);
 #endif

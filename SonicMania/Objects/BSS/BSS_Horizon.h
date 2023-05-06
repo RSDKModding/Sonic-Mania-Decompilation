@@ -25,7 +25,7 @@ void BSS_Horizon_StaticUpdate(void);
 void BSS_Horizon_Draw(void);
 void BSS_Horizon_Create(void *data);
 void BSS_Horizon_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BSS_Horizon_EditorDraw(void);
 void BSS_Horizon_EditorLoad(void);
 #endif

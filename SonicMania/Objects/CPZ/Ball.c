@@ -315,7 +315,7 @@ void Ball_State_Spawner(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Ball_EditorDraw(void)
 {
     RSDK_THIS(Ball);

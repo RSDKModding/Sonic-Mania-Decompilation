@@ -23,7 +23,7 @@ void ColorHelpers_StaticUpdate(void);
 void ColorHelpers_Draw(void);
 void ColorHelpers_Create(void *data);
 void ColorHelpers_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ColorHelpers_EditorDraw(void);
 void ColorHelpers_EditorLoad(void);
 #endif

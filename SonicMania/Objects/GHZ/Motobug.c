@@ -239,7 +239,7 @@ void Motobug_State_Turn(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Motobug_EditorDraw(void) { Motobug_Draw(); }
 
 void Motobug_EditorLoad(void)

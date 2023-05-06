@@ -56,7 +56,7 @@ void UIReplayCarousel_StaticUpdate(void);
 void UIReplayCarousel_Draw(void);
 void UIReplayCarousel_Create(void *data);
 void UIReplayCarousel_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIReplayCarousel_EditorDraw(void);
 void UIReplayCarousel_EditorLoad(void);
 #endif

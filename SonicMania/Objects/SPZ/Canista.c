@@ -453,7 +453,7 @@ void Canista_StateProjectile_Fall(void)
     Canista_CheckPlayerProjectileCollisions();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Canista_EditorDraw(void)
 {
     RSDK_THIS(Canista);

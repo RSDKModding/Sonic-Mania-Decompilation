@@ -71,7 +71,7 @@ void HeavyMystic_StaticUpdate(void);
 void HeavyMystic_Draw(void);
 void HeavyMystic_Create(void *data);
 void HeavyMystic_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void HeavyMystic_EditorDraw(void);
 void HeavyMystic_EditorLoad(void);
 #endif

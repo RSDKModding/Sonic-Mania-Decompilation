@@ -319,7 +319,7 @@ void FBZMissile_State_Hull(void)
 #endif
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FBZMissile_EditorDraw(void)
 {
     RSDK_THIS(FBZMissile);

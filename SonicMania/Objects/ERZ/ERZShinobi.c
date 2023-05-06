@@ -184,7 +184,7 @@ void ERZShinobi_State_Moving(void)
     ERZShinobi_CheckPlayerCollisions();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ERZShinobi_EditorDraw(void)
 {
     RSDK_THIS(ERZShinobi);

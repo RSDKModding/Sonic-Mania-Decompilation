@@ -27,7 +27,7 @@ void LRZ3Setup_StaticUpdate(void);
 void LRZ3Setup_Draw(void);
 void LRZ3Setup_Create(void *data);
 void LRZ3Setup_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LRZ3Setup_EditorDraw(void);
 void LRZ3Setup_EditorLoad(void);
 #endif

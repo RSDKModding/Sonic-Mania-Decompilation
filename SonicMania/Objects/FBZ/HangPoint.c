@@ -447,7 +447,7 @@ void HangPoint_HandlePlayerMovement(EntityHangPoint *self, EntityPlayer *player,
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void HangPoint_EditorDraw(void)
 {
     RSDK_THIS(HangPoint);

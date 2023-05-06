@@ -29,7 +29,7 @@ void SPZ1Intro_StaticUpdate(void);
 void SPZ1Intro_Draw(void);
 void SPZ1Intro_Create(void *data);
 void SPZ1Intro_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SPZ1Intro_EditorDraw(void);
 void SPZ1Intro_EditorLoad(void);
 #endif

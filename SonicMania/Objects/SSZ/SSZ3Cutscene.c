@@ -372,7 +372,7 @@ bool32 SSZ3Cutscene_CutsceneOutro_LoadHCZ1(EntityCutsceneSeq *host)
 }
 #endif
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SSZ3Cutscene_EditorDraw(void) {}
 
 void SSZ3Cutscene_EditorLoad(void) {}

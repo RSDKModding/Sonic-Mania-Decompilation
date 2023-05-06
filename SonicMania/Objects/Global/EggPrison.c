@@ -440,7 +440,7 @@ void EggPrison_State_FlyOffScreen(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void EggPrison_EditorDraw(void)
 {
     RSDK_THIS(EggPrison);

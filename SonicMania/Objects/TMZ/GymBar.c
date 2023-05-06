@@ -288,7 +288,7 @@ void GymBar_PlayerState_SwingH(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void GymBar_EditorDraw(void)
 {
     RSDK_THIS(GymBar);

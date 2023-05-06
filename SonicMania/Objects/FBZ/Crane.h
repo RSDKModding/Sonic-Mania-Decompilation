@@ -51,7 +51,7 @@ void Crane_StaticUpdate(void);
 void Crane_Draw(void);
 void Crane_Create(void *data);
 void Crane_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Crane_EditorDraw(void);
 void Crane_EditorLoad(void);
 #endif

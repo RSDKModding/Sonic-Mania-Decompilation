@@ -40,7 +40,7 @@ void ThoughtBubble_StaticUpdate(void);
 void ThoughtBubble_Draw(void);
 void ThoughtBubble_Create(void *data);
 void ThoughtBubble_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ThoughtBubble_EditorDraw(void);
 void ThoughtBubble_EditorLoad(void);
 #endif

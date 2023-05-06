@@ -260,7 +260,7 @@ void StickyPlatform_State_Oscillating(void)
     self->angle = (self->angle + self->speed) & 0x3FF;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void StickyPlatform_EditorDraw(void)
 {
     RSDK_THIS(StickyPlatform);

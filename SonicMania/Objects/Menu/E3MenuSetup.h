@@ -37,7 +37,7 @@ void E3MenuSetup_StaticUpdate(void);
 void E3MenuSetup_Draw(void);
 void E3MenuSetup_Create(void *data);
 void E3MenuSetup_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void E3MenuSetup_EditorDraw(void);
 void E3MenuSetup_EditorLoad(void);
 #endif

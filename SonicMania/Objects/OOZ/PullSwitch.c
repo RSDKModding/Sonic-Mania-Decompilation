@@ -138,7 +138,7 @@ void PullSwitch_StageLoad(void)
     PullSwitch->sfxSmogClear = RSDK.GetSfx("OOZ/SmogClear.wav");
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PullSwitch_EditorDraw(void)
 {
     RSDK_THIS(PullSwitch);

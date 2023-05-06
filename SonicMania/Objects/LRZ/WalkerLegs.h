@@ -46,7 +46,7 @@ void WalkerLegs_StaticUpdate(void);
 void WalkerLegs_Draw(void);
 void WalkerLegs_Create(void *data);
 void WalkerLegs_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void WalkerLegs_EditorDraw(void);
 void WalkerLegs_EditorLoad(void);
 #endif

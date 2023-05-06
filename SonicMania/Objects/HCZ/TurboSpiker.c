@@ -412,7 +412,7 @@ void TurboSpiker_State_Ember(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TurboSpiker_EditorDraw(void)
 {
     RSDK_THIS(TurboSpiker);

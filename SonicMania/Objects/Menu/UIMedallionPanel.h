@@ -25,7 +25,7 @@ void UIMedallionPanel_StaticUpdate(void);
 void UIMedallionPanel_Draw(void);
 void UIMedallionPanel_Create(void *data);
 void UIMedallionPanel_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIMedallionPanel_EditorDraw(void);
 void UIMedallionPanel_EditorLoad(void);
 #endif

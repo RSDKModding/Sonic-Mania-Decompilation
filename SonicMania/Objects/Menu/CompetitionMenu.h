@@ -36,7 +36,7 @@ void CompetitionMenu_StaticUpdate(void);
 void CompetitionMenu_Draw(void);
 void CompetitionMenu_Create(void *data);
 void CompetitionMenu_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void CompetitionMenu_EditorDraw(void);
 void CompetitionMenu_EditorLoad(void);
 #endif

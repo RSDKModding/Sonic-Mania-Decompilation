@@ -140,7 +140,7 @@ bool32 MSZ1KIntro_Cutscene_StartAct(EntityCutsceneSeq *host)
     return false;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MSZ1KIntro_EditorDraw(void)
 {
     RSDK_THIS(MSZ1KIntro);

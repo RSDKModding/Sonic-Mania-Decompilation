@@ -37,7 +37,7 @@ void Bridge_StaticUpdate(void);
 void Bridge_Draw(void);
 void Bridge_Create(void *data);
 void Bridge_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Bridge_EditorDraw(void);
 void Bridge_EditorLoad(void);
 #endif

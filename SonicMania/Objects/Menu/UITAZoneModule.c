@@ -1167,7 +1167,7 @@ void UITAZoneModule_State_ComeBackOnScreen(void)
 
 #endif
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UITAZoneModule_EditorDraw(void)
 {
     RSDK_THIS(UITAZoneModule);

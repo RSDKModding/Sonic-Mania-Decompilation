@@ -38,7 +38,7 @@ void UFO_Message_StaticUpdate(void);
 void UFO_Message_Draw(void);
 void UFO_Message_Create(void *data);
 void UFO_Message_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UFO_Message_EditorDraw(void);
 void UFO_Message_EditorLoad(void);
 #endif

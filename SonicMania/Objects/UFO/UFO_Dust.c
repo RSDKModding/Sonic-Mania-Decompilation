@@ -72,7 +72,7 @@ void UFO_Dust_Create(void *data)
 
 void UFO_Dust_StageLoad(void) { UFO_Dust->aniFrames = RSDK.LoadSpriteAnimation("SpecialUFO/Dust.bin", SCOPE_STAGE); }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UFO_Dust_EditorDraw(void) {}
 
 void UFO_Dust_EditorLoad(void) {}

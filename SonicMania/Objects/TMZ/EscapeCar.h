@@ -40,7 +40,7 @@ void EscapeCar_StaticUpdate(void);
 void EscapeCar_Draw(void);
 void EscapeCar_Create(void *data);
 void EscapeCar_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void EscapeCar_EditorDraw(void);
 void EscapeCar_EditorLoad(void);
 #endif

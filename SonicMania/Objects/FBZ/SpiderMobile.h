@@ -91,7 +91,7 @@ void SpiderMobile_StaticUpdate(void);
 void SpiderMobile_Draw(void);
 void SpiderMobile_Create(void *data);
 void SpiderMobile_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SpiderMobile_EditorDraw(void);
 void SpiderMobile_EditorLoad(void);
 #endif

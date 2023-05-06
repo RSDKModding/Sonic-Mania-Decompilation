@@ -57,7 +57,7 @@ bool32 GHZCutsceneK_Cutscene_None(void)
     return false;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void GHZCutsceneK_EditorDraw(void)
 {
     RSDK_THIS(GHZCutsceneK);

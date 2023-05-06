@@ -551,7 +551,7 @@ void SilverSonic_State_Explode(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SilverSonic_EditorDraw(void)
 {
     RSDK_THIS(SilverSonic);

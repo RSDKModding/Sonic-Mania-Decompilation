@@ -925,7 +925,7 @@ void DDWrecker_State_SpawnSignpost(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void DDWrecker_EditorDraw(void)
 {
     RSDK_THIS(DDWrecker);

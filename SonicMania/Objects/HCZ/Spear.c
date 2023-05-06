@@ -161,7 +161,7 @@ void Spear_SetupHitboxes(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Spear_EditorDraw(void)
 {
     Spear_Create(NULL);

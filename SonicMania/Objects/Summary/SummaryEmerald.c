@@ -43,7 +43,7 @@ void SummaryEmerald_Create(void *data)
 
 void SummaryEmerald_StageLoad(void) { SummaryEmerald->aniFrames = RSDK.LoadSpriteAnimation("Summary/SummaryEmerald.bin", SCOPE_STAGE); }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SummaryEmerald_EditorDraw(void)
 {
     RSDK_THIS(SummaryEmerald);

@@ -293,7 +293,7 @@ void MicDrop_State_Electrify(void)
     MicDrop_CheckOffScreen();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MicDrop_EditorDraw(void)
 {
     RSDK_THIS(MicDrop);

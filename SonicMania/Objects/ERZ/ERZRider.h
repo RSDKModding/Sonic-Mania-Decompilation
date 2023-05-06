@@ -36,7 +36,7 @@ void ERZRider_StaticUpdate(void);
 void ERZRider_Draw(void);
 void ERZRider_Create(void *data);
 void ERZRider_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ERZRider_EditorDraw(void);
 void ERZRider_EditorLoad(void);
 #endif

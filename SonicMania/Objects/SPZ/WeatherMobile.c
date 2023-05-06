@@ -1007,7 +1007,7 @@ void WeatherMobile_State_Flee(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void WeatherMobile_EditorDraw(void)
 {
     RSDK_THIS(WeatherMobile);

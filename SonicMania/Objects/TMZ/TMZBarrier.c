@@ -80,7 +80,7 @@ void TMZBarrier_StageLoad(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TMZBarrier_EditorDraw(void)
 {
     RSDK_THIS(TMZBarrier);

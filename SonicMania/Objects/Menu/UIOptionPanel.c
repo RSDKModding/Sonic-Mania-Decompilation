@@ -98,7 +98,7 @@ void UIOptionPanel_DrawBG(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIOptionPanel_EditorDraw(void)
 {
     RSDK_THIS(UIOptionPanel);

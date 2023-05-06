@@ -38,7 +38,7 @@ void UICreditsText_StaticUpdate(void);
 void UICreditsText_Draw(void);
 void UICreditsText_Create(void *data);
 void UICreditsText_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UICreditsText_EditorDraw(void);
 void UICreditsText_EditorLoad(void);
 #endif

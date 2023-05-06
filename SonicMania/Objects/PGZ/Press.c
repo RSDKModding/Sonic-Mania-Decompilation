@@ -374,7 +374,7 @@ void Press_State_HandleCrates(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Press_EditorDraw(void)
 {
     RSDK_THIS(Press);

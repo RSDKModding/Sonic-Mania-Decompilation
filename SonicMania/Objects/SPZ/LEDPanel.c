@@ -625,7 +625,7 @@ void LEDPanel_StateText_WaitForSignal(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LEDPanel_EditorDraw(void)
 {
     RSDK_THIS(LEDPanel);

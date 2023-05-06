@@ -38,7 +38,7 @@ void LargeGear_StaticUpdate(void);
 void LargeGear_Draw(void);
 void LargeGear_Create(void *data);
 void LargeGear_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LargeGear_EditorDraw(void);
 void LargeGear_EditorLoad(void);
 #endif

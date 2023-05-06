@@ -457,7 +457,7 @@ void UIKeyBinder_MoveKeyToActionCB_Yes(void)
 }
 #endif
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIKeyBinder_EditorDraw(void)
 {
     RSDK_THIS(UIKeyBinder);

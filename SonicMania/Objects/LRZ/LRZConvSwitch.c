@@ -119,7 +119,7 @@ void LRZConvSwitch_Calibrate(void)
         RSDK.SetSpriteAnimation(LRZConvSwitch->aniFrames, 2, &self->animator, true, 0);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LRZConvSwitch_EditorDraw(void)
 {
     LRZConvSwitch_Calibrate();

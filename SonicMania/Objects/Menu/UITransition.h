@@ -32,7 +32,7 @@ void UITransition_StaticUpdate(void);
 void UITransition_Draw(void);
 void UITransition_Create(void *data);
 void UITransition_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UITransition_EditorDraw(void);
 void UITransition_EditorLoad(void);
 #endif

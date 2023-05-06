@@ -32,7 +32,7 @@ void Motobug_StaticUpdate(void);
 void Motobug_Draw(void);
 void Motobug_Create(void *data);
 void Motobug_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Motobug_EditorDraw(void);
 void Motobug_EditorLoad(void);
 #endif

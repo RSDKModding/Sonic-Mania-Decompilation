@@ -23,7 +23,7 @@ void ParticleHelpers_StaticUpdate(void);
 void ParticleHelpers_Draw(void);
 void ParticleHelpers_Create(void *data);
 void ParticleHelpers_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ParticleHelpers_EditorDraw(void);
 void ParticleHelpers_EditorLoad(void);
 #endif

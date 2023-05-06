@@ -993,7 +993,7 @@ void TimeAttackMenu_SetupLeaderboardsCarousel(EntityUICarousel *carousel)
     carousel->buttonID = -1;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TimeAttackMenu_EditorDraw(void) {}
 
 void TimeAttackMenu_EditorLoad(void) {}

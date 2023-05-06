@@ -595,7 +595,7 @@ void PBL_Crane_StatePrize_PrizeGet(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PBL_Crane_EditorDraw(void)
 {
     RSDK_THIS(PBL_Crane);

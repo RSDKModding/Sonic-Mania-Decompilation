@@ -143,7 +143,7 @@ void Letterboard_State_Spun(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Letterboard_EditorDraw(void)
 {
     RSDK_THIS(Letterboard);

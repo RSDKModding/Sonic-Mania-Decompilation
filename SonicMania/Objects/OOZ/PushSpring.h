@@ -37,7 +37,7 @@ void PushSpring_StaticUpdate(void);
 void PushSpring_Draw(void);
 void PushSpring_Create(void *data);
 void PushSpring_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PushSpring_EditorDraw(void);
 void PushSpring_EditorLoad(void);
 #endif

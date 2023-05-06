@@ -169,7 +169,7 @@ void UFO_Camera_State_UFOCaught(void)
     RSDK.MatrixMultiply(&UFO_Camera->matWorld, &UFO_Camera->matWorld, &self->matWorld);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UFO_Camera_EditorDraw(void) {}
 
 void UFO_Camera_EditorLoad(void) {}

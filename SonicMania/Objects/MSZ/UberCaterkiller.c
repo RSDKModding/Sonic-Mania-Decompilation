@@ -724,7 +724,7 @@ void UberCaterkiller_State_Finish(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UberCaterkiller_EditorDraw(void)
 {
     RSDK_THIS(UberCaterkiller);

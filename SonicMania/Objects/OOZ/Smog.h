@@ -33,7 +33,7 @@ void Smog_StaticUpdate(void);
 void Smog_Draw(void);
 void Smog_Create(void *data);
 void Smog_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Smog_EditorDraw(void);
 void Smog_EditorLoad(void);
 #endif

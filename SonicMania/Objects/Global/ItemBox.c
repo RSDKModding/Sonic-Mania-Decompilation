@@ -1188,7 +1188,7 @@ void ItemBox_HandleObjectCollisions(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ItemBox_EditorDraw(void)
 {
     RSDK_THIS(ItemBox);

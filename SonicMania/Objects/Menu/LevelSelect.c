@@ -688,7 +688,7 @@ void LevelSelect_HandleNewStagePos(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LevelSelect_EditorDraw(void) {}
 
 void LevelSelect_EditorLoad(void)

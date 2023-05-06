@@ -82,7 +82,7 @@ void EggTV_DrawTV(void)
     self->drawFX = FX_NONE;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void EggTV_EditorDraw(void)
 {
     RSDK_THIS(EggTV);

@@ -37,7 +37,7 @@ void RotatingSpikes_StaticUpdate(void);
 void RotatingSpikes_Draw(void);
 void RotatingSpikes_Create(void *data);
 void RotatingSpikes_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void RotatingSpikes_EditorDraw(void);
 void RotatingSpikes_EditorLoad(void);
 #endif

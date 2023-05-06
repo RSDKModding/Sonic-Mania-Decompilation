@@ -34,7 +34,7 @@ void Crate_StaticUpdate(void);
 void Crate_Draw(void);
 void Crate_Create(void *data);
 void Crate_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Crate_EditorDraw(void);
 void Crate_EditorLoad(void);
 #endif

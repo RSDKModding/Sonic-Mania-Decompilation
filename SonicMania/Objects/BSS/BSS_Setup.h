@@ -113,7 +113,7 @@ void BSS_Setup_StaticUpdate(void);
 void BSS_Setup_Draw(void);
 void BSS_Setup_Create(void *data);
 void BSS_Setup_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BSS_Setup_EditorDraw(void);
 void BSS_Setup_EditorLoad(void);
 #endif

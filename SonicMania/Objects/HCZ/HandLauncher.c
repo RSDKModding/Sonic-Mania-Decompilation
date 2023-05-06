@@ -302,7 +302,7 @@ void HandLauncher_State_GrabbedPlayer(void)
     HandLauncher_HandleGrabbedPlayers();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void HandLauncher_EditorDraw(void)
 {
     RSDK_THIS(HandLauncher);

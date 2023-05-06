@@ -391,7 +391,7 @@ void Grabber_State_PlayerEscaped(void)
     Grabber_CheckOffScreen();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Grabber_EditorDraw(void)
 {
     RSDK_THIS(Grabber);

@@ -84,7 +84,7 @@ void PaintingEyes_Create(void *data)
 
 void PaintingEyes_StageLoad(void) { PaintingEyes->aniFrames = RSDK.LoadSpriteAnimation("MSZ/PaintingEyes.bin", SCOPE_STAGE); }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PaintingEyes_EditorDraw(void)
 {
     RSDK_THIS(PaintingEyes);

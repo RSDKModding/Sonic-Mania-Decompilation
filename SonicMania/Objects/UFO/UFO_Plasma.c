@@ -71,7 +71,7 @@ void UFO_Plasma_StageLoad(void)
     RSDK.SetDrawGroupProperties(3, false, StateMachine_None);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UFO_Plasma_EditorDraw(void) {}
 
 void UFO_Plasma_EditorLoad(void) {}

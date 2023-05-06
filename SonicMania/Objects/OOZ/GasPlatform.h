@@ -36,7 +36,7 @@ void GasPlatform_StaticUpdate(void);
 void GasPlatform_Draw(void);
 void GasPlatform_Create(void *data);
 void GasPlatform_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void GasPlatform_EditorDraw(void);
 void GasPlatform_EditorLoad(void);
 #endif

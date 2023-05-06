@@ -283,7 +283,7 @@ int32 BoucePlant_GetNodeY(int32 x)
     return y << 15;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BouncePlant_EditorDraw(void)
 {
     RSDK_THIS(BouncePlant);

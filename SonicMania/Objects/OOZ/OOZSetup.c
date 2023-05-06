@@ -643,7 +643,7 @@ void OOZSetup_PlayerState_OilFall(void)
     self->acceleration = acc;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void OOZSetup_EditorDraw(void) {}
 
 void OOZSetup_EditorLoad(void)

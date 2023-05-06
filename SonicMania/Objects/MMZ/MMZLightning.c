@@ -134,7 +134,7 @@ void MMZLightning_State_LightningSmallFadeOut(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MMZLightning_EditorDraw(void) {}
 
 void MMZLightning_EditorLoad(void) {}

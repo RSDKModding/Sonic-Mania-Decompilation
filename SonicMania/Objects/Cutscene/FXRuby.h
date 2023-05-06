@@ -44,7 +44,7 @@ void FXRuby_StaticUpdate(void);
 void FXRuby_Draw(void);
 void FXRuby_Create(void *data);
 void FXRuby_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FXRuby_EditorDraw(void);
 void FXRuby_EditorLoad(void);
 #endif

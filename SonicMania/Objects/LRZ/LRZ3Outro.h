@@ -33,7 +33,7 @@ void LRZ3Outro_StaticUpdate(void);
 void LRZ3Outro_Draw(void);
 void LRZ3Outro_Create(void *data);
 void LRZ3Outro_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LRZ3Outro_EditorDraw(void);
 void LRZ3Outro_EditorLoad(void);
 #endif

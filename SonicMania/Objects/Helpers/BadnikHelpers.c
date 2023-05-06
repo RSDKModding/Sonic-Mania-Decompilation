@@ -61,7 +61,7 @@ int32 BadnikHelpers_Oscillate(int32 origin, int32 speed, int32 amplitude)
     return ((RSDK.Sin256(self->angle) << amplitude) + origin) & 0xFFFF0000;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BadnikHelpers_EditorDraw(void) {}
 
 void BadnikHelpers_EditorLoad(void) {}

@@ -32,7 +32,7 @@ void Pinata_StaticUpdate(void);
 void Pinata_Draw(void);
 void Pinata_Create(void *data);
 void Pinata_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Pinata_EditorDraw(void);
 void Pinata_EditorLoad(void);
 #endif

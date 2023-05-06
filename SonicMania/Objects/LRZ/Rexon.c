@@ -396,7 +396,7 @@ void Rexon_State_Projectile(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Rexon_EditorDraw(void)
 {
     RSDK_THIS(Rexon);

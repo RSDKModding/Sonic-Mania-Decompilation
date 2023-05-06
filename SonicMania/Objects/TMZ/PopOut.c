@@ -283,7 +283,7 @@ void PopOut_SetupHitboxes(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PopOut_EditorDraw(void)
 {
     RSDK_THIS(PopOut);

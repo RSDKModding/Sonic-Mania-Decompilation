@@ -53,7 +53,7 @@ void TitleLogo_StaticUpdate(void);
 void TitleLogo_Draw(void);
 void TitleLogo_Create(void *data);
 void TitleLogo_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TitleLogo_EditorDraw(void);
 void TitleLogo_EditorLoad(void);
 #endif

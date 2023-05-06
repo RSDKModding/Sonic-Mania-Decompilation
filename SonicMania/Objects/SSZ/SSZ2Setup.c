@@ -224,7 +224,7 @@ void SSZ2Setup_Trigger_SSZ2BTransition(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SSZ2Setup_EditorDraw(void) {}
 
 void SSZ2Setup_EditorLoad(void)

@@ -32,7 +32,7 @@ void Crabmeat_StaticUpdate(void);
 void Crabmeat_Draw(void);
 void Crabmeat_Create(void *data);
 void Crabmeat_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Crabmeat_EditorDraw(void);
 void Crabmeat_EditorLoad(void);
 #endif

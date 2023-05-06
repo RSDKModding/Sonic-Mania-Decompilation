@@ -40,7 +40,7 @@ void ElectroMagnet_StaticUpdate(void);
 void ElectroMagnet_Draw(void);
 void ElectroMagnet_Create(void *data);
 void ElectroMagnet_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ElectroMagnet_EditorDraw(void);
 void ElectroMagnet_EditorLoad(void);
 #endif

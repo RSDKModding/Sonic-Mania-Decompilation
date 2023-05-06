@@ -94,7 +94,7 @@ void PuyoIndicator_ShowReady(void)
     self->position.y = self->startPos.y;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PuyoIndicator_EditorDraw(void)
 {
     RSDK_THIS(PuyoIndicator);

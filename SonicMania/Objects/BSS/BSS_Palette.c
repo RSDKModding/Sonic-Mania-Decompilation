@@ -50,7 +50,7 @@ void BSS_Palette_StageLoad(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BSS_Palette_EditorDraw(void)
 {
     RSDK_THIS(BSS_Palette);

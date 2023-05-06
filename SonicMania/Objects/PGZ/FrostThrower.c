@@ -248,7 +248,7 @@ void FrostThrower_State_StopDispensing(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FrostThrower_EditorDraw(void)
 {
     RSDK_THIS(FrostThrower);

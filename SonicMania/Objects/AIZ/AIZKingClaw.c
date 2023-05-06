@@ -134,7 +134,7 @@ void AIZKingClaw_State_Grab(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void AIZKingClaw_EditorDraw(void)
 {
     RSDK_THIS(AIZKingClaw);

@@ -229,7 +229,7 @@ void EggLoco_State_Tooting(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void EggLoco_EditorDraw(void)
 {
     RSDK_THIS(EggLoco);

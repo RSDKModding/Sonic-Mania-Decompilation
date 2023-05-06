@@ -178,7 +178,7 @@ void OneWayDoor_Draw_CPZ(void)
     self->position.y += 2 * self->offsetY;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void OneWayDoor_EditorDraw(void)
 {
     RSDK_THIS(OneWayDoor);

@@ -91,7 +91,7 @@ void Music_StaticUpdate(void);
 void Music_Draw(void);
 void Music_Create(void *data);
 void Music_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Music_EditorDraw(void);
 void Music_EditorLoad(void);
 #endif

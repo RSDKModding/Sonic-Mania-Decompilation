@@ -41,7 +41,7 @@ void Staircase_StaticUpdate(void);
 void Staircase_Draw(void);
 void Staircase_Create(void *data);
 void Staircase_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Staircase_EditorDraw(void);
 void Staircase_EditorLoad(void);
 #endif

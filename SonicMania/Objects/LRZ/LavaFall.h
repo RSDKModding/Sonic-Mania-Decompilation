@@ -34,7 +34,7 @@ void LavaFall_StaticUpdate(void);
 void LavaFall_Draw(void);
 void LavaFall_Create(void *data);
 void LavaFall_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LavaFall_EditorDraw(void);
 void LavaFall_EditorLoad(void);
 #endif

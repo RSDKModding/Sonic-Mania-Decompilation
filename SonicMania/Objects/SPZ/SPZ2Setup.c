@@ -140,7 +140,7 @@ void SPZ2Setup_StageLoad(void)
 
 void SPZ2Setup_StageFinish_EndAct2(void) { SPZ2Setup->outro->active = ACTIVE_NORMAL; }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SPZ2Setup_EditorDraw(void) {}
 
 void SPZ2Setup_EditorLoad(void) {}

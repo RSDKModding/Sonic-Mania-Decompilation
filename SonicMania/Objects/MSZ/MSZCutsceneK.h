@@ -32,7 +32,7 @@ void MSZCutsceneK_StaticUpdate(void);
 void MSZCutsceneK_Draw(void);
 void MSZCutsceneK_Create(void *data);
 void MSZCutsceneK_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MSZCutsceneK_EditorDraw(void);
 void MSZCutsceneK_EditorLoad(void);
 #endif

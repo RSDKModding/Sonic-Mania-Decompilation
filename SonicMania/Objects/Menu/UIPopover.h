@@ -53,7 +53,7 @@ void UIPopover_StaticUpdate(void);
 void UIPopover_Draw(void);
 void UIPopover_Create(void *data);
 void UIPopover_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIPopover_EditorDraw(void);
 void UIPopover_EditorLoad(void);
 #endif

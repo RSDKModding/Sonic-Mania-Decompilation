@@ -327,7 +327,7 @@ bool32 GHZCutsceneST_Cutscene_SetupGHZ1(EntityCutsceneSeq *host)
     return true;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void GHZCutsceneST_EditorDraw(void)
 {
     RSDK_THIS(GHZCutsceneST);

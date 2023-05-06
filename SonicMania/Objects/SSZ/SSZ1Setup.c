@@ -68,7 +68,7 @@ void SSZ1Setup_StageLoad(void)
 
 void SSZ1Setup_StageFinish_EndAct1(void) { SSZ1Setup->outro->active = ACTIVE_NORMAL; }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SSZ1Setup_EditorDraw(void) {}
 
 void SSZ1Setup_EditorLoad(void)

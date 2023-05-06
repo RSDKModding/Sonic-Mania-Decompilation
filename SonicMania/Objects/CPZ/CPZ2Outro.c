@@ -101,7 +101,7 @@ bool32 CPZ2Outro_Cutscene_Outro(EntityCutsceneSeq *host)
     return false;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void CPZ2Outro_EditorDraw(void)
 {
     RSDK_THIS(CPZ2Outro);

@@ -33,7 +33,7 @@ void InvisibleBlock_StaticUpdate(void);
 void InvisibleBlock_Draw(void);
 void InvisibleBlock_Create(void *data);
 void InvisibleBlock_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void InvisibleBlock_EditorDraw(void);
 void InvisibleBlock_EditorLoad(void);
 #endif

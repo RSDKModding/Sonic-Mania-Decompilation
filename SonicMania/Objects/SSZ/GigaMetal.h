@@ -74,7 +74,7 @@ void GigaMetal_StaticUpdate(void);
 void GigaMetal_Draw(void);
 void GigaMetal_Create(void *data);
 void GigaMetal_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void GigaMetal_EditorDraw(void);
 void GigaMetal_EditorLoad(void);
 #endif

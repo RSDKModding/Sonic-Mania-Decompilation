@@ -116,7 +116,7 @@ void UIVsScoreboard_DrawSprites(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIVsScoreboard_EditorDraw(void) { UIVsScoreboard_DrawSprites(); }
 
 void UIVsScoreboard_EditorLoad(void)

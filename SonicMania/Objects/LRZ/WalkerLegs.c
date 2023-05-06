@@ -515,7 +515,7 @@ void WalkerLegs_State_TryToReset(void)
         self->state = WalkerLegs_State_Init;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void WalkerLegs_EditorDraw(void)
 {
     RSDK_THIS(WalkerLegs);

@@ -396,7 +396,7 @@ void UIRankButton_State_Selected(void)
     self->textVisible = !((self->timer >> 1) & 1);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIRankButton_EditorDraw(void) { UIRankButton_DrawSprites(); }
 
 void UIRankButton_EditorLoad(void) {}

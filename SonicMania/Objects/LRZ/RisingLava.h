@@ -31,7 +31,7 @@ void RisingLava_StaticUpdate(void);
 void RisingLava_Draw(void);
 void RisingLava_Create(void *data);
 void RisingLava_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void RisingLava_EditorDraw(void);
 void RisingLava_EditorLoad(void);
 #endif

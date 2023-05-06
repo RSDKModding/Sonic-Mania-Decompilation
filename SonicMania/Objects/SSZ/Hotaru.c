@@ -439,7 +439,7 @@ void Hotaru_State_FinishedAttacking(void)
     Hotaru_CheckOffScreen();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Hotaru_EditorDraw(void)
 {
     RSDK_THIS(Hotaru);

@@ -303,7 +303,7 @@ void LRZ2Setup_GetTileInfo(int32 x, int32 y, int32 moveOffsetX, int32 moveOffset
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LRZ2Setup_EditorDraw(void) {}
 
 void LRZ2Setup_EditorLoad(void)

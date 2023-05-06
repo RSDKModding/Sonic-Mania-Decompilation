@@ -95,7 +95,7 @@ void RisingLava_State_StoppedRising(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void RisingLava_EditorDraw(void)
 {
     RSDK_THIS(RisingLava);

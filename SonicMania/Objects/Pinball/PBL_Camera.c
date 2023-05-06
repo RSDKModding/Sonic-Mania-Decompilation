@@ -122,7 +122,7 @@ void PBL_Camera_State_Normal(void)
     RSDK.MatrixMultiply(&PBL_Camera->matWorld, &PBL_Camera->matWorld, &self->matTransform);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PBL_Camera_EditorDraw(void) {}
 
 void PBL_Camera_EditorLoad(void) {}

@@ -1198,7 +1198,7 @@ void GigaMetal_StateArm_Marching(void)
     GigaMetal_HandleArmCollisions();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void GigaMetal_EditorDraw(void)
 {
     RSDK_THIS(GigaMetal);

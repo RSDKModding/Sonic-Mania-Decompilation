@@ -44,7 +44,7 @@ void TurboSpiker_StaticUpdate(void);
 void TurboSpiker_Draw(void);
 void TurboSpiker_Create(void *data);
 void TurboSpiker_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TurboSpiker_EditorDraw(void);
 void TurboSpiker_EditorLoad(void);
 #endif

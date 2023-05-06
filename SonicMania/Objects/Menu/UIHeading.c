@@ -72,7 +72,7 @@ void UIHeading_LoadSprites(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UIHeading_EditorDraw(void)
 {
     RSDK_THIS(UIHeading);

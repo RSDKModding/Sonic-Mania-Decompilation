@@ -281,7 +281,7 @@ void Stegway_State_Dash(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Stegway_EditorDraw(void)
 {
     RSDK_THIS(Stegway);

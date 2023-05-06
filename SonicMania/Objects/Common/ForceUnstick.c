@@ -78,7 +78,7 @@ void ForceUnstick_DrawSprites(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ForceUnstick_EditorDraw(void) { ForceUnstick_DrawSprites(); }
 
 void ForceUnstick_EditorLoad(void)

@@ -29,7 +29,7 @@ void OOZ1Outro_StaticUpdate(void);
 void OOZ1Outro_Draw(void);
 void OOZ1Outro_Create(void *data);
 void OOZ1Outro_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void OOZ1Outro_EditorDraw(void);
 void OOZ1Outro_EditorLoad(void);
 #endif

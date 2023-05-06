@@ -21,7 +21,7 @@ void PlatformNode_Create(void *data) {}
 
 void PlatformNode_StageLoad(void) {}
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PlatformNode_EditorDraw(void)
 {
     RSDK_THIS(PlatformNode);

@@ -34,7 +34,7 @@ void MSHologram_StaticUpdate(void);
 void MSHologram_Draw(void);
 void MSHologram_Create(void *data);
 void MSHologram_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MSHologram_EditorDraw(void);
 void MSHologram_EditorLoad(void);
 #endif

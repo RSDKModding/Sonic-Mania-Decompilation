@@ -42,7 +42,7 @@ void GHZCutsceneST_StaticUpdate(void);
 void GHZCutsceneST_Draw(void);
 void GHZCutsceneST_Create(void *data);
 void GHZCutsceneST_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void GHZCutsceneST_EditorDraw(void);
 void GHZCutsceneST_EditorLoad(void);
 #endif

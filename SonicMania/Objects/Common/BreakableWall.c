@@ -693,7 +693,7 @@ void BreakableWall_GiveScoreBonus(EntityPlayer *player)
         player->scoreBonus++;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BreakableWall_EditorDraw(void)
 {
     RSDK_THIS(BreakableWall);

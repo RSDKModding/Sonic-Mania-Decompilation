@@ -370,7 +370,7 @@ void LottoBall_State_ShowUIBall(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void LottoBall_EditorDraw(void)
 {
     RSDK_THIS(LottoBall);

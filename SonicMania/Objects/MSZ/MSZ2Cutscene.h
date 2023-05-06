@@ -27,7 +27,7 @@ void MSZ2Cutscene_StaticUpdate(void);
 void MSZ2Cutscene_Draw(void);
 void MSZ2Cutscene_Create(void *data);
 void MSZ2Cutscene_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MSZ2Cutscene_EditorDraw(void);
 void MSZ2Cutscene_EditorLoad(void);
 #endif

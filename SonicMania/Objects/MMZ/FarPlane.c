@@ -302,7 +302,7 @@ void FarPlane_Scanline_FarPlaneView(ScanlineInfo *scanline)
     RSDK.SetActivePalette(4, 0, ScreenInfo->size.y);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FarPlane_EditorDraw(void)
 {
     RSDK_THIS(FarPlane);

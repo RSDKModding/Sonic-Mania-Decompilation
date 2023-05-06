@@ -116,7 +116,7 @@ void CutsceneRules_DrawCutsceneBounds(void *e, Vector2 *size)
     DrawHelpers_DrawRectOutline(entity->position.x, entity->position.y, size->x, size->y, 0xFFFF00);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void CutsceneRules_EditorDraw(void) {}
 
 void CutsceneRules_EditorLoad(void) {}

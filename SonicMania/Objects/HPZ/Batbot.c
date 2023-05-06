@@ -207,7 +207,7 @@ void Batbot_State_SwoopRight(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Batbot_EditorDraw(void)
 {
     RSDK_THIS(Batbot);

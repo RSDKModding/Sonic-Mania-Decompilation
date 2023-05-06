@@ -416,7 +416,7 @@ void MegaChopper_State_ShakenOff(void)
     MegaChopper_CheckOffScreen();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MegaChopper_EditorDraw(void) { MegaChopper_Draw(); }
 
 void MegaChopper_EditorLoad(void) { MegaChopper->aniFrames = RSDK.LoadSpriteAnimation("HCZ/MegaChopper.bin", SCOPE_STAGE); }

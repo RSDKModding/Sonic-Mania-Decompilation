@@ -100,7 +100,7 @@ void BSS_Collected_Create(void *data)
 
 void BSS_Collected_StageLoad(void) {}
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BSS_Collected_EditorDraw(void) {}
 
 void BSS_Collected_EditorLoad(void) {}

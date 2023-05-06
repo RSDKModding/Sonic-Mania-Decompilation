@@ -47,7 +47,7 @@ void PKingAttack_StaticUpdate(void);
 void PKingAttack_Draw(void);
 void PKingAttack_Create(void *data);
 void PKingAttack_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PKingAttack_EditorDraw(void);
 void PKingAttack_EditorLoad(void);
 #endif

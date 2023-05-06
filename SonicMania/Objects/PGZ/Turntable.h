@@ -40,7 +40,7 @@ void Turntable_StaticUpdate(void);
 void Turntable_Draw(void);
 void Turntable_Create(void *data);
 void Turntable_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Turntable_EditorDraw(void);
 void Turntable_EditorLoad(void);
 #endif

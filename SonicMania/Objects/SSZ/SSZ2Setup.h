@@ -32,7 +32,7 @@ void SSZ2Setup_StaticUpdate(void);
 void SSZ2Setup_Draw(void);
 void SSZ2Setup_Create(void *data);
 void SSZ2Setup_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SSZ2Setup_EditorDraw(void);
 void SSZ2Setup_EditorLoad(void);
 #endif

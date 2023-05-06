@@ -60,7 +60,7 @@ void UILeaderboard_StaticUpdate(void);
 void UILeaderboard_Draw(void);
 void UILeaderboard_Create(void *data);
 void UILeaderboard_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void UILeaderboard_EditorDraw(void);
 void UILeaderboard_EditorLoad(void);
 #endif

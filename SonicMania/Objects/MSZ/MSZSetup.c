@@ -711,7 +711,7 @@ void MSZSetup_PlayerState_PostCrashJumpIn(void)
     Player_HandleSidekickRespawn();
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MSZSetup_EditorDraw(void) {}
 
 void MSZSetup_EditorLoad(void)

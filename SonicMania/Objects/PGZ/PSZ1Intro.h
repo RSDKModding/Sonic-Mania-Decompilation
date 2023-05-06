@@ -26,7 +26,7 @@ void PSZ1Intro_StaticUpdate(void);
 void PSZ1Intro_Draw(void);
 void PSZ1Intro_Create(void *data);
 void PSZ1Intro_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PSZ1Intro_EditorDraw(void);
 void PSZ1Intro_EditorLoad(void);
 #endif

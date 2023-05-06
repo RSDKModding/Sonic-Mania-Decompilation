@@ -258,7 +258,7 @@ void PlatformControl_ManagePlatformVelocity(EntityPlatform *platform, EntityPlat
         platform->velocity.y = -platform->velocity.y;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PlatformControl_EditorDraw(void)
 {
     RSDK_THIS(PlatformControl);

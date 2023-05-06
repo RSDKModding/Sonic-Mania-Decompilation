@@ -141,7 +141,7 @@ void CreditsSetup_LoadCreditsStrings(void)
     CreditsSetup->creditsSize = offset + (ScreenInfo->size.y << 15);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void CreditsSetup_EditorDraw(void) {}
 
 void CreditsSetup_EditorLoad(void) {}

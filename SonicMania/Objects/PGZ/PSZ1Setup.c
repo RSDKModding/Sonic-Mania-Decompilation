@@ -351,7 +351,7 @@ void PSZ1Setup_LevelWrap_Bottom(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void PSZ1Setup_EditorDraw(void) {}
 
 void PSZ1Setup_EditorLoad(void)

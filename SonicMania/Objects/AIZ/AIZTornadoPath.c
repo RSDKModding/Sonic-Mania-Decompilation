@@ -276,7 +276,7 @@ void AIZTornadoPath_State_CatchPlayer(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void AIZTornadoPath_EditorDraw(void)
 {
     RSDK_THIS(AIZTornadoPath);

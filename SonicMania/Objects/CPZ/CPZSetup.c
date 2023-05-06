@@ -184,7 +184,7 @@ void CPZSetup_StageFinish_EndAct1(void)
 
 void CPZSetup_StageFinish_EndAct2(void) { CPZSetup->outro->active = ACTIVE_NORMAL; }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void CPZSetup_EditorDraw(void) {}
 
 void CPZSetup_EditorLoad(void)

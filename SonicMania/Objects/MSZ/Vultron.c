@@ -321,7 +321,7 @@ void Vultron_State_Targeting(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Vultron_EditorDraw(void)
 {
     RSDK_THIS(Vultron);

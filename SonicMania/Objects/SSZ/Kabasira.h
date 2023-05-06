@@ -39,7 +39,7 @@ void Kabasira_StaticUpdate(void);
 void Kabasira_Draw(void);
 void Kabasira_Create(void *data);
 void Kabasira_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Kabasira_EditorDraw(void);
 void Kabasira_EditorLoad(void);
 #endif

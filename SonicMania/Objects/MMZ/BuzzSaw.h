@@ -39,7 +39,7 @@ void BuzzSaw_StaticUpdate(void);
 void BuzzSaw_Draw(void);
 void BuzzSaw_Create(void *data);
 void BuzzSaw_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void BuzzSaw_EditorDraw(void);
 void BuzzSaw_EditorLoad(void);
 #endif

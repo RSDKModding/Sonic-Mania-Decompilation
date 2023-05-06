@@ -241,7 +241,7 @@ void ShopWindow_Draw_Shattered(void)
                   2 * self->size.x, 2 * self->size.y, 0xF0F0F0, 0xFF, INK_NONE, true);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ShopWindow_EditorDraw(void)
 {
     RSDK_THIS(ShopWindow);

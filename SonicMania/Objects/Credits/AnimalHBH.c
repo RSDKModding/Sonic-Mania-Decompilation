@@ -92,7 +92,7 @@ void AnimalHBH_StageLoad(void)
     AnimalHBH->colorCount   = 0;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void AnimalHBH_EditorDraw(void)
 {
     RSDK_THIS(AnimalHBH);

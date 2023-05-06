@@ -534,7 +534,7 @@ void Button_HandleLWall(void)
     self->hitboxButton.left  = self->hitboxButton.left - 16;
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void Button_EditorDraw(void)
 {
     RSDK_THIS(Button);

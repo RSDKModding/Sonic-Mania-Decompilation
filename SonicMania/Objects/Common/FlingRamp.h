@@ -24,7 +24,7 @@ void FlingRamp_StaticUpdate(void);
 void FlingRamp_Draw(void);
 void FlingRamp_Create(void *data);
 void FlingRamp_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FlingRamp_EditorDraw(void);
 void FlingRamp_EditorLoad(void);
 #endif

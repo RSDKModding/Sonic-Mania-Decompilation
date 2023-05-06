@@ -37,7 +37,7 @@ void MicDrop_StaticUpdate(void);
 void MicDrop_Draw(void);
 void MicDrop_Create(void *data);
 void MicDrop_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MicDrop_EditorDraw(void);
 void MicDrop_EditorLoad(void);
 #endif

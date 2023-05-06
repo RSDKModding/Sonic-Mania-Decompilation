@@ -325,7 +325,7 @@ int32 ReplayDB_Buffer_UnpackEntry(void *uncompressed, uint8 *compressed)
     return (int32)(compressedBuffer - compressed);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ReplayDB_EditorDraw(void) {}
 
 void ReplayDB_EditorLoad(void) {}

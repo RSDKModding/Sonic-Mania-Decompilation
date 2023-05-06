@@ -28,7 +28,7 @@ void TMZAlert_StaticUpdate(void);
 void TMZAlert_Draw(void);
 void TMZAlert_Create(void *data);
 void TMZAlert_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TMZAlert_EditorDraw(void);
 void TMZAlert_EditorLoad(void);
 #endif

@@ -41,7 +41,7 @@ void SchrodingersCapsule_StaticUpdate(void);
 void SchrodingersCapsule_Draw(void);
 void SchrodingersCapsule_Create(void *data);
 void SchrodingersCapsule_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void SchrodingersCapsule_EditorDraw(void);
 void SchrodingersCapsule_EditorLoad(void);
 #endif

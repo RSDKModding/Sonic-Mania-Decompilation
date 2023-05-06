@@ -59,7 +59,7 @@ void ParticleHelpers_SetupParticleFX(void *debrisState, void (*callback)(EntityD
         callback(debris);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ParticleHelpers_EditorDraw(void) {}
 
 void ParticleHelpers_EditorLoad(void) {}

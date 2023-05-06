@@ -43,7 +43,7 @@ void StickyPlatform_StaticUpdate(void);
 void StickyPlatform_Draw(void);
 void StickyPlatform_Create(void *data);
 void StickyPlatform_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void StickyPlatform_EditorDraw(void);
 void StickyPlatform_EditorLoad(void);
 #endif
