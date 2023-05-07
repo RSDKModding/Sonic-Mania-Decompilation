@@ -34,6 +34,7 @@
 #else
 #define GAME_INCLUDE_EDITOR (1)
 #endif
+#endif
 
 #ifndef RETRO_USE_MOD_LOADER
 #define RETRO_USE_MOD_LOADER (1)
