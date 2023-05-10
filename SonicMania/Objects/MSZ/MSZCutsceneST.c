@@ -62,19 +62,19 @@ void MSZCutsceneST_StageLoad(void)
         if (hbh->characterID == HBH_MYSTIC)
             MSZCutsceneST->mystic = hbh;
 
-        if (hbh->characterID == HBH_ROUGE_FANG) {
-            MSZCutsceneST->rouges[0]         = hbh;
-            MSZCutsceneST->rougePlatforms[0] = RSDK_GET_ENTITY(RSDK.GetEntitySlot(hbh) + 1, Armadiloid);
+        if (hbh->characterID == HBH_ROGUE_FANG) {
+            MSZCutsceneST->rogues[0]         = hbh;
+            MSZCutsceneST->roguePlatforms[0] = RSDK_GET_ENTITY(RSDK.GetEntitySlot(hbh) + 1, Armadiloid);
         }
 
-        if (hbh->characterID == HBH_ROUGE_BEAN) {
-            MSZCutsceneST->rouges[1]         = hbh;
-            MSZCutsceneST->rougePlatforms[1] = RSDK_GET_ENTITY(RSDK.GetEntitySlot(hbh) + 1, Armadiloid);
+        if (hbh->characterID == HBH_ROGUE_BEAN) {
+            MSZCutsceneST->rogues[1]         = hbh;
+            MSZCutsceneST->roguePlatforms[1] = RSDK_GET_ENTITY(RSDK.GetEntitySlot(hbh) + 1, Armadiloid);
         }
 
-        if (hbh->characterID == HBH_ROUGE_BARK) {
-            MSZCutsceneST->rouges[2]         = hbh;
-            MSZCutsceneST->rougePlatforms[2] = RSDK_GET_ENTITY(RSDK.GetEntitySlot(hbh) + 1, Armadiloid);
+        if (hbh->characterID == HBH_ROGUE_BARK) {
+            MSZCutsceneST->rogues[2]         = hbh;
+            MSZCutsceneST->roguePlatforms[2] = RSDK_GET_ENTITY(RSDK.GetEntitySlot(hbh) + 1, Armadiloid);
         }
     }
 
@@ -96,7 +96,7 @@ void MSZCutsceneST_SetupCutscene(void)
     RSDK_THIS(MSZCutsceneST);
 
     CutsceneSeq_StartSequence(self, MSZCutsceneST_Cutscene_HandleSignPostLand, MSZCutsceneST_Cutscene_AwaitActFinish,
-                              MSZCutsceneST_Cutscene_EnterMystic, MSZCutsceneST_Cutscene_PrepareAmbush, MSZCutsceneST_Cutscene_RougesAmbush,
+                              MSZCutsceneST_Cutscene_EnterMystic, MSZCutsceneST_Cutscene_PrepareAmbush, MSZCutsceneST_Cutscene_RoguesAmbush,
                               MSZCutsceneST_Cutscene_Mayday, MSZCutsceneST_Cutscene_SetPlayerMSZ2SpawnPos, MSZCutsceneST_Cutscene_PanCameraToPlayer,
                               MSZCutsceneST_Cutscene_SetupMSZ2, StateMachine_None);
 
@@ -251,38 +251,38 @@ bool32 MSZCutsceneST_Cutscene_PrepareAmbush(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 MSZCutsceneST_Cutscene_RougesAmbush(EntityCutsceneSeq *host)
+bool32 MSZCutsceneST_Cutscene_RoguesAmbush(EntityCutsceneSeq *host)
 {
-    bool32 (*rougeStates[3])(EntityCutsceneSeq *);
-    rougeStates[0] = MSZCutsceneST_Cutscene_ShowFang;
-    rougeStates[1] = MSZCutsceneST_Cutscene_ShowBean;
-    rougeStates[2] = MSZCutsceneST_Cutscene_ShowBark;
+    bool32 (*rogueStates[3])(EntityCutsceneSeq *);
+    rogueStates[0] = MSZCutsceneST_Cutscene_ShowFang;
+    rogueStates[1] = MSZCutsceneST_Cutscene_ShowBean;
+    rogueStates[2] = MSZCutsceneST_Cutscene_ShowBark;
 
     if (!host->timer) {
-        MSZCutsceneST->rougeID = RSDK.Rand(0, 8) % 3;
+        MSZCutsceneST->rogueID = RSDK.Rand(0, 8) % 3;
 
         for (int32 i = 0; i < 3; ++i) {
-            if (i != MSZCutsceneST->rougeID) {
-                destroyEntity(MSZCutsceneST->rouges[i]);
-                destroyEntity(MSZCutsceneST->rougePlatforms[i]);
+            if (i != MSZCutsceneST->rogueID) {
+                destroyEntity(MSZCutsceneST->rogues[i]);
+                destroyEntity(MSZCutsceneST->roguePlatforms[i]);
             }
         }
     }
 
-    EntityArmadiloid *armadiloid      = MSZCutsceneST->rougePlatforms[MSZCutsceneST->rougeID];
+    EntityArmadiloid *armadiloid      = MSZCutsceneST->roguePlatforms[MSZCutsceneST->rogueID];
     armadiloid->drawGroup             = Zone->objectDrawGroup[1];
     armadiloid->boosterAnimator.speed = 1;
     armadiloid->velocity.x            = 0;
 
-    return rougeStates[MSZCutsceneST->rougeID](host);
+    return rogueStates[MSZCutsceneST->rogueID](host);
 }
 
 bool32 MSZCutsceneST_Cutscene_ShowFang(EntityCutsceneSeq *host)
 {
     EntityTornado *tornado       = MSZCutsceneST->tornado;
     EntityTornadoPath *pathNode  = MSZCutsceneST->tornadoPath;
-    EntityCutsceneHBH *rouge     = MSZCutsceneST->rouges[MSZCutsceneST->rougeID];
-    EntityArmadiloid *armadiloid = MSZCutsceneST->rougePlatforms[MSZCutsceneST->rougeID];
+    EntityCutsceneHBH *rogue     = MSZCutsceneST->rogues[MSZCutsceneST->rogueID];
+    EntityArmadiloid *armadiloid = MSZCutsceneST->roguePlatforms[MSZCutsceneST->rogueID];
 
     if (!host->timer)
         armadiloid->state = Armadiloid_State_PlatformFlying;
@@ -303,41 +303,41 @@ bool32 MSZCutsceneST_Cutscene_ShowFang(EntityCutsceneSeq *host)
     }
 
     if (host->values[0] && !host->values[1]) {
-        if (!rouge->mainAnimator.animationID)
-            RSDK.SetSpriteAnimation(rouge->aniFrames, 1, &rouge->mainAnimator, true, 0);
+        if (!rogue->mainAnimator.animationID)
+            RSDK.SetSpriteAnimation(rogue->aniFrames, 1, &rogue->mainAnimator, true, 0);
 
-        if (rouge->mainAnimator.animationID == 1 && rouge->mainAnimator.frameID == rouge->mainAnimator.frameCount - 1
-            && rouge->mainAnimator.timer == 12) {
-            RSDK.SetSpriteAnimation(rouge->aniFrames, 2, &rouge->mainAnimator, true, 0);
-            rouge->velocity.y = -0x20000;
+        if (rogue->mainAnimator.animationID == 1 && rogue->mainAnimator.frameID == rogue->mainAnimator.frameCount - 1
+            && rogue->mainAnimator.timer == 12) {
+            RSDK.SetSpriteAnimation(rogue->aniFrames, 2, &rogue->mainAnimator, true, 0);
+            rogue->velocity.y = -0x20000;
             RSDK.PlaySfx(HeavyMystic->sfxPon, false, 255);
 
-            EntityDebris *debris = CREATE_ENTITY(Debris, NULL, rouge->position.x, rouge->position.y - 0x40000);
+            EntityDebris *debris = CREATE_ENTITY(Debris, NULL, rogue->position.x, rogue->position.y - 0x40000);
             debris->position.x -= 0x180000;
             debris->velocity.x = -0x20000;
             debris->drawGroup  = Zone->playerDrawGroup[1];
             debris->state      = Debris_State_Move;
             debris->direction  = FLIP_X;
             debris->drawFX     = FX_FLIP;
-            RSDK.SetSpriteAnimation(rouge->aniFrames, 4, &debris->animator, true, 0);
+            RSDK.SetSpriteAnimation(rogue->aniFrames, 4, &debris->animator, true, 0);
 
             MSZCutsceneST->projectile = (Entity *)debris;
         }
 
-        if (rouge->mainAnimator.animationID == 2) {
-            rouge->position.y += rouge->velocity.y;
-            rouge->velocity.y += 0x3800;
+        if (rogue->mainAnimator.animationID == 2) {
+            rogue->position.y += rogue->velocity.y;
+            rogue->velocity.y += 0x3800;
         }
     }
 
-    rouge->position.x = armadiloid->position.x + 0x20000;
-    if (rouge->position.y > armadiloid->position.y - 0x200000) {
-        rouge->position.y = armadiloid->position.y - 0x200000;
-        rouge->velocity.y = 0;
+    rogue->position.x = armadiloid->position.x + 0x20000;
+    if (rogue->position.y > armadiloid->position.y - 0x200000) {
+        rogue->position.y = armadiloid->position.y - 0x200000;
+        rogue->velocity.y = 0;
 
-        if (rouge->mainAnimator.animationID == 2) {
-            RSDK.SetSpriteAnimation(rouge->aniFrames, 1, &rouge->mainAnimator, true, 2);
-            rouge->mainAnimator.loopIndex = 3;
+        if (rogue->mainAnimator.animationID == 2) {
+            RSDK.SetSpriteAnimation(rogue->aniFrames, 1, &rogue->mainAnimator, true, 2);
+            rogue->mainAnimator.loopIndex = 3;
             host->values[1]               = 1;
         }
     }
@@ -354,8 +354,8 @@ bool32 MSZCutsceneST_Cutscene_ShowBean(EntityCutsceneSeq *host)
 {
     EntityTornado *tornado       = MSZCutsceneST->tornado;
     EntityTornadoPath *pathNode  = MSZCutsceneST->tornadoPath;
-    EntityCutsceneHBH *rouge     = MSZCutsceneST->rouges[MSZCutsceneST->rougeID];
-    EntityArmadiloid *armadiloid = MSZCutsceneST->rougePlatforms[MSZCutsceneST->rougeID];
+    EntityCutsceneHBH *rogue     = MSZCutsceneST->rogues[MSZCutsceneST->rogueID];
+    EntityArmadiloid *armadiloid = MSZCutsceneST->roguePlatforms[MSZCutsceneST->rogueID];
 
     int32 x = pathNode->position.x + 0x600000;
     int32 y = armadiloid->startPos.y;
@@ -376,33 +376,33 @@ bool32 MSZCutsceneST_Cutscene_ShowBean(EntityCutsceneSeq *host)
     }
 
     if (host->values[0] && !host->values[1]) {
-        if (rouge->mainAnimator.animationID == 5) {
-            RSDK.SetSpriteAnimation(rouge->aniFrames, 7, &rouge->mainAnimator, true, 0);
+        if (rogue->mainAnimator.animationID == 5) {
+            RSDK.SetSpriteAnimation(rogue->aniFrames, 7, &rogue->mainAnimator, true, 0);
         }
 
-        if (rouge->mainAnimator.animationID == 7) {
-            if (rouge->mainAnimator.frameID == 2 && !MSZCutsceneST->projectile) {
+        if (rogue->mainAnimator.animationID == 7) {
+            if (rogue->mainAnimator.frameID == 2 && !MSZCutsceneST->projectile) {
                 RSDK.PlaySfx(HeavyMystic->sfxDrop, false, 255);
-                EntityDebris *debris = CREATE_ENTITY(Debris, NULL, rouge->position.x, rouge->position.y - 0x130000);
+                EntityDebris *debris = CREATE_ENTITY(Debris, NULL, rogue->position.x, rogue->position.y - 0x130000);
                 debris->position.x += 0xB0000;
                 debris->velocity.x      = -0x48000;
                 debris->velocity.y      = -0x40000;
                 debris->gravityStrength = 0x3800;
                 debris->drawGroup       = Zone->playerDrawGroup[1];
                 debris->state           = Debris_State_Fall;
-                RSDK.SetSpriteAnimation(rouge->aniFrames, 11, &debris->animator, true, 0);
+                RSDK.SetSpriteAnimation(rogue->aniFrames, 11, &debris->animator, true, 0);
                 MSZCutsceneST->projectile = (Entity *)debris;
             }
 
-            if (rouge->mainAnimator.animationID == 7 && rouge->mainAnimator.frameID == 5 && rouge->mainAnimator.timer == 2) {
-                RSDK.SetSpriteAnimation(rouge->aniFrames, 5, &rouge->mainAnimator, true, 0);
+            if (rogue->mainAnimator.animationID == 7 && rogue->mainAnimator.frameID == 5 && rogue->mainAnimator.timer == 2) {
+                RSDK.SetSpriteAnimation(rogue->aniFrames, 5, &rogue->mainAnimator, true, 0);
                 host->values[1] = 1;
             }
         }
     }
 
-    rouge->position.x = armadiloid->position.x + 0x40000;
-    rouge->position.y = armadiloid->position.y - 0x200000;
+    rogue->position.x = armadiloid->position.x + 0x40000;
+    rogue->position.y = armadiloid->position.y - 0x200000;
 
     if (MSZCutsceneST->projectile && MSZCutsceneST->projectile->position.y >= tornado->position.y - 0x100000) {
         destroyEntity(MSZCutsceneST->projectile);
@@ -416,8 +416,8 @@ bool32 MSZCutsceneST_Cutscene_ShowBark(EntityCutsceneSeq *host)
 {
     EntityTornado *tornado       = MSZCutsceneST->tornado;
     EntityTornadoPath *pathNode  = MSZCutsceneST->tornadoPath;
-    EntityCutsceneHBH *rouge     = MSZCutsceneST->rouges[MSZCutsceneST->rougeID];
-    EntityArmadiloid *armadiloid = MSZCutsceneST->rougePlatforms[MSZCutsceneST->rougeID];
+    EntityCutsceneHBH *rogue     = MSZCutsceneST->rogues[MSZCutsceneST->rogueID];
+    EntityArmadiloid *armadiloid = MSZCutsceneST->roguePlatforms[MSZCutsceneST->rogueID];
 
     int32 x = pathNode->position.x + 0x600000;
     int32 y = armadiloid->startPos.y;
@@ -438,11 +438,11 @@ bool32 MSZCutsceneST_Cutscene_ShowBark(EntityCutsceneSeq *host)
     }
 
     if (host->values[0] && !host->values[1]) {
-        if (rouge->mainAnimator.animationID == 12)
-            RSDK.SetSpriteAnimation(rouge->aniFrames, 14, &rouge->mainAnimator, true, 0);
+        if (rogue->mainAnimator.animationID == 12)
+            RSDK.SetSpriteAnimation(rogue->aniFrames, 14, &rogue->mainAnimator, true, 0);
 
-        if (rouge->mainAnimator.animationID == 14) {
-            if (rouge->mainAnimator.frameID == 3 && rouge->mainAnimator.timer == 1) {
+        if (rogue->mainAnimator.animationID == 14) {
+            if (rogue->mainAnimator.frameID == 3 && rogue->mainAnimator.timer == 1) {
                 RSDK.PlaySfx(HeavyMystic->sfxImpact2, false, 255);
                 Camera_ShakeScreen(0, 0, 2);
                 armadiloid->timer = 0;
@@ -450,8 +450,8 @@ bool32 MSZCutsceneST_Cutscene_ShowBark(EntityCutsceneSeq *host)
                 RSDK.SetSpriteAnimation(Armadiloid->aniFrames, 2, &armadiloid->headAnimator, true, 0);
             }
 
-            if (rouge->mainAnimator.animationID == 14 && rouge->mainAnimator.frameID == 7 && rouge->mainAnimator.timer == 2) {
-                RSDK.SetSpriteAnimation(rouge->aniFrames, 12, &rouge->mainAnimator, true, 0);
+            if (rogue->mainAnimator.animationID == 14 && rogue->mainAnimator.frameID == 7 && rogue->mainAnimator.timer == 2) {
+                RSDK.SetSpriteAnimation(rogue->aniFrames, 12, &rogue->mainAnimator, true, 0);
                 host->values[1] = true;
             }
         }
@@ -466,8 +466,8 @@ bool32 MSZCutsceneST_Cutscene_ShowBark(EntityCutsceneSeq *host)
         }
     }
 
-    rouge->position.x = armadiloid->position.x + 0x40000;
-    rouge->position.y = armadiloid->position.y - 0x2C0000;
+    rogue->position.x = armadiloid->position.x + 0x40000;
+    rogue->position.y = armadiloid->position.y - 0x2C0000;
 
     if (MSZCutsceneST->projectile && MSZCutsceneST->projectile->position.x <= tornado->position.x + 0x300000) {
         destroyEntity(MSZCutsceneST->projectile);
@@ -500,8 +500,8 @@ bool32 MSZCutsceneST_Cutscene_Mayday(EntityCutsceneSeq *host)
         player1->rotation = tornado->rotation;
         tornado->active   = ACTIVE_NORMAL;
         pathNode->state   = TornadoPath_State_SetTornadoSpeed;
-        destroyEntity(MSZCutsceneST->rouges[MSZCutsceneST->rougeID]);
-        destroyEntity(MSZCutsceneST->rougePlatforms[MSZCutsceneST->rougeID]);
+        destroyEntity(MSZCutsceneST->rogues[MSZCutsceneST->rogueID]);
+        destroyEntity(MSZCutsceneST->roguePlatforms[MSZCutsceneST->rogueID]);
 
         TileLayer *background1 = RSDK.GetTileLayer(0);
         for (int32 i = 0; i < background1->scrollInfoCount; ++i) background1->scrollInfo[i].scrollPos = 0;

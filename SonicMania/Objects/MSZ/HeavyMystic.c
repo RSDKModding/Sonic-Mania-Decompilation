@@ -129,7 +129,7 @@ void HeavyMystic_Create(void *data)
                     self->drawGroup = Zone->objectDrawGroup[0];
                     self->drawFX    = FX_FLIP;
 
-                    RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 4, &self->animator, true, 0);
+                    RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 4, &self->animator, true, 0);
                     self->state = HeavyMystic_StateCork_Fired;
 
                     self->hitbox.left   = -3;
@@ -144,7 +144,7 @@ void HeavyMystic_Create(void *data)
                     self->drawGroup = Zone->objectDrawGroup[0];
                     self->drawFX    = FX_FLIP;
 
-                    RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 11, &self->animator, true, 0);
+                    RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 11, &self->animator, true, 0);
                     self->state = HeavyMystic_State_Bomb;
 
                     self->hitbox.left   = -8;
@@ -159,7 +159,7 @@ void HeavyMystic_Create(void *data)
                     self->drawGroup = Zone->objectDrawGroup[0];
                     self->drawFX    = FX_FLIP;
 
-                    RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 16, &self->animator, true, 0);
+                    RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 16, &self->animator, true, 0);
                     self->state = HeavyMystic_State_BarkDebris;
 
                     self->hitbox.left   = -8;
@@ -180,7 +180,7 @@ void HeavyMystic_Create(void *data)
 void HeavyMystic_StageLoad(void)
 {
     HeavyMystic->aniFrames     = RSDK.LoadSpriteAnimation("MSZ/HeavyMystic.bin", SCOPE_STAGE);
-    HeavyMystic->rouguesFrames = RSDK.LoadSpriteAnimation("MSZ/Rogues.bin", SCOPE_STAGE);
+    HeavyMystic->roguesFrames = RSDK.LoadSpriteAnimation("MSZ/Rogues.bin", SCOPE_STAGE);
 
     HeavyMystic->active         = ACTIVE_ALWAYS;
     HeavyMystic->curtainLinePos = 0;
@@ -260,7 +260,7 @@ void HeavyMystic_Hit(void)
     RSDK_THIS(HeavyMystic);
 
     --self->health;
-    --self->rougeHealth;
+    --self->rogueHealth;
 
     if (self->health <= 0) {
         RSDK.PlaySfx(HeavyMystic->sfxExplosion, false, 255);
@@ -290,8 +290,8 @@ void HeavyMystic_CheckPlayerCollisions_Fang(void)
                 RSDK.PlaySfx(HeavyMystic->sfxImpact, false, 255);
                 self->velocity.x = player->position.x < self->position.x ? 0x20000 : -0x20000;
                 self->velocity.y = -0x40000;
-                RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 3, &self->animator, true, 0);
-                self->state = HeavyMystic_StateBoss_RougeHit;
+                RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 3, &self->animator, true, 0);
+                self->state = HeavyMystic_StateBoss_RogueHit;
             }
         }
     }
@@ -317,15 +317,15 @@ void HeavyMystic_CheckPlayerCollisions_Bark(void)
                         Player_Hurt(player, self);
                 }
                 else
-#endif
-                    if (Player_CheckBossHit(player, self)) {
-                    RSDK.PlaySfx(HeavyMystic->sfxImpact, false, 255);
+#endif	
+					if (Player_CheckBossHit(player, self)) {
+						
+					RSDK.PlaySfx(HeavyMystic->sfxImpact, false, 255);
 
-                    if (self->invincibilityTimer > 0)
-                        self->invincibilityTimer--;
-
-                    RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 15, &self->animator, true, 0);
-                    self->state = HeavyMystic_StateBoss_RougeHit;
+					self->velocity.x = player->position.x < self->position.x ? 0x20000 : -0x20000;
+					self->velocity.y = -0x40000;
+					RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 15, &self->animator, true, 0);
+					self->state = HeavyMystic_StateBoss_RogueHit;
                 }
             }
         }
@@ -348,8 +348,8 @@ void HeavyMystic_CheckPlayerCollisions_Bean(void)
 
                 self->velocity.x = player->position.x < self->position.x ? 0x20000 : -0x20000;
                 self->velocity.y = -0x40000;
-                RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 9, &self->animator, true, 0);
-                self->state = HeavyMystic_StateBoss_RougeHit;
+                RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 9, &self->animator, true, 0);
+                self->state = HeavyMystic_StateBoss_RogueHit;
             }
         }
     }
@@ -836,37 +836,37 @@ void HeavyMystic_StateBoss_Transforming(void)
             self->position = boss->position;
             boss->position = boss->targetPos;
             self->visible  = true;
-            self->state    = HeavyMystic_StateBoss_ShowRouge;
+            self->state    = HeavyMystic_StateBoss_ShowRogue;
         }
     }
 }
 
-void HeavyMystic_StateBoss_ShowRouge(void)
+void HeavyMystic_StateBoss_ShowRogue(void)
 {
     RSDK_THIS(HeavyMystic);
 
     self->velocity.x  = 0;
     self->velocity.y  = 0;
-    self->rougeHealth = 2;
+    self->rogueHealth = 2;
     RSDK.PlaySfx(HeavyMystic->sfxTwinkle, false, 255);
 
     self->velocity.y      = -0x40000;
     self->particleFXTimer = 75;
-    switch (self->rougeID) {
+    switch (self->rogueID) {
         case 0: // Fang
         case 3: // Fang
-            RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 2, &self->animator, true, 4);
+            RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 2, &self->animator, true, 4);
             self->state    = HeavyMystic_StateBoss_FangHop;
             self->attackID = 8;
             break;
 
         case 1: // Bean
-            RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 6, &self->animator, true, 3);
+            RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 6, &self->animator, true, 3);
             self->state = HeavyMystic_StateBoss_BeanJump;
             break;
 
         case 2: // Bark
-            RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 13, &self->animator, true, 3);
+            RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 13, &self->animator, true, 3);
             self->state = HeavyMystic_StateBoss_BarkJump;
             break;
 
@@ -891,9 +891,9 @@ void HeavyMystic_StateBoss_MysticReveal(void)
             }
         }
 
-        if (self->rougeHealth > 0) {
+        if (self->rogueHealth > 0) {
             RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, 3, &self->animator, true, 0);
-            self->state = HeavyMystic_StateBoss_TransformBackIntoRouge;
+            self->state = HeavyMystic_StateBoss_TransformBackIntoRogue;
         }
         else {
             RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, 0, &self->animator, true, 0);
@@ -934,7 +934,7 @@ void HeavyMystic_StateBoss_MoveToBoxY(void)
         self->angle      = 0x80;
 
         if (self->position.x == self->targetPos.x) {
-            ++self->rougeID;
+            ++self->rogueID;
             self->state = HeavyMystic_StateBoss_BoxCloseDelay;
         }
         else {
@@ -960,7 +960,7 @@ void HeavyMystic_StateBoss_MoveToBoxX(void)
     self->position.y = BadnikHelpers_Oscillate(self->targetPos.y, 4, 11);
 
     if (self->position.x == self->targetPos.x) {
-        ++self->rougeID;
+        ++self->rogueID;
 
         self->position.y = self->targetPos.y;
         self->state      = HeavyMystic_StateBoss_BoxCloseDelay;
@@ -985,7 +985,7 @@ void HeavyMystic_StateBoss_MoveToBoxX(void)
     }
 }
 
-void HeavyMystic_StateBoss_TransformBackIntoRouge(void)
+void HeavyMystic_StateBoss_TransformBackIntoRogue(void)
 {
     RSDK_THIS(HeavyMystic);
 
@@ -1004,21 +1004,21 @@ void HeavyMystic_StateBoss_TransformBackIntoRouge(void)
 
         self->velocity.y      = -0x40000;
         self->particleFXTimer = 75;
-        switch (self->rougeID) {
+        switch (self->rogueID) {
             case 0:
             case 3:
-                RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 2, &self->animator, true, 4);
+                RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 2, &self->animator, true, 4);
                 self->state    = HeavyMystic_StateBoss_FangHop;
                 self->attackID = 8;
                 break;
 
             case 1:
-                RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 6, &self->animator, true, 3);
+                RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 6, &self->animator, true, 3);
                 self->state = HeavyMystic_StateBoss_BeanJump;
                 break;
 
             case 2:
-                RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 13, &self->animator, true, 3);
+                RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 13, &self->animator, true, 3);
                 self->state = HeavyMystic_StateBoss_BarkJump;
                 break;
 
@@ -1038,7 +1038,7 @@ void HeavyMystic_StateBoss_FangIdle(void)
     self->direction = player1->position.x < self->position.x;
 
     if (!--self->timer) {
-        RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 1, &self->animator, true, 0);
+        RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 1, &self->animator, true, 0);
         self->state = HeavyMystic_StateBoss_FangTell;
     }
 
@@ -1055,7 +1055,7 @@ void HeavyMystic_StateBoss_FangTell(void)
         self->velocity.x = RSDK.Rand(0, 2) != 0 ? -0x10000 : 0x10000;
         self->velocity.y = -0x50000;
         self->attackID   = 8;
-        RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 2, &self->animator, true, 0);
+        RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 2, &self->animator, true, 0);
         self->state = HeavyMystic_StateBoss_FangHop;
     }
 
@@ -1089,14 +1089,14 @@ void HeavyMystic_StateBoss_FangHop(void)
         if (--self->attackID > 0) {
             self->velocity.y = -0x50000;
             self->velocity.x = RSDK.Rand(0, 2) != 0 ? -0x10000 : 0x10000;
-            RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 2, &self->animator, true, 0);
+            RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 2, &self->animator, true, 0);
             self->state = HeavyMystic_StateBoss_FangHop;
         }
         else {
             self->timer      = 15;
             self->velocity.x = 0;
             self->velocity.y = 0;
-            RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 0, &self->animator, true, 0);
+            RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 0, &self->animator, true, 0);
             self->state = HeavyMystic_StateBoss_FangIdle;
         }
     }
@@ -1119,7 +1119,7 @@ void HeavyMystic_StateBoss_FangHop(void)
     HeavyMystic_CheckPlayerCollisions_Fang();
 }
 
-void HeavyMystic_StateBoss_RougeHit(void)
+void HeavyMystic_StateBoss_RogueHit(void)
 {
     RSDK_THIS(HeavyMystic);
 
@@ -1171,12 +1171,12 @@ void HeavyMystic_StateBoss_BarkIdle(void)
 
         if (self->attackID == 1) {
             self->timer = 240;
-            RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 14, &self->animator, true, 0);
+            RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 14, &self->animator, true, 0);
             self->state = HeavyMystic_StateBoss_BarkPounding;
         }
         else {
             self->attackID = 1;
-            RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 13, &self->animator, true, 0);
+            RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 13, &self->animator, true, 0);
             self->state = HeavyMystic_StateBoss_BarkJump;
         }
     }
@@ -1202,7 +1202,7 @@ void HeavyMystic_StateBoss_BarkPounding(void)
         self->timer      = 15;
         self->velocity.x = 0;
         self->velocity.y = 0;
-        RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 12, &self->animator, true, 0);
+        RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 12, &self->animator, true, 0);
         self->state = HeavyMystic_StateBoss_BarkIdle;
     }
 
@@ -1244,7 +1244,7 @@ void HeavyMystic_StateBoss_BarkJump(void)
 
     if (self->velocity.y > 0 && RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x200000, true)) {
         self->timer = 15;
-        RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 12, &self->animator, true, 0);
+        RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 12, &self->animator, true, 0);
         self->state = HeavyMystic_StateBoss_BarkIdle;
     }
 
@@ -1265,12 +1265,12 @@ void HeavyMystic_StateBoss_BeanIdle(void)
         self->velocity.y = -0x68000;
 
         if (self->attackID == 1) {
-            RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 8, &self->animator, true, 0);
+            RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 8, &self->animator, true, 0);
             self->state = HeavyMystic_StateBoss_BeanBomb1Throw;
         }
         else {
             self->attackID = 1;
-            RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 6, &self->animator, true, 0);
+            RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 6, &self->animator, true, 0);
             self->state = HeavyMystic_StateBoss_BeanJump;
         }
     }
@@ -1304,7 +1304,7 @@ void HeavyMystic_StateBoss_BeanBomb1Throw(void)
 
     if (self->animator.frameID == self->animator.frameCount - 1) {
         self->attackID = 1;
-        RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 7, &self->animator, true, 0);
+        RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 7, &self->animator, true, 0);
         self->state = HeavyMystic_StateBoss_BeanBomb2Throw;
     }
 
@@ -1340,7 +1340,7 @@ void HeavyMystic_StateBoss_BeanBomb2Throw(void)
         self->timer      = 5;
         self->velocity.x = 0;
         self->velocity.y = 0;
-        RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 5, &self->animator, true, 0);
+        RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 5, &self->animator, true, 0);
         self->state = HeavyMystic_StateBoss_BeanIdle;
     }
 
@@ -1375,13 +1375,13 @@ void HeavyMystic_StateBoss_BeanJump(void)
             self->timer      = 15;
             self->velocity.x = 0;
             self->velocity.y = 0;
-            RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 5, &self->animator, true, 0);
+            RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 5, &self->animator, true, 0);
             self->state = HeavyMystic_StateBoss_BeanIdle;
         }
         else {
             self->velocity.y = -0x50000;
             self->velocity.x = RSDK.Rand(0, 2) != 0 ? -0x10000 : 0x10000;
-            RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 6, &self->animator, true, 0);
+            RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 6, &self->animator, true, 0);
         }
     }
 
@@ -1761,7 +1761,7 @@ void HeavyMystic_EditorDraw(void)
 void HeavyMystic_EditorLoad(void)
 {
     HeavyMystic->aniFrames     = RSDK.LoadSpriteAnimation("MSZ/HeavyMystic.bin", SCOPE_STAGE);
-    HeavyMystic->rouguesFrames = RSDK.LoadSpriteAnimation("MSZ/Rogues.bin", SCOPE_STAGE);
+    HeavyMystic->roguesFrames = RSDK.LoadSpriteAnimation("MSZ/Rogues.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(HeavyMystic, type);
     RSDK_ENUM_VAR("Mischief", MYSTIC_MISCHIEF);
