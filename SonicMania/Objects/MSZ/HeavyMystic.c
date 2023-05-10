@@ -318,14 +318,14 @@ void HeavyMystic_CheckPlayerCollisions_Bark(void)
                 }
                 else
 #endif	
-					if (Player_CheckBossHit(player, self)) {
+                    if (Player_CheckBossHit(player, self)) {
 						
-					RSDK.PlaySfx(HeavyMystic->sfxImpact, false, 255);
+                    RSDK.PlaySfx(HeavyMystic->sfxImpact, false, 255);
 
-					self->velocity.x = player->position.x < self->position.x ? 0x20000 : -0x20000;
-					self->velocity.y = -0x40000;
-					RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 15, &self->animator, true, 0);
-					self->state = HeavyMystic_StateBoss_RogueHit;
+                    self->velocity.x = player->position.x < self->position.x ? 0x20000 : -0x20000;
+                    self->velocity.y = -0x40000;
+                    RSDK.SetSpriteAnimation(HeavyMystic->roguesFrames, 15, &self->animator, true, 0);
+                    self->state = HeavyMystic_StateBoss_RogueHit;
                 }
             }
         }
