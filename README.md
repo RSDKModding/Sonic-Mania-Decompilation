@@ -23,7 +23,7 @@ If you want to transfer your save from the official PC versions, you can just co
 * Added all content from all released versions of the game. Including: 1.00 (Console initial release), 1.03 (PC initial release) & 1.06 (Plus update)
 
 # How to Build
-Most platforms will heavily encourage you to build it in conjunction with RSDKv5. However, there are some options available for some platforms if you wish to build separately.
+This repo includes everything you need for Sonic Mania.
 
 ## Windows
 Open SonicMania.sln and build the project you wish to build.
@@ -31,16 +31,70 @@ Open SonicMania.sln and build the project you wish to build.
   * Adversely, projects without `All` compile each object using their separate source files. Use for JIT-compiling.
 * The version you choose **must match up** with the RSDKv5 version you run. A v5U executable cannot run a v5 Mania, etc.
 
-## Linux/Make-like systems
-The makefile is a trimmed down version of the RSDKv5 makefile that only supports game compilation.
-By default, unlike the RSDK makefile, this will look for the default game name of `SonicMania` and use it as source and compile as such. Pass `GAME_NAME` to the makefile to change it/
+## Linux/Make-like systems (+for Switch)
+If you are building for Switch, you'll need [devkitPro](https://devkitpro.org/) and GLAD, install GLAD with `sudo dkp-pacman -S switch-glad`.
+
+### Linux dependencies:
+- **pacman (Arch):** `sudo pacman -S base-devel glew glfw libtheora zlib sdl2 portaudio`
+- **apt (Debian/Ubuntu):** `sudo apt install build-essential libglew-dev libglfw3-dev libtheora-dev zlib1g-dev libsdl2-dev portaudio19-dev`
+- **rpm (Fedora):** `sudo dnf install make gcc glew-devel glfw-devel libtheora-devel zlib-devel SDL2-devel portaudio`
+- your favorite package manager here, [make a pull request](https://github.com/Rubberduckycooly/Sonic-Mania-Decompilation/fork) <3 (also update RSDKv5U!)
+
+### Compiling
+
+Compiling is as simple as typing the following:
+```
+mkdir build
+cd build
+cmake .. # arguments go here
+cmake --build ..
+```
+
+The following cmake arguments are available when compiling.
+For example, if you wanted to disable plus, the `cmake ..` step would look like `cmake -DRETRO_DISABLE_PLUS=on ..`.
+
+### RSDKv5 flags
+- `TRO_REVISION`= What revision to compile for. Takes an integer, defaults to `3` (RSDKv5U).
+- `RETRO_DISABLE_PLUS`= What it says on the tin. Takes a boolean (on/off); build with `=on` when compiling for distribution. Defaults to `=off`.
+- `RETRO_MOD_LOADER`= Enables or disables the mod loader. Takes a boolean, defaults to `=on`.
+- `RETRO_MOD_LOADER_VER`= Manually sets the mod loader version. Takes a string, defaults to `latest`.
+
+### Sonic Mania flags
+- `WITH_RSDK`= Whether or not RSDKv5 is built alongside Sonic Mania. Takes a boolean, defaults to `=on`.
+- `GAME_STATIC`= How the libs are handled. Takes a string, defaults depend on build target. Usually fine to leave alone.
+- `MANIA_FIRST_RELEASE`= Another boolean. Builds the first release of Sonic Mania when set to `=on`.
+- `MANIA_PRE_PLUS`= A boolean. Builds the pre-plus release of Sonic Mania when set to `=on`.
+- `GAME_VERSION`= An integer. Sets the game version to use. Defaults to 3 when `MANIA_PRE_PLUS` is enabled, and 6 otherwise (last steam release).
+
+After compiling your binary, stick your `libGame.so` and `Data.rsdk` files in the same directory, launch, and voila!
+
 
 ### Other platforms
-The only directly supported platforms are those listed above. Since Mania is very easy to build, requiring no dependencies, virtually any platform that can run RSDKv5 can compile Mania easily.
+The only directly supported platforms are those listed above. Since Mania is very easy to build, requiring no additional dependencies, virtually any platform that can run RSDKv5 can compile Mania easily.
 
 However, there are a multitude of ports listed in the **[RSDKv5 repository.](https://github.com/Rubberduckycooly/RSDKv5-Decompilation)**
 
 # FAQ
+### Q: Why aren't videos/filters working?
+A: There's a mod for it that you have to make. Refer to the following directions:
+
+Create the following directory structure inside your mods directory:
+```
+GLShaders/
+| Data/
+| | ...
+| mod.ini
+```
+
+Inside `mods/GLShaders/Data/`, copy the `RSDKv5/Shaders` directory, and inside the `mod.ini`, paste this:
+```
+Name=GLShaders
+Description=GL3 shaders to enable filters and stuff
+Author=Ducky
+Version=1.0.0
+TargetVersion=5
+```
+
 ### Q: I found a bug/I have a feature request!
 A: Submit an issue in the issues tab and we _might_ fix it in the main branch. Don't expect any major future releases, however.
 
