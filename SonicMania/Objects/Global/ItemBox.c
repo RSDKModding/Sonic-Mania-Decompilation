@@ -1205,6 +1205,7 @@ void ItemBox_EditorDraw(void)
     self->inkEffect = INK_ALPHA;
     self->alpha     = self->hidden ? 0x80 : 0x100;
 
+    RSDK.SetSpriteAnimation(ItemBox->aniFrames, 2, &self->contentsAnimator, true, self->type);
     RSDK.DrawSprite(&self->boxAnimator, NULL, false);
     RSDK.DrawSprite(&self->contentsAnimator, &self->contentsPos, false);
 
