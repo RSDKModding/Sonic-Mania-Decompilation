@@ -117,7 +117,7 @@ void MSBomb_State_SilverSonicExplode(void)
         bomb->velocity.y = yVel;
 
         bomb             = CREATE_ENTITY(MSBomb, INT_TO_VOID(true), self->position.x, self->position.y);
-        yVel             = -(yVel >> 1);
+        yVel             = yVel >> 1;
         bomb->velocity.x = -xVel;
         bomb->velocity.y = yVel;
 
