@@ -118,9 +118,9 @@ void CutsceneHBH_SetupColors(void)
         }
 
         case HBH_MYSTIC:
-        case HBH_ROUGE_FANG:
-        case HBH_ROUGE_BEAN:
-        case HBH_ROUGE_BARK: {
+        case HBH_ROGUE_FANG:
+        case HBH_ROGUE_BEAN:
+        case HBH_ROGUE_BARK: {
             self->colorSet      = 2;
             color tempPal[0x80] = { 0x200000, 0x300010, 0x400030, 0x600038, 0x800030, 0x901038, 0xA81038, 0xB82020, 0xB83828, 0xC04020, 0xC85020,
                                     0xD06020, 0xD88020, 0xE0A028, 0xE0C030, 0xE8D038, 0x004000, 0x086000, 0x087800, 0x209000, 0x38A800, 0x60C000,
@@ -241,7 +241,7 @@ void CutsceneHBH_LoadSprites(void)
             RSDK.SetSpriteAnimation(self->aniFrames, 16, &self->fxAnimator, true, 0);
             break;
 
-        case HBH_ROUGE_FANG:
+        case HBH_ROGUE_FANG:
             if (!self->aniFrames)
                 self->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Rogues.bin", SCOPE_STAGE);
 
@@ -249,7 +249,7 @@ void CutsceneHBH_LoadSprites(void)
             RSDK.SetSpriteAnimation(-1, 0, &self->fxAnimator, true, 0);
             break;
 
-        case HBH_ROUGE_BEAN:
+        case HBH_ROGUE_BEAN:
             if (!self->aniFrames)
                 self->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Rogues.bin", SCOPE_STAGE);
 
@@ -257,7 +257,7 @@ void CutsceneHBH_LoadSprites(void)
             RSDK.SetSpriteAnimation(-1, 0, &self->fxAnimator, true, 0);
             break;
 
-        case HBH_ROUGE_BARK:
+        case HBH_ROGUE_BARK:
             if (!self->aniFrames)
                 self->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Rogues.bin", SCOPE_STAGE);
 
@@ -583,9 +583,9 @@ void CutsceneHBH_EditorLoad(void)
     RSDK_ENUM_VAR("Magician", HBH_MYSTIC);
     RSDK_ENUM_VAR("Rider", HBH_RIDER);
     RSDK_ENUM_VAR("King", HBH_KING);
-    RSDK_ENUM_VAR("Fang", HBH_ROUGE_FANG);
-    RSDK_ENUM_VAR("Bean", HBH_ROUGE_BEAN);
-    RSDK_ENUM_VAR("Bark", HBH_ROUGE_BARK);
+    RSDK_ENUM_VAR("Fang", HBH_ROGUE_FANG);
+    RSDK_ENUM_VAR("Bean", HBH_ROGUE_BEAN);
+    RSDK_ENUM_VAR("Bark", HBH_ROGUE_BARK);
     RSDK_ENUM_VAR("King (Damaged)", HBH_KINGDAMAGED);
     RSDK_ENUM_VAR("Pile", HBH_PILE);
     RSDK_ENUM_VAR("King (TMZ2)", HBH_KINGTMZ2);

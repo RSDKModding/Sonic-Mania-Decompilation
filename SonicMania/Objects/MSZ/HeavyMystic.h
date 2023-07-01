@@ -39,7 +39,7 @@ struct ObjectHeavyMystic {
     uint16 sfxTransform;
     uint16 sfxAppear1;
     uint16 aniFrames;
-    uint16 rouguesFrames;
+    uint16 roguesFrames;
 };
 
 // Entity Class
@@ -51,11 +51,11 @@ struct EntityHeavyMystic {
     int32 timer;
     int32 invincibilityTimer;
     int32 health;
-    int32 rougeHealth;
+    int32 rogueHealth;
     int32 particleFXTimer;
     int32 unused;
     int32 attackID;
-    int32 rougeID;
+    int32 rogueID;
     Vector2 targetPos;
     Animator animator;
     Hitbox hitbox;
@@ -114,15 +114,15 @@ void HeavyMystic_StateBoss_BoxCloseDelay(void);
 void HeavyMystic_StateBoss_AwaitBoxClosing(void);
 void HeavyMystic_StateBoss_AwaitBoxClosed(void);
 void HeavyMystic_StateBoss_Transforming(void);
-void HeavyMystic_StateBoss_ShowRouge(void);
+void HeavyMystic_StateBoss_ShowRogue(void);
 void HeavyMystic_StateBoss_MysticReveal(void);
 void HeavyMystic_StateBoss_MoveToBoxY(void);
 void HeavyMystic_StateBoss_MoveToBoxX(void);
-void HeavyMystic_StateBoss_TransformBackIntoRouge(void);
+void HeavyMystic_StateBoss_TransformBackIntoRogue(void);
 void HeavyMystic_StateBoss_FangIdle(void);
 void HeavyMystic_StateBoss_FangTell(void);
 void HeavyMystic_StateBoss_FangHop(void);
-void HeavyMystic_StateBoss_RougeHit(void);
+void HeavyMystic_StateBoss_RogueHit(void);
 void HeavyMystic_StateBoss_BarkIdle(void);
 void HeavyMystic_StateBoss_BarkPounding(void);
 void HeavyMystic_StateBoss_BarkJump(void);
