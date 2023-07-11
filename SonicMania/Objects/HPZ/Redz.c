@@ -154,9 +154,9 @@ void Redz_State_Turn(void)
 
     if (self->timer < 59) {
         self->timer++;
-        self->state = Redz_State_Walk;
     }
     else {
+        self->state = Redz_State_Walk;
         self->timer = 0;
         RSDK.SetSpriteAnimation(Redz->aniFrames, 0, &self->animator, true, 0);
         self->animator.frameID = 0;
