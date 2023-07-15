@@ -232,7 +232,7 @@ void JuggleSaw_StateCrab_Handle(void)
         if (++self->sawTimer >= self->sawDelay) {
             bool32 throwSaw = true;
 
-            if (!self->friends[0] || self->friends[0]->classID != self->classID) {
+            if (!self->friends[0] || self->friends[0]->classID != JuggleSaw->classID) {
                 self->friendCount = 0;
                 foreach_active(JuggleSaw, newFriend)
                 {
@@ -245,27 +245,30 @@ void JuggleSaw_StateCrab_Handle(void)
 
                 if (self->friendCount) {
                     self->friends[0]  = self->friends[RSDK.Rand(0, self->friendCount)];
-                    bool32 throwCheck = false;
 
                     if (self->startDir >= FLIP_Y) {
-                        if (self->friends[0]->position.y < self->position.y) {
+                        if (self->position.y < self->friends[0]->position.y) {
+                            if ((self->direction & FLIP_Y))
+                                --self->sawTimer;
+                        }
+                        else {
                             if (!(self->direction & FLIP_Y))
                                 --self->sawTimer;
                         }
-                        else
-                            throwCheck = !(self->direction & FLIP_Y);
                     }
                     else {
-                        if (self->friends[0]->position.x < self->position.x) {
+                        if (self->position.x < self->friends[0]->position.x) {
+                            if ((self->direction & FLIP_X))
+                                --self->sawTimer;
+                        }
+                        else {
                             if (!(self->direction & FLIP_X))
                                 --self->sawTimer;
                         }
-                        else
-                            throwCheck = !(self->direction & FLIP_X);
                     }
 
                     throwSaw = false;
-                    if (throwCheck && self->sawTimer >= self->sawDelay)
+                    if (self->sawTimer >= self->sawDelay)
                         throwSaw = true;
                 }
                 else {
