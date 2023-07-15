@@ -38,17 +38,25 @@ typedef uint32 color;
 // CONSTANTS
 // -------------------------
 
-#define SCREEN_XMAX    (1280)
-#define SCREEN_YSIZE   (240)
+#ifndef SCREEN_XMAX
+#define SCREEN_XMAX (1280)
+#endif
+
+#ifndef SCREEN_YSIZE
+#define SCREEN_YSIZE (240)
+#endif
+
 #define SCREEN_YCENTER (SCREEN_YSIZE / 2)
 
 #define LAYER_COUNT     (8)
 #define DRAWGROUP_COUNT (16)
 
+#ifndef SCREEN_COUNT
 #if RETRO_REV02
 #define SCREEN_COUNT (4)
 #else
 #define SCREEN_COUNT (2)
+#endif
 #endif
 
 #define PLAYER_COUNT (4)
