@@ -323,7 +323,7 @@ void TimeAttackGate_CheckTouch(void)
             Zone->cameraBoundsR[p] = (self->position.x >> 16) + ScreenInfo[p].center.x;
 
             if (self->topBoundary)
-                Zone->cameraBoundsT[p] = (self->position.y) - ScreenInfo[p].center.y;
+                Zone->cameraBoundsT[p] = (self->position.y >> 16) - ScreenInfo[p].center.y;
         }
     }
 }
