@@ -32,7 +32,7 @@ struct EntityTimeAttackGate {
     int32 extendBottom;
     Vector2 boundsSize;
     Vector2 boundsOffset;
-    int32 topBoundary;
+    bool32 topBoundary;
     int32 timer;
     bool32 hasFinished;
     int32 baseRotation;
