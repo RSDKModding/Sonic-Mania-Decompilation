@@ -102,7 +102,9 @@ typedef enum {
     SLOT_PLAYER3    = 2,
     SLOT_PLAYER4    = 3,
     SLOT_POWERUP1   = 4,
+    SLOT_PLAYER5    = 4, // Used in TMZ2Outro
     SLOT_POWERUP2   = 5,
+    SLOT_PLAYER6    = 5, // Used in TMZ2Outro
     SLOT_POWERUP3   = 6,
     SLOT_POWERUP4   = 7,
     SLOT_POWERUP1_2 = 8,
