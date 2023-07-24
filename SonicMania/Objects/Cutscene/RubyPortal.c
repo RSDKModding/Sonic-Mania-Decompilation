@@ -184,9 +184,11 @@ void RubyPortal_HandleTileDestruction(void)
                 }
 
                 spawnY += 0x100000;
+                ty++;
             }
 
             spawnX += 0x100000;
+            tx++;
         }
     }
 }
