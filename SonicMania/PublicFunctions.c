@@ -1908,6 +1908,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Player_HurtFlip);
     ADD_PUBLIC_FUNC(Player_ElementHurt);
     ADD_PUBLIC_FUNC(Player_CheckAttacking);
+    ADD_PUBLIC_FUNC(Player_CheckAttackingNoInvTimer);
     ADD_PUBLIC_FUNC(Player_CheckBadnikTouch);
     ADD_PUBLIC_FUNC(Player_CheckBadnikBreak);
     ADD_PUBLIC_FUNC(Player_CheckBossHit);

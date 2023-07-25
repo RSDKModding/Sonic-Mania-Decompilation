@@ -2440,6 +2440,30 @@ bool32 Player_CheckAttacking(EntityPlayer *player, void *e)
 
     return attacking;
 }
+// This is identical to Player_CheckAttacking, except it's not checking for the player invincible timer.
+bool32 Player_CheckAttackingNoInvTimer(EntityPlayer *player, void *e)
+{
+    Entity *entity   = (Entity *)e;
+    int32 anim       = player->animator.animationID;
+    bool32 attacking = anim == ANI_JUMP || anim == ANI_SPINDASH;
+    switch (player->characterID) {
+        case ID_SONIC: attacking |= anim == ANI_DROPDASH; break;
+#if MANIA_USE_PLUS
+        case ID_MIGHTY: attacking |= anim == ANI_HAMMERDROP; break;
+#endif
+        case ID_TAILS:
+            if (!attacking && entity) {
+                attacking = anim == ANI_FLY || anim == ANI_FLY_TIRED || anim == ANI_FLY_LIFT;
+                if (player->position.y <= entity->position.y)
+                    return false;
+            }
+            break;
+        case ID_KNUCKLES: attacking |= anim == ANI_GLIDE || anim == ANI_GLIDE_SLIDE; break;
+        default: break;
+    }
+
+    return attacking;
+}
 bool32 Player_CheckBadnikTouch(EntityPlayer *player, void *e, Hitbox *entityHitbox)
 {
     Entity *entity = (Entity *)e;
