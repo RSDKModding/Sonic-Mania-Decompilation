@@ -89,7 +89,7 @@ void FlowerPod_State_Pod(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckAttacking(player, self) && Player_CheckBadnikTouch(player, self, &FlowerPod->hitboxPod))
+        if (Player_CheckAttackingNoInvTimer(player, self) && Player_CheckBadnikTouch(player, self, &FlowerPod->hitboxPod))
             self->state = FlowerPod_State_Exploding;
     }
 }

@@ -80,7 +80,7 @@ void TurretSwitch_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &ItemBox->hitboxItemBox)) {
-            if (Player_CheckAttacking(player, self) || player->state == Ice_PlayerState_Frozen) {
+            if (Player_CheckAttackingNoInvTimer(player, self) || player->state == Ice_PlayerState_Frozen) {
                 TurretSwitch_Break(self, player);
                 foreach_break;
             }

@@ -155,13 +155,7 @@ void SilverSonic_CheckPlayerCollisions_Ball(void)
         foreach_active(Player, player)
         {
             if (Player_CheckBadnikTouch(player, self, self->innerBox)) {
-                // Player_CheckAttacking is inlined here in the original, but the player->invincibleTimer != 0 check is removed.
-                // Instead of copying the entire function for removing a single condition, we'll manually set it to 0 before the call, then set it back.
-                int32 saveInvincibilityTimer = player->invincibleTimer;
-                player->invincibleTimer = 0;
-                if (Player_CheckAttacking(player, self)) {
-                    player->invincibleTimer = saveInvincibilityTimer;
-
+                if (Player_CheckAttackingNoInvTimer(player, self)) {
                     if (self->onGround) {
                         if (abs(player->velocity.x) <= 0x30000) {
                             player->groundVel  = self->groundVel;
@@ -213,7 +207,6 @@ void SilverSonic_CheckPlayerCollisions_Ball(void)
                     RSDK.PlaySfx(SilverSonic->sfxRebound, false, 255);
                 }
                 else {
-                    player->invincibleTimer = saveInvincibilityTimer;
                     Player_Hurt(player, self);
                 }
             }
