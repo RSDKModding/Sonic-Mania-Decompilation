@@ -171,12 +171,12 @@ bool32 PSZ2Outro_Cutscene_RubyActivated(EntityCutsceneSeq *host)
 {
     RSDK_THIS(PSZ2Outro);
 
-    EntityPSZEggman *eggman = self->eggman;
+    EntityPhantomRuby *ruby = self->ruby;
 
     if (!host->timer)
-        PhantomRuby_SetupFlash(self->ruby);
+        PhantomRuby_SetupFlash(ruby);
 
-    if (eggman->ruby) {
+    if (ruby->flashFinished) {
         PhantomRuby_PlaySfx(RUBYSFX_REDCUBE);
         return true;
     }
@@ -191,13 +191,13 @@ bool32 PSZ2Outro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);                                                                                       \
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);                                                                                       \
 
-    EntityPSZEggman *eggman = self->eggman;
+    EntityPhantomRuby *ruby = self->ruby;
     EntityFXRuby *fxRuby    = NULL;
     if (host->timer) {
         fxRuby = self->fxRuby;
     }
     else {
-        fxRuby            = CREATE_ENTITY(FXRuby, NULL, eggman->position.x, eggman->position.y);
+        fxRuby            = CREATE_ENTITY(FXRuby, NULL, ruby->position.x, ruby->position.y);
         fxRuby->drawGroup = Zone->playerDrawGroup[1];
         self->fxRuby      = fxRuby;
         Camera_ShakeScreen(0, 4, 4);
@@ -238,7 +238,7 @@ bool32 PSZ2Outro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
 
                         int32 valX = (player->position.x - player->position.x) >> 3;
                         int32 valY =
-                            (0xA00 * RSDK.Sin256(2 * ((i * 0x40) + host->timer - host->storedTimer)) + (eggman->position.y - 0x200000) - player->position.y)
+                            (0xA00 * RSDK.Sin256(2 * ((i * 0x40) + host->timer - host->storedTimer)) + (ruby->position.y - 0x200000) - player->position.y)
                             >> 3;
 
                         player->position.x += valX;
