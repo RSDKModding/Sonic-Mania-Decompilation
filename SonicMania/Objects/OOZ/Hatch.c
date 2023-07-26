@@ -364,7 +364,6 @@ void Hatch_State_Surfacing(void)
     if (self->timer >= self->depth) {
         self->timer      = 0;
         self->visible    = true;
-        self->position.x = player->position.x;
         self->position.y = player->position.y + 0x80000;
 
         RSDK.SetSpriteAnimation(Hatch->aniFrames, 1, &self->hatchAnimator, false, 0);
