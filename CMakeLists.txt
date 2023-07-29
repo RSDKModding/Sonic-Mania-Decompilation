@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 3.13)
 project(SonicMania)
 
-option(WITH_RSDK "Whether or not to build with RSDKv5. Defalts to true" ON)
+option(WITH_RSDK "Whether or not to build with RSDKv5. Defaults to true" ON)
 
 if(NOT DEFINED GAME_STATIC)
     if(WIN32)
         set(GAME_STATIC OFF)
-    elseif(ANDROID)
-        set(GAME_STATIC ON) # just to keep the libraries uncluttered
-    elseif(CMAKE_SYSTEM_NAME STREQUAL NintendoSwitch)
+    elseif(UNIX)
+        set(GAME_STATIC OFF)
+    else()
         set(GAME_STATIC ON)
     endif()
 endif()
@@ -34,11 +34,20 @@ set(GAME_OUTPUT_NAME "Game" CACHE STRING "The name of the built library")
 
 option(GAME_INCLUDE_EDITOR "Whether or not to include editor functions. Defaults to true" ON)
 
-# mmmmeh
-set(GAME_SOURCES
-    ${GAME_NAME}/Game.c
-    ${GAME_NAME}/Objects/All.c
-)
+option(GAME_INCREMENTAL_BUILD "Whether or not to build all objects separately (for quicker dev-->build iterations). Defaults to false." OFF)
+
+if(GAME_INCREMENTAL_BUILD)
+    include(${GAME_NAME}/Objects.cmake)
+    set(GAME_SOURCES
+        ${GAME_NAME}/Game.c
+        ${GENERATED_SOURCES}
+    )
+else()
+    set(GAME_SOURCES
+        ${GAME_NAME}/Game.c
+        ${GAME_NAME}/Objects/All.c
+    )
+endif()
 
 if(GAME_STATIC)
     add_library(${GAME_NAME} STATIC ${GAME_SOURCES})
@@ -57,8 +66,6 @@ endif()
 
 set_target_properties(${GAME_NAME} PROPERTIES OUTPUT_NAME ${GAME_OUTPUT_NAME})
 
-message(NOTICE "static " ${GAME_STATIC})
-
 if(WITH_RSDK)
     set(RSDK_PATH dependencies/RSDKv5 CACHE STRING "The path to look for RSDKv5 if using WITH_RSDK.")
 
@@ -76,10 +83,10 @@ else()
 
     target_compile_definitions(${GAME_NAME} PRIVATE
         RETRO_REVISION=${RETRO_REVISION}
-        
+
         RETRO_USE_MOD_LOADER=$<BOOL:${RETRO_MOD_LOADER}>
         RETRO_MOD_LOADER_VER=${RETRO_MOD_LOADER_VER}
-        
+
         GAME_INCLUDE_EDITOR=$<BOOL:${GAME_INCLUDE_EDITOR}>
 
         MANIA_PREPLUS=$<BOOL:${MANIA_PREPLUS}>
