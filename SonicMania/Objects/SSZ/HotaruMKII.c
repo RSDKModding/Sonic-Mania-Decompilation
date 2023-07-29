@@ -326,14 +326,14 @@ void HotaruMKII_State_FlyOnScreen(void)
                 moveFinished     = 1;
                 self->position.x = x;
             }
-        }
-
-        if (self->moveAcceleration.x > 0) {
+        } else if (self->moveAcceleration.x >= 1) {
             int32 x = player->position.x + self->curOffset.x;
             if (self->position.x >= x) {
                 moveFinished     = 1;
                 self->position.x = x;
             }
+        } else {
+            moveFinished = 1;
         }
 
         if (self->moveAcceleration.y < 0) {
@@ -342,14 +342,14 @@ void HotaruMKII_State_FlyOnScreen(void)
                 moveFinished++;
                 self->position.y = y;
             }
-        }
-
-        if (self->moveAcceleration.y > 0) {
+        } else if (self->moveAcceleration.y > 0) {
             int32 y = player->position.y + self->curOffset.y;
             if (self->position.y >= y) {
                 moveFinished++;
-                self->position.x = y;
+                self->position.y = y;
             }
+        } else {
+            moveFinished++;
         }
 
         if (moveFinished == 2) {
