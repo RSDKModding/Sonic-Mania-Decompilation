@@ -34,11 +34,20 @@ set(GAME_OUTPUT_NAME "Game" CACHE STRING "The name of the built library")
 
 option(GAME_INCLUDE_EDITOR "Whether or not to include editor functions. Defaults to true" ON)
 
-# mmmmeh
-set(GAME_SOURCES
-    ${GAME_NAME}/Game.c
-    ${GAME_NAME}/Objects/All.c
-)
+option(GAME_INCREMENTAL_BUILD "Whether or not to build all objects separately (for quicker dev-->build iterations). Defaults to false." OFF)
+
+if(GAME_INCREMENTAL_BUILD)
+    include(${GAME_NAME}/Objects.cmake)
+    set(GAME_SOURCES
+        ${GAME_NAME}/Game.c
+        ${GENERATED_SOURCES}
+    )
+else()
+    set(GAME_SOURCES
+        ${GAME_NAME}/Game.c
+        ${GAME_NAME}/Objects/All.c
+    )
+endif()
 
 if(GAME_STATIC)
     add_library(${GAME_NAME} STATIC ${GAME_SOURCES})
