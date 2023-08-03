@@ -6582,17 +6582,16 @@ void Player_Input_P2_AI(void)
 
         uint8 autoJump = 0;
         if (self->animator.animationID == ANI_PUSH) {
+            ++Player->autoJumpTimer;
             if (leader->direction == self->direction && leader->animator.animationID == ANI_PUSH)
                 Player->autoJumpTimer = 0;
-            else
-                autoJump = ++Player->autoJumpTimer < 30 ? 1 : 0;
+
+            autoJump = Player->autoJumpTimer < 30 ? 1 : 0;
         }
         else {
             if (self->position.y - Player->targetLeaderPosition.y <= 0x200000) {
                 Player->autoJumpTimer = 0;
-                if (self->controlLock > 0 && abs(self->groundVel) < 0x8000)
-                    self->stateInput = Player_Input_AI_SpindashPt1;
-                autoJump = 2;
+                autoJump = 2; // Skip autoJump
             }
             else {
                 ++Player->autoJumpTimer;
