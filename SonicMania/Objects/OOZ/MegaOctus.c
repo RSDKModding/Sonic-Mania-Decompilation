@@ -1528,7 +1528,7 @@ void MegaOctus_TilePlatformState_RiseOuttaOil(void)
         foreach_active(Player, player)
         {
             if ((1 << player->playerID) & self->stoodPlayers) {
-                if (player->state != OOZSetup_PlayerState_OilPool) {
+                if (player->state == OOZSetup_PlayerState_OilPool) {
                     player->state = Player_State_Ground;
                     OOZSetup->activePlayers &= ~(1 << player->playerID);
                 }
