@@ -113,11 +113,19 @@ void CutsceneSeq_NewState(int32 nextState, EntityCutsceneSeq *seq)
     }
 }
 #if MANIA_USE_PLUS
-void CutsceneSeq_SetSkipType(uint8 type, void (*callback)(void))
+void CutsceneSeq_SetSkipType(uint8 type)
 {
     EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     if (seq->classID) {
-        seq->skipType     = type;
+        seq->skipType = type;
+    }
+}
+
+void CutsceneSeq_SetSkipTypeCallback(void (*callback)(void))
+{
+    EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
+    if (seq->classID) {
+        seq->skipType     = SKIPTYPE_CALLBACK;
         seq->skipCallback = callback;
     }
 }

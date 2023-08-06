@@ -25,7 +25,7 @@ void ERZStart_Update(void)
                                           ERZStart_Cutscene_Fight, StateMachine_None);
 
 #if MANIA_USE_PLUS
-                CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED, StateMachine_None);
+                CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED);
 #endif
 
                 self->activated = true;

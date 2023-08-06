@@ -39,7 +39,7 @@ void EncoreIntro_Update(void)
         self->skipPart2 = false;
 
 #if MANIA_USE_PLUS
-        CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED, StateMachine_None);
+        CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED);
 #endif
     }
 }
@@ -146,7 +146,7 @@ void EncoreIntro_SetupCutscene(void)
                               EncoreIntro_Cutscene_AwaitSaveFinish, StateMachine_None);
 
 #if MANIA_USE_PLUS
-    CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED, StateMachine_None);
+    CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED);
 #endif
 }
 

@@ -709,6 +709,8 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(CutsceneSeq_NewState);
 #if MANIA_USE_PLUS
     ADD_PUBLIC_FUNC(CutsceneSeq_CheckSkip);
+    ADD_PUBLIC_FUNC(CutsceneSeq_SetSkipType);
+    ADD_PUBLIC_FUNC(CutsceneSeq_SetSkipTypeCallback);
 #endif
     ADD_PUBLIC_FUNC(CutsceneSeq_GetEntity);
     ADD_PUBLIC_FUNC(CutsceneSeq_LockPlayerControl);

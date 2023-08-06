@@ -18,7 +18,7 @@ void PSZ2Outro_Update(void)
                               PSZ2Outro_Cutscene_LoadSSZ1, StateMachine_None);
 
 #if MANIA_USE_PLUS
-    CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN, StateMachine_None);
+    CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN);
 #endif
 
     HUD_MoveOut();

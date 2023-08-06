@@ -75,7 +75,7 @@ void TMZ2Outro_SetupCutscene(void)
 #endif
 
 #if MANIA_USE_PLUS
-    CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED, StateMachine_None);
+    CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED);
 #endif
 }
 

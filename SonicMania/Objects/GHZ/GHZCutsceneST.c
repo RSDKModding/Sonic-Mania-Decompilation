@@ -26,7 +26,7 @@ void GHZCutsceneST_Update(void)
                                           GHZCutsceneST_Cutscene_SetupGHZ1, StateMachine_None);
 
 #if MANIA_USE_PLUS
-                CutsceneSeq_SetSkipType(SKIPTYPE_CALLBACK, GHZCutsceneST_Cutscene_SkipCB);
+                CutsceneSeq_SetSkipTypeCallback(GHZCutsceneST_Cutscene_SkipCB);
 #endif
 
                 self->activated = true;

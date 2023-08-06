@@ -23,7 +23,7 @@ void SSZ1Intro_Update(void)
                                       StateMachine_None);
 
 #if MANIA_USE_PLUS
-            CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED, StateMachine_None);
+            CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED);
 #endif
         }
     }

@@ -174,7 +174,7 @@ void LRZ3Outro_StageFinish_EndAct2ST(void)
         CutsceneSeq_StartSequence(cutscene, LRZ3Outro_Cutscene_StopPlayers, LRZ3Outro_Cutscene_LightUpLittlePlanet, StateMachine_None);
 
 #if MANIA_USE_PLUS
-        CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN, StateMachine_None);
+        CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN);
 #endif
 
         HUD_MoveOut();

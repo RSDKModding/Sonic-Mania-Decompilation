@@ -101,7 +101,7 @@ void MSZCutsceneST_SetupCutscene(void)
                               MSZCutsceneST_Cutscene_SetupMSZ2, StateMachine_None);
 
 #if MANIA_USE_PLUS
-    CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED, StateMachine_None);
+    CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED);
 #endif
 }
 

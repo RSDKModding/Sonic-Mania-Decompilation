@@ -18,7 +18,7 @@ void LRZ3Cutscene_Update(void)
     CutsceneSeq_StartSequence(self, LRZ3Cutscene_Cutscene_FadeIn, LRZ3Cutscene_Cutscene_RunRight, StateMachine_None);
 
 #if MANIA_USE_PLUS
-    CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED, StateMachine_None);
+    CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED);
 #endif
 
     self->active = ACTIVE_NEVER;

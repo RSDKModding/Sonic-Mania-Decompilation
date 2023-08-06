@@ -19,7 +19,7 @@ void OOZ1Outro_Update(void)
                                   OOZ1Outro_Cutscene_BeginAct, StateMachine_None);
 
 #if MANIA_USE_PLUS
-        CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED, StateMachine_None);
+        CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED);
 #endif
     }
 
