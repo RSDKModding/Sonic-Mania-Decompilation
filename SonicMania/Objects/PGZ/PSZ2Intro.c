@@ -101,8 +101,7 @@ bool32 PSZ2Intro_Cutscene_ShowActClear(EntityCutsceneSeq *host)
 {
     if (ActClear->finished) {
 #if MANIA_USE_PLUS
-        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
-            RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+        CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN);
 #endif
 
         return true;

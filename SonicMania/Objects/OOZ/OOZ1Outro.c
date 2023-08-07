@@ -129,8 +129,7 @@ bool32 OOZ1Outro_Cutscene_PostActClearSetup(EntityCutsceneSeq *host)
         Zone->cameraBoundsB[0] = self->boundsB;
 
 #if MANIA_USE_PLUS
-        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
-            RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+        CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN);
 #endif
         return true;
     }

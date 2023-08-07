@@ -19,9 +19,7 @@ void EncoreIntro_Update(void)
         {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
                 EncoreIntro_SetupCutscene();
-                EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
-                if (seq->classID)
-                    seq->skipType = SKIPTYPE_RELOADSCN;
+                CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN);
                 self->activated = true;
             }
         }
@@ -723,11 +721,7 @@ bool32 EncoreIntro_Cutscene_AIZEncoreTutorial(EntityCutsceneSeq *host)
             player->velocity.x = 0x20000;
         self->velocity.x = player->velocity.x;
         camera->target   = (Entity *)self;
-        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID) {
-            EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
-            cutsceneSeq->skipType          = SKIPTYPE_CALLBACK;
-            cutsceneSeq->skipCallback      = AIZEncoreTutorial_State_ReturnToCutscene;
-        }
+        CutsceneSeq_SetSkipTypeCallback(AIZEncoreTutorial_State_ReturnToCutscene);
         HUD_MoveOut();
         return true;
     }
