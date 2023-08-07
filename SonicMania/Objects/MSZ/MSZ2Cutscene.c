@@ -91,8 +91,8 @@ bool32 MSZ2Cutscene_Cutscene_GoToPistol(EntityCutsceneSeq *host)
         MSZ2Cutscene_GetPistolPtr();
         parallaxSprite->visible = true;
         parallaxSprite->drawFX  = FX_SCALE;
-        parallaxSprite->scale.x = 0x200;
-        parallaxSprite->scale.y = 0x200;
+        parallaxSprite->scale.x = 0x100;
+        parallaxSprite->scale.y = 0x100;
         prison->notSolid        = true;
 
         Vector2 size;

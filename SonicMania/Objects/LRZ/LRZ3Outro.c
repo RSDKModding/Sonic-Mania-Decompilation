@@ -184,7 +184,10 @@ void LRZ3Outro_StageFinish_EndAct2ST(void)
 
 bool32 LRZ3Outro_Cutscene_StopPlayers(EntityCutsceneSeq *host)
 {
-    foreach_active(Player, player) { player->state = Player_State_Static; }
+    foreach_active(Player, player) {
+        player->state = Player_State_Static;
+        player->stateInput = StateMachine_None;
+    }
 
     return true;
 }
