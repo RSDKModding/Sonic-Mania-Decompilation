@@ -363,9 +363,7 @@ bool32 ERZOutro_Cutscene_EnterPortal(EntityCutsceneSeq *host)
         ERZOutro->rubyPortalAcceleration = 0;
 
         host->storedTimer = RSDK.ATan2(player1->position.x - portal->position.x, player1->position.y - portal->position.y) << 16;
-        int32 rx          = abs(portal->position.x - player1->position.x) >> 16;
-        int32 ry          = abs(portal->position.y - player1->position.y) >> 16;
-        host->storedValue = MathHelpers_SquareRoot(rx * rx + ry * ry) << 16;
+        host->storedValue = MathHelpers_Distance(player1->position.x, player1->position.y, portal->position.x, portal->position.y);
 
         player1->drawFX |= FX_SCALE;
         player1->scale.x = 0x200;
@@ -386,9 +384,7 @@ bool32 ERZOutro_Cutscene_EnterPortal(EntityCutsceneSeq *host)
             ruby->startPos.y = ruby->position.y;
 
             ERZOutro->rubyPortalAngle  = RSDK.ATan2(ruby->position.x - portal->position.x, ruby->position.y - portal->position.y) << 16;
-            int32 rx                   = abs(portal->position.x - ruby->position.x) >> 16;
-            int32 ry                   = abs(portal->position.y - ruby->position.y) >> 16;
-            ERZOutro->rubyPortalRadius = MathHelpers_SquareRoot(rx * rx + ry * ry) << 16;
+            ERZOutro->rubyPortalRadius = MathHelpers_Distance(ruby->position.x, ruby->position.y, portal->position.x, portal->position.y);
 
             ruby->drawFX |= FX_SCALE;
             ruby->scale.x = 0x200;
