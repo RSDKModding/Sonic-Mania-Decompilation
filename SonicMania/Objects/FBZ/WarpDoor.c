@@ -45,7 +45,7 @@ void WarpDoor_Update(void)
                         newPos.x = tag->position.x;
                         newPos.y = tag->position.y;
                         if (!self->warpToCenter) {
-                            newPos.x += relPosY;
+                            newPos.x += relPosX;
                             newPos.y += relPosY;
                         }
 
