@@ -19,7 +19,7 @@ void SSZ1Outro_Update(void)
         CutsceneSeq_StartSequence(self, SSZ1Outro_Cutscene_TimeWarpRunway, SSZ1Outro_Cutscene_TimeWarp, StateMachine_None);
 
 #if MANIA_USE_PLUS
-        CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN, StateMachine_None);
+        CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN);
 #endif
     }
 }

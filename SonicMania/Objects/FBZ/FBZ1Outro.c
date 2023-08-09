@@ -75,7 +75,7 @@ void FBZ1Outro_StartCutscene(void)
                               FBZ1Outro_Cutscene_PrepareFBZ2, StateMachine_None);
 
 #if MANIA_USE_PLUS
-    CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED, StateMachine_None);
+    CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN);
 #endif
 }
 

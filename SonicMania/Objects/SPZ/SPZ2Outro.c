@@ -61,7 +61,7 @@ void SPZ2Outro_StartCutscene(void)
                               SPZ2Outro_Cutscene_FBZFlyAway, StateMachine_None);
 
 #if MANIA_USE_PLUS
-    CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN, StateMachine_None);
+    CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN);
 #endif
 
     HUD_MoveOut();

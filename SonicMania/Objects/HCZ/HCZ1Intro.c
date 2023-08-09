@@ -22,7 +22,7 @@ void HCZ1Intro_Update(void)
             CutsceneSeq_StartSequence(self, HCZ1Intro_Cutscene_Intro, StateMachine_None);
 
 #if MANIA_USE_PLUS
-            CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED, StateMachine_None);
+            CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED);
 #endif
         }
     }

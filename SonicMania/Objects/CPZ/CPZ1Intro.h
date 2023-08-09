@@ -38,6 +38,7 @@ void CPZ1Intro_EditorLoad(void);
 void CPZ1Intro_Serialize(void);
 
 // Extra Entity Functions
+void CPZ1Intro_SetupCutscene(void);
 void CPZ1Intro_Particle_ChemDrop(EntityDebris *debris);
 void CPZ1Intro_HandleRubyHover(EntityCutsceneSeq *cutsceneSequence, EntityPlayer *player1, EntityPlayer *player2, int32 targetY);
 

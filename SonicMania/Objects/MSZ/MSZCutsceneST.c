@@ -101,7 +101,7 @@ void MSZCutsceneST_SetupCutscene(void)
                               MSZCutsceneST_Cutscene_SetupMSZ2, StateMachine_None);
 
 #if MANIA_USE_PLUS
-    CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED, StateMachine_None);
+    CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED);
 #endif
 }
 
@@ -163,8 +163,7 @@ bool32 MSZCutsceneST_Cutscene_AwaitActFinish(EntityCutsceneSeq *host)
         }
 
 #if MANIA_USE_PLUS
-        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
-            RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_NEXTSCENE;
+        CutsceneSeq_SetSkipType(SKIPTYPE_NEXTSCENE);
 #endif
         return true;
     }

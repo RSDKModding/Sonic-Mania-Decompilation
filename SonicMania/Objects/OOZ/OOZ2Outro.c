@@ -113,7 +113,7 @@ void OOZ2Outro_State_SubFloat(void)
 
 void OOZ2Outro_CheckSkip(void)
 {
-    if (ControllerInfo->keyStart.press && !(SceneInfo->state & ENGINESTATE_REGULAR)) {
+    if (ControllerInfo->keyStart.press && (SceneInfo->state & ENGINESTATE_REGULAR)) {
         globals->suppressTitlecard = false;
         globals->suppressAutoMusic = false;
         globals->enableIntro       = false;

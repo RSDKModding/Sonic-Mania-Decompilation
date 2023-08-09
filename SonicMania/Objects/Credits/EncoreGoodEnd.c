@@ -22,7 +22,7 @@ void EncoreGoodEnd_Update(void)
                                           EncoreGoodEnd_Cutscene_ClinkGlasses, EncoreGoodEnd_Cutscene_KingAppear,
                                           EncoreGoodEnd_Cutscene_ThanksForPlaying, EncoreGoodEnd_Cutscene_FinishCutscene, StateMachine_None);
 #if MANIA_USE_PLUS
-                CutsceneSeq_SetSkipType(SKIPTYPE_CALLBACK, EncoreGoodEnd_Cutscene_SkipCB);
+                CutsceneSeq_SetSkipTypeCallback(EncoreGoodEnd_Cutscene_SkipCB);
 #endif
 
                 self->activated = true;

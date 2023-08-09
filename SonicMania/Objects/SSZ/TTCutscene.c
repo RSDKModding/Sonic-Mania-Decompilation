@@ -53,7 +53,7 @@ void TTCutscene_StartCutscene(void)
                               TTCutscene_Cutscene_NextScene, StateMachine_None);
 
 #if MANIA_USE_PLUS
-    CutsceneSeq_SetSkipType(SKIPTYPE_CALLBACK, TTCutscene_Cutscene_SkipCB);
+    CutsceneSeq_SetSkipTypeCallback(TTCutscene_Cutscene_SkipCB);
 #endif
 }
 

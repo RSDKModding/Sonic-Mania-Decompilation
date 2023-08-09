@@ -23,7 +23,7 @@ void TMZ1Outro_Update(void)
     }
 
 #if MANIA_USE_PLUS
-    CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN, StateMachine_None);
+    CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN);
 #endif
 
     self->active = ACTIVE_NEVER;

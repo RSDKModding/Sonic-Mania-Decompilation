@@ -19,10 +19,10 @@ void SPZ1Intro_Update(void)
         }
         else {
             self->activated = true;
-            CutsceneSeq_StartSequence(self, SPZ1Intro_Cutscene_SetupAct, SPZ1Intro_Cutscene_ExitPipe, SPZ1Intro_Cutscene_BeginAct1, NULL);
+            CutsceneSeq_StartSequence(self, SPZ1Intro_Cutscene_SetupAct, SPZ1Intro_Cutscene_ExitPipe, SPZ1Intro_Cutscene_BeginAct1, StateMachine_None);
 
 #if MANIA_USE_PLUS
-            CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED, StateMachine_None);
+            CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED);
 #endif
         }
     }

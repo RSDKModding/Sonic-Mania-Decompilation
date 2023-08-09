@@ -20,7 +20,7 @@ void SSZ3Cutscene_Update(void)
                                   SSZ3Cutscene_CutsceneOutro_LoadHCZ1, StateMachine_None);
 
 #if MANIA_USE_PLUS
-        CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN, StateMachine_None);
+        CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN);
 #endif
 
         HUD_MoveOut();
@@ -32,7 +32,7 @@ void SSZ3Cutscene_Update(void)
         CutsceneSeq_StartSequence(self, SSZ3Cutscene_CutsceneIntro_EnterStageLeft, SSZ3Cutscene_CutsceneIntro_PlayerRunLeft, StateMachine_None);
 
 #if MANIA_USE_PLUS
-        CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED, StateMachine_None);
+        CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED);
 #endif
 
         self->active = ACTIVE_NEVER;
