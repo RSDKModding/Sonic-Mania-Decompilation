@@ -299,9 +299,9 @@ void PaperRoller_HandleRollerCollisions(void)
     {
         int32 playerID = RSDK.GetEntitySlot(player);
         if (self->playerTimer[playerID] <= 0) {
-            int32 distX = abs(self->position.x - player->position.x);
-            int32 distY = abs(self->position.y - player->position.y);
-            if (MathHelpers_SquareRoot((distX >> 16) * (distX >> 16) + (distY >> 16) * (distY >> 16)) <= 40 && !self->playerTimer[playerID]) {
+            int32 distX = abs(self->position.x - player->position.x) >> 16;
+            int32 distY = abs(self->position.y - player->position.y) >> 16;
+            if (MathHelpers_SquareRoot(distX * distX + distY * distY) <= 40 && !self->playerTimer[playerID]) {
                 RSDK.PlaySfx(Player->sfxRelease, false, 255);
                 int32 angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
 

@@ -49,10 +49,10 @@ void PullChain_Update(void)
             if (!((1 << playerID) & self->activePlayers)) {
                 if (!(self->releasedPlayers & (1 << playerID))) {
                     if (!Current || !((1 << playerID) & Current->activePlayers)) {
-                        int32 x = abs(player->position.x - self->position.x);
-                        int32 y = abs((player->position.y - 0x180000) - self->position.y);
+                        int32 x = abs(player->position.x - self->position.x) >> 16;
+                        int32 y = abs((player->position.y - 0x180000) - self->position.y) >> 16;
 
-                        if (MathHelpers_SquareRoot((x >> 16) * (x >> 16) + (y >> 16) * (y >> 16)) <= 8 && player->state != Player_State_Static
+                        if (MathHelpers_SquareRoot(x * x + y * y) <= 8 && player->state != Player_State_Static
                             && !self->grabDelay[playerID]) {
                             self->activePlayers |= 1 << playerID;
                             self->releasedPlayers |= 1 << playerID;
