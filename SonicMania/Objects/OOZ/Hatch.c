@@ -95,30 +95,29 @@ void Hatch_Create(void *data)
         }
 
         switch (self->go) {
-            case HATCH_GO_SUBENTRYHATCH:
             case HATCH_GO_SUBENTRYHATCH_SMOGONLY:
-                if (self->go == HATCH_GO_SUBENTRYHATCH || OOZSetup->useSmogEffect) {
-                    self->visible      = true;
-                    self->useMoveLayer = true;
-                    self->state        = Hatch_State_SubEntryHatch;
-                }
-                else {
+                if (!OOZSetup->useSmogEffect) {
                     self->vScrollPos += self->depth << 16;
                     self->position.y += self->depth << 16;
-                    destroyEntity(RSDK_GET_ENTITY_GEN(SceneInfo->entitySlot - 1));
+                    destroyEntity(RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, WarpDoor));
                     self->useMoveLayer = true;
+                    break;
                 }
+                // [[fallthrough]]
+            case HATCH_GO_SUBENTRYHATCH:
+                self->visible      = true;
+                self->state        = Hatch_State_SubEntryHatch;
+                self->useMoveLayer = true;
                 break;
 
-            case HATCH_GO_SUBEXITHATCH_NOCOPY:
             case HATCH_GO_SUBEXITHATCH_COPYTILES:
                 // Copies the Hatch Tiles from the move layer
-                if (self->go == HATCH_GO_SUBEXITHATCH_COPYTILES) {
-                    RSDK.CopyTileLayer(Zone->moveLayer, (self->position.x >> 20) - 2, (self->position.y >> 20) - 1, Zone->moveLayer, 1, 7, 4,
-                                       2); // Copy Hatch Tiles
-                    RSDK.CopyTileLayer(Zone->fgLayer[1], (self->position.x >> 20) - 3, (self->position.y >> 20) + 1, Zone->moveLayer, 16, 1, 6,
-                                       2); // Copy [???] Tiles (There's nothing there in the scene)
-                }
+                RSDK.CopyTileLayer(Zone->moveLayer, (self->position.x >> 20) - 2, (self->position.y >> 20) - 1, Zone->moveLayer, 1, 7, 4,
+                                    2); // Copy Hatch Tiles
+                RSDK.CopyTileLayer(Zone->fgLayer[1], (self->position.x >> 20) - 3, (self->position.y >> 20) + 1, Zone->moveLayer, 16, 1, 6,
+                                    2); // Copy [???] Tiles (There's nothing there in the scene)
+                // [[fallthrough]]
+            case HATCH_GO_SUBEXITHATCH_NOCOPY:
                 self->visible      = false;
                 self->useMoveLayer = false;
                 self->state        = Hatch_State_SubExitHatch;
