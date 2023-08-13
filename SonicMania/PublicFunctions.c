@@ -858,7 +858,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(ERZStart_Cutscene_ShrinkRubyWarpFX);
     ADD_PUBLIC_FUNC(ERZStart_Cutscene_EnterKing);
     ADD_PUBLIC_FUNC(ERZStart_Cutscene_KingMovingRuby);
-    ADD_PUBLIC_FUNC(ERZStart_Cutscene_KingAttatchHornRuby);
+    ADD_PUBLIC_FUNC(ERZStart_Cutscene_KingAttachHornRuby);
     ADD_PUBLIC_FUNC(ERZStart_Cutscene_SetupEggmanReveal);
     ADD_PUBLIC_FUNC(ERZStart_Cutscene_EnterEggman);
     ADD_PUBLIC_FUNC(ERZStart_Cutscene_EggmanKingWrestling);
@@ -983,6 +983,7 @@ void InitPublicFunctions()
 
     // ERZ/PhantomKing
     ADD_PUBLIC_FUNC(PhantomKing_CheckPlayerCollisions);
+    ADD_PUBLIC_FUNC(PhantomKing_Oscillate);
     ADD_PUBLIC_FUNC(PhantomKing_Hit);
     ADD_PUBLIC_FUNC(PhantomKing_Explode);
     ADD_PUBLIC_FUNC(PhantomKing_HandleFrames);

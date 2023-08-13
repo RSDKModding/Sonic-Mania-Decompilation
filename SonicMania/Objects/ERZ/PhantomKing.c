@@ -112,6 +112,14 @@ void PhantomKing_CheckPlayerCollisions(void)
     }
 }
 
+void PhantomKing_Oscillate(void)
+{
+    RSDK_THIS(PhantomKing);
+
+    self->angle      = (self->angle + 3) & 0xFF;
+    self->position.y = (RSDK.Sin256(self->angle) << 10) + self->originPos.y;
+}
+
 void PhantomKing_Hit(void)
 {
     RSDK_THIS(PhantomKing);
@@ -459,7 +467,7 @@ void PhantomKing_State_InitialHover(void)
 
     RSDK.ProcessAnimation(&self->beltAnimator);
 
-    self->position.y = BadnikHelpers_Oscillate(self->originPos.y, 3, 11);
+    PhantomKing_Oscillate();
 
     PhantomKing_HandleFrames();
 
@@ -475,7 +483,7 @@ void PhantomKing_State_TakeRubyAway(void)
 
     RSDK.ProcessAnimation(&self->beltAnimator);
 
-    self->position.y = BadnikHelpers_Oscillate(self->originPos.y, 3, 11);
+    PhantomKing_Oscillate();
 
     if (self->velocity.x < 0x40000)
         self->velocity.x += 0x1800;
@@ -499,7 +507,7 @@ void PhantomKing_State_RubyHoldHover(void)
 
     RSDK.ProcessAnimation(&self->beltAnimator);
 
-    self->position.y = BadnikHelpers_Oscillate(self->originPos.y, 3, 11);
+    PhantomKing_Oscillate();
 
     PhantomKing_HandleFrames();
 }
@@ -509,8 +517,9 @@ void PhantomKing_State_WrestleEggman(void)
     RSDK_THIS(PhantomKing);
 
     RSDK.ProcessAnimation(&self->beltAnimator);
+    RSDK.ProcessAnimation(&self->rubyAnimator);
 
-    self->position.y = BadnikHelpers_Oscillate(self->originPos.y, 3, 11);
+    PhantomKing_Oscillate();
 
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
@@ -524,7 +533,7 @@ void PhantomKing_State_FlyAround(void)
 
     RSDK.ProcessAnimation(&self->beltAnimator);
 
-    self->position.y = BadnikHelpers_Oscillate(self->originPos.y, 3, 11);
+    PhantomKing_Oscillate();
 
     PhantomKing_CheckPlayerCollisions();
 
