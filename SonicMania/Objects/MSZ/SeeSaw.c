@@ -32,8 +32,12 @@ void SeeSaw_Update(void)
         self->tilt = self->tilt <= self->targetTilt ? self->tilt + 1 : self->tilt - 1;
 
         if (self->state == SeeSaw_State_None) {
-            switch (self->targetTilt) {
-                case SEESAW_TILT_L:
+            if (self->targetTilt == SEESAW_TILT_M) {
+                self->velocity.x = -0x11400;
+                self->velocity.y = -0x81800;
+            }
+            else {
+                if (!self->orbTimer) {
                     if (self->launchVelocity < 0xA0000) {
                         self->velocity.x = -0xCC00;
                         self->velocity.y = -0xAF000;
@@ -42,14 +46,8 @@ void SeeSaw_Update(void)
                         self->velocity.x = -0xA000;
                         self->velocity.y = -0xE0000;
                     }
-                    break;
-
-                case SEESAW_TILT_M:
-                    self->velocity.x = -0x11400;
-                    self->velocity.y = -0x81800;
-                    break;
-
-                case SEESAW_TILT_R:
+                }
+                else {
                     if (self->launchVelocity < 0x9C000) {
                         self->velocity.x = -0xF400;
                         self->velocity.y = -0x96000;
@@ -58,7 +56,7 @@ void SeeSaw_Update(void)
                         self->velocity.x = -0x8000;
                         self->velocity.y = -0xA2000;
                     }
-                    break;
+                }
             }
 
             if (self->orbPos.x < self->position.x)
