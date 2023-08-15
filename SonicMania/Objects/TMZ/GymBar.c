@@ -197,7 +197,7 @@ void GymBar_HandleSwingJump(void)
     self->abilityPtrs[0]   = NULL;
     self->abilityValues[0] = 0;
     self->abilityValues[1] = 0;
-    self->abilityValues[3] = 0;
+    self->abilityValues[2] = 0;
 
     self->state = Player_State_Air;
 }
