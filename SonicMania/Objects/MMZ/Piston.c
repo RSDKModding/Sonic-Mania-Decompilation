@@ -123,7 +123,7 @@ void Piston_StateMove_Vertical_Reverse(void)
     self->drawPos.y += self->reverse ? -0x10000 : 0x10000;
 
     if (--self->timer <= 0) {
-        self->timer = ACTIVE_BOUNDS;
+        self->active = ACTIVE_BOUNDS;
         self->state = Piston_State_WaitForInterval;
     }
 }
@@ -241,7 +241,7 @@ void Piston_StateMove_Horizontal_Reverse(void)
     self->drawPos.x += self->reverse ? -0x10000 : 0x10000;
 
     if (--self->timer <= 0) {
-        self->timer = ACTIVE_BOUNDS;
+        self->active = ACTIVE_BOUNDS;
         self->state = Piston_State_WaitForInterval;
     }
 }
