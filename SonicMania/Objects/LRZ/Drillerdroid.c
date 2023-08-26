@@ -52,7 +52,7 @@ void Drillerdroid_Create(void *data)
                 self->type = VOID_TO_INT(data);
 
             switch (self->type) {
-                case DRILLERDROIDO_MAIN:
+                case DRILLERDROID_MAIN:
                     self->active        = ACTIVE_BOUNDS;
                     self->updateRange.x = 0x800000;
                     self->updateRange.y = 0x800000;
@@ -199,8 +199,7 @@ void Drillerdroid_CheckPlayerCollisions(void)
                     else if (self->alpha > 0x80 && player->shield != SHIELD_FIRE && !player->blinkTimer && !player->invincibleTimer) {
                         Player_Hurt(player, self);
                     }
-
-                    if (Player_CheckBossHit(player, self)) {
+                    else if (Player_CheckBossHit(player, self)) {
                         if (Drillerdroid->armorHealth <= 1) {
                             Drillerdroid_Hit();
                         }
@@ -406,9 +405,9 @@ void Drillerdroid_State_DecideNextMove(void)
             self->state = Drillerdroid_State_PrepareJump;
         }
         else if (Drillerdroid->canBreakSegment) {
-            self->timer                   = 180;
-            Drillerdroid->stalatiteOffset = 2 * (3 * RSDK.Rand(-2, 3));
-            self->state                   = Drillerdroid_State_Drilling;
+            self->timer                    = 180;
+            Drillerdroid->stalactiteOffset = 6 * RSDK.Rand(-2, 3);
+            self->state                    = Drillerdroid_State_Drilling;
         }
         else {
             self->timer = 60;
@@ -589,7 +588,7 @@ void Drillerdroid_State_Drilling(void)
             debris->updateRange.y   = 0x400000;
         }
         else {
-            int32 x = (48 * RSDK.Rand(0, ScreenInfo->size.x / 48) + Drillerdroid->stalatiteOffset + ScreenInfo->position.x) << 16;
+            int32 x = (48 * RSDK.Rand(0, ScreenInfo->size.x / 48) + Drillerdroid->stalactiteOffset + ScreenInfo->position.x) << 16;
             int32 y = (ScreenInfo->position.y + 24) << 16;
             EntityStalactite *stalactite = CREATE_ENTITY(Stalactite, Stalactite_State_Falling_Boss, x, y);
 
@@ -644,7 +643,10 @@ void Drillerdroid_State_Overheat(void)
             switch (Drillerdroid->armorHealth) {
                 default: break;
 
-                case 0: Drillerdroid_Hit(); break;
+                case 0:
+                    self->state = Drillerdroid_State_OverheatRecoil_DestroyedSegment;
+                    Drillerdroid_Hit();
+                    break;
 
                 case 1: {
                     debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
@@ -733,9 +735,9 @@ void Drillerdroid_State_Overheat(void)
                 RSDK.PlaySfx(Drillerdroid->sfxHit, false, 255);
                 self->invincibilityTimer = 45;
                 --Drillerdroid->armorHealth;
+                self->state = Drillerdroid_State_OverheatRecoil_DestroyedSegment;
             }
 
-            self->state = Drillerdroid_State_OverheatRecoil_DestroyedSegment;
         }
         else {
             self->state = Drillerdroid_State_OverheatRecoil;
@@ -750,7 +752,7 @@ void Drillerdroid_State_OverheatRecoil(void)
     RSDK_THIS(Drillerdroid);
 
     Drillerdroid->drillPos[0] += 0x10000;
-    Drillerdroid->drillPos[0] += 0x10000;
+    Drillerdroid->drillPos[1] += 0x10000;
 
     self->position.y -= 0x10000;
 
@@ -814,7 +816,7 @@ void Drillerdroid_State_JumpTargeting(void)
         Drillerdroid->pistonDelay[1] = 0;
 
         Drillerdroid->drillDelay[0] = 4;
-        Drillerdroid->drillDelay[0] = 0;
+        Drillerdroid->drillDelay[1] = 0;
 
         Drillerdroid->pistonMoveDir[0] = FLIP_NONE;
         Drillerdroid->pistonMoveDir[1] = FLIP_NONE;

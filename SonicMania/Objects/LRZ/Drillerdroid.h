@@ -31,7 +31,7 @@ struct ObjectDrillerdroid {
     uint8 armorHealth;
     uint8 jumpsRemaining;
     uint8 canBreakSegment;
-    int32 stalatiteOffset;
+    int32 stalactiteOffset;
     EntityDrillerdroid *boss;
     uint16 aniFrames;
     uint16 ticFrames;
@@ -50,6 +50,7 @@ struct ObjectDrillerdroid {
 // Entity Class
 struct EntityDrillerdroid {
     RSDK_ENTITY
+    uint8 unused;
     uint8 type;
     StateMachine(state);
     StateMachine(stateDraw);
