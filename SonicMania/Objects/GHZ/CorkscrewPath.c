@@ -50,7 +50,7 @@ void CorkscrewPath_Update(void)
                     self->activePlayers &= ~playerID;
                 }
             }
-            else if (abs(player->groundVel) > 0x40000 && player->groundedStore && abs(yOffset + player->position.y - player->position.y) < 0x100000) {
+            else if (abs(player->groundVel) > 0x40000 && player->groundedStore && abs(yOffset + self->position.y - player->position.y) < 0x100000) {
                 self->activePlayers |= playerID;
                 player->position.y = yOffset + self->position.y;
                 player->velocity.y = 0;
