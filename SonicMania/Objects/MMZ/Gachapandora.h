@@ -154,8 +154,8 @@ void Gachapandora_StateDebris_Falling(void);
 void Gachapandora_StateDebris_BossDebris(void);
 void Gachapandora_Draw_BossDebris(void);
 
-void Gachapandora_StateSpark_Attatched(void);
-void Gachapandora_StateSpark_Detatched(void);
+void Gachapandora_StateSpark_Attached(void);
+void Gachapandora_StateSpark_Detached(void);
 
 void Gachapandora_StateEggman_Falling(void);
 void Gachapandora_StateEggman_Escape(void);

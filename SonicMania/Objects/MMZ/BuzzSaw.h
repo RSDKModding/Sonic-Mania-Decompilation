@@ -51,7 +51,7 @@ void BuzzSaw_SfxUpdate_SawSus(int32 sfx);
 
 void BuzzSaw_CheckPlayerCollisions(void);
 
-void BuzzSaw_State_Attatched(void);
+void BuzzSaw_State_Attached(void);
 
 void BuzzSaw_State_Stray_Waiting(void);
 void BuzzSaw_State_Stray_Released(void);
