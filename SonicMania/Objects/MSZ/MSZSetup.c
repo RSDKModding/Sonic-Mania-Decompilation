@@ -119,7 +119,6 @@ void MSZSetup_Create(void *data)
     }
 #endif
     else {
-        RSDK.CopyPalette(0, 204, 4, 204, 4);
         RSDK.CopyPalette(3, 128, 0, 128, 128);
     }
 }
