@@ -50,7 +50,7 @@ void BuzzSaw_Create(void *data)
         self->startPos  = self->position;
 
         if (self->type == BUZZSAW_ATTACHED)
-            self->state = BuzzSaw_State_Attatched;
+            self->state = BuzzSaw_State_Attached;
         else
             self->state = BuzzSaw_State_Stray_Waiting;
     }
@@ -120,7 +120,7 @@ void BuzzSaw_CheckPlayerCollisions(void)
     self->position.y = self->startPos.y;
 }
 
-void BuzzSaw_State_Attatched(void)
+void BuzzSaw_State_Attached(void)
 {
     RSDK_THIS(BuzzSaw);
 

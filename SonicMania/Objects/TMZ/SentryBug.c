@@ -27,7 +27,7 @@ void SentryBug_Draw(void)
 {
     RSDK_THIS(SentryBug);
 
-    if (self->orbsDetatched) {
+    if (self->orbsDetached) {
         RSDK.DrawSprite(&self->bugAnimator, NULL, false);
 
         if (self->showNet) {
@@ -170,9 +170,9 @@ void SentryBug_StateOrbs_Attached(void)
 
     Vector2 *offsets = NULL;
     if (self->bugAnimator.animationID == 1)
-        offsets = (Vector2 *)&SentryBug->orbOffsets_Attatched[12 * self->bugAnimator.frameID];
+        offsets = (Vector2 *)&SentryBug->orbOffsets_Attached[12 * self->bugAnimator.frameID];
     else
-        offsets = (Vector2 *)&SentryBug->orbOffsets_Attatched[-12 * self->bugAnimator.frameID + 72];
+        offsets = (Vector2 *)&SentryBug->orbOffsets_Attached[-12 * self->bugAnimator.frameID + 72];
 
     for (int32 i = 0; i < 6; ++i) {
         self->orbPositions[i].x = self->position.x + offsets[i].x;
@@ -230,9 +230,9 @@ void SentryBug_StateOrbs_ReturnToSlots(void)
 
     Vector2 *offsets = NULL;
     if (self->bugAnimator.animationID == 1)
-        offsets = (Vector2 *)&SentryBug->orbOffsets_Attatched[12 * self->bugAnimator.frameID];
+        offsets = (Vector2 *)&SentryBug->orbOffsets_Attached[12 * self->bugAnimator.frameID];
     else
-        offsets = (Vector2 *)&SentryBug->orbOffsets_Attatched[-12 * self->bugAnimator.frameID + 72];
+        offsets = (Vector2 *)&SentryBug->orbOffsets_Attached[-12 * self->bugAnimator.frameID + 72];
 
     for (int32 i = 0; i < 6; ++i) {
         self->orbVelocities[i].x = CLAMP((self->position.x + offsets[i].x - self->orbPositions[i].x) >> 3, -0xC0000, 0xC0000);
@@ -306,7 +306,7 @@ void SentryBug_State_DropOrbs(void)
     }
 
     if (self->timer == 30) {
-        self->orbsDetatched = true;
+        self->orbsDetached = true;
         self->stateOrbs     = SentryBug_StateOrbs_BeginNetRotation;
     }
 
@@ -362,7 +362,7 @@ void SentryBug_State_NetShrink(void)
             }
             else {
                 self->orbAnimator.frameID = 0;
-                self->orbsDetatched       = false;
+                self->orbsDetached       = false;
                 self->stateOrbs           = SentryBug_StateOrbs_ReturnToSlots;
                 self->state               = SentryBug_State_ReturnToSlots;
                 RSDK.StopSfx(SentryBug->sfxSwarm);
@@ -376,7 +376,7 @@ void SentryBug_State_NetShrink(void)
     }
     else {
         self->orbAnimator.frameID = 0;
-        self->orbsDetatched       = false;
+        self->orbsDetached       = false;
 
         self->stateOrbs = SentryBug_StateOrbs_ReturnToSlots;
         self->state     = SentryBug_State_ReturnToSlots;
@@ -408,7 +408,7 @@ void SentryBug_State_NetFlash(void)
 
         self->orbAnimator.frameID = 0;
         self->netColor            = 0xF02000;
-        self->orbsDetatched       = false;
+        self->orbsDetached       = false;
         self->stateOrbs           = SentryBug_StateOrbs_ReturnToSlots;
         self->state               = SentryBug_State_ReturnToSlots;
 

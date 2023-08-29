@@ -13,16 +13,16 @@ void Bungee_Update(void)
 {
     RSDK_THIS(Bungee);
 
-    if (self->hasAttatchedPlayer) {
-        EntityPlayer *player = self->attatchedPlayer;
+    if (self->hasAttachedPlayer) {
+        EntityPlayer *player = self->attachedPlayer;
 
         self->timer = 2;
 #if GAME_VERSION != VER_100
         if (player && !Player_CheckValidState(player)) {
-            self->attatchedPlayer    = NULL;
-            self->hasAttatchedPlayer = false;
+            self->attachedPlayer    = NULL;
+            self->hasAttachedPlayer = false;
         }
-        if (self->attatchedPlayer) {
+        if (self->attachedPlayer) {
 #endif
             RSDK.GetHitbox(&player->animator, 0); // yeah
 
@@ -44,9 +44,9 @@ void Bungee_Update(void)
             if (self->bungeePos.y <= self->startPos.y) {
                 self->bungeePos.x        = self->startPos.x;
                 self->bungeePos.y        = self->startPos.y;
-                self->hasAttatchedPlayer = false;
+                self->hasAttachedPlayer = false;
 
-                if (self->attatchedPlayer) {
+                if (self->attachedPlayer) {
                     player->tileCollisions = TILECOLLISION_DOWN;
                     player->velocity       = self->velocity;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_TWIRL, &player->animator, true, 0);
@@ -74,13 +74,13 @@ void Bungee_Update(void)
                     if (abs(player->position.x - self->position.x) < 0x180000 && self->playerY[player->playerID] <= self->position.y
                         && player->position.y >= self->position.y) {
                         if (abs(player->groundVel) > 0x20000 || player->velocity.y > 0x20000) {
-                            if (player->state != Player_State_Static && !self->hasAttatchedPlayer && !self->timer) {
+                            if (player->state != Player_State_Static && !self->hasAttachedPlayer && !self->timer) {
                                 self->stretchForce       = -0x2C00;
                                 self->timer              = 2;
-                                self->attatchedPlayer    = player;
+                                self->attachedPlayer    = player;
                                 self->bungeePos.x        = self->startPos.x;
                                 self->bungeePos.y        = self->startPos.y;
-                                self->hasAttatchedPlayer = true;
+                                self->hasAttachedPlayer = true;
                                 self->velocity.x         = 0;
 
                                 int32 velocity = player->onGround ? abs(player->groundVel) : player->velocity.y;
@@ -118,11 +118,11 @@ void Bungee_Update(void)
         self->timer--;
     }
     else {
-        EntityPlayer *player = self->attatchedPlayer;
+        EntityPlayer *player = self->attachedPlayer;
         if (player) {
             Zone->deathBoundary[player->playerID] = self->deathBoundary[player->playerID];
             self->deathBoundary[player->playerID] = 0;
-            self->attatchedPlayer                 = NULL;
+            self->attachedPlayer                 = NULL;
         }
     }
 }
@@ -135,8 +135,8 @@ void Bungee_Draw(void)
 {
     RSDK_THIS(Bungee);
 
-    if (self->hasAttatchedPlayer) {
-        EntityPlayer *player = self->attatchedPlayer;
+    if (self->hasAttachedPlayer) {
+        EntityPlayer *player = self->attachedPlayer;
         Vector2 drawPos      = self->startPos;
 
         int32 playerY = player->position.y;

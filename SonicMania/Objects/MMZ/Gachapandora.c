@@ -183,7 +183,7 @@ void Gachapandora_Create(void *data)
 
                     RSDK.SetSpriteAnimation(Gachapandora->aniFrames, 13, &self->mainAnimator, true, 0);
 
-                    self->state     = Gachapandora_StateSpark_Attatched;
+                    self->state     = Gachapandora_StateSpark_Attached;
                     self->stateDraw = Gachapandora_Draw_Simple;
 
                     self->updateRange.x = 0x800000;
@@ -860,7 +860,7 @@ void Gachapandora_StateBoss_LastDitchAttack(void)
                 spark->velocity.x = self->velocity.x + 0x10000;
             }
 
-            spark->state = Gachapandora_StateSpark_Detatched;
+            spark->state = Gachapandora_StateSpark_Detached;
             spark->position.y += (RSDK.Rand(-8, 8) + 20) << 16;
         }
     }
@@ -1754,7 +1754,7 @@ void Gachapandora_Draw_BossDebris(void)
         RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 }
 
-void Gachapandora_StateSpark_Attatched(void)
+void Gachapandora_StateSpark_Attached(void)
 {
     RSDK_THIS(Gachapandora);
 
@@ -1779,7 +1779,7 @@ void Gachapandora_StateSpark_Attatched(void)
         destroyEntity(self);
 }
 
-void Gachapandora_StateSpark_Detatched(void)
+void Gachapandora_StateSpark_Detached(void)
 {
     RSDK_THIS(Gachapandora);
 
@@ -1802,7 +1802,7 @@ void Gachapandora_StateSpark_Detatched(void)
         RSDK.SetSpriteAnimation(Gachapandora->aniFrames, 16, &self->mainAnimator, true, 0);
         self->velocity.x = 0;
         self->velocity.y = 0;
-        self->state      = Gachapandora_StateSpark_Attatched;
+        self->state      = Gachapandora_StateSpark_Attached;
     }
 }
 
