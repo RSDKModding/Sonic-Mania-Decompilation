@@ -3980,7 +3980,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(BuzzSaw_SfxCheck_SawSus);
     ADD_PUBLIC_FUNC(BuzzSaw_SfxUpdate_SawSus);
     ADD_PUBLIC_FUNC(BuzzSaw_CheckPlayerCollisions);
-    ADD_PUBLIC_FUNC(BuzzSaw_State_Attatched);
+    ADD_PUBLIC_FUNC(BuzzSaw_State_Attached);
     ADD_PUBLIC_FUNC(BuzzSaw_State_Stray_Waiting);
     ADD_PUBLIC_FUNC(BuzzSaw_State_Stray_Released);
     ADD_PUBLIC_FUNC(BuzzSaw_State_FreeMove_Reset);
@@ -4067,8 +4067,8 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Gachapandora_StateDebris_Falling);
     ADD_PUBLIC_FUNC(Gachapandora_StateDebris_BossDebris);
     ADD_PUBLIC_FUNC(Gachapandora_Draw_BossDebris);
-    ADD_PUBLIC_FUNC(Gachapandora_StateSpark_Attatched);
-    ADD_PUBLIC_FUNC(Gachapandora_StateSpark_Detatched);
+    ADD_PUBLIC_FUNC(Gachapandora_StateSpark_Attached);
+    ADD_PUBLIC_FUNC(Gachapandora_StateSpark_Detached);
     ADD_PUBLIC_FUNC(Gachapandora_StateEggman_Falling);
     ADD_PUBLIC_FUNC(Gachapandora_StateEggman_Escape);
     ADD_PUBLIC_FUNC(Gachapandora_StateEggman_RunAway);
