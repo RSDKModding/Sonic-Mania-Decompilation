@@ -70,7 +70,7 @@ void Spikes_Serialize(void);
 
 // Extra Entity Functions
 void Spikes_Draw_Global(void);
-void Spikes_Draw_Stage(void);
+void Spikes_Draw_Glint(void);
 
 void Spikes_Shatter(int32 velX, int32 velY);
 #if MANIA_USE_PLUS

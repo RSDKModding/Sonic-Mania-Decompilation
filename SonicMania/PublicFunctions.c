@@ -2137,7 +2137,7 @@ void InitPublicFunctions()
 
     // Global/Spikes
     ADD_PUBLIC_FUNC(Spikes_Draw_Global);
-    ADD_PUBLIC_FUNC(Spikes_Draw_Stage);
+    ADD_PUBLIC_FUNC(Spikes_Draw_Glint);
     ADD_PUBLIC_FUNC(Spikes_Shatter);
 #if MANIA_USE_PLUS
     ADD_PUBLIC_FUNC(Spikes_CheckHit);
