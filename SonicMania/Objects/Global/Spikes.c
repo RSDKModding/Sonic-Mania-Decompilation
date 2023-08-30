@@ -394,7 +394,7 @@ void Spikes_StageLoad(void)
     }
     else if (RSDK.CheckSceneFolder("PSZ2")) {
         Spikes->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Spikes.bin", SCOPE_STAGE);
-        Spikes->stateDraw = Spikes_Draw_Stage;
+        Spikes->stateDraw = Spikes_Draw_Glint;
     }
     else {
         Spikes->aniFrames = RSDK.LoadSpriteAnimation("Global/Spikes.bin", SCOPE_STAGE);
@@ -410,7 +410,7 @@ void Spikes_StageLoad(void)
     Spikes->sfxSpike = RSDK.GetSfx("Global/Spike.wav");
 }
 
-void Spikes_Draw_Stage(void)
+void Spikes_Draw_Glint(void)
 {
     RSDK_THIS(Spikes);
 
@@ -722,7 +722,7 @@ void Spikes_EditorLoad(void)
     }
     if (RSDK.CheckSceneFolder("PSZ2")) {
         Spikes->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Spikes.bin", SCOPE_STAGE);
-        Spikes->stateDraw = Spikes_Draw_Stage;
+        Spikes->stateDraw = Spikes_Draw_Glint;
     }
     else {
         Spikes->aniFrames = RSDK.LoadSpriteAnimation("Global/Spikes.bin", SCOPE_STAGE);
