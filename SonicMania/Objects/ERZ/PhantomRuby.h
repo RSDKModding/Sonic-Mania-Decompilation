@@ -30,7 +30,7 @@ struct EntityPhantomRuby {
     int32 timer;
     bool32 flashFinished;
     bool32 hasFlashed;
-    int32 sfx;
+    uint8 sfx;
     int32 unused1;
     int32 unused2;
     Animator rubyAnimator;
