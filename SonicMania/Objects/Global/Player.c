@@ -168,7 +168,7 @@ void Player_LateUpdate(void)
 
 #if MANIA_USE_PLUS
         if (!self->sidekick)
-            RSDK.CopyEntity(Zone->entityStorage[1], self, false);
+            RSDK.CopyEntity(&Zone->entityStorage[1], self, false);
 #endif
 
         bool32 stopInvincibility = self->sidekick || globals->gameMode == MODE_COMPETITION;
@@ -3410,9 +3410,9 @@ bool32 Player_SwapMainPlayer(bool32 forceSwap)
                 destroyEntity(ice);
         }
     }
-    RSDK.CopyEntity(Zone->entityStorage, leader, false);
+    RSDK.CopyEntity(&Zone->entityStorage[0], leader, false);
     RSDK.CopyEntity(leader, sidekick, false);
-    RSDK.CopyEntity(sidekick, (Entity *)Zone->entityStorage, false);
+    RSDK.CopyEntity(sidekick, &Zone->entityStorage[0], false);
 
     sidekick->state       = Player_State_Air;
     self->controllerID    = sidekick->controllerID;
@@ -5553,7 +5553,7 @@ void Player_State_FlyToPlayer(void)
         leader = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 #if MANIA_USE_PLUS
     else
-        leader = (EntityPlayer *)Zone->entityStorage[1];
+        leader = (EntityPlayer *)&Zone->entityStorage[1];
 #endif
 
     Player->respawnTimer = 0;
@@ -5722,7 +5722,7 @@ void Player_State_ReturnToPlayer(void)
         leader = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 #if MANIA_USE_PLUS
     else
-        leader = (EntityPlayer *)Zone->entityStorage[1];
+        leader = (EntityPlayer *)&Zone->entityStorage[1];
 #endif
 
     RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->animator, false, 0);

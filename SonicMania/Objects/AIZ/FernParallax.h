@@ -8,7 +8,7 @@
 struct ObjectFernParallax {
     RSDK_OBJECT
     uint16 aniFrames;
-    uint8 entityBuffer[2 * ENTITY_SIZE];
+    EntityBase entityBuffer[2];
 };
 
 // Entity Class

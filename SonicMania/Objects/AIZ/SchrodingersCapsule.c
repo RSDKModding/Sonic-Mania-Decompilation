@@ -217,7 +217,7 @@ void SchrodingersCapsule_State_Explode(void)
         RSDK.SetSpriteAnimation(-1, -1, &self->rayAnimator, true, 0);
 
         EntityPlayer *buddy1 = RSDK_GET_ENTITY(SLOT_PLAYER3, Player);
-        memset(buddy1, 0, ENTITY_SIZE); // not in the original, clears the entity slot incase of something like a shield is still active
+        memset(buddy1, 0, sizeof(EntityBase)); // not in the original, clears the entity slot incase of something like a shield is still active
         buddy1->classID = Player->classID;
         Player_ChangeCharacter(buddy1, ID_MIGHTY);
         buddy1->position.x      = self->position.x + TO_FIXED(14);
@@ -240,7 +240,7 @@ void SchrodingersCapsule_State_Explode(void)
         RSDK.SetSpriteAnimation(buddy1->aniFrames, ANI_HURT, &buddy1->animator, true, 0);
 
         EntityPlayer *buddy2 = RSDK_GET_ENTITY(SLOT_PLAYER4, Player);
-        memset(buddy2, 0, ENTITY_SIZE); // like above, but for safety :]
+        memset(buddy2, 0, sizeof(EntityBase)); // like above, but for safety :]
         buddy2->classID      = Player->classID;
         Player_ChangeCharacter(buddy2, ID_RAY);
         buddy2->position.x      = self->position.x - TO_FIXED(14);

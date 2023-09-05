@@ -93,7 +93,7 @@ struct ObjectZone {
     uint8 hudDrawGroup;
     uint16 sfxFail;
 #if MANIA_USE_PLUS
-    uint8 entityStorage[16][ENTITY_SIZE];
+    EntityBase entityStorage[16];
     int32 screenPosX[PLAYER_COUNT];
     int32 screenPosY[PLAYER_COUNT];
     bool32 swapGameMode;

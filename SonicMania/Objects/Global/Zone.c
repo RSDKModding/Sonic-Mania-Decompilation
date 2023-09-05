@@ -803,9 +803,9 @@ void Zone_State_FadeOut(void)
             globals->restartMinutes      = SceneInfo->minutes;
 
             EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-            RSDK.CopyEntity(Zone->entityStorage, player, false);
+            RSDK.CopyEntity(&Zone->entityStorage[0], player, false);
             if (player->camera)
-                RSDK.CopyEntity(Zone->entityStorage[8], player->camera, false);
+                RSDK.CopyEntity(&Zone->entityStorage[8], player->camera, false);
         }
 #endif
 
@@ -958,7 +958,7 @@ void Zone_HandlePlayerSwap(void)
 
     for (int32 p = 0; p < Player->playerCount; ++p) {
         EntityPlayer *player       = RSDK_GET_ENTITY(Zone->swappedPlayerIDs[p], Player);
-        EntityPlayer *storedPlayer = (EntityPlayer *)Zone->entityStorage[p];
+        EntityPlayer *storedPlayer = (EntityPlayer *)&Zone->entityStorage[p];
 
         void *state = storedPlayer->state;
         if (state == Player_State_Ground || state == Player_State_Air || state == Player_State_Roll || state == Player_State_TubeRoll
@@ -1046,10 +1046,10 @@ void Zone_HandlePlayerSwap(void)
             cam->position.y = player->position.y;
         }
 
-        memset(&Zone->entityStorage[0 + p], 0, ENTITY_SIZE);
-        memset(&Zone->entityStorage[4 + p], 0, ENTITY_SIZE);
-        memset(&Zone->entityStorage[8 + p], 0, ENTITY_SIZE);
-        memset(&Zone->entityStorage[12 + p], 0, ENTITY_SIZE);
+        memset(&Zone->entityStorage[0 + p], 0, sizeof(EntityBase));
+        memset(&Zone->entityStorage[4 + p], 0, sizeof(EntityBase));
+        memset(&Zone->entityStorage[8 + p], 0, sizeof(EntityBase));
+        memset(&Zone->entityStorage[12 + p], 0, sizeof(EntityBase));
     }
 #else
     for (int32 p = 0; p < Player->playerCount; ++p) {
