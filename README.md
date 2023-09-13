@@ -57,10 +57,8 @@ Finally, follow the [compilation steps below](#compiling) using `-DCMAKE_TOOLCHA
 
 Compiling is as simple as typing the following:
 ```
-mkdir build
-cd build
-cmake .. # arguments go here
-cmake --build ..
+cmake -Bbuild # arguments go here
+cmake --build build
 ```
 
 The resulting build for Mania will be located somewhere in `build/` depending on your system.
