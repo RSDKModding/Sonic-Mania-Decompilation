@@ -266,9 +266,12 @@ void BallCannon_State_CorkBlocked(void)
             ) {
                 if (storeVelY >= 0 && !player->groundedStore) {
                     for (int32 i = 0; i < 16; ++i) {
+                        // Bug Details:
+                        // The original starts iterating 1 element before each corkDebris____ array.
+                        // The code below was fixed. To reproduce the bug, change the offsets: "+ 0" ---> "- 1" and "+ 1" ---> "+ 0"
                         EntityBallCannon *debris =
                             CREATE_ENTITY(BallCannon, INT_TO_VOID((i & 3) + 1), self->position.x + BallCannon->corkDebrisOffset[(i * 2) + 0],
-                                          self->position.y + BallCannon->corkDebrisVelocity[(i * 2) + 1]);
+                                          self->position.y + BallCannon->corkDebrisOffset[(i * 2) + 1]);
                         debris->velocity.x = BallCannon->corkDebrisVelocity[(i * 2) + 0];
                         debris->velocity.y = BallCannon->corkDebrisVelocity[(i * 2) + 1];
                     }
