@@ -36,11 +36,11 @@ void FernParallax_Draw(void)
     thisHitbox.top    = -screen->center.y;
     thisHitbox.bottom = screen->center.y;
 
-    Entity *screenBuffer     = (Entity *)&FernParallax->entityBuffer[0 * ENTITY_SIZE];
+    EntityBase *screenBuffer = &FernParallax->entityBuffer[0];
     screenBuffer->position.x = screenX;
     screenBuffer->position.y = screenY;
 
-    Entity *entityBuffer     = (Entity *)&FernParallax->entityBuffer[1 * ENTITY_SIZE];
+    EntityBase *entityBuffer = &FernParallax->entityBuffer[1];
     entityBuffer->position.x = drawPos.x;
     entityBuffer->position.y = drawPos.y;
 
@@ -64,7 +64,7 @@ void FernParallax_Create(void *data)
 void FernParallax_StageLoad(void)
 {
     FernParallax->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Decoration.bin", SCOPE_STAGE);
-    memset(FernParallax->entityBuffer, 0, 2 * ENTITY_SIZE);
+    memset(FernParallax->entityBuffer, 0, sizeof(FernParallax->entityBuffer));
 }
 
 #if GAME_INCLUDE_EDITOR

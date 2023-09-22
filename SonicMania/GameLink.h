@@ -245,7 +245,13 @@ typedef struct {
     uint8 onScreen;
 #endif
 
-#define ENTITY_SIZE (sizeof(Entity) + (0x100 * sizeof(void *)))
+typedef struct {
+    RSDK_ENTITY
+    void *data[0x100];
+#if RETRO_REV0U
+    void *unknown;
+#endif
+} EntityBase;
 
 #if RETRO_REV02
 #define Unknown_pausePress  UnknownInfo->pausePress
