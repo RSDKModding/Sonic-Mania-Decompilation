@@ -72,7 +72,7 @@ Finally, follow the [compilation steps below](#compiling) using `-DCMAKE_TOOLCHA
 
 ### Compiling
 
-Compiling is as simple as typing the following:
+Compiling is as simple as typing the following in the root repository directory:
 ```
 cmake -B build
 cmake --build build --config release
