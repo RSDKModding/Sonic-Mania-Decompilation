@@ -231,7 +231,7 @@ void Acetone_State_StopDispensing(void)
     else if (self->timer > 5)
         self->maxGustCount[0] = 1;
     else
-        self->maxGustCount[1] = 2;
+        self->maxGustCount[0] = 2;
 
     if (self->timer > 8)
         self->maxGustCount[1] = 0;
