@@ -5142,8 +5142,8 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(PuyoBean_CheckAIRotationDisabled);
     ADD_PUBLIC_FUNC(PuyoBean_CheckCollisions);
     ADD_PUBLIC_FUNC(PuyoBean_GetBeanChainRemovalCount);
-    ADD_PUBLIC_FUNC(PuyoBean_GetAvaliableLinks);
-    ADD_PUBLIC_FUNC(PuyoBean_CheckLinkPosAvaliable);
+    ADD_PUBLIC_FUNC(PuyoBean_GetAvailableLinks);
+    ADD_PUBLIC_FUNC(PuyoBean_CheckLinkPosAvailable);
     ADD_PUBLIC_FUNC(PuyoBean_SetupBeanLinkTable);
     ADD_PUBLIC_FUNC(PuyoBean_GetColumnHeight);
     ADD_PUBLIC_FUNC(PuyoBean_CalculateStillPos);

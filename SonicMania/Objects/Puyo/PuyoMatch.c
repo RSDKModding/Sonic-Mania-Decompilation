@@ -122,16 +122,16 @@ void PuyoMatch_DropJunkBeans(void)
 {
     RSDK_THIS(PuyoMatch);
 
-    int32 beanColumnColount[PUYO_PLAYFIELD_W];
+    int32 beanColumnCount[PUYO_PLAYFIELD_W];
     int32 count = 0;
 
     for (int32 x = 0; x < PUYO_PLAYFIELD_W; ++x) {
-        beanColumnColount[x] = 0;
+        beanColumnCount[x] = 0;
 
         for (int32 y = 0; y < PUYO_PLAYFIELD_H; ++y) {
             EntityPuyoBean *bean = PuyoBean_GetPuyoBean(self->playerID, x, y);
             if (!bean) {
-                ++beanColumnColount[x];
+                ++beanColumnCount[x];
                 ++count;
             }
         }
@@ -146,7 +146,7 @@ void PuyoMatch_DropJunkBeans(void)
 
     for (int32 i = 0; i < count; ++i) {
         int32 column = PuyoMatch->beanDropColumnIDs[id];
-        if (beanColumnColount[column] > 0) {
+        if (beanColumnCount[column] > 0) {
             EntityPuyoBean *junkBean = CREATE_ENTITY(PuyoBean, INT_TO_VOID(30), self->beanDropPos.x - 0x200000 + (column << 20), spawnY);
             junkBean->playerID       = self->playerID;
             junkBean->origin.x       = self->beanDropPos.x - 0x280000;
@@ -154,7 +154,7 @@ void PuyoMatch_DropJunkBeans(void)
             self->beanPtr            = junkBean;
             junkBean->state          = PuyoBean_State_Falling;
             --count;
-            beanColumnColount[column]--;
+            beanColumnCount[column]--;
         }
 
         id = (id + 1) % -24;

@@ -428,9 +428,9 @@ int32 PuyoBean_GetBeanChainRemovalCount(int32 playerID, EntityPuyoBean *bean, in
     return junkBeanCount + beanLinkCount + 1;
 }
 
-int32 PuyoBean_GetAvaliableLinks(int32 playerID, EntityPuyoBean *bean, int32 x, int32 y)
+int32 PuyoBean_GetAvailableLinks(int32 playerID, EntityPuyoBean *bean, int32 x, int32 y)
 {
-    int32 avaliableLinks = 0;
+    int32 availableLinks = 0;
     for (int32 i = 0; i < 4; ++i) {
         int32 bx = x;
         int32 by = y;
@@ -446,16 +446,16 @@ int32 PuyoBean_GetAvaliableLinks(int32 playerID, EntityPuyoBean *bean, int32 x, 
         if (beanState && beanState->type != bean->type) {
             PuyoBean_SetupBeanLinkTable(playerID, bx, by, true);
 
-            if (PuyoBean->beanLinkCount >= 3 && !PuyoBean_CheckLinkPosAvaliable(playerID, x, y)) {
-                avaliableLinks++;
+            if (PuyoBean->beanLinkCount >= 3 && !PuyoBean_CheckLinkPosAvailable(playerID, x, y)) {
+                availableLinks++;
             }
         }
     }
 
-    return avaliableLinks;
+    return availableLinks;
 }
 
-bool32 PuyoBean_CheckLinkPosAvaliable(int32 playerID, int32 x, int32 y)
+bool32 PuyoBean_CheckLinkPosAvailable(int32 playerID, int32 x, int32 y)
 {
     bool32 beanLinkTable[0x101];
     memset(beanLinkTable, 0, sizeof(beanLinkTable));
