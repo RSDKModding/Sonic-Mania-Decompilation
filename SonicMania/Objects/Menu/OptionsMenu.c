@@ -445,7 +445,7 @@ void OptionsMenu_ControlsMenuButton_ActionCB(void)
 
         case DEVICE_TYPE_STEAMOVERLAY:
             if (!API.IsOverlayEnabled(id)) {
-                Localization_GetString(&message, STR_STEAMOVERLAYUNAVALIABLE);
+                Localization_GetString(&message, STR_STEAMOVERLAYUNAVAILABLE);
                 UIDialog_CreateDialogOk(&message, StateMachine_None, true);
             }
             break;
