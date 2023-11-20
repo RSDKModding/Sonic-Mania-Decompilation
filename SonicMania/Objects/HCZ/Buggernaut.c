@@ -298,9 +298,7 @@ void Buggernaut_State_Child(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
-    EntityBuggernaut *parent = self->parent;
-    if (!parent || parent->classID != Buggernaut->classID) {
-        self->parent = NULL;
+    if (!self->parent || self->parent->classID != Buggernaut->classID) {
         foreach_active(Buggernaut, buggernaut)
         {
             if (buggernaut->bodyAnimator.animationID == 0
@@ -322,7 +320,7 @@ void Buggernaut_State_Child(void)
     }
 
     if (self->parent) {
-        if (parent->position.x >= self->position.x) {
+        if (self->parent->position.x >= self->position.x) {
             self->velocity.x += 0x2000;
 
             if (self->velocity.x > 0x20000)
@@ -339,7 +337,7 @@ void Buggernaut_State_Child(void)
             self->direction = FLIP_NONE;
         }
 
-        if (parent->position.y >= self->position.y) {
+        if (self->parent->position.y >= self->position.y) {
             self->velocity.y += 0x2000;
 
             if (self->velocity.y > 0x20000)
@@ -368,7 +366,7 @@ void Buggernaut_State_Child(void)
 
     RSDK.ProcessAnimation(&self->wingAnimator);
 
-    if (parent->state == Buggernaut_State_Init)
+    if (self->parent->state == Buggernaut_State_Init)
         destroyEntity(self);
 }
 

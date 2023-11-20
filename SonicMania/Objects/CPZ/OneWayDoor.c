@@ -119,13 +119,13 @@ void OneWayDoor_HandlePlayerInteractions(void)
             OneWayDoor->hitboxRange.left = -88;
 
         if (Player_CheckCollisionTouch(currentPlayer, self, &OneWayDoor->hitboxRange)) {
-#if MANIA_USE_PLUS
             if (isMMZ1 && currentPlayer->sidekick && !isBehind) {
+#if MANIA_USE_PLUS
                 Player->cantSwap = true;
                 NoSwap->counter++;
+#endif
             }
             else
-#endif
                 self->state = OneWayDoor_State_MoveUp;
         }
     }
