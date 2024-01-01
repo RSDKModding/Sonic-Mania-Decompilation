@@ -9,8 +9,8 @@
   * [Switch, via the eShop](https://www.nintendo.com/games/detail/sonic-mania-switch/)
   * [PS4, via the Store](https://store.playstation.com/en-us/product/UP0177-CUSA07023_00-SONICMANIA000000)
   * [Xbox One, via the Store](https://www.xbox.com/en-US/games/store/sonic-mania/BXH46NQT9W4Q/0001)
-  * [Android, via the Netflix, Google Play]
-  * [iOS, via the Netflix, App Store]
+  * Android, via the Netflix, Google Play
+  * iOS, via the Netflix, App Store
 
 Even if your platform isn't supported by the official releases, you **must** buy or officially download it for the assets.
 
