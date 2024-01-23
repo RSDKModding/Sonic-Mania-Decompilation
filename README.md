@@ -63,7 +63,7 @@ Install the following dependencies: then follow the [compilation steps below](#c
 [Setup devKitPro](https://devkitpro.org/wiki/Getting_Started), then run the following:
 - `(dkp-)pacman -Syuu switch-dev switch-libogg switch-libtheora switch-sdl2 switch-glad`
 
-Finally, follow the [compilation steps below](#compiling) using `-DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/cmake/Platform/Switch.cmake` as arguments for `cmake -B build`.
+Finally, follow the [compilation steps below](#compiling) using `-DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/cmake/Switch.cmake` as arguments for `cmake -B build`.
 
 #### (make sure to [install GL shaders!](#q-why-arent-videosfilters-working-while-using-gl))
 
