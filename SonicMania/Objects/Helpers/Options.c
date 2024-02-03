@@ -157,7 +157,7 @@ void Options_SaveFile(void (*callback)(void))
         }
         else {
 #if MANIA_USE_PLUS
-            RSDK.SetVideoSetting(VIDEOSETTING_CHANGED, true);
+            RSDK.SetVideoSetting(VIDEOSETTING_WRITE, true);
 #else
             APICallback_SaveSettingsINI();
 #endif
