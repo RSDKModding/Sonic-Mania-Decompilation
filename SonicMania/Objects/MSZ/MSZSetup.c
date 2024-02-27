@@ -119,7 +119,7 @@ void MSZSetup_Create(void *data)
     }
 #endif
     else {
-#if MANIA_PREPLUS
+#if !MANIA_USE_PLUS
         RSDK.CopyPalette(0, 204, 4, 204, 4);
 #endif
         RSDK.CopyPalette(3, 128, 0, 128, 128);
