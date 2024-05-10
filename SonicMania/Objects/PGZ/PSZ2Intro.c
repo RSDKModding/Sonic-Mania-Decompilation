@@ -133,6 +133,13 @@ bool32 PSZ2Intro_Cutscene_RunToAct2(EntityCutsceneSeq *host)
         player1->down      = false;
 
         if (player2->classID == Player->classID) {
+            // Bug Details:
+            // Player 2's animation should be set here, but it sets it to Player 1's animator instead.
+            // In doing so, if you were to beat Press Garden Act 1 and watch the transition cutscene,
+            // Player 1 will temporarily use the idle sprite of Player 2 for a single frame
+            // before turning back into the character Player 1 is supposed to be.
+            // Pretty odd, huh?
+            // Change &player1->animator to &player2->animator to fix it.
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player1->animator, true, 0);
             player2->state      = Player_State_Ground;
             player2->up         = false;
