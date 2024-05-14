@@ -120,7 +120,7 @@ void Turbine_State_Handles(void)
                     player->onGround        = false;
                     player->state           = Player_State_Static;
 
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLE_SWING_H, &player->animator, true, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLE_SWING_V, &player->animator, true, 0);
                     player->animator.speed = 0;
 
                     self->playerAngles[playerID] = player->position.y >= self->position.y ? 0x80 : 0x180;
@@ -158,7 +158,7 @@ void Turbine_State_Handles(void)
                 player->state                = Player_State_Air;
                 self->playerTimers[playerID] = 30;
             }
-            else if (player->animator.animationID != ANI_POLE_SWING_H || player->state != Player_State_Static) {
+            else if (player->animator.animationID != ANI_POLE_SWING_V || player->state != Player_State_Static) {
                 self->activePlayers &= ~(1 << playerID);
                 player->state                = Player_State_Air;
                 self->playerTimers[playerID] = 30;
