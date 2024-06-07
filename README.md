@@ -54,6 +54,7 @@ Install the following dependencies: then follow the [compilation steps below](#c
 - **pacman (Arch):** `sudo pacman -S base-devel cmake glew glfw libtheora`
 - **apt (Debian/Ubuntu):** `sudo apt install build-essential cmake libglew-dev libglfw3-dev libtheora-dev`
 - **rpm (Fedora):** `sudo dnf install make cmake gcc glew-devel glfw-devel libtheora-devel zlib-devel`
+- **xbps (Void):** `sudo xbps-install make cmake gcc pkg-config glew-devel glfw-devel libtheora-devel zlib-devel`
 - Your favorite package manager here, [make a pull request](https://github.com/Rubberduckycooly/Sonic-Mania-Decompilation/fork) (also update [RSDKv5U](https://github.com/Rubberduckycooly/RSDKv5-Decompilation)!)
 
 #### (make sure to [install GL shaders!](#q-why-arent-videosfilters-working-while-using-gl))
