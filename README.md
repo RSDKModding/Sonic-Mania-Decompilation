@@ -92,7 +92,7 @@ The following cmake arguments are available when compiling:
 - `RETRO_SUBSYSTEM`: *Only change this if you know what you're doing.* Changes the subsystem that RSDKv5 will be built for. Defaults to the most standard subsystem for the platform.
 
 ### Sonic Mania flags
-- `WITH_RSDK`: Whether or not RSDKv5 is built alongside Sonic Mania. Takes a boolean, defaults to `off`.
+- `WITH_RSDK`: Whether or not RSDKv5 is built alongside Sonic Mania. Takes a boolean, defaults to `on`.
   - `GAME_STATIC`: Whether or not to build Sonic Mania into the resulting RSDKv5 executable. Takes a boolean, defaults change depending on the system.
 - `MANIA_FIRST_RELEASE`: Whether or not to build the first console release of Sonic Mania. Takes a boolean, defaults to `off`.
 - `MANIA_PRE_PLUS`: Whether or not to build a pre-plus version of Sonic Mania. Takes a boolean, defaults to `off`.
