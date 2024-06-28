@@ -3578,6 +3578,8 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(UIDialog_State_Idle);
     ADD_PUBLIC_FUNC(UIDialog_State_Close);
     ADD_PUBLIC_FUNC(UIDialog_CreateDialogOk);
+    ADD_PUBLIC_FUNC(UIDialog_CreateDialogYesNo);
+    ADD_PUBLIC_FUNC(UIDialog_CreateDialogOkCancel);
 
     // Menu/UIDiorama
 #if MANIA_USE_PLUS
