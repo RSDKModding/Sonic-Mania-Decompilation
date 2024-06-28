@@ -9,9 +9,9 @@
   * [PS4, via the Store](https://store.playstation.com/en-us/product/UP0177-CUSA07023_00-SONICMANIA000000)
   * [Xbox One, via the Store](https://www.xbox.com/en-US/games/store/sonic-mania/BXH46NQT9W4Q/0001)
 
-Even if your platform isn't supported by the official releases, you **must** buy or officially download it for the assets.
+Even if your platform isn't supported by the above official releases, you **must** buy it for the assets. The Netflix Games version is NOT supported.
 
-## **DO NOT USE THIS DECOMPILATION PROJECT AS A MEANS TO PIRATE SONIC MANIA**
+## **DO NOT USE THIS DECOMPILATION PROJECT AS A MEANS TO PIRATE SONIC MANIA (PLUS)**
 We do not condone using this project as a means for piracy in any form. This project was made with love and care for the source material and was created for purely educational purposes, and would not exist without the work of Sega, Headcannon, and Evening Star.
 
 If you want to transfer your save from the official PC versions, you can just copy your savedata into the folder containing the decompilation!
@@ -19,7 +19,7 @@ If you want to transfer your save from the official PC versions, you can just co
 # Additional Tweaks
 * Added a built-in mod loader and API calls to enable a much smoother modding experience.
 * Added support for targeting RSDKv5U rather than standalone RSDKv5
-* Added all content from all released versions of the game. Including: 1.00 (Console initial release), 1.03 (PC initial release) & 1.06 (Plus update)
+* Added all content from almost all released versions of the game. Including: 1.00 (Console initial release), 1.03 (PC initial release) & 1.06 (Plus update)
 
 # How to Build
 
@@ -30,7 +30,7 @@ This project uses [CMake](https://cmake.org/), a versatile building system that 
 In order to clone the repository, you need to install Git, which you can get [here](https://git-scm.com/downloads).
 
 Clone the repo **recursively**, using:
-`git clone --recursive https://github.com/Rubberduckycooly/Sonic-Mania-Decompilation`
+`git clone --recursive https://github.com/RSDKModding/Sonic-Mania-Decompilation`
 
 If you've already cloned the repo, run this command inside of the repository:
 ```git submodule update --init --recursive```
@@ -55,7 +55,7 @@ Install the following dependencies: then follow the [compilation steps below](#c
 - **apt (Debian/Ubuntu):** `sudo apt install build-essential cmake libglew-dev libglfw3-dev libtheora-dev`
 - **rpm (Fedora):** `sudo dnf install make cmake gcc glew-devel glfw-devel libtheora-devel zlib-devel`
 - **xbps (Void):** `sudo xbps-install make cmake gcc pkg-config glew-devel glfw-devel libtheora-devel zlib-devel`
-- Your favorite package manager here, [make a pull request](https://github.com/Rubberduckycooly/Sonic-Mania-Decompilation/fork) (also update [RSDKv5U](https://github.com/Rubberduckycooly/RSDKv5-Decompilation)!)
+- Your favorite package manager here, [make a pull request](https://github.com/RSDKModding/Sonic-Mania-Decompilation/fork) (also update [RSDKv5U](https://github.com/RSDKModding/RSDKv5-Decompilation)!)
 
 #### (make sure to [install GL shaders!](#q-why-arent-videosfilters-working-while-using-gl))
 
@@ -102,7 +102,7 @@ The following cmake arguments are available when compiling:
 ### Other Platforms
 The only directly supported platforms are those listed above. Since Mania is very easy to build, requiring no additional dependencies, virtually any platform that can run RSDKv5 can compile Mania easily.
 
-However, there are a multitude of ports listed in the **[RSDKv5 repository.](https://github.com/Rubberduckycooly/RSDKv5-Decompilation)**
+However, there are a multitude of ports listed in the **[RSDKv5 repository.](https://github.com/RSDKModding/RSDKv5-Decompilation)**
 
 # FAQ
 ## Q: Why aren't videos/filters working while using GL?
@@ -125,11 +125,11 @@ Version=1.0.0
 TargetVersion=5
 ```
 
-### Q: I found a bug/I have a feature request!
-A: Submit an issue in the issues tab and we _might_ fix it in the main branch. Don't expect any major future releases, however.
+### Q: I found a bug!
+A: Submit an issue in the Issues tab and we might look into it. Keep in mind that this is a decompilation, so bugs that exist in official releases will most likely not be fixed here.
 
 ### Q: Will you do a decompilation for Sonic CD (2011) and/or Sonic 1/2 (2013)?
-A: I already have! You can find Sonic CD [here](https://github.com/Rubberduckycooly/Sonic-CD-11-Decompilation) and Sonic 1/2 [here](https://github.com/Rubberduckycooly/Sonic-1-2-2013-Decompilation).
+A: I already have! You can find Sonic CD [here](https://github.com/RSDKModding/RSDKv3-Decompilation) and Sonic 1/2 [here](https://github.com/RSDKModding/RSDKv4-Decompilation).
 
 ### Q: Are there anymore decompilation projects in the works, such as Sonic Origins/Sonic 3 & Knuckles?
 A: Absolutely not. This project took about 1 and a half years to do, and doing Sonic 3 & Knuckles would take equally as long, if not longer, as it's not only larger in scope, but Origins' hybrid codebase makes it harder to read. Between our other decompilation projects and this one, we're done with decompiling, at least for the time being. We would also like to expand our horizons beyond Sonic going forward, and we don't wish to spend forever just playing catchup with Sega's official releases. Please do not expect any more decompilations from us, Sonic or otherwise!
