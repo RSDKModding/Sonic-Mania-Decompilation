@@ -7,7 +7,7 @@ if len(sys.argv) < 2:
     print(f"Not enough arguments supplied... Exiting...")
     exit(1)
 
-events = ("Update", "LateUpdate", "StaticUpdate", "Draw", "Create", "StageLoad", "EditorDraw", "EditorLoad", "Serialize")
+events = ("Update", "LateUpdate", "StaticUpdate", "Draw", "Create", "StageLoad", "EditorLoad", "EditorDraw", "Serialize")
 
 print("void InitPublicFunctions()\n{")
 for path in Path(sys.argv[1]).rglob("*.h"):
