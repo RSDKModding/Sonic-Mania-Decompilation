@@ -1641,9 +1641,6 @@ typedef struct {
     uint16 (*GetSfx)(const char *path);
     int32 (*PlaySfx)(uint16 sfx, int32 loopPoint, int32 priority);
     void (*StopSfx)(uint16 sfx);
-#if RETRO_REV0U
-    void (*StopAllSfx)(void);
-#endif
     int32 (*PlayStream)(const char *filename, uint32 channel, uint32 startPos, uint32 loopPoint, bool32 loadASync);
     void (*SetChannelAttributes)(uint8 channel, float volume, float pan, float speed);
     void (*StopChannel)(uint32 channel);
@@ -1712,6 +1709,7 @@ typedef struct {
     // Origins Extras
     void (*NotifyCallback)(int32 callbackID, int32 param1, int32 param2, int32 param3);
     void (*SetGameFinished)(void);
+    void (*StopAllSfx)(void);
 #endif
 } RSDKFunctionTable;
 
