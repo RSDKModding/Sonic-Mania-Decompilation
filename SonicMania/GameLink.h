@@ -1537,7 +1537,7 @@ typedef struct {
     void (*SetPaletteEntry)(uint8 bankID, uint8 index, uint32 color);
     color (*GetPaletteEntry)(uint8 bankID, uint8 index);
     void (*SetActivePalette)(uint8 newActiveBank, int32 startLine, int32 endLine);
-    void (*CopyPalette)(uint8 sourceBank, uint8 srcBankStart, uint8 destinationBank, uint8 destBankStart, uint16 count);
+    void (*CopyPalette)(uint8 sourceBank, uint8 srcBankStart, uint8 destinationBank, uint8 destBankStart, uint8 count);
 #if RETRO_REV02
     void (*LoadPalette)(uint8 bankID, const char *path, uint16 disabledRows);
 #endif
