@@ -105,8 +105,8 @@ The only directly supported platforms are those listed above. Since Mania is ver
 However, there are a multitude of ports listed in the **[RSDKv5 repository.](https://github.com/RSDKModding/RSDKv5-Decompilation)**
 
 # FAQ
-## Q: Why aren't videos/filters working while using GL?
-### A: There's a mod for it that you have to make. Refer to the following directions:
+### Q: Why aren't videos/filters working while using GL?
+A: There's a mod for it that you have to make. Refer to the following directions:
 
 Create the following directory structure inside your mods directory:
 ```
@@ -127,6 +127,9 @@ TargetVersion=5
 
 ### Q: I found a bug!
 A: Submit an issue in the Issues tab and we might look into it. Keep in mind that this is a decompilation, so bugs that exist in official releases will most likely not be fixed here.
+
+### Q: Will you add support for the Netflix Games version of Mania?
+A: No. There are several reasons for this: the APIs introduced in the port that we'd have to deal with, the pressure of having to maintain support for a version that's being frequently updated, concerns over piracy, and a general disinterest in the port. If you want to play the decomp on mobile with touch controls, there's a [mod](https://github.com/RSDKModding/RSDKv5-Example-Mods/tree/master/ManiaTouchControls) for that you can use instead.
 
 ### Q: Will you do a decompilation for Sonic CD (2011) and/or Sonic 1/2 (2013)?
 A: I already have! You can find Sonic CD [here](https://github.com/RSDKModding/RSDKv3-Decompilation) and Sonic 1/2 [here](https://github.com/RSDKModding/RSDKv4-Decompilation).
