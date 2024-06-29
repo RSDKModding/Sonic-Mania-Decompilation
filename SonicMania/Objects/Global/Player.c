@@ -4230,9 +4230,9 @@ void Player_State_Peelout(void)
     }
     else if (self->abilityTimer < self->minDashVelocity) {
         if (self->animator.animationID == ANI_DASH || self->animator.animationID == ANI_RUN)
-            RSDK.SetSpriteAnimation(self->aniFrames, ANI_RUN, &self->animator, false, 1);
-        else
             RSDK.SetSpriteAnimation(self->aniFrames, ANI_RUN, &self->animator, false, 0);
+        else
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_RUN, &self->animator, false, 1);
 
         self->animator.speed = (self->abilityTimer >> 12) + 96;
         if (self->animator.speed > 0x200)
@@ -4242,9 +4242,9 @@ void Player_State_Peelout(void)
     }
     else {
         if (self->animator.animationID == ANI_DASH || self->animator.animationID == ANI_RUN)
-            RSDK.SetSpriteAnimation(self->aniFrames, ANI_DASH, &self->animator, false, 1);
-        else
             RSDK.SetSpriteAnimation(self->aniFrames, ANI_DASH, &self->animator, false, 0);
+        else
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_DASH, &self->animator, false, 1);
 
         self->minDashVelocity = 0xB8000;
     }
