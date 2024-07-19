@@ -118,14 +118,15 @@ void ChemicalPool_Create(void *data)
         self->g                = 0x08;
         self->b                = 0xC0;
 
-        self->timer = 0;
-
         self->hitbox.left   = -(self->size.x >> 17);
         self->hitbox.top    = (self->type == CHEMICALPOOL_BLUE ? 6 : 0) - (self->size.y >> 17);
         self->hitbox.right  = -self->hitbox.left;
         self->hitbox.bottom = -self->hitbox.bottom;
 
         ChemicalPool_SetupColors();
+
+        self->timer = 0;
+
         RSDK.SetSpriteAnimation(ChemicalPool->aniFrames, 0, &self->animator, true, 0);
     }
 }
