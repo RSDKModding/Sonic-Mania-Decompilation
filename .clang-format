@@ -12,7 +12,6 @@ AllowShortLoopsOnASingleLine: true
 BinPackArguments: true
 BinPackParameters: true
 SpaceAfterCStyleCast: false
-BreakBeforeBraces: Attach
 BreakBeforeTernaryOperators: true
 BreakBeforeBinaryOperators: NonAssignment
 Cpp11BracedListStyle: false
