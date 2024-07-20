@@ -48,7 +48,6 @@
     <ClInclude Include="Objects\Common\BreakableWall.h" />
     <ClInclude Include="Objects\Common\Button.h" />
     <ClInclude Include="Objects\Common\CollapsingPlatform.h" />
-    <ClInclude Include="Objects\Helpers\CompetitionSession.h" />
     <ClInclude Include="Objects\Common\Decoration.h" />
     <ClInclude Include="Objects\Common\Eggman.h" />
     <ClInclude Include="Objects\Common\FlingRamp.h" />
@@ -96,12 +95,7 @@
     <ClInclude Include="Objects\Credits\AnimalHBH.h" />
     <ClInclude Include="Objects\Credits\CreditsSetup.h" />
     <ClInclude Include="Objects\Credits\EncoreGoodEnd.h" />
-    <ClInclude Include="Objects\Credits\TAEmerald.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClInclude>
+    <ClInclude Include="Objects\Credits\TAEmerald.h" />
     <ClInclude Include="Objects\Credits\TryAgain.h" />
     <ClInclude Include="Objects\Credits\TryAgainE.h" />
     <ClInclude Include="Objects\Cutscene\ChaosEmerald.h" />
@@ -142,7 +136,6 @@
     <ClInclude Include="Objects\FBZ\Crane.h" />
     <ClInclude Include="Objects\FBZ\Cylinder.h" />
     <ClInclude Include="Objects\FBZ\ElectroMagnet.h" />
-    <ClInclude Include="Objects\HCZ\Fan.h" />
     <ClInclude Include="Objects\FBZ\FBZ1Outro.h" />
     <ClInclude Include="Objects\FBZ\FBZ2Outro.h" />
     <ClInclude Include="Objects\FBZ\FBZFan.h" />
@@ -164,12 +157,7 @@
     <ClInclude Include="Objects\FBZ\PropellerShaft.h" />
     <ClInclude Include="Objects\FBZ\SpiderMobile.h" />
     <ClInclude Include="Objects\FBZ\SpiralPlatform.h" />
-    <ClInclude Include="Objects\FBZ\SwitchDoor.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClInclude>
+    <ClInclude Include="Objects\FBZ\SwitchDoor.h" />
     <ClInclude Include="Objects\FBZ\Technosqueek.h" />
     <ClInclude Include="Objects\FBZ\TetherBall.h" />
     <ClInclude Include="Objects\FBZ\Tuesday.h" />
@@ -222,12 +210,7 @@
     <ClInclude Include="Objects\Global\NoSwap.h" />
     <ClInclude Include="Objects\Global\PauseMenu.h" />
     <ClInclude Include="Objects\Global\PlaneSwitch.h" />
-    <ClInclude Include="Objects\Global\Player.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClInclude>
+    <ClInclude Include="Objects\Global\Player.h" />
     <ClInclude Include="Objects\Global\ReplayRecorder.h" />
     <ClInclude Include="Objects\Global\Ring.h" />
     <ClInclude Include="Objects\Global\SaveGame.h" />
@@ -248,8 +231,10 @@
     <ClInclude Include="Objects\HCZ\BreakBar.h" />
     <ClInclude Include="Objects\HCZ\Buggernaut.h" />
     <ClInclude Include="Objects\HCZ\ButtonDoor.h" />
+    <ClInclude Include="Objects\HCZ\Current.h" />
     <ClInclude Include="Objects\HCZ\DCEvent.h" />
     <ClInclude Include="Objects\HCZ\DiveEggman.h" />
+    <ClInclude Include="Objects\HCZ\Fan.h" />
     <ClInclude Include="Objects\HCZ\Gondola.h" />
     <ClInclude Include="Objects\HCZ\HandLauncher.h" />
     <ClInclude Include="Objects\HCZ\HangConveyor.h" />
@@ -257,6 +242,7 @@
     <ClInclude Include="Objects\HCZ\HCZOneWayDoor.h" />
     <ClInclude Include="Objects\HCZ\HCZSetup.h" />
     <ClInclude Include="Objects\HCZ\HCZSpikeBall.h" />
+    <ClInclude Include="Objects\HCZ\Jawz.h" />
     <ClInclude Include="Objects\HCZ\Jellygnite.h" />
     <ClInclude Include="Objects\HCZ\LaundroMobile.h" />
     <ClInclude Include="Objects\HCZ\MegaChopper.h" />
@@ -270,32 +256,21 @@
     <ClInclude Include="Objects\HCZ\Whirlpool.h" />
     <ClInclude Include="Objects\Helpers\BadnikHelpers.h" />
     <ClInclude Include="Objects\Helpers\ColorHelpers.h" />
+    <ClInclude Include="Objects\Helpers\CompetitionSession.h" />
     <ClInclude Include="Objects\Helpers\DrawHelpers.h" />
     <ClInclude Include="Objects\Helpers\GameProgress.h" />
     <ClInclude Include="Objects\Helpers\LogHelpers.h" />
     <ClInclude Include="Objects\Helpers\MathHelpers.h" />
     <ClInclude Include="Objects\Helpers\Options.h" />
     <ClInclude Include="Objects\Helpers\ParticleHelpers.h" />
-    <ClInclude Include="Objects\Helpers\PlayerHelpers.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="Objects\Helpers\PlayerProbe.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClInclude>
+    <ClInclude Include="Objects\Helpers\PlayerHelpers.h" />
+    <ClInclude Include="Objects\Helpers\PlayerProbe.h" />
     <ClInclude Include="Objects\Helpers\ReplayDB.h" />
     <ClInclude Include="Objects\Helpers\TimeAttackData.h" />
     <ClInclude Include="Objects\HPZ\Batbot.h" />
-    <ClInclude Include="Objects\HCZ\Jawz.h" />
     <ClInclude Include="Objects\HPZ\Redz.h" />
     <ClInclude Include="Objects\HPZ\Stegway.h" />
     <ClInclude Include="Objects\LRZ\BuckwildBall.h" />
-    <ClInclude Include="Objects\HCZ\Current.h" />
     <ClInclude Include="Objects\LRZ\DashLift.h" />
     <ClInclude Include="Objects\LRZ\Drillerdroid.h" />
     <ClInclude Include="Objects\LRZ\DrillerdroidO.h" />
@@ -396,18 +371,8 @@
     <ClInclude Include="Objects\Menu\UIWinSize.h" />
     <ClInclude Include="Objects\MMZ\BladePole.h" />
     <ClInclude Include="Objects\MMZ\BuzzSaw.h" />
-    <ClInclude Include="Objects\MMZ\ConveyorBelt.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="Objects\MMZ\ConveyorPlatform.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClInclude>
+    <ClInclude Include="Objects\MMZ\ConveyorBelt.h" />
+    <ClInclude Include="Objects\MMZ\ConveyorPlatform.h" />
     <ClInclude Include="Objects\MMZ\ConveyorWheel.h" />
     <ClInclude Include="Objects\MMZ\EggPistonsMKII.h" />
     <ClInclude Include="Objects\MMZ\FarPlane.h" />
@@ -822,12 +787,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Objects\Common\CollapsingPlatform.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="Objects\Helpers\CompetitionSession.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -1356,12 +1315,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Objects\FBZ\ElectroMagnet.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="Objects\HCZ\Fan.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -1937,6 +1890,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="Objects\HCZ\Current.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Objects\HCZ\DCEvent.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -1944,6 +1903,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Objects\HCZ\DiveEggman.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Objects\HCZ\Fan.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -1986,6 +1951,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Objects\HCZ\HCZSpikeBall.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Objects\HCZ\Jawz.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -2069,6 +2040,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="Objects\Helpers\CompetitionSession.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Objects\Helpers\DrawHelpers.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -2135,12 +2112,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Objects\HCZ\Jawz.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="Objects\HPZ\Redz.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -2154,12 +2125,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Objects\LRZ\BuckwildBall.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="Objects\HCZ\Current.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

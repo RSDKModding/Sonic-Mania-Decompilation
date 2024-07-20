@@ -211,16 +211,7 @@
     <ClInclude Include="Objects\Global\NoSwap.h" />
     <ClInclude Include="Objects\Global\PauseMenu.h" />
     <ClInclude Include="Objects\Global\PlaneSwitch.h" />
-    <ClInclude Include="Objects\Global\Player.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </ExcludedFromBuild>
-    </ClInclude>
+    <ClInclude Include="Objects\Global\Player.h" />
     <ClInclude Include="Objects\Global\ReplayRecorder.h" />
     <ClInclude Include="Objects\Global\Ring.h" />
     <ClInclude Include="Objects\Global\SaveGame.h" />
@@ -791,7 +782,8 @@
     </ClCompile>
     <ClCompile Include="Objects\Credits\EncoreGoodEnd.c">
     </ClCompile>
-    <ClCompile Include="Objects\Credits\TAEmerald.c" />
+    <ClCompile Include="Objects\Credits\TAEmerald.c">
+    </ClCompile>
     <ClCompile Include="Objects\Credits\TryAgain.c">
     </ClCompile>
     <ClCompile Include="Objects\Credits\TryAgainE.c">
@@ -914,7 +906,8 @@
     </ClCompile>
     <ClCompile Include="Objects\FBZ\SpiralPlatform.c">
     </ClCompile>
-    <ClCompile Include="Objects\FBZ\SwitchDoor.c" />
+    <ClCompile Include="Objects\FBZ\SwitchDoor.c">
+    </ClCompile>
     <ClCompile Include="Objects\FBZ\Technosqueek.c">
     </ClCompile>
     <ClCompile Include="Objects\FBZ\TetherBall.c">
@@ -1020,14 +1013,6 @@
     <ClCompile Include="Objects\Global\PlaneSwitch.c">
     </ClCompile>
     <ClCompile Include="Objects\Global\Player.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Objects\Global\ReplayRecorder.c">
     </ClCompile>
@@ -1069,12 +1054,14 @@
     </ClCompile>
     <ClCompile Include="Objects\HCZ\ButtonDoor.c">
     </ClCompile>
-    <ClCompile Include="Objects\HCZ\Current.c" />
+    <ClCompile Include="Objects\HCZ\Current.c">
+    </ClCompile>
     <ClCompile Include="Objects\HCZ\DCEvent.c">
     </ClCompile>
     <ClCompile Include="Objects\HCZ\DiveEggman.c">
     </ClCompile>
-    <ClCompile Include="Objects\HCZ\Fan.c" />
+    <ClCompile Include="Objects\HCZ\Fan.c">
+    </ClCompile>
     <ClCompile Include="Objects\HCZ\Gondola.c">
     </ClCompile>
     <ClCompile Include="Objects\HCZ\HandLauncher.c">
@@ -1089,7 +1076,8 @@
     </ClCompile>
     <ClCompile Include="Objects\HCZ\HCZSpikeBall.c">
     </ClCompile>
-    <ClCompile Include="Objects\HCZ\Jawz.c" />
+    <ClCompile Include="Objects\HCZ\Jawz.c">
+    </ClCompile>
     <ClCompile Include="Objects\HCZ\Jellygnite.c">
     </ClCompile>
     <ClCompile Include="Objects\HCZ\LaundroMobile.c">
@@ -1116,7 +1104,8 @@
     </ClCompile>
     <ClCompile Include="Objects\Helpers\ColorHelpers.c">
     </ClCompile>
-    <ClCompile Include="Objects\Helpers\CompetitionSession.c" />
+    <ClCompile Include="Objects\Helpers\CompetitionSession.c">
+    </ClCompile>
     <ClCompile Include="Objects\Helpers\DrawHelpers.c">
     </ClCompile>
     <ClCompile Include="Objects\Helpers\GameProgress.c">
@@ -1129,8 +1118,10 @@
     </ClCompile>
     <ClCompile Include="Objects\Helpers\ParticleHelpers.c">
     </ClCompile>
-    <ClCompile Include="Objects\Helpers\PlayerHelpers.c" />
-    <ClCompile Include="Objects\Helpers\PlayerProbe.c" />
+    <ClCompile Include="Objects\Helpers\PlayerHelpers.c">
+    </ClCompile>
+    <ClCompile Include="Objects\Helpers\PlayerProbe.c">
+    </ClCompile>
     <ClCompile Include="Objects\Helpers\ReplayDB.c">
     </ClCompile>
     <ClCompile Include="Objects\Helpers\TimeAttackData.c">
@@ -1343,8 +1334,10 @@
     </ClCompile>
     <ClCompile Include="Objects\MMZ\BuzzSaw.c">
     </ClCompile>
-    <ClCompile Include="Objects\MMZ\ConveyorBelt.c" />
-    <ClCompile Include="Objects\MMZ\ConveyorPlatform.c" />
+    <ClCompile Include="Objects\MMZ\ConveyorBelt.c">
+    </ClCompile>
+    <ClCompile Include="Objects\MMZ\ConveyorPlatform.c">
+    </ClCompile>
     <ClCompile Include="Objects\MMZ\ConveyorWheel.c">
     </ClCompile>
     <ClCompile Include="Objects\MMZ\EggPistonsMKII.c">

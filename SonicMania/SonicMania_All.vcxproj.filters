@@ -251,9 +251,6 @@
     <ClInclude Include="Objects\Common\CollapsingPlatform.h">
       <Filter>Sources\Objects\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\Helpers\CompetitionSession.h">
-      <Filter>Sources\Objects\Helpers</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\Common\Decoration.h">
       <Filter>Sources\Objects\Common</Filter>
     </ClInclude>
@@ -1034,9 +1031,6 @@
     <ClInclude Include="Objects\HPZ\Batbot.h">
       <Filter>Sources\Objects\HPZ</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\HCZ\Jawz.h">
-      <Filter>Sources\Objects\HCZ</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\HPZ\Redz.h">
       <Filter>Sources\Objects\HPZ</Filter>
     </ClInclude>
@@ -1496,9 +1490,6 @@
     <ClInclude Include="Objects\FBZ\ElectroMagnet.h">
       <Filter>Sources\Objects\FBZ</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\HCZ\Fan.h">
-      <Filter>Sources\Objects\HCZ</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\FBZ\FBZ1Outro.h">
       <Filter>Sources\Objects\FBZ</Filter>
     </ClInclude>
@@ -1645,9 +1636,6 @@
     </ClInclude>
     <ClInclude Include="Objects\LRZ\BuckwildBall.h">
       <Filter>Sources\Objects\LRZ</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\HCZ\Current.h">
-      <Filter>Sources\Objects\HCZ</Filter>
     </ClInclude>
     <ClInclude Include="Objects\LRZ\DashLift.h">
       <Filter>Sources\Objects\LRZ</Filter>
@@ -1943,6 +1931,18 @@
     <ClInclude Include="Objects\MMZ\ConveyorPlatform.h">
       <Filter>Sources\Objects\MMZ</Filter>
     </ClInclude>
+    <ClInclude Include="Objects\Helpers\CompetitionSession.h">
+      <Filter>Sources\Objects\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\HCZ\Jawz.h">
+      <Filter>Sources\Objects\HCZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\HCZ\Current.h">
+      <Filter>Sources\Objects\HCZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\HCZ\Fan.h">
+      <Filter>Sources\Objects\HCZ</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\Global\ActClear.c">
@@ -2082,9 +2082,6 @@
     </ClCompile>
     <ClCompile Include="Objects\Common\CollapsingPlatform.c">
       <Filter>Sources\Objects\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\Helpers\CompetitionSession.c">
-      <Filter>Sources\Objects\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="Objects\Common\Decoration.c">
       <Filter>Sources\Objects\Common</Filter>
@@ -2866,9 +2863,6 @@
     <ClCompile Include="Objects\HPZ\Batbot.c">
       <Filter>Sources\Objects\HPZ</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\HCZ\Jawz.c">
-      <Filter>Sources\Objects\HCZ</Filter>
-    </ClCompile>
     <ClCompile Include="Objects\HPZ\Redz.c">
       <Filter>Sources\Objects\HPZ</Filter>
     </ClCompile>
@@ -3328,9 +3322,6 @@
     <ClCompile Include="Objects\FBZ\ElectroMagnet.c">
       <Filter>Sources\Objects\FBZ</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\HCZ\Fan.c">
-      <Filter>Sources\Objects\HCZ</Filter>
-    </ClCompile>
     <ClCompile Include="Objects\FBZ\FBZ1Outro.c">
       <Filter>Sources\Objects\FBZ</Filter>
     </ClCompile>
@@ -3477,9 +3468,6 @@
     </ClCompile>
     <ClCompile Include="Objects\LRZ\BuckwildBall.c">
       <Filter>Sources\Objects\LRZ</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\HCZ\Current.c">
-      <Filter>Sources\Objects\HCZ</Filter>
     </ClCompile>
     <ClCompile Include="Objects\LRZ\DashLift.c">
       <Filter>Sources\Objects\LRZ</Filter>
@@ -3777,6 +3765,18 @@
     </ClCompile>
     <ClCompile Include="Game.c">
       <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Helpers\CompetitionSession.c">
+      <Filter>Sources\Objects\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\HCZ\Current.c">
+      <Filter>Sources\Objects\HCZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\HCZ\Fan.c">
+      <Filter>Sources\Objects\HCZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\HCZ\Jawz.c">
+      <Filter>Sources\Objects\HCZ</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
