@@ -18,65 +18,66 @@ void AIZRockPile_Update(void)
 
     foreach_active(Player, player)
     {
-        if (!self->onlyMighty || player->characterID == ID_MIGHTY) {
-            if (!self->onlyKnux || player->characterID == ID_KNUCKLES) {
-                int32 cMode     = player->collisionMode;
-                int32 playerX   = player->position.x;
-                int32 playerY   = player->position.y;
-                int32 xVelocity = player->velocity.x;
-                int32 yVelocity = player->velocity.y;
-                int32 jumping   = player->animator.animationID == ANI_JUMP;
-                int32 groundVel = player->groundVel;
+        if (self->onlyMighty && player->characterID != ID_MIGHTY) {
+            if (!self->onlyKnux || player->characterID != ID_KNUCKLES) {
+                Player_CheckCollisionBox(player, self, hitbox);
+                continue;
+            }
+        }
+        else if ((self->onlyKnux && player->characterID != ID_KNUCKLES) && (!self->onlyMighty || player->characterID != ID_MIGHTY)) {
+            Player_CheckCollisionBox(player, self, hitbox);
+            continue;
+        }
 
-                if (self->smashSides || self->smashTop) {
-                    int32 side = Player_CheckCollisionBox(player, self, hitbox);
-                    if (self->smashSides && (side == C_LEFT || side == C_RIGHT)) {
-                        if (side == C_LEFT || side == C_RIGHT) {
-                            bool32 canBreak = jumping && player->onGround && abs(groundVel) >= 0x48000;
-                            if (player->shield == SHIELD_FIRE) {
-                                EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield);
-                                canBreak |= shield->shieldAnimator.animationID == SHIELDANI_FIREATTACK;
-                            }
+        int32 cMode     = player->collisionMode;
+        int32 playerX   = player->position.x;
+        int32 playerY   = player->position.y;
+        int32 xVelocity = player->velocity.x;
+        int32 yVelocity = player->velocity.y;
+        int32 jumping   = player->animator.animationID == ANI_JUMP;
+        int32 groundVel = player->groundVel;
 
-                            canBreak |= player->characterID == ID_SONIC && player->superState == SUPERSTATE_SUPER;
-                            if (!player->sidekick && (canBreak || (player->characterID == ID_KNUCKLES))) {
-                                player->position.x = playerX;
-                                player->position.y = playerY;
-                                player->velocity.x = xVelocity;
-                                player->velocity.y = yVelocity;
-                                player->groundVel  = groundVel;
-                                if (xVelocity <= 0)
-                                    AIZRockPile_SpawnRocks(self->rockSpeedsL);
-                                else
-                                    AIZRockPile_SpawnRocks(self->rockSpeedsR);
+        int32 side = Player_CheckCollisionBox(player, self, hitbox);
+        if (side == C_LEFT || side == C_RIGHT) {
+            bool32 canBreak = jumping && player->onGround && abs(groundVel) >= 0x48000;
+            if (player->shield == SHIELD_FIRE) {
+                EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield);
+                canBreak |= shield->shieldAnimator.animationID == SHIELDANI_FIREATTACK;
+            }
 
-                                foreach_return;
-                            }
-                        }
-                    }
+            canBreak |= player->characterID == ID_SONIC && player->superState == SUPERSTATE_SUPER;
+            if (!player->sidekick && (canBreak || (player->characterID == ID_KNUCKLES))) {
+                player->position.x = playerX;
+                player->position.y = playerY;
+                player->velocity.x = xVelocity;
+                player->velocity.y = yVelocity;
+                player->groundVel  = groundVel;
+                if (xVelocity <= 0)
+                    AIZRockPile_SpawnRocks(self->rockSpeedsL);
+                else
+                    AIZRockPile_SpawnRocks(self->rockSpeedsR);
 
-                    if (self->smashTop && side == C_TOP) {
-                        bool32 canBreak = jumping;
-                        canBreak |= player->characterID == ID_SONIC && player->animator.animationID == ANI_DROPDASH;
-                        canBreak |= player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop;
-                        if (player->groundedStore && cMode != CMODE_FLOOR && cMode != CMODE_ROOF)
-                            canBreak = false;
-
-                        if (canBreak && !player->sidekick) {
-                            player->onGround = false;
-                            if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
-                                player->velocity.y = yVelocity - 0x10000;
-                            else
-                                player->velocity.y = -0x30000;
-                            AIZRockPile_SpawnRocks(self->rockSpeedsT);
-                            foreach_return;
-                        }
-                    }
-                }
+                foreach_return;
             }
         }
 
-        Player_CheckCollisionBox(player, self, hitbox);
+        if (side == C_TOP && (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_HAMMERDROP))) {
+            bool32 canBreak = jumping;
+            canBreak |= player->characterID == ID_SONIC && player->animator.animationID == ANI_DROPDASH;
+            canBreak |= player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop;
+            if (player->groundedStore && cMode != CMODE_LWALL && cMode != CMODE_RWALL)
+                canBreak = false;
+
+            if (canBreak && !player->sidekick) {
+                player->onGround = false;
+                if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
+                    player->velocity.y = yVelocity - 0x10000;
+                else
+                    player->velocity.y = -0x30000;
+                AIZRockPile_SpawnRocks(self->rockSpeedsT);
+                foreach_return;
+            }
+        }
     }
 }
 
