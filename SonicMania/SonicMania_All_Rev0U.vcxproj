@@ -291,7 +291,7 @@
     <ClInclude Include="Objects\Helpers\ReplayDB.h" />
     <ClInclude Include="Objects\Helpers\TimeAttackData.h" />
     <ClInclude Include="Objects\HPZ\Batbot.h" />
-    <ClInclude Include="Objects\HPZ\Jawz.h" />
+    <ClInclude Include="Objects\HCZ\Jawz.h" />
     <ClInclude Include="Objects\HPZ\Redz.h" />
     <ClInclude Include="Objects\HPZ\Stegway.h" />
     <ClInclude Include="Objects\LRZ\BuckwildBall.h" />
@@ -2135,7 +2135,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Objects\HPZ\Jawz.c">
+    <ClCompile Include="Objects\HCZ\Jawz.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

@@ -1034,8 +1034,8 @@
     <ClInclude Include="Objects\HPZ\Batbot.h">
       <Filter>Sources\Objects\HPZ</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\HPZ\Jawz.h">
-      <Filter>Sources\Objects\HPZ</Filter>
+    <ClInclude Include="Objects\HCZ\Jawz.h">
+      <Filter>Sources\Objects\HCZ</Filter>
     </ClInclude>
     <ClInclude Include="Objects\HPZ\Redz.h">
       <Filter>Sources\Objects\HPZ</Filter>
@@ -2866,8 +2866,8 @@
     <ClCompile Include="Objects\HPZ\Batbot.c">
       <Filter>Sources\Objects\HPZ</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\HPZ\Jawz.c">
-      <Filter>Sources\Objects\HPZ</Filter>
+    <ClCompile Include="Objects\HCZ\Jawz.c">
+      <Filter>Sources\Objects\HCZ</Filter>
     </ClCompile>
     <ClCompile Include="Objects\HPZ\Redz.c">
       <Filter>Sources\Objects\HPZ</Filter>
