@@ -36,7 +36,7 @@ void LRZ3Setup_StageLoad(void)
         Zone_StartFadeIn(10, 0x000000);
     }
 
-    if (isMainGameMode() && globals->enableIntro && (!CutsceneRules_CheckStageReload() || !CutsceneRules_CheckStageReload())) {
+    if ((isMainGameMode() && globals->enableIntro && !CutsceneRules_CheckStageReload()) || !CutsceneRules_CheckStageReload()) {
         CREATE_ENTITY(LRZ3Cutscene, NULL, 0, 0);
     }
 
