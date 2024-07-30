@@ -803,11 +803,7 @@ void APICallback_CheckUserAuth_CB(void)
     }
 }
 
-#if MANIA_USE_PLUS
-void APICallback_TrackGameProgressCB(bool32 success) { UIWaitSpinner_FinishWait(); }
-#else
 void APICallback_TrackGameProgressCB(void) { UIWaitSpinner_FinishWait(); }
-#endif
 
 void APICallback_GetNextNotif(void)
 {
