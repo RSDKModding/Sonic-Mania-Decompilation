@@ -364,7 +364,6 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Water_SpawnCountDownBubble);
     ADD_PUBLIC_FUNC(Water_GetPlayerBubble);
     ADD_PUBLIC_FUNC(Water_HandleBubbleMovement);
-    ADD_PUBLIC_FUNC(Water_State_BtnBigBubble);
     ADD_PUBLIC_FUNC(Water_PopBigBubble);
     ADD_PUBLIC_FUNC(Water_State_Water);
     ADD_PUBLIC_FUNC(Water_State_Pool);
@@ -372,6 +371,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Water_State_Bubble);
     ADD_PUBLIC_FUNC(Water_State_BubbleBreathed);
     ADD_PUBLIC_FUNC(Water_State_BigBubble);
+    ADD_PUBLIC_FUNC(Water_State_BtnBigBubble);
     ADD_PUBLIC_FUNC(Water_State_Bubbler);
     ADD_PUBLIC_FUNC(Water_State_Countdown);
     ADD_PUBLIC_FUNC(Water_State_CountdownFollow);
@@ -1549,12 +1549,12 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Motobug_DebugSpawn);
     ADD_PUBLIC_FUNC(Motobug_CheckOffScreen);
     ADD_PUBLIC_FUNC(Motobug_CheckPlayerCollisions);
-    ADD_PUBLIC_FUNC(Motobug_State_Fall);
+    ADD_PUBLIC_FUNC(Motobug_State_Init);
     ADD_PUBLIC_FUNC(Motobug_State_Move);
     ADD_PUBLIC_FUNC(Motobug_State_Idle);
-    ADD_PUBLIC_FUNC(Motobug_State_Init);
-    ADD_PUBLIC_FUNC(Motobug_State_Smoke);
+    ADD_PUBLIC_FUNC(Motobug_State_Fall);
     ADD_PUBLIC_FUNC(Motobug_State_Turn);
+    ADD_PUBLIC_FUNC(Motobug_State_Smoke);
 
     // GHZ/Newtron
     ADD_PUBLIC_FUNC(Newtron_DebugDraw);
@@ -1641,6 +1641,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Announcer_State_Countdown);
     ADD_PUBLIC_FUNC(Announcer_State_Finished);
     ADD_PUBLIC_FUNC(Announcer_State_AnnounceWinner);
+    ADD_PUBLIC_FUNC(Announcer_State_AnnounceDraw);
     ADD_PUBLIC_FUNC(Announcer_State_AnnounceWinPlayer);
 
     // Global/APICallback
@@ -1771,9 +1772,9 @@ void InitPublicFunctions()
 
     // Global/EggPrison
     ADD_PUBLIC_FUNC(EggPrison_HandleMovement);
-    ADD_PUBLIC_FUNC(EggPrison_State_Opened);
     ADD_PUBLIC_FUNC(EggPrison_State_Init);
     ADD_PUBLIC_FUNC(EggPrison_State_Idle);
+    ADD_PUBLIC_FUNC(EggPrison_State_Opened);
     ADD_PUBLIC_FUNC(EggPrison_State_Explode);
     ADD_PUBLIC_FUNC(EggPrison_State_SetupActClear);
     ADD_PUBLIC_FUNC(EggPrison_State_FlyOffScreen);
@@ -1949,6 +1950,8 @@ void InitPublicFunctions()
 #endif
     ADD_PUBLIC_FUNC(Player_CheckItemBreak);
     ADD_PUBLIC_FUNC(Player_UpdatePhysicsState);
+    ADD_PUBLIC_FUNC(Player_HandleIdleAnimation);
+    ADD_PUBLIC_FUNC(Player_HandleGroundAnimation);
     ADD_PUBLIC_FUNC(Player_HandleGroundMovement);
     ADD_PUBLIC_FUNC(Player_HandleGroundRotation);
     ADD_PUBLIC_FUNC(Player_HandleAirRotation);
@@ -2008,8 +2011,8 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Player_State_Bubble);
     ADD_PUBLIC_FUNC(Player_State_WaterSlide);
     ADD_PUBLIC_FUNC(Player_State_TransportTube);
-    ADD_PUBLIC_FUNC(Player_Gravity_False);
     ADD_PUBLIC_FUNC(Player_Gravity_True);
+    ADD_PUBLIC_FUNC(Player_Gravity_False);
     ADD_PUBLIC_FUNC(Player_JumpAbility_Sonic);
     ADD_PUBLIC_FUNC(Player_JumpAbility_Tails);
     ADD_PUBLIC_FUNC(Player_JumpAbility_Knux);
@@ -2148,9 +2151,9 @@ void InitPublicFunctions()
     // Global/SpecialRing
     ADD_PUBLIC_FUNC(SpecialRing_DebugDraw);
     ADD_PUBLIC_FUNC(SpecialRing_DebugSpawn);
-    ADD_PUBLIC_FUNC(SpecialRing_State_Warp);
-    ADD_PUBLIC_FUNC(SpecialRing_State_Flash);
     ADD_PUBLIC_FUNC(SpecialRing_State_Idle);
+    ADD_PUBLIC_FUNC(SpecialRing_State_Flash);
+    ADD_PUBLIC_FUNC(SpecialRing_State_Warp);
 
     // Global/SpeedGate
     ADD_PUBLIC_FUNC(SpeedGate_State_WaitForStart);
@@ -2223,6 +2226,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Zone_RotateOnPivot);
     ADD_PUBLIC_FUNC(Zone_ReloadScene);
     ADD_PUBLIC_FUNC(Zone_StartTeleportAction);
+    ADD_PUBLIC_FUNC(Zone_HandlePlayerBounds);
     ADD_PUBLIC_FUNC(Zone_ApplyWorldBounds);
     ADD_PUBLIC_FUNC(Zone_IsZoneLastAct);
 #if MANIA_USE_PLUS
@@ -2641,6 +2645,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(TimeAttackData_TrackTAClear);
     ADD_PUBLIC_FUNC(TimeAttackData_TrackEnemyDefeat);
 #endif
+    ADD_PUBLIC_FUNC(TimeAttackData_GetTimeAttackRAM);
     ADD_PUBLIC_FUNC(TimeAttackData_Clear);
     ADD_PUBLIC_FUNC(TimeAttackData_GetManiaListPos);
 #if MANIA_USE_PLUS
@@ -3676,8 +3681,8 @@ void InitPublicFunctions()
 #if !MANIA_USE_PLUS
     ADD_PUBLIC_FUNC(UILeaderboard_InitLeaderboard);
     ADD_PUBLIC_FUNC(UILeaderboard_SetupLeaderboard);
-    ADD_PUBLIC_FUNC(UILeaderboard_LoadEntries);
 #endif
+    ADD_PUBLIC_FUNC(UILeaderboard_LoadEntries);
     ADD_PUBLIC_FUNC(UILeaderboard_DrawPrimitives);
     ADD_PUBLIC_FUNC(UILeaderboard_DrawEntries);
     ADD_PUBLIC_FUNC(UILeaderboard_DrawZonePreview);
@@ -4890,8 +4895,8 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(IceSpring_Shatter);
 
     // PGZ/JuggleSaw
-    ADD_PUBLIC_FUNC(JuggleSaw_DebugSpawn);
     ADD_PUBLIC_FUNC(JuggleSaw_DebugDraw);
+    ADD_PUBLIC_FUNC(JuggleSaw_DebugSpawn);
     ADD_PUBLIC_FUNC(JuggleSaw_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(JuggleSaw_CheckOffScreen);
     ADD_PUBLIC_FUNC(JuggleSaw_StateCrab_Setup);
@@ -5078,6 +5083,7 @@ void InitPublicFunctions()
 
     // PGZ/Woodrow
     ADD_PUBLIC_FUNC(Woodrow_DebugSpawn);
+    ADD_PUBLIC_FUNC(Woodrow_DebugDraw);
     ADD_PUBLIC_FUNC(Woodrow_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(Woodrow_CheckOffScreen);
     ADD_PUBLIC_FUNC(Woodrow_State_Init);
@@ -5371,6 +5377,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(EggJanken_State_FinishedBeingHit);
     ADD_PUBLIC_FUNC(EggJanken_State_RaiseArms);
     ADD_PUBLIC_FUNC(EggJanken_State_SwingDropArms);
+    ADD_PUBLIC_FUNC(EggJanken_State_ResultPlayerDraw);
     ADD_PUBLIC_FUNC(EggJanken_State_WaitForArmAttackExtend);
     ADD_PUBLIC_FUNC(EggJanken_State_PrepareArmAttack);
     ADD_PUBLIC_FUNC(EggJanken_State_ArmAttack);
@@ -6215,6 +6222,7 @@ void InitPublicFunctions()
 
     // Summary/Summary
 #if MANIA_USE_PLUS
+    ADD_PUBLIC_FUNC(Summary_State_Draw);
     ADD_PUBLIC_FUNC(Summary_State_SetupText);
     ADD_PUBLIC_FUNC(Summary_State_FadeIn);
     ADD_PUBLIC_FUNC(Summary_State_Wait);
