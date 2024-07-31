@@ -182,7 +182,7 @@ void PhantomHand_State_TryGrabPlayer(void)
         self->state = PhantomHand_State_Disappear;
     }
     else {
-        if ((self->direction && player1->position.x <= PhantomEgg->boundsM) || (self->direction && player1->position.x >= PhantomEgg->boundsM))
+        if ((self->direction && player1->position.x <= PhantomEgg->boundsM) || (!self->direction && player1->position.x >= PhantomEgg->boundsM))
             PhantomHand_CheckPlayerGrab(self->parent->position.x, player1->position.y);
         else
             PhantomHand_CheckPlayerGrab(player1->position.x, player1->position.y);
