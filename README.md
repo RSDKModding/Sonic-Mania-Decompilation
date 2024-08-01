@@ -68,7 +68,7 @@ Finally, follow the [compilation steps below](#compiling) using `-DCMAKE_TOOLCHA
 #### (make sure to [install GL shaders!](#q-why-arent-videosfilters-working-while-using-gl))
 
 ## Android
-**Ensure you clone the repo recursively,** then follow the RSDK build instructions [here.](./dependencies/RSDKV5/dependencies/android/README.md)
+**Ensure you clone the repo recursively,** then follow the RSDK build instructions [here.](https://github.com/RSDKModding/RSDKv5-Decompilation/blob/master/dependencies/android/README.md)
 
 ### Compiling
 
