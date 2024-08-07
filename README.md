@@ -82,7 +82,7 @@ The resulting build for Mania will be located somewhere in `build/` depending on
 If building with RSDKv5(U), the resulting Mania and RSDK executable will likely be in `build/dependencies/RSDKv5/`.
 
 The following cmake arguments are available when compiling:
-- Use these on the `cmake -B build` step like so: `cmake -B build -DRETRO_DISABLE_PLUS=on`
+- Use these by adding `-D[flag-name]=[value]` to the end of the `cmake -B build` command. For example, to build with `RETRO_DISABLE_PLUS` set to on, add `-DRETRO_DISABLE_PLUS=on` to the command.
 
 ### RSDKv5 flags
 - `RETRO_REVISION`: What revision to compile for. Takes an integer, defaults to `3` (RSDKv5U).
