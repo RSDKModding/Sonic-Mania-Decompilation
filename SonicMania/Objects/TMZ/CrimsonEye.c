@@ -531,7 +531,40 @@ void CrimsonEye_StateContainer_CoreActive(void)
         }
     }
 
-    CrimsonEye_StateContainer_HandleElevator(); // its the exact same code
+    // Same code as CrimsonEye_StateContainer_HandleElevator() but using CrimsonEye->elevatorGravity instead of 0x800
+    if (CrimsonEye->elevatorSpeed != CrimsonEye->targetElevatorSpeed) {
+        if (CrimsonEye->elevatorSpeed >= CrimsonEye->targetElevatorSpeed) {
+            CrimsonEye->elevatorSpeed -= CrimsonEye->elevatorGravity;
+
+            if (CrimsonEye->elevatorSpeed < CrimsonEye->targetElevatorSpeed)
+                CrimsonEye->elevatorSpeed = CrimsonEye->targetElevatorSpeed;
+        }
+        else {
+            CrimsonEye->elevatorSpeed += CrimsonEye->elevatorGravity;
+
+            if (CrimsonEye->elevatorSpeed > CrimsonEye->targetElevatorSpeed)
+                CrimsonEye->elevatorSpeed = CrimsonEye->targetElevatorSpeed;
+        }
+    }
+
+    for (int32 i = 0; i < PLAYER_COUNT; ++i) {
+        EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
+        // NOTE:
+        // according to IDA, the original code is
+        // if (player->classID)
+        // but this crashes the game when super & without a sidekick so this fix will stay
+        if (player->classID == Player->classID)
+            player->gravityStrength = 0x3800 - CrimsonEye->elevatorSpeed / 0x30;
+    }
+
+    TileLayer *elevatorLayer = CrimsonEye->liftBackground;
+    elevatorLayer->scrollPos = -0x800000;
+    for (int32 i = 0; i < elevatorLayer->scrollInfoCount; ++i) {
+        elevatorLayer->scrollInfo[i].scrollSpeed = elevatorLayer->scrollInfo[i].parallaxFactor * (CrimsonEye->elevatorSpeed / 24);
+    }
+
+    CrimsonEye->bg2Layer->scrollSpeed = 6 * CrimsonEye->elevatorSpeed;
+    //
 
     if (CrimsonEye->health == 9)
         self->stateEye = StateMachine_None;
