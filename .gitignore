@@ -30,8 +30,6 @@ bin/
 [Oo]bj/
 cmake/
 
-.github/
-
 # safety
 *.rsdk
 Sonic Mania/Static/*
