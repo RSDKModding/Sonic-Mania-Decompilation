@@ -217,9 +217,6 @@ void PhantomHand_State_TryGrabPlayers(void)
                     playerPtr = player;
                 }
             }
-
-            if (playerPtr)
-                PhantomHand_CheckPlayerGrab(playerPtr->position.x, playerPtr->position.y);
         }
         else {
             foreach_active(Player, player)
