@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectBurningLog {
     RSDK_OBJECT
-    int32 aniFrames;
+    uint16 aniFrames;
     Hitbox hitboxPlatform;
     Hitbox hitboxFlame;
 };
