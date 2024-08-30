@@ -1,12 +1,9 @@
 name: Build Mania
 
-on: workflow_dispatch
-
-# each artifact is like 15MB so we'll start by only doing it manually
-# on:
-#   push:
-#     branches:
-#       - master
+on:
+  push:
+    branches:
+      - master
 
 env:
   GENERAL_FLAGS: "-DWITH_RSDK=OFF -DCMAKE_BUILD_TYPE=Release"
