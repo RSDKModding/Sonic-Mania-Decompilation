@@ -87,8 +87,8 @@ body:
       multiple: false
       options:
         - REV0U (RSDKv5U)
-        - REV02
-        - REV01
+        - REV02 (RSDKv5 - Mania Plus)
+        - REV01 (RSDKv5 - Mania Pre-Plus)
   - id: platform
     type: input
     validations:
