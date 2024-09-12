@@ -35,12 +35,12 @@ Clone the repo **recursively**, using:
 If you've already cloned the repo, run this command inside of the repository:
 ```git submodule update --init --recursive```
 
-## Follow the build steps
+## Getting dependencies
 
 This repo includes everything you need for Sonic Mania + RSDKv5(U). If you wish to compile only Sonic Mania, you can skip to the [compilation steps below](#compiling).
 
 ### Windows
-To handle dependencies, you'll need to install [Visual Studio Community](https://visualstudio.microsoft.com/downloads/) (make sure to install the `Desktop development with C++` package during the installation) and [vcpkg](https://learn.microsoft.com/en-us/vcpkg/get_started/get-started).
+To handle dependencies, you'll need to install [Visual Studio Community](https://visualstudio.microsoft.com/downloads/) (make sure to install the `Desktop development with C++` package during the installation) and [vcpkg](https://learn.microsoft.com/en-us/vcpkg/get_started/get-started?pivots=shell-cmd#1---set-up-vcpkg) (You only need to follow `1 - Set up vcpkg`).
 
 After installing those, run the following in Command Prompt (make sure to replace `[vcpkg root]` with the path to the vcpkg installation!):
 - `[vcpkg root]/vcpkg.exe install libtheora libogg --triplet=x64-windows-static` (If you're compiling a 32-bit build, replace `x64-windows-static` with `x86-windows-static`.)
@@ -49,7 +49,7 @@ Finally, follow the [compilation steps below](#compiling) using `-DCMAKE_TOOLCHA
   - Make sure to replace `[vcpkg root]` with the path to the vcpkg installation!
   - If you're compiling a 32-bit build, replace `x64-windows-static` with `x86-windows-static`.
 
-## Linux
+### Linux
 Install the following dependencies: then follow the [compilation steps below](#compiling):
 - **pacman (Arch):** `sudo pacman -S base-devel cmake glew glfw libtheora`
 - **apt (Debian/Ubuntu):** `sudo apt install build-essential cmake libglew-dev libglfw3-dev libtheora-dev`
@@ -59,7 +59,7 @@ Install the following dependencies: then follow the [compilation steps below](#c
 
 #### (make sure to [install GL shaders!](#q-why-arent-videosfilters-working-while-using-gl))
 
-## Switch
+### Switch
 [Setup devKitPro](https://devkitpro.org/wiki/Getting_Started), then run the following:
 - `(dkp-)pacman -Syuu switch-dev switch-libogg switch-libtheora switch-sdl2 switch-glad`
 
@@ -67,10 +67,10 @@ Finally, follow the [compilation steps below](#compiling) using `-DCMAKE_TOOLCHA
 
 #### (make sure to [install GL shaders!](#q-why-arent-videosfilters-working-while-using-gl))
 
-## Android
+### Android
 **Ensure you clone the repo recursively,** then follow the RSDK build instructions [here.](https://github.com/RSDKModding/RSDKv5-Decompilation/blob/master/dependencies/android/README.md)
 
-### Compiling
+## Compiling
 
 Compiling is as simple as typing the following in the root repository directory:
 ```
