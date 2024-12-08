@@ -110,6 +110,16 @@ void Toxomister_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, &Toxomister->hitboxBadnik)) {
+            if (self->parent) {
+                if (self->parent->grabbedPlayer) {
+                    self->parent->grabbedPlayer = NULL;
+                } else {
+                    self->parent->parent = NULL;
+                    RSDK.SetSpriteAnimation(Toxomister->aniFrames, 3, &self->parent->animator, true, 0);
+                    self->parent->state = Toxomister_StateCloud_Dissipate;
+                }
+            }
+
             if (Player_CheckBadnikBreak(player, self, true)) {
                 if (self->parent)
                     destroyEntity(self->parent);
