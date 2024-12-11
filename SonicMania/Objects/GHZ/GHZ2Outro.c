@@ -413,7 +413,7 @@ bool32 GHZ2Outro_Cutscene_HandleRubyWarp(EntityCutsceneSeq *host)
                 int32 id = 0;
                 for (int32 angle = 0; angle < 0x80; angle += 0x10) {
                     EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
-                    if (!player || player->classID == TYPE_BLANK)
+                    if (!player || player->classID == TYPE_DEFAULTOBJECT)
                         break;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
 

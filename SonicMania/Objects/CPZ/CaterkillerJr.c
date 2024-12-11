@@ -232,7 +232,7 @@ void CaterkillerJr_State_Move(void)
             foreach_break;
         }
 
-        if (self->classID != TYPE_BLANK) {
+        if (self->classID != TYPE_DEFAULTOBJECT) {
             for (int32 i = 1; i < CATERKILLERJR_SEGMENT_COUNT; ++i) {
                 self->position.x = self->bodyPosition[i].x;
                 self->position.y = self->bodyPosition[i].y;

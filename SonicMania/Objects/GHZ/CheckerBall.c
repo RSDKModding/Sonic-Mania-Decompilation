@@ -548,7 +548,7 @@ void CheckerBall_HandleObjectCollisions(void)
             // "ItemBox_Break" was updated for plus stuff (mighty, swap monitors, etc)
             // But this is cant be in comp or effect mighty's velocity this was left unchanged
 
-            RSDK.CreateEntity(TYPE_BLANK, NULL, itemBox->position.x, itemBox->position.y);
+            RSDK.CreateEntity(TYPE_DEFAULTOBJECT, NULL, itemBox->position.x, itemBox->position.y);
             itemBox->storedEntity  = (Entity *)player1;
             itemBox->alpha         = 0x100;
             itemBox->contentsSpeed = -0x38000;

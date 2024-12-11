@@ -766,7 +766,7 @@ void BSS_Setup_HandleCollectableMovement(void)
             y                                  = -(y + self->paletteLine - 16);
 
             if (y < 0) {
-                collectable->classID = TYPE_BLANK;
+                collectable->classID = TYPE_DEFAULTOBJECT;
             }
             else {
                 collectable->classID = BSS_Collectable->classID;
@@ -797,7 +797,7 @@ void BSS_Setup_HandleCollectableMovement(void)
     }
 
     while (slot < RESERVE_ENTITY_COUNT + 0x80) {
-        RSDK_GET_ENTITY(slot++, BSS_Collectable)->classID = TYPE_BLANK;
+        RSDK_GET_ENTITY(slot++, BSS_Collectable)->classID = TYPE_DEFAULTOBJECT;
     }
 }
 
@@ -1215,7 +1215,7 @@ void BSS_Setup_LaunchSpheres(void)
     EntityBSS_Collectable *collectable = NULL;
 
     collectable = RSDK_GET_ENTITY(slot++, BSS_Collectable);
-    while (collectable->classID != TYPE_BLANK) {
+    while (collectable->classID != TYPE_DEFAULTOBJECT) {
         int32 ix                = (collectable->position.x >> 16);
         collectable->position.x = ((x * (ix - screen->center.x) >> 8) + screen->center.x) << 16;
         collectable->position.y -= y;

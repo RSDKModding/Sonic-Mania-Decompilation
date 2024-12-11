@@ -2025,7 +2025,7 @@ void Player_HandleDeath(EntityPlayer *player)
                 if (player->lives) {
                     if (Zone->gotTimeOver) {
                         // Time Over!!
-                        player->classID = TYPE_BLANK;
+                        player->classID = TYPE_DEFAULTOBJECT;
                         RSDK.ResetEntitySlot(SLOT_GAMEOVER, GameOver->classID, INT_TO_VOID(true));
 
                         SaveRAM *saveRAM = SaveGame_GetSaveRAM();
@@ -2088,7 +2088,7 @@ void Player_HandleDeath(EntityPlayer *player)
 
                         Music_FadeOut(0.025);
                         Zone_StartFadeOut_MusicFade(10, 0x000000);
-                        player->classID = TYPE_BLANK;
+                        player->classID = TYPE_DEFAULTOBJECT;
                     }
                     else {
                         // Competition (or encore) death, do a quick respawn
@@ -2102,7 +2102,7 @@ void Player_HandleDeath(EntityPlayer *player)
                 else {
                     // GGGGGGGame Over...!
                     int32 screenID  = 0;
-                    player->classID = TYPE_BLANK;
+                    player->classID = TYPE_DEFAULTOBJECT;
                     if (player->camera) {
                         screenID               = player->camera->screenID;
                         player->camera->target = (Entity *)player->camera;
@@ -2146,7 +2146,7 @@ void Player_HandleDeath(EntityPlayer *player)
 
                 if (!globals->characterFlags) {
                     int32 screenID  = 0;
-                    player->classID = TYPE_BLANK;
+                    player->classID = TYPE_DEFAULTOBJECT;
                     if (player->camera) {
                         screenID               = player->camera->screenID;
                         player->camera->target = (Entity *)player->camera;
@@ -2177,7 +2177,7 @@ void Player_HandleDeath(EntityPlayer *player)
                     }
                     else {
                         globals->playerID &= 0xFF;
-                        player2->classID = TYPE_BLANK;
+                        player2->classID = TYPE_DEFAULTOBJECT;
                     }
 
                     // Bug Details
@@ -5959,7 +5959,7 @@ void Player_State_EncoreRespawn(void)
         else {
 #endif
             leader->state   = StateMachine_None;
-            leader->classID = TYPE_BLANK;
+            leader->classID = TYPE_DEFAULTOBJECT;
 #if MANIA_USE_PLUS
         }
 #endif

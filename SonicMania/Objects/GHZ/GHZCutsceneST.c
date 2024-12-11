@@ -168,7 +168,7 @@ bool32 GHZCutsceneST_Cutscene_FadeIn(EntityCutsceneSeq *host)
     int32 id = 0;
     for (int32 angle = 0; angle < 0x80; angle += 0x40) {
         EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
-        if (!player || player->classID == TYPE_BLANK)
+        if (!player || player->classID == TYPE_DEFAULTOBJECT)
             break;
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, 0, 0);
         player->position.x += (player->position.x - player->position.x) >> 3;
@@ -193,7 +193,7 @@ bool32 GHZCutsceneST_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
         int32 id = 0;
         for (int32 angle = 0; angle < 0x80; angle += 0x10) {
             EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
-            if (!player || player->classID == TYPE_BLANK)
+            if (!player || player->classID == TYPE_DEFAULTOBJECT)
                 break;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
             int32 x            = (player->position.x - player->position.x) >> 3;
@@ -214,7 +214,7 @@ bool32 GHZCutsceneST_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
         int32 id = 0;
         for (int32 angle = 0; angle < 0x80; angle += 0x10) {
             EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
-            if (!player || player->classID == TYPE_BLANK)
+            if (!player || player->classID == TYPE_DEFAULTOBJECT)
                 break;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, 0, 0);
             player->position.x += (player->position.x - player->position.x) >> 3;
@@ -240,7 +240,7 @@ bool32 GHZCutsceneST_Cutscene_ExitHBH(EntityCutsceneSeq *host)
             int32 id = 0;
             for (int32 i = 0; i < 2; ++i) {
                 EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
-                if (!player || player->classID == TYPE_BLANK)
+                if (!player || player->classID == TYPE_DEFAULTOBJECT)
                     break;
                 player->up = false;
             }

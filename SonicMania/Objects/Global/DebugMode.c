@@ -150,7 +150,7 @@ void DebugMode_StageLoad(void)
     DebugMode->debugActive = false;
 
     for (int32 i = 0; i < DEBUGMODE_OBJECT_COUNT; ++i) {
-        DebugMode->classIDs[i] = TYPE_BLANK;
+        DebugMode->classIDs[i] = TYPE_DEFAULTOBJECT;
         DebugMode->draw[i]     = StateMachine_None;
         DebugMode->spawn[i]    = DebugMode_NullState;
     }

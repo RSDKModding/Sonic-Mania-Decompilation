@@ -124,7 +124,7 @@ void SaveGame_LoadSaveData(void)
 
                     case SAVERECALL_DISABLED: {
                         Entity *entity  = RSDK_GET_ENTITY_GEN(e);
-                        entity->classID = TYPE_BLANK;
+                        entity->classID = TYPE_DEFAULTOBJECT;
                         entity->active  = ACTIVE_DISABLED;
                         break;
                     }

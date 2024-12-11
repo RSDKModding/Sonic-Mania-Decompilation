@@ -319,7 +319,7 @@ void CPZBoss_State_HandleMatch_Player(void)
         }
 
         if (ControllerInfo[CONT_P1].keyStart.press) {
-            if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->classID == TYPE_BLANK) {
+            if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->classID == TYPE_DEFAULTOBJECT) {
                 RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
                 RSDK.PlaySfx(PauseMenu->sfxAccept, false, 0xFF);
                 RSDK.SetEngineState(ENGINESTATE_FROZEN);
