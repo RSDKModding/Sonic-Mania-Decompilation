@@ -77,7 +77,10 @@ if(WITH_RSDK)
     add_subdirectory(${RSDK_PATH})
 
     if(GAME_STATIC)
-        target_include_directories(RetroEngine PRIVATE ${GAME_NAME}/)
+        target_include_directories(RetroEngine PRIVATE
+		    ${GAMEAPI_PATH}/C/GameAPI/
+		    ${GAME_NAME}/
+		)
         target_link_libraries(RetroEngine ${GAME_NAME})
     endif()
 else()
