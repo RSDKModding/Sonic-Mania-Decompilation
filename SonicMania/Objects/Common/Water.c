@@ -5,7 +5,7 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "Game.h"
+#include "SonicMania.h"
 
 ObjectWater *Water;
 
@@ -970,7 +970,7 @@ void Water_State_BigBubble(void)
                     if (RSDK.GetEntitySlot(self) >= RESERVE_ENTITY_COUNT) {
                         int32 id = SLOT_BIGBUBBLE_P1;
                         for (; id < SLOT_BIGBUBBLE_P1 + PLAYER_COUNT; ++id) {
-                            if (RSDK_GET_ENTITY_GEN(id)->classID == TYPE_BLANK)
+                            if (RSDK_GET_ENTITY_GEN(id)->classID == TYPE_DEFAULTOBJECT)
                                 break;
                         }
 

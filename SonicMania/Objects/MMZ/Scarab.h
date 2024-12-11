@@ -25,7 +25,7 @@ struct EntityScarab {
     Animator backLegAnimator;
     int32 amplitude;
     uint8 childCount;
-    PlaneFilterTypes planeFilter;
+    ManiaPlaneFilterTypes planeFilter;
     uint8 drawGroupLow;
     uint8 drawGroupHigh;
     uint8 pullCount;

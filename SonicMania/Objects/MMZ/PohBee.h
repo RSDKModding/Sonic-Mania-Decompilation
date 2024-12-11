@@ -27,7 +27,7 @@ struct EntityPohBee {
     Hitbox hitboxes[2];
     uint8 spikeCount;
     Vector2 amplitude;
-    PlaneFilterTypes planeFilter;
+    ManiaPlaneFilterTypes planeFilter;
 };
 
 // Object Struct

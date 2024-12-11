@@ -5,7 +5,7 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "Game.h"
+#include "SonicMania.h"
 
 ObjectItemBox *ItemBox;
 
@@ -802,7 +802,7 @@ void ItemBox_Break(EntityItemBox *itemBox, EntityPlayer *player)
         ++session->items[RSDK.GetEntitySlot(player)];
     }
 
-    RSDK.CreateEntity(TYPE_BLANK, NULL, itemBox->position.x, itemBox->position.y);
+    RSDK.CreateEntity(TYPE_DEFAULTOBJECT, NULL, itemBox->position.x, itemBox->position.y);
 
 #if MANIA_USE_PLUS
     if (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_HAMMERDROP)

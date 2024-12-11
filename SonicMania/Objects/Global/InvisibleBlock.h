@@ -15,7 +15,7 @@ struct EntityInvisibleBlock {
     RSDK_ENTITY
     uint8 width;
     uint8 height;
-    PlaneFilterTypes planeFilter;
+    ManiaPlaneFilterTypes planeFilter;
     bool32 noCrush;
     bool32 activeNormal;
     bool32 timeAttackOnly;

@@ -5,7 +5,7 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // clang-format off
 AchievementID achievementList[] = {
