@@ -1100,10 +1100,23 @@ bool32 EncoreIntro_Cutscene_SkipAndFadeOut(EntityCutsceneSeq *host)
     }
     else if (fxRuby->fadeBlack < 512) {
         fxRuby->fadeBlack += 16;
-        return 0;
     }
     else if (host->timer >= 150) {
-        return EncoreIntro_Cutscene_LoadGHZ(host);
+        // Same as EncoreIntro_Cutscene_LoadGHZ but setting GHZ+1 to skip the intro cutscene
+        RSDK_THIS(EncoreIntro);
+        Player->playerCount = 2;
+        SaveGame_SavePlayerState();
+        SaveGame_GetSaveRAM()->saveState = SAVEGAME_INPROGRESS; // save file is active
+        RSDK.SetScene("Encore Mode", "Green Hill Zone+ 1");
+        EncoreIntro->awaitingSaveFinish = true;
+        SaveGame_SaveFile(EncoreIntro_SaveGameCB);
+        if (EncoreIntro->awaitingSaveFinish) {
+            UIWaitSpinner_StartWait();
+            if (EncoreIntro->awaitingSaveFinish)
+                return true;
+        }
+        RSDK.LoadScene();
+        destroyEntity(self);
     }
 
     return false;

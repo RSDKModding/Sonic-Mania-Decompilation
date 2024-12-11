@@ -144,7 +144,7 @@ void SpecialRing_State_Idle(void)
 {
     RSDK_THIS(SpecialRing);
 
-    self->angleZ = (self->angleZ + 4) & 0x3FF;
+    self->angleZ = (self->angleZ + 1) & 0x3FF;
     self->angleY = (self->angleY + 4) & 0x3FF;
 
     Vector2 range;

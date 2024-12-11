@@ -152,7 +152,7 @@ plus        = len(sys.argv) < 4 or sys.argv[3] == "plus"
 folder      = "" if len(sys.argv) < 3 else sys.argv[2]
 staticCount = 0
 
-try: os.mkdir(f"{folder}Static")
+try: os.makedirs(f"{folder}Static")
 except: pass
 
 for path in Path(sys.argv[1]).rglob("*.h"):

@@ -1,0 +1,105 @@
+name: Bug Report
+description: Something isn't working
+labels: [bug]
+body:
+  - id: validation
+    type: checkboxes
+    attributes:
+      label: Before opening this issue, I ensure that...
+      options:
+      - label: I have read the [FAQ](https://github.com/RSDKModding/Sonic-Mania-Decompilation?tab=readme-ov-file#faq) and confirmed my issue is not mentioned in it.
+        required: true
+      - label: I have checked **both open and closed** issues and confirmed this bug has not already been reported.
+        required: true
+      - label: I am not asking for tech support (e.g. game closing on startup, error when trying to build, etc).
+        required: true
+      - label: I am not asking for modding support or reporting a bug in a specific mod; this bug either occurs without mods enabled or is directly related to the mod loader.
+        required: true
+      - label: This bug is not related to any unofficial fork/port of the decompilation, and any issues with those should be kept in the appropriate repository.
+        required: true
+  - id: expected-behavior
+    type: input
+    validations:
+      required: true
+    attributes:
+      label: Expected Behavior
+      description: What behavior is supposed to occur?
+  - id: actual-behavior
+    type: input
+    validations:
+      required: true
+    attributes:
+      label: Actual Behavior
+      description: What actually happens?
+  - id: repro-steps
+    type: textarea
+    validations:
+      required: true
+    attributes:
+      label: Steps to Reproduce
+      description: How can you reproduce the bug? Please give clear instructions.
+      placeholder: |
+        1. Do this
+        2. Do that
+        3. This happens
+  - id: screenshots
+    type: textarea
+    validations:
+      required: false
+    attributes:
+      label: Screenshots
+      description: Provide screenshots or videos if applicable.
+  - id: log-file
+    type: textarea
+    validations:
+      required: false
+    attributes:
+      label: Log File
+      description: The RSDKv5(U) decompilation automatically writes console output to a log file named log.txt. You can provide it here if you believe it will be helpful.
+  - id: decomp-version
+    type: input
+    validations:
+      required: true
+    attributes:
+      label: Decompilation Version
+      description: The decompilation version. If you built it manually or are using an autobuild, please specify the commit if possible.
+  - id: gameversion
+    type: dropdown
+    validations:
+      required: true
+    attributes:
+      label: "Game Version"
+      description: The version of the game used. By default, this is 1.06.
+      multiple: false
+      options:
+        - 1.00 - 1.02 (Initial console release)
+        - 1.03 (Initial Steam release, last Pre-Plus release)
+        - 1.04 / 1.05 (Mania Plus release)
+        - 1.06 (Latest Steam release)
+        - 1.07 (EGS/Origin release)
+  - id: enginerevision
+    type: dropdown
+    validations:
+      required: true
+    attributes:
+      label: "Engine Revision"
+      description: The revision of RSDKv5 used. By default, this is REV0U.
+      multiple: false
+      options:
+        - REV0U (RSDKv5U)
+        - REV02 (RSDKv5 - Mania Plus)
+        - REV01 (RSDKv5 - Mania Pre-Plus)
+  - id: platform
+    type: input
+    validations:
+      required: true
+    attributes:
+      label: Platform
+      description: The platform/OS you're running the decompilation on.
+  - id: comments
+    type: textarea
+    validations:
+      required: false
+    attributes:
+      label: Additional Comments
+      description: Provide any additional information if needed.

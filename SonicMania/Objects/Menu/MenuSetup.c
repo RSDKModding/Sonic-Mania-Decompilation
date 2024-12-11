@@ -1037,19 +1037,11 @@ void MenuSetup_OpenSaveSelectMenu(void)
     control->childHasFocus = false;
 }
 
-#if MANIA_USE_PLUS
-void MenuSetup_SaveFileCB(bool32 success)
-{
-    UIWaitSpinner_FinishWait();
-    RSDK.LoadScene();
-}
-#else
 void MenuSetup_SaveFileCB(void)
 {
     UIWaitSpinner_FinishWait();
     RSDK.LoadScene();
 }
-#endif
 
 void MenuSetup_SaveSlot_ActionCB(void)
 {

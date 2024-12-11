@@ -123,11 +123,7 @@ void MenuSetup_State_HandleTransition(void);
 // Save Select
 int32 MenuSetup_GetMedalMods(void);
 void MenuSetup_OpenSaveSelectMenu(void);
-#if MANIA_USE_PLUS
-void MenuSetup_SaveFileCB(bool32 success);
-#else
 void MenuSetup_SaveFileCB(void);
-#endif
 void MenuSetup_SaveSlot_ActionCB(void);
 void MenuSetup_SaveSel_MenuUpdateCB(void);
 void MenuSetup_OpenSecretsMenu(void);

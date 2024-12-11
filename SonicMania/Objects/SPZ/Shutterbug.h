@@ -49,6 +49,7 @@ void Shutterbug_EditorLoad(void);
 #endif
 void Shutterbug_Serialize(void);
 
+// Extra Entity Functions
 void Shutterbug_DebugSpawn(void);
 void Shutterbug_DebugDraw(void);
 
@@ -65,7 +66,5 @@ int32 Shutterbug_BounceY(void);
 void Shutterbug_CheckFocus(void);
 void Shutterbug_TryTakePicture(void);
 void Shutterbug_HandleBodyAnim(void);
-
-// Extra Entity Functions
 
 #endif //! OBJ_SHUTTERBUG_H

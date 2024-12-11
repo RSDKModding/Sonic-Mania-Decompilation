@@ -124,10 +124,10 @@ void PuyoAI_PrepareAction(int32 playerID)
                             chainComboSize = -1;
                     }
 
-                    int32 beanAvaliableLinks    = PuyoBean_GetAvaliableLinks(playerID, bean, beanX, beanY);
-                    int32 partnerAvaliableLinks = PuyoBean_GetAvaliableLinks(playerID, partner, partnerX, partnerY);
+                    int32 beanAvailableLinks    = PuyoBean_GetAvailableLinks(playerID, bean, beanX, beanY);
+                    int32 partnerAvailableLinks = PuyoBean_GetAvailableLinks(playerID, partner, partnerX, partnerY);
 
-                    int32 linkCount = (beanAvaliableLinks > 0) + (partnerAvaliableLinks > 0);
+                    int32 linkCount = (beanAvailableLinks > 0) + (partnerAvailableLinks > 0);
 
                     if (orientation == 1 || orientation == 3)
                         chainComboSize = (0x70000 * chainComboSize) >> 19;

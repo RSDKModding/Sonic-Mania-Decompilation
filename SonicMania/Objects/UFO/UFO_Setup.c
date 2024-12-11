@@ -57,7 +57,7 @@ void UFO_Setup_Create(void *data)
 
 void UFO_Setup_StageLoad(void)
 {
-    RSDK.ResetEntitySlot(SLOT_BSS_SETUP, UFO_Setup->classID, NULL);
+    RSDK.ResetEntitySlot(SLOT_UFO_SETUP, UFO_Setup->classID, NULL);
 
     UFO_Setup->playFieldLayer = RSDK.GetTileLayerID("Playfield");
 

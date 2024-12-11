@@ -43,6 +43,7 @@ void UFO_Ring_Serialize(void);
 // Extra Entity Functions
 void UFO_Ring_PlayRingSfx(void);
 void UFO_Ring_LoseRings(EntityUFO_Player *player);
+
 // States
 void UFO_Ring_State_NormalRing(void);
 void UFO_Ring_State_Sparkle(void);

@@ -65,6 +65,7 @@ void ChemicalPool_ProcessDeformations(void);
 void ChemicalPool_SetDeform(int32 impactX, int32 impactVelocity);
 void ChemicalPool_SpawnDebris(int32 x, int32 y);
 void ChemicalPool_SetupColors(void);
+
 // States
 void ChemicalPool_State_HarmfulBlue(void);
 void ChemicalPool_State_Green(void);

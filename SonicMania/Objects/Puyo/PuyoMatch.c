@@ -37,7 +37,7 @@ void PuyoMatch_Draw(void)
         RSDK.DrawSprite(&self->beanRAnimator, &drawPos, false);
     }
 
-    if (self->junkBeanCount > 0)
+    else if (self->junkBeanCount > 0)
         PuyoMatch_DrawJunkBeanPreviews();
 }
 
@@ -122,31 +122,36 @@ void PuyoMatch_DropJunkBeans(void)
 {
     RSDK_THIS(PuyoMatch);
 
-    int32 beanColumnColount[PUYO_PLAYFIELD_W];
+    int32 beanColumnCount[PUYO_PLAYFIELD_W];
     int32 count = 0;
 
     for (int32 x = 0; x < PUYO_PLAYFIELD_W; ++x) {
-        beanColumnColount[x] = 0;
+        beanColumnCount[x] = 0;
 
         for (int32 y = 0; y < PUYO_PLAYFIELD_H; ++y) {
             EntityPuyoBean *bean = PuyoBean_GetPuyoBean(self->playerID, x, y);
             if (!bean) {
-                ++beanColumnColount[x];
+                ++beanColumnCount[x];
                 ++count;
             }
         }
     }
 
-    count = CLAMP(count, 30, self->junkBeanCount);
+    if (count > 30)
+        count = 30;
+
+    if (count > self->junkBeanCount)
+        count = self->junkBeanCount;
+
     self->junkBeanCount -= count;
     self->junkDropCount -= count << 8;
 
     int32 id     = 6 * RSDK.Rand(0, 4);
     int32 spawnY = self->beanDropPos.y + 0x100000;
 
-    for (int32 i = 0; i < count; ++i) {
+    while (count > 0) {
         int32 column = PuyoMatch->beanDropColumnIDs[id];
-        if (beanColumnColount[column] > 0) {
+        if (beanColumnCount[column] > 0) {
             EntityPuyoBean *junkBean = CREATE_ENTITY(PuyoBean, INT_TO_VOID(30), self->beanDropPos.x - 0x200000 + (column << 20), spawnY);
             junkBean->playerID       = self->playerID;
             junkBean->origin.x       = self->beanDropPos.x - 0x280000;
@@ -154,7 +159,7 @@ void PuyoMatch_DropJunkBeans(void)
             self->beanPtr            = junkBean;
             junkBean->state          = PuyoBean_State_Falling;
             --count;
-            beanColumnColount[column]--;
+            --beanColumnCount[column];
         }
 
         id = (id + 1) % -24;

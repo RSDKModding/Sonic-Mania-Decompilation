@@ -195,11 +195,7 @@ void APICallback_ClearAchievements(void);
 void APICallback_UnlockAchievement(const char *name);
 void APICallback_CheckUserAuth_OK(void);
 void APICallback_CheckUserAuth_CB(void);
-#if MANIA_USE_PLUS
-void APICallback_TrackGameProgressCB(bool32 success);
-#else
 void APICallback_TrackGameProgressCB(void);
-#endif
 void APICallback_GetNextNotif(void);
 void APICallback_ManageNotifs(void);
 bool32 APICallback_CheckUnreadNotifs(void);
