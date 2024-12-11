@@ -38,6 +38,9 @@ option(GAME_INCREMENTAL_BUILD "Whether or not to build all objects separately (f
 
 set(GAMEAPI_PATH dependencies/GameAPI CACHE STRING "The path to look for GameAPI.")
 
+set(GAME_TYPE 1)
+set(GAME_CUSTOMLINKLOGIC ON)
+
 if(GAME_INCREMENTAL_BUILD)
     include(${GAME_NAME}/Objects.cmake)
     set(GAME_SOURCES
@@ -96,12 +99,12 @@ else()
         RETRO_MOD_LOADER_VER=${RETRO_MOD_LOADER_VER}
 
         GAME_INCLUDE_EDITOR=$<BOOL:${GAME_INCLUDE_EDITOR}>
+        GAME_VERSION=${GAME_VERSION}
 
         MANIA_PREPLUS=$<BOOL:${MANIA_PREPLUS}>
         MANIA_FIRST_RELEASE=$<BOOL:${MANIA_FIRST_RELEASE}>
-        GAME_VERSION=${GAME_VERSION}
 
-        GAME_TYPE=1
-        GAME_CUSTOMLINKLOGIC=1
+        GAME_TYPE=${GAME_TYPE}
+        GAME_CUSTOMLINKLOGIC=$<BOOL:${GAME_CUSTOMLINKLOGIC}>
     )
 endif()
