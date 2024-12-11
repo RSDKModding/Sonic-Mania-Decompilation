@@ -104,15 +104,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GameObjects.h">
-      <Filter>Sources</Filter>
-    </ClInclude>
-    <ClInclude Include="GameLink.h">
-      <Filter>Sources</Filter>
-    </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>Sources</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\Global\ActClear.h">
       <Filter>Sources\Objects\Global</Filter>
     </ClInclude>
@@ -1919,10 +1910,7 @@
     <ClInclude Include="Objects\HCZ\Jawz.h">
       <Filter>Sources\Objects\HCZ</Filter>
     </ClInclude>
-    <ClInclude Include="GameVariables.h">
-      <Filter>Sources</Filter>
-    </ClInclude>
-    <ClInclude Include="All.h">
+    <ClInclude Include="SonicMania.h">
       <Filter>Sources</Filter>
     </ClInclude>
     <ClInclude Include="Objects\Global\Player.h">
@@ -1945,6 +1933,18 @@
     </ClInclude>
     <ClInclude Include="Objects\MMZ\ConveyorPlatform.h">
       <Filter>Sources\Objects\MMZ</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\GameAPI\C\GameAPI\GameLink.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\GameAPI\C\GameAPI\GameObjects.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\GameAPI\C\GameAPI\GameVariables.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\GameAPI\C\GameAPI\Game.h">
+      <Filter>Sources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -3775,7 +3775,10 @@
     <ClCompile Include="Objects\MMZ\ConveyorPlatform.c">
       <Filter>Sources\Objects\MMZ</Filter>
     </ClCompile>
-    <ClCompile Include="Game.c">
+    <ClCompile Include="SonicMania.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\dependencies\GameAPI\C\GameAPI\Game.c">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>

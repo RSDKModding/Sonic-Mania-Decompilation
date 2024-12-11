@@ -19,10 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="All.h" />
-    <ClInclude Include="GameLink.h" />
-    <ClInclude Include="GameObjects.h" />
-    <ClInclude Include="GameVariables.h" />
+    <ClInclude Include="SonicMania.h" />
+    <ClInclude Include="..\dependencies\GameAPI\C\GameAPI\GameLink.h" />
+    <ClInclude Include="..\dependencies\GameAPI\C\GameAPI\GameObjects.h" />
+    <ClInclude Include="..\dependencies\GameAPI\C\GameAPI\GameVariables.h" />
     <ClInclude Include="Objects\AIZ\AIZEggRobo.h" />
     <ClInclude Include="Objects\AIZ\AIZEncoreTutorial.h" />
     <ClInclude Include="Objects\AIZ\AIZKingClaw.h" />
@@ -641,10 +641,11 @@
     <ClInclude Include="Objects\Unused\TargetBumper.h" />
     <ClInclude Include="Objects\Unused\WallCrawl.h" />
     <ClInclude Include="Objects\Unused\Wisp.h" />
-    <ClInclude Include="Game.h" />
+    <ClInclude Include="..\dependencies\GameAPI\C\GameAPI\Game.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Game.c" />
+    <ClCompile Include="..\dependencies\GameAPI\C\GameAPI\Game.c" />
+    <ClCompile Include="SonicMania.c" />
     <ClCompile Include="Objects\AIZ\AIZEggRobo.c">
     </ClCompile>
     <ClCompile Include="Objects\AIZ\AIZEncoreTutorial.c">
@@ -1946,11 +1947,11 @@
     <ClCompile>
       <WarningLevel>Level1</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;MANIA_PREPLUS=1;RETRO_REVISION=1;RETRO_STANDALONE=1;WIN32;_DEBUG;SONICMANIA_EXPORTS;_WINDOWS;_USRDLL;RETRO_STANDALONE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;MANIA_PREPLUS=1;RETRO_REVISION=1;RETRO_STANDALONE=1;GAME_TYPE=1;GAME_CUSTOMLINKLOGIC=1;WIN32;_DEBUG;SONICMANIA_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Objects\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Objects\;$(ProjectDir)..\dependencies\GameAPI\C\GameAPI\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -1971,11 +1972,11 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;MANIA_PREPLUS=1;RETRO_REVISION=1;RETRO_STANDALONE=1;WIN32;NDEBUG;SONICMANIA_EXPORTS;_WINDOWS;_USRDLL;RETRO_STANDALONE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;MANIA_PREPLUS=1;RETRO_REVISION=1;RETRO_STANDALONE=1;GAME_TYPE=1;GAME_CUSTOMLINKLOGIC=1;WIN32;NDEBUG;SONICMANIA_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Objects\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Objects\;$(ProjectDir)..\dependencies\GameAPI\C\GameAPI\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -1996,11 +1997,11 @@
     <ClCompile>
       <WarningLevel>Level1</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;MANIA_PREPLUS=1;RETRO_REVISION=1;RETRO_STANDALONE=1;_DEBUG;SONICMANIA_EXPORTS;_WINDOWS;_USRDLL;RETRO_STANDALONE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;MANIA_PREPLUS=1;RETRO_REVISION=1;RETRO_STANDALONE=1;GAME_TYPE=1;GAME_CUSTOMLINKLOGIC=1;_DEBUG;SONICMANIA_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Objects\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Objects\;$(ProjectDir)..\dependencies\GameAPI\C\GameAPI\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -2021,11 +2022,11 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;MANIA_PREPLUS=1;RETRO_REVISION=1;RETRO_STANDALONE=1;NDEBUG;SONICMANIA_EXPORTS;_WINDOWS;_USRDLL;RETRO_STANDALONE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;MANIA_PREPLUS=1;RETRO_REVISION=1;RETRO_STANDALONE=1;GAME_TYPE=1;GAME_CUSTOMLINKLOGIC=1;NDEBUG;SONICMANIA_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Objects\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Objects\;$(ProjectDir)..\dependencies\GameAPI\C\GameAPI\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

@@ -36,15 +36,19 @@ option(GAME_INCLUDE_EDITOR "Whether or not to include editor functions. Defaults
 
 option(GAME_INCREMENTAL_BUILD "Whether or not to build all objects separately (for quicker dev-->build iterations). Defaults to false." OFF)
 
+set(GAMEAPI_PATH dependencies/GameAPI CACHE STRING "The path to look for GameAPI.")
+
 if(GAME_INCREMENTAL_BUILD)
     include(${GAME_NAME}/Objects.cmake)
     set(GAME_SOURCES
-        ${GAME_NAME}/Game.c
+        ${GAMEAPI_PATH}/C/GameAPI/Game.c
+        ${GAME_NAME}/SonicMania.c
         ${GENERATED_SOURCES}
     )
 else()
     set(GAME_SOURCES
-        ${GAME_NAME}/Game.c
+        ${GAMEAPI_PATH}/C/GameAPI/Game.c
+        ${GAME_NAME}/SonicMania.c
         ${GAME_NAME}/Objects/All.c
     )
 endif()
@@ -56,6 +60,7 @@ else()
 endif()
 
 target_include_directories(${GAME_NAME} PRIVATE
+    ${GAMEAPI_PATH}/C/GameAPI/
     ${GAME_NAME}/
     ${GAME_NAME}/Objects/
 )
@@ -92,5 +97,8 @@ else()
         MANIA_PREPLUS=$<BOOL:${MANIA_PREPLUS}>
         MANIA_FIRST_RELEASE=$<BOOL:${MANIA_FIRST_RELEASE}>
         GAME_VERSION=${GAME_VERSION}
+
+        GAME_TYPE=1
+        GAME_CUSTOMLINKLOGIC=1
     )
 endif()

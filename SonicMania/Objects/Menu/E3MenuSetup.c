@@ -5,7 +5,7 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #if !MANIA_USE_PLUS
 ObjectE3MenuSetup *E3MenuSetup = NULL;

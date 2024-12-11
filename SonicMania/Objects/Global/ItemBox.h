@@ -56,7 +56,7 @@ struct EntityItemBox {
     bool32 isFalling;
     bool32 isContents;
     bool32 hidden;
-    PlaneFilterTypes planeFilter;
+    ManiaPlaneFilterTypes planeFilter;
     bool32 lrzConvPhys;
     Animator boxAnimator;
     Animator contentsAnimator;
