@@ -110,9 +110,10 @@ void Toxomister_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, &Toxomister->hitboxBadnik)) {
+            EntityToxomister *cloud = self->parent;
             if (Player_CheckBadnikBreak(player, self, true)) {
-                if (self->parent)
-                    destroyEntity(self->parent);
+                if (cloud)
+                    destroyEntity(cloud);
             }
         }
     }
@@ -123,10 +124,11 @@ void Toxomister_CheckOffScreen(void)
     RSDK_THIS(Toxomister);
 
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
-        if (self->parent)
+        if (self->parent) {
             destroyEntity(self->parent);
+            self->parent = NULL;
+        }
 
-        self->parent    = NULL;
         self->position  = self->startPos;
         self->direction = self->startDir;
 
