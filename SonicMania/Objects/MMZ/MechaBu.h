@@ -18,7 +18,7 @@ struct ObjectMechaBu {
 struct EntityMechaBu {
     RSDK_ENTITY
     StateMachine(state);
-    PlaneFilterTypes planeFilter;
+    ManiaPlaneFilterTypes planeFilter;
     uint8 timer;
     uint8 sawTimer;
     Vector2 startPos;

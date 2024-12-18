@@ -26,7 +26,7 @@ struct ObjectMatryoshkaBom {
 struct EntityMatryoshkaBom {
     RSDK_ENTITY
     StateMachine(state);
-    PlaneFilterTypes planeFilter;
+    ManiaPlaneFilterTypes planeFilter;
     MatryoshkaSizes size;
     bool32 canExplode;
     bool32 destroyOffscreen;
