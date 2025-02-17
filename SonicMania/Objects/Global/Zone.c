@@ -5,7 +5,7 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "Game.h"
+#include "SonicMania.h"
 #include <time.h>
 
 ObjectZone *Zone;
@@ -405,7 +405,7 @@ void Zone_ReloadStoredEntities(int32 xOffset, int32 yOffset, bool32 setATLBounds
 
         // only players & powerups get to be overridden, everything else is just added to the temp area
         if (globals->atlEntitySlot[e] >= SLOT_ZONE)
-            entity = RSDK.CreateEntity(TYPE_BLANK, NULL, 0, 0);
+            entity = RSDK.CreateEntity(TYPE_DEFAULTOBJECT, NULL, 0, 0);
         else
             entity = RSDK_GET_ENTITY_GEN(globals->atlEntitySlot[e]);
 
@@ -1077,7 +1077,7 @@ void Zone_HandlePlayerSwap(void)
     }
 
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    Entity *playerStorage = RSDK.CreateEntity(TYPE_BLANK, NULL, 0, 0);
+    Entity *playerStorage = RSDK.CreateEntity(TYPE_DEFAULTOBJECT, NULL, 0, 0);
     RSDK.CopyEntity(playerStorage, player1, false);
 
     EntityCamera camStore;

@@ -87,6 +87,8 @@ endif
 
 DEFINES += -DRETRO_STANDALONE=1
 DEFINES += -DRETRO_REVISION=$(RSDK_REVISION)
+DEFINES += -DGAME_TYPE=1
+DEFINES += -DGAME_CUSTOMLINKLOGIC=1
 
 CFLAGS_ALL += $(CFLAGS) \
 			   -fsigned-char 
@@ -99,11 +101,13 @@ CXXFLAGS_ALL += $(CXXFLAGS) \
 LDFLAGS_ALL = $(LDFLAGS)
 
 GAME_INCLUDES = \
-	-I./$(GAME_NAME)/   		\
+	-I../dependencies/GameAPI/C/GameAPI/        \
+	-I./$(GAME_NAME)/                           \
 	-I./$(GAME_NAME)/Objects/
 
 GAME_SOURCES = \
-	$(GAME_NAME)/Game
+	../dependencies/GameAPI/C/GameAPI/          \
+	$(GAME_NAME)/SonicMania                     \
 
 ifeq ($(GAME_ALLC),1)
 GAME_SOURCES += $(GAME_NAME)/Objects/All

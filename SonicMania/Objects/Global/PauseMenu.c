@@ -5,7 +5,7 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "Game.h"
+#include "SonicMania.h"
 
 ObjectPauseMenu *PauseMenu;
 
@@ -68,7 +68,7 @@ void PauseMenu_StaticUpdate(void)
         if (Zone)
             allowEvents = Zone->timer > 1;
 
-        if (!cnt && pauseMenu->classID == TYPE_BLANK && allowEvents && !PauseMenu->disableEvents) {
+        if (!cnt && pauseMenu->classID == TYPE_DEFAULTOBJECT && allowEvents && !PauseMenu->disableEvents) {
             if (API_GetUserAuthStatus() == STATUS_FORBIDDEN) {
                 PauseMenu->signOutDetected = true;
                 RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
