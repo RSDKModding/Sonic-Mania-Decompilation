@@ -358,7 +358,7 @@ void BreakableWall_CheckBreak_Wall(void)
                 RSDK.PlaySfx(BreakableWall->sfxBreak, false, 255);
                 destroyEntity(self);
             }
-            continue;
+            continue; // skip to next loop, so we dont do the box collision
         }
 
         Player_CheckCollisionBox(player, self, &self->hitbox);
