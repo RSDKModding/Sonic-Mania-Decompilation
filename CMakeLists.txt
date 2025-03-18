@@ -80,6 +80,8 @@ if(WITH_RSDK)
     add_subdirectory(${RSDK_PATH})
 
     if(GAME_STATIC)
+        set(GAMEAPI_INC <GameObjects.h> CACHE STRING "The GameAPI file declaring the LinkGameLogicDLL function for RSDKv5 if using GAME_STATIC.")
+
         target_include_directories(RetroEngine PRIVATE
 		    ${GAMEAPI_PATH}/C/GameAPI/
 		    ${GAME_NAME}/
