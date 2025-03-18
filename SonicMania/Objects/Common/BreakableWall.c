@@ -299,56 +299,68 @@ void BreakableWall_CheckBreak_Wall(void)
     foreach_active(Player, player)
     {
 #if MANIA_USE_PLUS
-        if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_HAMMERDROP)) {
-#endif
-            if (!self->onlyKnux || player->characterID == ID_KNUCKLES) {
-                bool32 canBreak = abs(player->groundVel) >= 0x48000 && player->onGround && player->animator.animationID == ANI_JUMP;
-
-                if (player->shield == SHIELD_FIRE) {
-                    EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield);
-                    canBreak |= shield->shieldAnimator.animationID == SHIELDANI_FIREATTACK;
-                }
-
-                switch (player->characterID) {
-                    default: break;
-
-                    case ID_SONIC: canBreak |= player->superState == SUPERSTATE_SUPER; break;
-
-                    case ID_KNUCKLES: canBreak = true; break;
-                }
-
-                if (player->state == Ice_PlayerState_Frozen)
-                    canBreak |= abs(player->groundVel) >= 0x48000;
-
-                if (canBreak && !player->sidekick) {
-                    if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-                        BreakableWall_Break(self, player->position.x > self->position.x);
-
-                        if (player->characterID == ID_KNUCKLES) {
-                            if (player->animator.animationID == ANI_GLIDE) {
-                                player->abilitySpeed -= player->abilitySpeed >> 2;
-                                player->velocity.x -= player->velocity.x >> 2;
-                                if (abs(player->velocity.x) <= 0x30000) {
-                                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_GLIDE_DROP, &player->animator, false, 0);
-                                    player->state = Player_State_KnuxGlideDrop;
-                                }
-                            }
-                            else if (player->animator.animationID == ANI_GLIDE_SLIDE) {
-                                player->abilitySpeed -= player->abilitySpeed >> 2;
-                                player->velocity.x -= player->velocity.x >> 2;
-                            }
-                        }
-
-                        RSDK.PlaySfx(BreakableWall->sfxBreak, false, 255);
-                        destroyEntity(self);
-                    }
-
-                    continue; // skip to next loop, so we dont do the box collision
-                }
+        if (self->onlyMighty) {
+            if (player->characterID != ID_MIGHTY && (!self->onlyKnux || player->characterID != ID_KNUCKLES)) {
+                Player_CheckCollisionBox(player, self, &self->hitbox);
+                continue;
             }
-#if MANIA_USE_PLUS
+        }
+        else {
+            if (self->onlyKnux && player->characterID != ID_KNUCKLES && (!self->onlyMighty || player->characterID != ID_MIGHTY)) {
+                Player_CheckCollisionBox(player, self, &self->hitbox);
+                continue;
+            }
+        }
+#else
+        if (self->onlyKnux && player->characterID != ID_KNUCKLES) {
+            Player_CheckCollisionBox(player, self, &self->hitbox);
+            continue;
         }
 #endif
+
+        bool32 canBreak = abs(player->groundVel) >= 0x48000 && player->onGround && player->animator.animationID == ANI_JUMP;
+
+        if (player->shield == SHIELD_FIRE) {
+            EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield);
+            canBreak |= shield->shieldAnimator.animationID == SHIELDANI_FIREATTACK;
+        }
+
+        switch (player->characterID) {
+            default: break;
+
+            case ID_SONIC: canBreak |= player->superState == SUPERSTATE_SUPER; break;
+
+            case ID_KNUCKLES: canBreak = true; break;
+        }
+
+        if (player->state == Ice_PlayerState_Frozen)
+            canBreak |= abs(player->groundVel) >= 0x48000;
+
+        if (canBreak && !player->sidekick) {
+            if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
+                BreakableWall_Break(self, player->position.x > self->position.x);
+
+                if (player->characterID == ID_KNUCKLES) {
+                    if (player->animator.animationID == ANI_GLIDE) {
+                        player->abilitySpeed -= player->abilitySpeed >> 2;
+                        player->velocity.x -= player->velocity.x >> 2;
+                        if (abs(player->velocity.x) <= 0x30000) {
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_GLIDE_DROP, &player->animator, false, 0);
+                            player->state = Player_State_KnuxGlideDrop;
+                        }
+                    }
+                    else if (player->animator.animationID == ANI_GLIDE_SLIDE) {
+                        player->abilitySpeed -= player->abilitySpeed >> 2;
+                        player->velocity.x -= player->velocity.x >> 2;
+                    }
+                }
+
+                RSDK.PlaySfx(BreakableWall->sfxBreak, false, 255);
+                destroyEntity(self);
+            }
+            continue;
+        }
+
         Player_CheckCollisionBox(player, self, &self->hitbox);
     }
 }
@@ -364,55 +376,68 @@ void BreakableWall_CheckBreak_Floor(void)
 
         if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP) {
 #if MANIA_USE_PLUS
-            if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_HAMMERDROP)) {
-#endif
-                if (!self->onlyKnux || player->characterID == ID_KNUCKLES) {
-                    bool32 canBreak = player->animator.animationID == ANI_JUMP;
-
-                    switch (player->characterID) {
-                        default: break;
-
-                        case ID_SONIC:
-                            if (!canBreak)
-                                canBreak = player->animator.animationID == ANI_DROPDASH;
-                            break;
-
-                        case ID_KNUCKLES: canBreak = true; break;
-
-#if MANIA_USE_PLUS
-                        case ID_MIGHTY:
-                            if (!canBreak)
-                                canBreak = player->state == Player_State_MightyHammerDrop;
-                            break;
-#endif
-                    }
-
-                    if (player->groundedStore && player->collisionMode != CMODE_LWALL && player->collisionMode != CMODE_RWALL)
-                        canBreak = false;
-
-                    if (canBreak && !player->sidekick) {
-                        player->onGround = false;
-
-                        BreakableWall_Break(self, FLIP_Y);
-
-                        RSDK.PlaySfx(BreakableWall->sfxBreak, false, 255);
-                        BreakableWall_GiveScoreBonus(player);
-
-#if MANIA_USE_PLUS
-                        if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
-                            player->velocity.y = velY - TO_FIXED(1);
-                        else
-#endif
-                            player->velocity.y = -TO_FIXED(3);
-
-                        destroyEntity(self);
-
-                        continue; // skip to next loop, so we dont do the box collision
-                    }
+            if (self->onlyMighty) {
+                if ((player->characterID != ID_MIGHTY || player->animator.animationID != ANI_HAMMERDROP)
+                    && (!self->onlyKnux || player->characterID != ID_KNUCKLES)) {
+                    Player_CheckCollisionBox(player, self, &self->hitbox);
+                    continue;
                 }
-#if MANIA_USE_PLUS
+            }
+            else {
+                if (self->onlyKnux && player->characterID != ID_KNUCKLES && (!self->onlyMighty || player->characterID != ID_MIGHTY)) {
+                    Player_CheckCollisionBox(player, self, &self->hitbox);
+                    continue;
+                }
+            }
+#else
+            if (self->onlyKnux && player->characterID != ID_KNUCKLES) {
+                Player_CheckCollisionBox(player, self, &self->hitbox);
+                continue;
             }
 #endif
+
+            bool32 canBreak = player->animator.animationID == ANI_JUMP;
+
+            switch (player->characterID) {
+                default: break;
+
+                case ID_SONIC:
+                    if (!canBreak)
+                        canBreak = player->animator.animationID == ANI_DROPDASH;
+                    break;
+
+                case ID_KNUCKLES: canBreak = true; break;
+
+#if MANIA_USE_PLUS
+                case ID_MIGHTY:
+                    if (!canBreak)
+                        canBreak = player->state == Player_State_MightyHammerDrop;
+                    break;
+#endif
+            }
+
+            if (player->groundedStore && player->collisionMode != CMODE_LWALL && player->collisionMode != CMODE_RWALL)
+                canBreak = false;
+
+            if (canBreak && !player->sidekick) {
+                player->onGround = false;
+
+                BreakableWall_Break(self, FLIP_Y);
+
+                RSDK.PlaySfx(BreakableWall->sfxBreak, false, 255);
+                BreakableWall_GiveScoreBonus(player);
+
+#if MANIA_USE_PLUS
+                if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
+                    player->velocity.y = velY - TO_FIXED(1);
+                else
+#endif
+                    player->velocity.y = -TO_FIXED(3);
+
+                destroyEntity(self);
+
+                continue; // skip to next loop, so we dont do the box collision
+            }
         }
 
         Player_CheckCollisionBox(player, self, &self->hitbox);
@@ -432,72 +457,77 @@ void BreakableWall_CheckBreak_BurrowFloor(void)
         if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP && !player->sidekick
             && ((player->collisionPlane == 1 && self->type == BREAKWALL_TYPE_BURROWFLOOR_B) || self->type == BREAKWALL_TYPE_BURROWFLOOR)) {
 #if MANIA_USE_PLUS
-            if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_HAMMERDROP)) {
-#endif
-                if (!self->onlyKnux || player->characterID == ID_KNUCKLES) {
-                    bool32 canBreak = player->animator.animationID == ANI_JUMP;
-
-                    switch (player->characterID) {
-                        default: break;
-
-                        case ID_SONIC:
-                            if (!canBreak)
-                                canBreak = player->animator.animationID == ANI_DROPDASH;
-                            break;
-
-                        case ID_KNUCKLES: canBreak = true; break;
-
-#if MANIA_USE_PLUS
-                        case ID_MIGHTY:
-                            if (!canBreak)
-                                canBreak = player->state == Player_State_MightyHammerDrop;
-                            break;
-#endif
-                    }
-
-                    if (onGround && player->collisionMode != CMODE_LWALL && player->collisionMode != CMODE_RWALL)
-                        canBreak = false;
-
-                    if (canBreak && !player->sidekick) {
-                        player->onGround = false;
-
-                        int32 sizeX = self->size.x;
-                        int32 sizeY = self->size.y;
-                        int32 posX  = self->position.x;
-                        int32 posY  = self->position.y;
-
-                        self->size.y = 1;
-                        self->position.y += 0x80000 - (sizeY << 19);
-
-                        BreakableWall_Break(self, FLIP_Y);
-
-                        self->size.x     = sizeX;
-                        self->size.y     = sizeY;
-                        self->position.x = posX;
-                        self->position.y = posY;
-                        RSDK.PlaySfx(BreakableWall->sfxBreak, false, 255);
-
-                        BreakableWall_GiveScoreBonus(player);
-
-#if MANIA_USE_PLUS
-                        if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
-                            player->velocity.y = velY - TO_FIXED(1);
-                        else
-#endif
-                            player->velocity.y = 0;
-
-                        self->hitbox.top += 8;
-                        self->hitbox.bottom -= 8;
-                        --self->size.y;
-                        self->position.y += TO_FIXED(8);
-
-                        if (self->size.y <= 0)
-                            destroyEntity(self);
-                    }
-                }
-#if MANIA_USE_PLUS
+            if (self->onlyMighty) {
+                if ((player->characterID != ID_MIGHTY || player->animator.animationID != ANI_HAMMERDROP)
+                    && (!self->onlyKnux || player->characterID != ID_KNUCKLES))
+                    continue;
             }
+            else {
+                if (self->onlyKnux && player->characterID != ID_KNUCKLES && (!self->onlyMighty || player->characterID != ID_MIGHTY))
+                    continue;
+            }
+#else
+            if (self->onlyKnux && player->characterID != ID_KNUCKLES)
+                continue;
 #endif
+
+            bool32 canBreak = player->animator.animationID == ANI_JUMP;
+
+            switch (player->characterID) {
+                default: break;
+
+                case ID_SONIC:
+                    if (!canBreak)
+                        canBreak = player->animator.animationID == ANI_DROPDASH;
+                    break;
+
+#if MANIA_USE_PLUS
+                case ID_MIGHTY:
+                    if (!canBreak)
+                        canBreak = player->state == Player_State_MightyHammerDrop;
+                    break;
+#endif
+            }
+
+            if (onGround && player->collisionMode != CMODE_LWALL && player->collisionMode != CMODE_RWALL)
+                canBreak = false;
+
+            if (canBreak && !player->sidekick) {
+                player->onGround = false;
+
+                int32 sizeX = self->size.x;
+                int32 sizeY = self->size.y;
+                int32 posX  = self->position.x;
+                int32 posY  = self->position.y;
+
+                self->size.y = 1;
+                self->position.y += 0x80000 - (sizeY << 19);
+
+                BreakableWall_Break(self, FLIP_Y);
+
+                self->size.x     = sizeX;
+                self->size.y     = sizeY;
+                self->position.x = posX;
+                self->position.y = posY;
+                RSDK.PlaySfx(BreakableWall->sfxBreak, false, 255);
+
+                BreakableWall_GiveScoreBonus(player);
+
+#if MANIA_USE_PLUS
+                if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
+                    player->velocity.y = velY - TO_FIXED(1);
+                else
+#endif
+                    player->velocity.y = 0;
+
+                self->hitbox.top += 8;
+                self->hitbox.bottom -= 8;
+                --self->size.y;
+                self->position.y += TO_FIXED(8);
+
+                if (self->size.y <= 0)
+                    destroyEntity(self);
+            }
         }
     }
 }
@@ -510,51 +540,57 @@ void BreakableWall_CheckBreak_BurrowFloorUp(void)
         int32 velY = player->velocity.y;
         if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_BOTTOM) {
 #if MANIA_USE_PLUS
-            if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_HAMMERDROP)) {
-#endif
-                if (!self->onlyKnux || player->characterID == ID_KNUCKLES) {
-                    if (!player->sidekick) {
-                        int32 sizeX = self->size.x;
-                        int32 sizeY = self->size.y;
-                        int32 posX  = self->position.x;
-                        int32 posY  = self->position.y;
-
-                        if (sizeY > 2)
-                            self->size.y = 2;
-                        self->position.y += (sizeY - self->size.y) << 19;
-
-                        BreakableWall_Break(self, FLIP_Y);
-
-                        self->size.x     = sizeX;
-                        self->size.y     = sizeY;
-                        self->position.x = posX;
-                        self->position.y = posY;
-                        RSDK.PlaySfx(BreakableWall->sfxBreak, false, 255);
-
-                        player->velocity.y = 0;
-
-                        if (self->size.y < 2) {
-                            self->hitbox.top += 8;
-                            self->size.y -= 1;
-                            self->hitbox.bottom -= 8;
-                            self->position.y -= TO_FIXED(8);
-                        }
-                        else {
-                            self->hitbox.top += 16;
-                            self->size.y -= 2;
-                            self->hitbox.bottom -= 16;
-                            self->position.y -= TO_FIXED(16);
-                        }
-
-                        if (self->size.y <= 0)
-                            destroyEntity(self);
-
-                        player->velocity.y = velY;
-                    }
-                }
-#if MANIA_USE_PLUS
+            if (self->onlyMighty) {
+                if ((player->characterID != ID_MIGHTY) && (!self->onlyKnux || player->characterID != ID_KNUCKLES))
+                    continue;
             }
+            else {
+                if (self->onlyKnux && player->characterID != ID_KNUCKLES && (!self->onlyMighty || player->characterID != ID_MIGHTY))
+                    continue;
+            }
+#else
+            if (self->onlyKnux && player->characterID != ID_KNUCKLES)
+                continue;
 #endif
+
+            if (!player->sidekick) {
+                int32 sizeX = self->size.x;
+                int32 sizeY = self->size.y;
+                int32 posX  = self->position.x;
+                int32 posY  = self->position.y;
+
+                if (sizeY > 2)
+                    self->size.y = 2;
+                self->position.y += (sizeY - self->size.y) << 19;
+
+                BreakableWall_Break(self, FLIP_Y);
+
+                self->size.x     = sizeX;
+                self->size.y     = sizeY;
+                self->position.x = posX;
+                self->position.y = posY;
+                RSDK.PlaySfx(BreakableWall->sfxBreak, false, 255);
+
+                player->velocity.y = 0;
+
+                if (self->size.y < 2) {
+                    self->hitbox.top += 8;
+                    self->size.y -= 1;
+                    self->hitbox.bottom -= 8;
+                    self->position.y -= TO_FIXED(8);
+                }
+                else {
+                    self->hitbox.top += 16;
+                    self->size.y -= 2;
+                    self->hitbox.bottom -= 16;
+                    self->position.y -= TO_FIXED(16);
+                }
+
+                if (self->size.y <= 0)
+                    destroyEntity(self);
+
+                player->velocity.y = velY;
+            }
         }
     }
 }
@@ -567,20 +603,25 @@ void BreakableWall_CheckBreak_Ceiling(void)
         int32 velY = player->velocity.y;
         if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_BOTTOM) {
 #if MANIA_USE_PLUS
-            if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_HAMMERDROP)) {
-#endif
-                if (!self->onlyKnux || player->characterID == ID_KNUCKLES) {
-                    player->onGround = false;
-
-                    BreakableWall_Break(self, FLIP_Y);
-
-                    RSDK.PlaySfx(BreakableWall->sfxBreak, false, 0xFF);
-                    player->velocity.y = velY;
-                    destroyEntity(self);
-                }
-#if MANIA_USE_PLUS
+            if (self->onlyMighty) {
+                if ((player->characterID != ID_MIGHTY) && (!self->onlyKnux || player->characterID != ID_KNUCKLES))
+                    continue;
             }
+            else {
+                if (self->onlyKnux && player->characterID != ID_KNUCKLES && (!self->onlyMighty || player->characterID != ID_MIGHTY))
+                    continue;
+            }
+#else
+            if (self->onlyKnux && player->characterID != ID_KNUCKLES)
+                continue;
 #endif
+            player->onGround = false;
+
+            BreakableWall_Break(self, FLIP_Y);
+
+            RSDK.PlaySfx(BreakableWall->sfxBreak, false, 0xFF);
+            player->velocity.y = velY;
+            destroyEntity(self);
         }
     }
 }
