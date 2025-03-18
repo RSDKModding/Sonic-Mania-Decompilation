@@ -1131,10 +1131,10 @@ void Water_State_Bubbler(void)
     }
 
     if (self->visible && RSDK.CheckOnScreen(self, &self->updateRange)) {
-        if (!self->countdownID) {
+        if (--self->countdownID <= 0) {
             if (!self->bubbleFlags) {
                 self->bubbleFlags = 1;
-                int32 rand        = RSDK.Rand(0, 0x10000);
+                int8 rand        = RSDK.Rand(0, 0x10000);
                 self->bubbleType1 = rand % 6;
                 self->bubbleType2 = rand & 12;
 
@@ -1170,9 +1170,6 @@ void Water_State_Bubbler(void)
                 self->bubbleFlags = 0;
                 self->countdownID += RSDK.Rand(0, 128) + 128;
             }
-        }
-        else {
-            --self->countdownID;
         }
     }
 
