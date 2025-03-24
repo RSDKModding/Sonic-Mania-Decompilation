@@ -90,7 +90,7 @@ void BSS_Player_Draw(void)
     RSDK.DrawSprite(&self->animator, &drawPos, true);
 
     // if we're tails, draw his tail
-    if (CHECK_CHARACTER_ID(ID_TAILS, 1) && self->animator.animationID == 1)
+    if (CHECK_CHARACTER_ID(ID_TAILS, 1))
         RSDK.DrawSprite(&self->tailAnimator, &drawPos, true);
 #if MANIA_USE_PLUS
     // if we're ray, draw his tail
