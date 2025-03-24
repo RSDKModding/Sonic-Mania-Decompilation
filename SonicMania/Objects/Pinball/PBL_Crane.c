@@ -5,7 +5,7 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #if MANIA_USE_PLUS
 ObjectPBL_Crane *PBL_Crane;

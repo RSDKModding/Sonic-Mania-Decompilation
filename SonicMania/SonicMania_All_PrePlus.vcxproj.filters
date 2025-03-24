@@ -104,15 +104,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GameObjects.h">
-      <Filter>Sources</Filter>
-    </ClInclude>
-    <ClInclude Include="GameLink.h">
-      <Filter>Sources</Filter>
-    </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>Sources</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\Global\ActClear.h">
       <Filter>Sources\Objects\Global</Filter>
     </ClInclude>
@@ -1907,9 +1898,6 @@
     <ClInclude Include="Objects\Unused\Wisp.h">
       <Filter>Sources\Objects\Unused</Filter>
     </ClInclude>
-    <ClInclude Include="GameVariables.h">
-      <Filter>Sources</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\Credits\TAEmerald.h">
       <Filter>Sources\Objects\Credits</Filter>
     </ClInclude>
@@ -1942,6 +1930,18 @@
     </ClInclude>
     <ClInclude Include="Objects\HCZ\Fan.h">
       <Filter>Sources\Objects\HCZ</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\GameAPI\C\GameAPI\GameLink.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\GameAPI\C\GameAPI\GameObjects.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\GameAPI\C\GameAPI\GameVariables.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\GameAPI\C\GameAPI\Game.h">
+      <Filter>Sources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -3763,7 +3763,10 @@
     <ClCompile Include="Objects\MMZ\ConveyorPlatform.c">
       <Filter>Sources\Objects\MMZ</Filter>
     </ClCompile>
-    <ClCompile Include="Game.c">
+    <ClCompile Include="SonicMania.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\dependencies\GameAPI\C\GameAPI\Game.c">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="Objects\Helpers\CompetitionSession.c">
@@ -3778,6 +3781,11 @@
     <ClCompile Include="Objects\HCZ\Jawz.c">
       <Filter>Sources\Objects\HCZ</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Game.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc">

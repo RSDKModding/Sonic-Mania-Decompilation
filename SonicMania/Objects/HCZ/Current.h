@@ -42,7 +42,7 @@ struct EntityCurrent {
     int32 buttonTag;
     EntityButton *taggedButton;
     bool32 activated;
-    PlaneFilterTypes planeFilter;
+    ManiaPlaneFilterTypes planeFilter;
     bool32 waterOnly;
     bool32 fbzAchievement;
     Animator animator;

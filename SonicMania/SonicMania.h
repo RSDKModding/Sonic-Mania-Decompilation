@@ -1,3 +1,5 @@
+#include "Game.h"
+
 //Forward Declarations
 typedef struct ObjectAcetone ObjectAcetone;
 typedef struct EntityAcetone EntityAcetone;

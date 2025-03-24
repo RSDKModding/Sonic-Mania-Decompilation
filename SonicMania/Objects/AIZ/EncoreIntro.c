@@ -5,7 +5,7 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #if MANIA_USE_PLUS
 ObjectEncoreIntro *EncoreIntro;
@@ -84,8 +84,8 @@ void EncoreIntro_Create(void *data)
                     foreach_break;
                 }
             }
-            RSDK.ResetEntitySlot(id - 3, TYPE_BLANK, NULL);
-            RSDK.ResetEntitySlot(id - 2, TYPE_BLANK, NULL);
+            RSDK.ResetEntitySlot(id - 3, TYPE_DEFAULTOBJECT, NULL);
+            RSDK.ResetEntitySlot(id - 2, TYPE_DEFAULTOBJECT, NULL);
             self->activated = true;
             self->skipPart2 = true;
         }
