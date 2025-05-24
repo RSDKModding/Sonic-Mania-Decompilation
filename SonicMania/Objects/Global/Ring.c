@@ -487,11 +487,22 @@ void Ring_CheckObjectCollisions(int32 x, int32 y)
     }
 
     if (xVel <= 0) {
-        if (!(collisionSides & 8) && RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, self->collisionPlane, -x, 0, true))
+        if (!(collisionSides & 8)) {
+            if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, self->collisionPlane, -x, 0, true))
+                self->velocity.x = -xVel;
+        }
+        else {
             self->velocity.x = -xVel;
+        }
     }
-    else if (!(collisionSides & 4) && RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, self->collisionPlane, x, 0, true)) {
-        self->velocity.x = -xVel;
+    else {
+        if (!(collisionSides & 4)) {
+            if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, self->collisionPlane, x, 0, true))
+                self->velocity.x = -xVel;
+        }
+        else {
+            self->velocity.x = -xVel;
+        }
     }
 
     if (yVel <= 0) {
