@@ -247,7 +247,7 @@ void BSS_Setup_SetupPalette(void)
     for (int32 i = 0; i < 3; ++i) RSDK.SetPaletteEntry(0, 0xA0 + i, RSDK.GetPaletteEntry(1, i + BSS_Palette->startColorID + 2));
 
     // Emerald Colours (Unused in mania)
-    for (int32 i = 0; i < 4; ++i) RSDK.SetPaletteEntry(0, 0xC0 + i, RSDK.GetPaletteEntry(1, i + BSS_Palette->startColorID + 8));
+    for (int32 i = 0; i < 4; ++i) RSDK.SetPaletteEntry(0, 0xD0 + i, RSDK.GetPaletteEntry(1, i + BSS_Palette->startColorID + 8));
 
     // Alt Globe Palettes
     for (int32 i = 0; i < 0x100; i += 0x10) {
