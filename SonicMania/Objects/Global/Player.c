@@ -5083,7 +5083,7 @@ void Player_State_KnuxWallClimb(void)
             }
 
             self->velocity.y = -0x38000;
-            if (self->underwater) {
+            if (self->underwater == true) {
                 self->velocity.x >>= 1;
                 self->velocity.y >>= 1;
                 self->groundVel >>= 1;
