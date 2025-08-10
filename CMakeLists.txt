@@ -94,3 +94,9 @@ else()
         GAME_VERSION=${GAME_VERSION}
     )
 endif()
+
+# MSVC likes to merge similar functions together even though their addresses are being referenced.
+# Disable COMDAT folding to fix some bugs like not drowning when suspended to a pull chain in HCZ.
+if(MSVC)
+    target_link_options(${GAME_NAME} PRIVATE /OPT:NOICF)
+endif()
