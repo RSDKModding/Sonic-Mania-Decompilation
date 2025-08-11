@@ -4063,6 +4063,8 @@ void Player_State_LookUp(void)
         }
     }
     else {
+        Player_HandleGroundMovement();
+
         self->animator.speed = 64;
 
         if (self->animator.frameID == 0 || self->left || self->right)
