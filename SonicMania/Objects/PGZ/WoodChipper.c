@@ -40,7 +40,7 @@ void WoodChipper_StaticUpdate(void)
             WoodChipper->playingWoodSfx = true;
         }
     }
-    else if (WoodChipper->playingChipSfx) {
+    else if (WoodChipper->playingWoodSfx) {
         RSDK.StopSfx(WoodChipper->sfxChipperWood);
         WoodChipper->playingWoodSfx = false;
     }
