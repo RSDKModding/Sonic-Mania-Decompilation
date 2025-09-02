@@ -1182,6 +1182,31 @@ typedef enum {
     SUPER_EDITORDRAW,
     SUPER_SERIALIZE
 } ModSuper;
+
+#if RETRO_MOD_LOADER_VER >= 3
+typedef enum {
+    RETRO_WIN     = 0,
+    RETRO_PS4     = 1,
+    RETRO_XB1     = 2,
+    RETRO_SWITCH  = 3,
+    // CUSTOM
+    RETRO_OSX     = 4,
+    RETRO_LINUX   = 5,
+    RETRO_iOS     = 6,
+    RETRO_ANDROID = 7,
+    RETRO_UWP     = 8,
+    RETRO_OTHER   = 9
+} RetroPlatform;
+
+// Opaque pointer to a file descriptor
+typedef void* IOHandle;
+
+typedef enum {
+    IOSEEK_SET = 0, /* Seek from beginning of file. */
+    IOSEEK_CUR = 1, /* Seek from current position. */
+    IOSEEK_END = 2  /* Seek from end of file. */
+} IOSeekWhence;
+#endif
 #endif
 
 // -------------------------
@@ -1309,7 +1334,19 @@ typedef struct {
     void (*GetCollisionInfo)(CollisionMask **masks, TileInfo **tileInfo);
 #endif
 #if RETRO_MOD_LOADER_VER >= 3
+    // Mod hooks (Public Functions override)
     void (*HookPublicFunction)(const char *id, const char *functionName, void *functionPtr, void **originalPtr);
+
+    // Platform info
+    int32 (*GetRetroPlatform)(void);
+
+    // IO
+    IOHandle (*IOOpen)(const char *filename, const char *mode);
+    uint32 (*IORead)(void *buffer, uint32 elementSize, uint32 elementCount, IOHandle file);
+    int32 (*IOSeek)(IOHandle file, int32 offset, int32 whence);
+    int32 (*IOTell)(IOHandle file);
+    int32 (*IOClose)(IOHandle file);
+    uint32 (*IOWrite)(const void *buffer, uint32 elementSize, uint32 elementCount, IOHandle file);
 #endif
 } ModFunctionTable;
 #endif
