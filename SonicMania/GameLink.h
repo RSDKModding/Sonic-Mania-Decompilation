@@ -1347,6 +1347,16 @@ typedef struct {
     int32 (*IOTell)(IOHandle file);
     int32 (*IOClose)(IOHandle file);
     uint32 (*IOWrite)(const void *buffer, uint32 elementSize, uint32 elementCount, IOHandle file);
+
+    // Files
+    bool32 (*FileExists)(const char *path);
+
+    // Game Title
+    void (*GetGameTitle)(String *result);
+    void (*SetGameTitle)(const char *name);
+
+    // Graphics
+    void (*LoadPaletteLegacy)(uint8 bankID, const char *filename, int32 startDstIndex, int32 startSrcIndex, int32 endSrcIndex);
 #endif
 } ModFunctionTable;
 #endif
