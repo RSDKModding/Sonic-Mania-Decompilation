@@ -1357,6 +1357,13 @@ typedef struct {
 
     // Graphics
     void (*LoadPaletteLegacy)(uint8 bankID, const char *filename, int32 startDstIndex, int32 startSrcIndex, int32 endSrcIndex);
+
+    // Audio
+    void (*GetChannelAttributes)(uint8 channel, float *volume, float *panning, float *speed);
+
+    // Dev Menu Characters
+    void (*AddDevMenuCharacter)(const char *playerName, int32 id);
+    int32 (*GetActiveDevMenuCharacter)(void);
 #endif
 } ModFunctionTable;
 #endif
