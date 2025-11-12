@@ -3429,6 +3429,11 @@ bool32 Player_SwapMainPlayer(bool32 forceSwap)
     self->hyperRing       = sidekick->hyperRing;
     self->playerID        = sidekick->playerID;
     self->scrollDelay     = 0;
+    // Bug Details:
+    // This line assumes the player always has a camera assigned to them
+    // small problem though-- PhantomRider steals P1's camera!!
+    // this will cause a null pointer dereference for the camera and will crash the game
+    // To fix this crash, add a self->camera check right before this line
     self->camera->state   = Camera_State_FollowXY;
     Player_UpdatePhysicsState(self);
 
