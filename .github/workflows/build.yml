@@ -2,6 +2,11 @@ name: Build Mania
 
 on:
   push:
+    paths:
+      - dependencies/**
+      - SonicMania/**
+      - .github/workflows/build.yml
+      - CMakeLists.txt
     branches:
       - master
 
