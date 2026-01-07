@@ -219,7 +219,7 @@ void PopcornMachine_CheckPlayerCollisions(void)
                     break;
 
                 case POPCORNMACHINE_RIGHT:
-                    if (player->onGround && Player_CheckCollisionTouch(player, self, &PopcornMachine->hitboxEntryL)) {
+                    if (player->onGround && Player_CheckCollisionTouch(player, self, &PopcornMachine->hitboxEntryR)) {
                         PopcornMachine_LinkPlayer(player);
                     }
                     else if (!player->onGround) {
