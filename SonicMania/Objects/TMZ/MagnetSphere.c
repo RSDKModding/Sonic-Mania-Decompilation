@@ -34,10 +34,10 @@ void MagnetSphere_Draw(void)
     self->inkEffect = INK_ADD;
     RSDK.DrawSprite(&self->plasma1Animator, NULL, false);
 
-    self->direction = INK_ADD;
+    self->direction = FLIP_XY;
     RSDK.DrawSprite(&self->plasma2Animator, NULL, false);
 
-    self->direction = INK_NONE;
+    self->direction = FLIP_NONE;
     RSDK.DrawSprite(&self->glassOuterAnimator, NULL, false);
 
     self->inkEffect = INK_NONE;
