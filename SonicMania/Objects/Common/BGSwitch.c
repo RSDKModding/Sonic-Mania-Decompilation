@@ -70,7 +70,13 @@ void BGSwitch_EditorDraw(void)
     if (showGizmos()) {
         // Bounds
         RSDK_DRAWING_OVERLAY(true);
-        DrawHelpers_DrawRectOutline(self->position.x, self->position.y, self->size.x, self->size.y, 0xFFFF00);
+        // This is taken from Sonic 3 & Knuckles in Sonic Origins.
+        // Presumably, this is what the editor code actually was. Raw function calls.
+        // Note: I don't think we'd need to use updateRange here? It can be just size like it is in S3K...
+        RSDK.DrawLine(self->position.x - self->updateRange.x, self->position.y - self->updateRange.y, self->position.x + self->updateRange.x, self->position.y - self->updateRange.y, 0xFFFF00, 0xFF, INK_NONE, false);
+        RSDK.DrawLine(self->position.x - self->updateRange.x, self->position.y + self->updateRange.y, self->position.x + self->updateRange.x, self->position.y + self->updateRange.y, 0xFFFF00, 0xFF, INK_NONE, false);
+        RSDK.DrawLine(self->position.x - self->updateRange.x, self->position.y - self->updateRange.y, self->position.x - self->updateRange.x, self->position.y + self->updateRange.y, 0xFFFF00, 0xFF, INK_NONE, false);
+        RSDK.DrawLine(self->position.x + self->updateRange.x, self->position.y - self->updateRange.y, self->position.x + self->updateRange.x, self->position.y + self->updateRange.y, 0xFFFF00, 0xFF, INK_NONE, false);
         RSDK_DRAWING_OVERLAY(false);
     }
 }
