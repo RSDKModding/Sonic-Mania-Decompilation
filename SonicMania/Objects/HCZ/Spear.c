@@ -153,7 +153,7 @@ void Spear_SetupHitboxes(void)
         case SPEAR_RIGHT:
         case SPEAR_LEFT:
             self->hitbox.left   = 0;
-            self->hitbox.top    = 64;
+            self->hitbox.top    = -4;
             self->hitbox.right  = (self->retractPos >> 16) + 15;
             self->hitbox.bottom = 4;
             break;
