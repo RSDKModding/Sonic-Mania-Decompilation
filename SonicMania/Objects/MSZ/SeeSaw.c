@@ -205,7 +205,7 @@ void SeeSaw_Update(void)
         {
             if (Player_CheckCollisionTouch(playerPtr, self, &SeeSaw->hitboxCactinaut)) {
 #if MANIA_USE_PLUS
-                if (!Player_CheckMightyUnspin(playerPtr, 0x300, 2, &player->uncurlTimer))
+                if (!Player_CheckMightyUnspin(playerPtr, 0x300, 2, &playerPtr->uncurlTimer))
 #endif
                     Player_Hurt(playerPtr, self);
             }
