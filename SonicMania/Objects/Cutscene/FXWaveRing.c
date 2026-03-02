@@ -45,7 +45,7 @@ void FXWaveRing_Draw(void)
     RSDK_THIS(FXWaveRing);
 
     int32 angInc = 256 / self->pointCount;
-    uint32 color = (self->r << 16) | (self->g << 8) | (self->b << 8);
+    uint32 color = (self->r << 16) | (self->g << 8) | (self->b);
     int32 sin    = self->radius * RSDK.Sin256(self->angle2) + (self->radiusOffset << 8);
 
     int32 x = sin * RSDK.Sin256(self->angle) + self->position.x;
