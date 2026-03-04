@@ -150,7 +150,7 @@ void HCZOneWayDoor_SetupHitboxes(void)
 
         case HCZONEWAYDOOR_LEFT:
         case HCZONEWAYDOOR_RIGHT:
-            self->hitboxTrigger.right  = self->size.y >> 17;
+            self->hitboxTrigger.right  = self->size.x >> 17;
             self->hitboxTrigger.top    = -(self->size.y >> 17);
             self->hitboxTrigger.left   = -(self->size.x >> 17);
             self->hitboxTrigger.bottom = self->size.y >> 17;
