@@ -716,6 +716,9 @@ void ReplayRecorder_DrawGhostDisplay(void)
                 DrawHelpers_DrawIsocelesTriangle(x, y, (RSDK.Cos256(angle) << 10) + x, (RSDK.Sin256(angle) << 10) + y, 4, 0xC0E0E0, INK_ALPHA,
                                                  self->ghostAlpha >> 1);
 
+                // Draw Background Circle
+                RSDK.DrawCircle(drawPos.x, drawPos.y, size + 0x10, 0xC0E0E0, self->ghostAlpha >> 1, INK_ALPHA, false);
+
                 self->alpha     = self->ghostAlpha;
                 self->inkEffect = INK_ALPHA;
                 self->drawFX    = FX_FLIP | FX_ROTATE | FX_SCALE;
