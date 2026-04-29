@@ -19,7 +19,7 @@ If you want to transfer your save from the official PC versions, you can just co
 # Additional Tweaks
 * Added a built-in mod loader and API calls to enable a much smoother modding experience.
 * Added support for targeting RSDKv5U rather than standalone RSDKv5
-* Added all content from almost all released versions of the game. Including: 1.00 (Console initial release), 1.03 (PC initial release) & 1.06 (Plus update)
+* Added support for building almost all released versions of the game. Including: 1.00 (Console initial release), 1.03 (PC initial release) & 1.06 (Plus update)
 
 # How to Build
 
@@ -39,7 +39,7 @@ If you've already cloned the repo, run this command inside of the repository:
 
 ## Getting dependencies
 
-This repo includes everything you need for Sonic Mania + RSDKv5(U). If you wish to compile only Sonic Mania, you can skip to the [compilation steps below](#compiling).
+This repo includes everything you need for Sonic Mania + RSDKv5(U). If you wish to compile only Sonic Mania, you can skip to the [compilation steps below](#compiling) and compile with the `WITH_RSDK` flag disabled.
 
 ### Windows
 To handle dependencies, you'll need to install [Visual Studio Community](https://visualstudio.microsoft.com/downloads/) (make sure to install the `Desktop development with C++` package during the installation) and [vcpkg](https://learn.microsoft.com/en-us/vcpkg/get_started/get-started?pivots=shell-cmd#1---set-up-vcpkg) (You only need to follow `1 - Set up vcpkg`).
