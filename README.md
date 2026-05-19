@@ -18,7 +18,6 @@ If you want to transfer your save from the official PC versions, you can just co
 
 # Additional Tweaks
 * Added a built-in mod loader and API calls to enable a much smoother modding experience.
-* Added support for targeting RSDKv5U rather than standalone RSDKv5
 * Added support for building almost all released versions of the game. Including: 1.00 (Console initial release), 1.03 (PC initial release) & 1.06 (Plus update)
 
 # How to Build
@@ -39,7 +38,7 @@ If you've already cloned the repo, run this command inside of the repository:
 
 ## Getting dependencies
 
-This repo includes everything you need for Sonic Mania + RSDKv5(U). If you wish to compile only Sonic Mania, you can skip to the [compilation steps below](#compiling) and compile with the `WITH_RSDK` flag disabled.
+This repo includes everything you need for Sonic Mania + RSDKv5. If you wish to compile only Sonic Mania, you can skip to the [compilation steps below](#compiling) and compile with the `WITH_RSDK` flag disabled.
 
 ### Windows
 To handle dependencies, you'll need to install [Visual Studio Community](https://visualstudio.microsoft.com/downloads/) (make sure to install the `Desktop development with C++` package during the installation) and [vcpkg](https://learn.microsoft.com/en-us/vcpkg/get_started/get-started?pivots=shell-cmd#1---set-up-vcpkg) (You only need to follow `1 - Set up vcpkg`).
@@ -57,7 +56,7 @@ Install the following dependencies: then follow the [compilation steps below](#c
 - **apt (Debian/Ubuntu):** `sudo apt install build-essential cmake libglew-dev libglfw3-dev libtheora-dev`
 - **rpm (Fedora):** `sudo dnf install make cmake gcc glew-devel glfw-devel libtheora-devel zlib-devel`
 - **xbps (Void):** `sudo xbps-install make cmake gcc pkg-config glew-devel glfw-devel libtheora-devel zlib-devel`
-- Your favorite package manager here, [make a pull request](https://github.com/RSDKModding/Sonic-Mania-Decompilation/fork) (also update [RSDKv5U](https://github.com/RSDKModding/RSDKv5-Decompilation)!)
+- Your favorite package manager here, [make a pull request](https://github.com/RSDKModding/Sonic-Mania-Decompilation/fork) (also update [RSDKv5](https://github.com/RSDKModding/RSDKv5-Decompilation)!)
 
 #### (make sure to [install GL shaders!](#q-why-arent-videosfilters-working-while-using-gl))
 
@@ -81,13 +80,13 @@ cmake --build build --config release
 ```
 
 The resulting build for Mania will be located somewhere in `build/` depending on your system.
-If building with RSDKv5(U), the resulting Mania and RSDK executable will likely be in `build/dependencies/RSDKv5/`.
+If building with RSDKv5, the resulting Mania and RSDK executable will likely be in `build/dependencies/RSDKv5/`.
 
 The following cmake arguments are available when compiling:
 - Use these by adding `-D[flag-name]=[value]` to the end of the `cmake -B build` command. For example, to build with `RETRO_DISABLE_PLUS` set to on, add `-DRETRO_DISABLE_PLUS=on` to the command.
 
 ### RSDKv5 flags
-- `RETRO_REVISION`: What revision to compile for. Takes an integer, defaults to `3` (RSDKv5U).
+- `RETRO_REVISION`: What revision to compile for. Takes an integer, defaults to `2` (RSDKv5).
 - `RETRO_DISABLE_PLUS`: Whether or not to disable the Plus DLC. Takes a boolean (on/off): build with `on` when compiling for distribution. Defaults to `off`.
 - `RETRO_MOD_LOADER`: Enables or disables the mod loader. Takes a boolean, defaults to `on`.
 - `RETRO_MOD_LOADER_VER`: Manually sets the mod loader version. Takes an integer, defaults to the current latest version.
