@@ -1,7 +1,7 @@
 #ifndef OBJ_COMPETITION_H
 #define OBJ_COMPETITION_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectCompetition {

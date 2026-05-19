@@ -1,7 +1,7 @@
 #ifndef OBJ_SPZ1SETUP_H
 #define OBJ_SPZ1SETUP_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectSPZ1Setup {

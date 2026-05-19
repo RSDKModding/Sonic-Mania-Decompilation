@@ -1,7 +1,7 @@
 #ifndef OBJ_FORCESPIN_H
 #define OBJ_FORCESPIN_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectForceSpin {

@@ -1,7 +1,7 @@
 #ifndef OBJ_DEBRIS_H
 #define OBJ_DEBRIS_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Structs
 typedef struct {

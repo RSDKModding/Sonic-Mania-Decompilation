@@ -1,7 +1,7 @@
 #ifndef OBJ_CRABMEAT_H
 #define OBJ_CRABMEAT_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectCrabmeat {

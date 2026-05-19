@@ -1,7 +1,7 @@
 #ifndef OBJ_TITLEBG_H
 #define OBJ_TITLEBG_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     TITLEBG_MOUNTAIN1,

@@ -1,7 +1,7 @@
 #ifndef OBJ_TITLESONIC_H
 #define OBJ_TITLESONIC_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectTitleSonic {

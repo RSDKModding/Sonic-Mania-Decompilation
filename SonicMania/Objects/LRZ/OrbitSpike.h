@@ -1,7 +1,7 @@
 #ifndef OBJ_ORBITSPIKE_H
 #define OBJ_ORBITSPIKE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectOrbitSpike {

@@ -1,7 +1,7 @@
 #ifndef OBJ_PROPELLER_H
 #define OBJ_PROPELLER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectPropeller {

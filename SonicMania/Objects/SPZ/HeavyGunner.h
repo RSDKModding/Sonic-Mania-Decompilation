@@ -1,7 +1,7 @@
 #ifndef OBJ_HEAVYGUNNER_H
 #define OBJ_HEAVYGUNNER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     HEAVYGUNNER_HBH,

@@ -1,7 +1,7 @@
 #ifndef OBJ_HATTERKILLER_H
 #define OBJ_HATTERKILLER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #define HATTERKILLER_SEGMENT_COUNT (10)
 

@@ -1,7 +1,7 @@
 #ifndef OBJ_TURBOTURTLE_H
 #define OBJ_TURBOTURTLE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     TURBOTURTLE_FANDIR_TOP,

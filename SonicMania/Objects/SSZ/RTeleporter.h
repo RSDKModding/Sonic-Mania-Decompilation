@@ -1,7 +1,7 @@
 #ifndef OBJ_RTELEPORTER_H
 #define OBJ_RTELEPORTER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectRTeleporter {

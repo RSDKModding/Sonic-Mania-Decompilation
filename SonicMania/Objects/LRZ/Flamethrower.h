@@ -1,7 +1,7 @@
 #ifndef OBJ_FLAMETHROWER_H
 #define OBJ_FLAMETHROWER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     FLAMETHROWER_ORIENTATION_RIGHT,

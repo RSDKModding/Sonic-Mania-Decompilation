@@ -1,7 +1,7 @@
 #ifndef OBJ_SILVERSONIC_H
 #define OBJ_SILVERSONIC_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     SSONIC_ANI_IDLE,

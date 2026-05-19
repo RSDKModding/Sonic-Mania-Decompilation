@@ -1,7 +1,7 @@
 #ifndef OBJ_BUTTONDOOR_H
 #define OBJ_BUTTONDOOR_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     BUTTONDOOR_UP,

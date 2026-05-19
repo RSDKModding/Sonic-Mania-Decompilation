@@ -1,7 +1,7 @@
 #ifndef OBJ_TUBINAUT_H
 #define OBJ_TUBINAUT_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #define TUBINAUT_ORB_COUNT (3)
 

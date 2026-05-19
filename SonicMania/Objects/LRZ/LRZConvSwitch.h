@@ -1,7 +1,7 @@
 #ifndef OBJ_LRZCONVSWITCH_H
 #define OBJ_LRZCONVSWITCH_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum { LRZCONVSWITCH_RIGHT, LRZCONVSWITCH_LEFT } LRZConvSwitchCalibrateModes;
 

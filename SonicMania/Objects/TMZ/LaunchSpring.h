@@ -1,7 +1,7 @@
 #ifndef OBJ_LAUNCHSPRING_H
 #define OBJ_LAUNCHSPRING_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     LAUNCHSPRING_SPINNING,

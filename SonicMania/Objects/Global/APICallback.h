@@ -1,7 +1,7 @@
 #ifndef OBJ_APICALLBACK_H
 #define OBJ_APICALLBACK_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #if MANIA_USE_PLUS
 #define sku_platform SKU->platform

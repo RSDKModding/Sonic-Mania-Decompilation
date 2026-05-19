@@ -1,7 +1,7 @@
 #ifndef OBJ_JUGGLESAW_H
 #define OBJ_JUGGLESAW_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum { JUGGLESAW_NO_SAW = 0, JUGGLESAW_HAS_SAW = 1, JUGGLESAW_AWAITING_SAW = 2 } JuggleSawMode;
 

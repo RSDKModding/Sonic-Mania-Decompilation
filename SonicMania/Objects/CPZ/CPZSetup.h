@@ -1,7 +1,7 @@
 #ifndef OBJ_CPZSETUP_H
 #define OBJ_CPZSETUP_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     CPZ_BG_CPZ2,

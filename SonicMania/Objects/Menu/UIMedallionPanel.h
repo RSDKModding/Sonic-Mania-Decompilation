@@ -1,7 +1,7 @@
 #ifndef OBJ_UIMEDALLIONPANEL_H
 #define OBJ_UIMEDALLIONPANEL_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectUIMedallionPanel {

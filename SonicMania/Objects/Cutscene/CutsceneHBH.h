@@ -1,7 +1,7 @@
 #ifndef OBJ_CUTSCENEHBH_H
 #define OBJ_CUTSCENEHBH_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     HBH_GUNNER,

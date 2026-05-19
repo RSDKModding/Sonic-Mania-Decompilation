@@ -1,7 +1,7 @@
 #ifndef OBJ_BSS_MESSAGE_H
 #define OBJ_BSS_MESSAGE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     BSS_MESSAGE_GETSPHERES,

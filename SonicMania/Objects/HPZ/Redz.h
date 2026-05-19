@@ -1,7 +1,7 @@
 #ifndef OBJ_REDZ_H
 #define OBJ_REDZ_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectRedz {

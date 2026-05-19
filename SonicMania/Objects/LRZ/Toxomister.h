@@ -1,7 +1,7 @@
 #ifndef OBJ_TOXOMISTER_H
 #define OBJ_TOXOMISTER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectToxomister {

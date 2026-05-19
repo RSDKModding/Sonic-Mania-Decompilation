@@ -1,7 +1,7 @@
 #ifndef OBJ_UIMODEBUTTON_H
 #define OBJ_UIMODEBUTTON_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     UIMODEBUTTON_MANIA,

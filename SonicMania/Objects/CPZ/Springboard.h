@@ -1,7 +1,7 @@
 #ifndef OBJ_SPRINGBOARD_H
 #define OBJ_SPRINGBOARD_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectSpringboard {

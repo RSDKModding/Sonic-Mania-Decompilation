@@ -1,7 +1,7 @@
 #ifndef OBJ_FAN_H
 #define OBJ_FAN_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     FAN_V,

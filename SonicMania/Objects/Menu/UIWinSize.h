@@ -1,7 +1,7 @@
 #ifndef OBJ_UIWINSIZE_H
 #define OBJ_UIWINSIZE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #if GAME_VERSION != VER_100
 // Object Class

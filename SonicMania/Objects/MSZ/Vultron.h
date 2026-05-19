@@ -1,7 +1,7 @@
 #ifndef OBJ_VULTRON_H
 #define OBJ_VULTRON_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     VULTRON_DIVE,

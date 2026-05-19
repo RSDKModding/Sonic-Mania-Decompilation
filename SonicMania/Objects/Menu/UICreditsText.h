@@ -1,7 +1,7 @@
 #ifndef OBJ_UICREDITSTEXT_H
 #define OBJ_UICREDITSTEXT_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectUICreditsText {

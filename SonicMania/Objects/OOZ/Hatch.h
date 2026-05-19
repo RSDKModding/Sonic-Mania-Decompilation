@@ -1,7 +1,7 @@
 #ifndef OBJ_HATCH_H
 #define OBJ_HATCH_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     HATCH_GO_SUBENTRYHATCH,

@@ -1,7 +1,7 @@
 #ifndef OBJ_SPIKEFLAIL_H
 #define OBJ_SPIKEFLAIL_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectSpikeFlail {

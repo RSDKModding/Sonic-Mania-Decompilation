@@ -1,7 +1,7 @@
 #ifndef OBJ_DASHLIFT_H
 #define OBJ_DASHLIFT_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectDashLift {

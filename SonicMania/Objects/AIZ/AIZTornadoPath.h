@@ -1,7 +1,7 @@
 #ifndef OBJ_AIZTORNADOPATH_H
 #define OBJ_AIZTORNADOPATH_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     AIZTORNADOPATH_START,

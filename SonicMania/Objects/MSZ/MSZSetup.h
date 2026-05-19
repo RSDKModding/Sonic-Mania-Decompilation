@@ -1,7 +1,7 @@
 #ifndef OBJ_MSZSETUP_H
 #define OBJ_MSZSETUP_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum { MSZ_GENERICTRIGGER_ACHIEVEMENT } GenericTriggerTypesMSZ;
 

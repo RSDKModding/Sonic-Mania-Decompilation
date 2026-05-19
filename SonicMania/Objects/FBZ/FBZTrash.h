@@ -1,7 +1,7 @@
 #ifndef OBJ_FBZTRASH_H
 #define OBJ_FBZTRASH_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     FBZTRASH_TRASH,

@@ -1,7 +1,7 @@
 #ifndef OBJ_MOTOBUG_H
 #define OBJ_MOTOBUG_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectMotobug {

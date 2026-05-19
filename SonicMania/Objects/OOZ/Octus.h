@@ -1,7 +1,7 @@
 #ifndef OBJ_OCTUS_H
 #define OBJ_OCTUS_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectOctus {

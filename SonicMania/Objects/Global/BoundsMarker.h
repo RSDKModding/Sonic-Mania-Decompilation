@@ -1,7 +1,7 @@
 #ifndef OBJ_BOUNDSMARKER_H
 #define OBJ_BOUNDSMARKER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     BOUNDSMARKER_ANY_Y,

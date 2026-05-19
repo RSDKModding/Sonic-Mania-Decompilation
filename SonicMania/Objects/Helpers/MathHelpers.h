@@ -1,7 +1,7 @@
 #ifndef OBJ_MATHHELPERS_H
 #define OBJ_MATHHELPERS_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectMathHelpers {

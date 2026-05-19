@@ -1,7 +1,7 @@
 #ifndef OBJ_SPEAR_H
 #define OBJ_SPEAR_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     SPEAR_UP,

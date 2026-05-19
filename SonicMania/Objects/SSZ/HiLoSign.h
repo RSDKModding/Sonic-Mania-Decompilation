@@ -1,7 +1,7 @@
 #ifndef OBJ_HILOSIGN_H
 #define OBJ_HILOSIGN_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     HILOSIGN_H,

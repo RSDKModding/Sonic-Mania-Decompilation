@@ -1,7 +1,7 @@
 #ifndef OBJ_FXTRAIL_H
 #define OBJ_FXTRAIL_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Extras lol
 #define FXTRAIL_TRACK_COUNT 7

@@ -1,7 +1,7 @@
 #ifndef OBJ_LRZROCKPILE_H
 #define OBJ_LRZROCKPILE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     LRZROCKPILE_WALL,
@@ -28,7 +28,7 @@ struct EntityLRZRockPile {
     uint16 delay;
     bool32 debugParticles;
     bool32 unbreakable;
-    PlaneFilterTypes planeFilter;
+    ManiaPlaneFilterTypes planeFilter;
     bool32 onlyKnux;
 #if MANIA_USE_PLUS
     bool32 onlyMighty;

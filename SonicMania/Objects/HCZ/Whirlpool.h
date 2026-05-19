@@ -1,7 +1,7 @@
 #ifndef OBJ_WHIRLPOOL_H
 #define OBJ_WHIRLPOOL_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectWhirlpool {

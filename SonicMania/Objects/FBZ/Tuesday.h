@@ -1,7 +1,7 @@
 #ifndef OBJ_TUESDAY_H
 #define OBJ_TUESDAY_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     TUESDAY_GONDOLA,

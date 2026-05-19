@@ -1,7 +1,7 @@
 #ifndef OBJ_UFO_CIRCUIT_H
 #define OBJ_UFO_CIRCUIT_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum { UFO_CIRCUIT_MODE_UNUSED } UFO_CircuitModes;
 

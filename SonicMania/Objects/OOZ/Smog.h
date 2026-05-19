@@ -1,7 +1,7 @@
 #ifndef OBJ_SMOG_H
 #define OBJ_SMOG_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectSmog {

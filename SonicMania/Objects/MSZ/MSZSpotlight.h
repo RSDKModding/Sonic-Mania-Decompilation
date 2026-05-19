@@ -1,7 +1,7 @@
 #ifndef OBJ_MSZSPOTLIGHT_H
 #define OBJ_MSZSPOTLIGHT_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     MSZSPOTLIGHT_RED,

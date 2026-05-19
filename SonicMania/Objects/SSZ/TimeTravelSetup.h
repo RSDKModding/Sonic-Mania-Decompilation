@@ -1,7 +1,7 @@
 #ifndef OBJ_TIMETRAVELSETUP_H
 #define OBJ_TIMETRAVELSETUP_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectTimeTravelSetup {

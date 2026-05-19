@@ -1,7 +1,7 @@
 #ifndef OBJ_DIVEEGGMAN_H
 #define OBJ_DIVEEGGMAN_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     DIVEEGGMAN_EGGMAN,

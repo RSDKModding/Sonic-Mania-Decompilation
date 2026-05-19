@@ -1,7 +1,7 @@
 #ifndef OBJ_LOCALIZATION_H
 #define OBJ_LOCALIZATION_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     STR_TESTSTR,

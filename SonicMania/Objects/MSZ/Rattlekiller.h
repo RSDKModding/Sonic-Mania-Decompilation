@@ -1,7 +1,7 @@
 #ifndef OBJ_RATTLEKILLER_H
 #define OBJ_RATTLEKILLER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #define RATTLEKILLER_SEGMENT_COUNT (10)
 

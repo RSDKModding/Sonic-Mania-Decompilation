@@ -1,7 +1,7 @@
 #ifndef OBJ_SHUTTERBUG_H
 #define OBJ_SHUTTERBUG_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectShutterbug {

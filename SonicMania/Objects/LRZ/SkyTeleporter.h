@@ -1,7 +1,7 @@
 #ifndef OBJ_SKYTELEPORTER_H
 #define OBJ_SKYTELEPORTER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectSkyTeleporter {

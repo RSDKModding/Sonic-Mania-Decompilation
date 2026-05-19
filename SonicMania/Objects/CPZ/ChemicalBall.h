@@ -1,7 +1,7 @@
 #ifndef OBJ_CHEMICALBALL_H
 #define OBJ_CHEMICALBALL_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum { CHEMICALBALL_ARC, CHEMICALBALL_VERTICAL } ChemicalBallTypes;
 

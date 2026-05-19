@@ -1,7 +1,7 @@
 #ifndef OBJ_MMZWHEEL_H
 #define OBJ_MMZWHEEL_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     MMZWHEEL_MOTION_STIFF,

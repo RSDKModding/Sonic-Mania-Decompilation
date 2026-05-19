@@ -1,7 +1,7 @@
 #ifndef OBJ_KINGCLAW_H
 #define OBJ_KINGCLAW_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #define KINGCLAW_CHAIN_COUNT (12)
 

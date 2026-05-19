@@ -1,7 +1,7 @@
 #ifndef OBJ_LRZCONVDROPPER_H
 #define OBJ_LRZCONVDROPPER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum { LRZCONVDROP_TRIGGER_BUTTON, LRZCONVDROP_TRIGGER_PLAYER } LRZConvDropperTriggerModes;
 

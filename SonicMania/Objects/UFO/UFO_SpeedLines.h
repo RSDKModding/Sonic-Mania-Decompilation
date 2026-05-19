@@ -1,7 +1,7 @@
 #ifndef OBJ_UFO_SPEEDLINES_H
 #define OBJ_UFO_SPEEDLINES_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #define UFO_SPEEDLINES_LINE_COUNT (32)
 

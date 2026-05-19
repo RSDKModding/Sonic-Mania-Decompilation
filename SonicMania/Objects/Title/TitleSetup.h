@@ -1,7 +1,7 @@
 #ifndef OBJ_TITLESETUP_H
 #define OBJ_TITLESETUP_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectTitleSetup {

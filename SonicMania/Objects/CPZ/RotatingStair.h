@@ -1,7 +1,7 @@
 #ifndef OBJ_ROTATINGSTAIR_H
 #define OBJ_ROTATINGSTAIR_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     ROTATINGSTAIR_LEFT,

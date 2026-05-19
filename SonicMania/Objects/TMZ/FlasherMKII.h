@@ -1,7 +1,7 @@
 #ifndef OBJ_FLASHERMKII_H
 #define OBJ_FLASHERMKII_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     FLASHERMKII_ORIENTATION_UP,

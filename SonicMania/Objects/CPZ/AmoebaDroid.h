@@ -1,7 +1,7 @@
 #ifndef OBJ_AMOEBADROID_H
 #define OBJ_AMOEBADROID_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #define AMOEBADROID_BLOB_COUNT (8)
 

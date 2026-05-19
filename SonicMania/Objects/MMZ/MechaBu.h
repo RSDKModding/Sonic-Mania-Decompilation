@@ -1,7 +1,7 @@
 #ifndef OBJ_MECHABU_H
 #define OBJ_MECHABU_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectMechaBu {
@@ -18,7 +18,7 @@ struct ObjectMechaBu {
 struct EntityMechaBu {
     RSDK_ENTITY
     StateMachine(state);
-    PlaneFilterTypes planeFilter;
+    ManiaPlaneFilterTypes planeFilter;
     uint8 timer;
     uint8 sawTimer;
     Vector2 startPos;

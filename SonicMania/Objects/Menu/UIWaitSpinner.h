@@ -1,7 +1,7 @@
 #ifndef OBJ_UIWAITSPINNER_H
 #define OBJ_UIWAITSPINNER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectUIWaitSpinner {

@@ -1,7 +1,7 @@
 #ifndef OBJ_MATRYOSHKABOM_H
 #define OBJ_MATRYOSHKABOM_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     MATRYOSHKA_SIZE_BIG,
@@ -26,7 +26,7 @@ struct ObjectMatryoshkaBom {
 struct EntityMatryoshkaBom {
     RSDK_ENTITY
     StateMachine(state);
-    PlaneFilterTypes planeFilter;
+    ManiaPlaneFilterTypes planeFilter;
     MatryoshkaSizes size;
     bool32 canExplode;
     bool32 destroyOffscreen;

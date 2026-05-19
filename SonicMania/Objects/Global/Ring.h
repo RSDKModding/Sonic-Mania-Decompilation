@@ -1,7 +1,7 @@
 #ifndef OBJ_RING_H
 #define OBJ_RING_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     RING_TYPE_NORMAL,
@@ -34,7 +34,7 @@ struct EntityRing {
     StateMachine(state);
     StateMachine(stateDraw);
     RingTypes type;
-    PlaneFilterTypes planeFilter;
+    ManiaPlaneFilterTypes planeFilter;
     int32 ringAmount;
     int32 timer;
     int32 maxFrameCount;

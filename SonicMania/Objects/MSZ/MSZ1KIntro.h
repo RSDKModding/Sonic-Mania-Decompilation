@@ -1,7 +1,7 @@
 #ifndef OBJ_MSZ1KINTRO_H
 #define OBJ_MSZ1KINTRO_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectMSZ1KIntro {

@@ -1,7 +1,7 @@
 #ifndef OBJ_TEETERTOTTER_H
 #define OBJ_TEETERTOTTER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #define TEETERTOTTER_SEGMENT_COUNT (32)
 

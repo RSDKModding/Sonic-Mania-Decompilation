@@ -1,7 +1,7 @@
 #ifndef OBJ_EXPLOSION_H
 #define OBJ_EXPLOSION_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     EXPLOSION_ITEMBOX,

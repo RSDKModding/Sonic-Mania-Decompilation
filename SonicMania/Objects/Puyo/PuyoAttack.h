@@ -1,7 +1,7 @@
 #ifndef OBJ_PUYOATTACK_H
 #define OBJ_PUYOATTACK_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectPuyoAttack {

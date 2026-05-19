@@ -1,7 +1,7 @@
 #ifndef OBJ_TAEMERALD_H
 #define OBJ_TAEMERALD_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectTAEmerald {

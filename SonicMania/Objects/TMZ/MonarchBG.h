@@ -1,7 +1,7 @@
 #ifndef OBJ_MONARCHBG_H
 #define OBJ_MONARCHBG_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectMonarchBG {

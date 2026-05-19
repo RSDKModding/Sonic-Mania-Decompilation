@@ -1,7 +1,7 @@
 #ifndef OBJ_FLAMESPRING_H
 #define OBJ_FLAMESPRING_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     FLAMESPRING_BOTH,

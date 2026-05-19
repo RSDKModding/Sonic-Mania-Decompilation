@@ -1,7 +1,7 @@
 #ifndef OBJ_PHANTOMRIDER_H
 #define OBJ_PHANTOMRIDER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum { PHANTOMRIDER_JIMMY = 3 } PhantomRiderTypes;
 

@@ -1,7 +1,7 @@
 #ifndef OBJ_CUTSCENERULES_H
 #define OBJ_CUTSCENERULES_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectCutsceneRules {

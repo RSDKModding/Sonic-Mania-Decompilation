@@ -1,7 +1,7 @@
 #ifndef OBJ_KINGATTACK_H
 #define OBJ_KINGATTACK_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     KINGATTACK_LASER,

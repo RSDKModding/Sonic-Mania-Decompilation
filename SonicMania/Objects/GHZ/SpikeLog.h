@@ -1,7 +1,7 @@
 #ifndef OBJ_SPIKELOG_H
 #define OBJ_SPIKELOG_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectSpikeLog {

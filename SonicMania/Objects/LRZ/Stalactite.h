@@ -1,7 +1,7 @@
 #ifndef OBJ_STALACTITE_H
 #define OBJ_STALACTITE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectStalactite {

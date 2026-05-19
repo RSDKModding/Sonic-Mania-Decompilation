@@ -1,7 +1,7 @@
 #ifndef OBJ_TURNTABLE_H
 #define OBJ_TURNTABLE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     TURNTABLE_SMALL,

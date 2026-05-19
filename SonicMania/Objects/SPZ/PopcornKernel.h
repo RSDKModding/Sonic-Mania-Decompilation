@@ -1,7 +1,7 @@
 #ifndef OBJ_POPCORNKERNEL_H
 #define OBJ_POPCORNKERNEL_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectPopcornKernel {

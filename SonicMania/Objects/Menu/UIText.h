@@ -1,7 +1,7 @@
 #ifndef OBJ_UITEXT_H
 #define OBJ_UITEXT_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     UITEXT_ALIGN_LEFT,

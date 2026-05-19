@@ -1,7 +1,7 @@
 #ifndef OBJ_SHIELD_H
 #define OBJ_SHIELD_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     SHIELDANI_BLUE,

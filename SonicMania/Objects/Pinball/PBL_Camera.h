@@ -1,7 +1,7 @@
 #ifndef OBJ_PBL_CAMERA_H
 #define OBJ_PBL_CAMERA_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #if MANIA_USE_PLUS
 // Object Class
