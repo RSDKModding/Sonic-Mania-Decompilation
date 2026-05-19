@@ -12,8 +12,6 @@ on:
 
 env:
   GENERAL_FLAGS: "-DWITH_RSDK=OFF -DCMAKE_BUILD_TYPE=Release"
-  V5_FLAGS: "-DRETRO_REVISION=2"
-  V5U_FLAGS: "-DRETRO_REVISION=3"
   # Normally you would use $VCPKG_INSTALLATION_PATH, but it's broken...so hardcode C:/vcpkg
   GENERAL_WIN_FLAGS: "-DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake"
   WIN32_FLAGS: "-DVCPKG_TARGET_TRIPLET=x86-windows-static -A Win32"
@@ -29,17 +27,12 @@ jobs:
           submodules: recursive
       - name: Build Mania
         run: |
-          cmake -B build_v5 ${{env.GENERAL_FLAGS}} ${{env.GENERAL_WIN_FLAGS}} ${{env.WIN32_FLAGS}} ${{env.V5_FLAGS}}
-          cmake --build build_v5 --parallel --config Release
-          cmake -B build_v5U ${{env.GENERAL_FLAGS}} ${{env.GENERAL_WIN_FLAGS}} ${{env.WIN32_FLAGS}} ${{env.V5U_FLAGS}}
-          cmake --build build_v5U --parallel --config Release
+          cmake -B build ${{env.GENERAL_FLAGS}} ${{env.GENERAL_WIN_FLAGS}} ${{env.WIN32_FLAGS}}
+          cmake --build build --parallel --config Release
       - name: Move artifacts
         run: |
           mkdir artifacts
-          mkdir artifacts/v5
-          mkdir artifacts/v5U
-          mv ./build_v5/Release/*.dll ./artifacts/v5/
-          mv ./build_v5U/Release/*.dll ./artifacts/v5U/
+          mv ./build/Release/*.dll ./artifacts/
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -54,17 +47,12 @@ jobs:
           submodules: recursive
       - name: Build Mania
         run: |
-          cmake -B build_v5 ${{env.GENERAL_FLAGS}} ${{env.GENERAL_WIN_FLAGS}} ${{env.WIN64_FLAGS}} ${{env.V5_FLAGS}}
-          cmake --build build_v5 --parallel --config Release
-          cmake -B build_v5U ${{env.GENERAL_FLAGS}} ${{env.GENERAL_WIN_FLAGS}} ${{env.WIN64_FLAGS}} ${{env.V5U_FLAGS}}
-          cmake --build build_v5U --parallel --config Release
+          cmake -B build ${{env.GENERAL_FLAGS}} ${{env.GENERAL_WIN_FLAGS}} ${{env.WIN64_FLAGS}}
+          cmake --build build --parallel --config Release
       - name: Move artifacts
         run: |
           mkdir artifacts
-          mkdir artifacts/v5
-          mkdir artifacts/v5U
-          mv ./build_v5/Release/*.dll ./artifacts/v5/
-          mv ./build_v5U/Release/*.dll ./artifacts/v5U/
+          mv ./build/Release/*.dll ./artifacts/
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -79,17 +67,12 @@ jobs:
           submodules: recursive
       - name: Build Mania
         run: |
-          cmake -B build_v5 ${{env.GENERAL_FLAGS}} ${{env.V5_FLAGS}}
-          cmake --build build_v5 --parallel
-          cmake -B build_v5U ${{env.GENERAL_FLAGS}} ${{env.V5U_FLAGS}}
-          cmake --build build_v5U --parallel
+          cmake -B build ${{env.GENERAL_FLAGS}}
+          cmake --build build --parallel
       - name: Move artifacts
         run: |
           mkdir artifacts
-          mkdir artifacts/v5
-          mkdir artifacts/v5U
-          mv ./build_v5/lib*.so ./artifacts/v5/
-          mv ./build_v5U/lib*.so ./artifacts/v5U/
+          mv ./build/lib*.so ./artifacts/
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
