@@ -1,0 +1,10 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="SonicMania/SonicMania.vcxproj" />
+  <Project Path="SonicMania/SonicMania_All.vcxproj" />
+  <Project Path="SonicMania/SonicMania_All_PrePlus.vcxproj" />
+  <Project Path="SonicMania/SonicMania_PrePlus.vcxproj" />
+</Solution>
