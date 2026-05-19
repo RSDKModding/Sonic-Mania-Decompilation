@@ -76,7 +76,7 @@ if(WITH_RSDK)
         target_link_libraries(RetroEngine ${GAME_NAME})
     endif()
 else()
-    set(RETRO_REVISION 3 CACHE STRING "What revision to compile for. Defaults to v5U = 3")
+    set(RETRO_REVISION 2 CACHE STRING "What revision to compile for. Defaults to v5 = 2")
 
     option(RETRO_MOD_LOADER "Enables or disables the mod loader." ON)
     set(RETRO_MOD_LOADER_VER 3 CACHE STRING "Sets the mod loader version. Defaults to latest")
