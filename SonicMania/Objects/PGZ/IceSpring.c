@@ -34,9 +34,9 @@ void IceSpring_Update(void)
 
                     int32 collided = false;
                     if (player->state == Ice_PlayerState_Frozen)
-                        collided = MathHelpers_CheckBoxCollision(self, &self->hitbox, player, &Ice->hitboxPlayerBlockOuter);
+                        collided = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, &Ice->hitboxPlayerBlockOuter, false);
                     else
-                        collided = MathHelpers_CheckBoxCollision(self, &self->hitbox, player, Player_GetHitbox(player));
+                        collided = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, Player_GetHitbox(player), false);
 
                     if (collided) {
                         int32 type       = self->type;

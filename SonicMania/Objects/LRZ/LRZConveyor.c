@@ -184,7 +184,7 @@ int32 LRZConveyor_HandlePlayerCollisions(EntityLRZConveyor *conveyor, void *p, H
             playerHitbox.bottom = 8;
         }
 
-        side                = MathHelpers_CheckBoxCollision(conveyor, &hitbox, player, &playerHitbox);
+        side                = RSDK.CheckObjectCollisionBox(conveyor, &hitbox, player, &playerHitbox, false);
         conveyor->direction = storeDir;
     }
 
