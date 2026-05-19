@@ -1,12 +1,7 @@
-[submodule "dependencies/all/tinyxml2"]
-	path = dependencies/all/tinyxml2
-	url = https://github.com/leethomason/tinyxml2
-[submodule "dependencies/all/stb_vorbis"]
-	path = dependencies/all/stb_vorbis
-	url = https://github.com/nothings/stb
 [submodule "dependencies/RSDKv5"]
 	path = dependencies/RSDKv5
 	url = https://github.com/Rubberduckycooly/RSDKv5-Decompilation
+	branch = modapi-v3
 [submodule "dependencies/RSDKv5-GameAPI"]
 	path = dependencies/RSDKv5-GameAPI
 	url = https://github.com/RSDKModding/RSDKv5-GameAPI
