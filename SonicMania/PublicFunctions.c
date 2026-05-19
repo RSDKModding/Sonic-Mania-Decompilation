@@ -2599,7 +2599,6 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(MathHelpers_CheckPositionOverlap);
     ADD_PUBLIC_FUNC(MathHelpers_GetEdgeDistance);
     ADD_PUBLIC_FUNC(MathHelpers_ConstrainToBox);
-    ADD_PUBLIC_FUNC(MathHelpers_CheckBoxCollision);
 
     // Helpers/Options
     ADD_PUBLIC_FUNC(Options_GetOptionsRAM);

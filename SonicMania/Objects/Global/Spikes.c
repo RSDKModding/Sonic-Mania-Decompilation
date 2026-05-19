@@ -204,9 +204,9 @@ void Spikes_Update(void)
                     uint8 side = C_NONE;
 
                     if (player->state == Ice_PlayerState_Frozen)
-                        side = MathHelpers_CheckBoxCollision(self, &self->hitbox, player, &Ice->hitboxPlayerBlockOuter);
+                        side = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, &Ice->hitboxPlayerBlockOuter, false);
                     else
-                        side = MathHelpers_CheckBoxCollision(self, &self->hitbox, player, Player_GetHitbox(player));
+                        side = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, Player_GetHitbox(player), false);
 
                     switch (side) {
                         case C_TOP:
