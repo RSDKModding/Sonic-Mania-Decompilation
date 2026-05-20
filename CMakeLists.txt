@@ -29,6 +29,10 @@ else()
     set(GAME_VERSION 3 CACHE STRING "The game version to use. Defaults to 3 == Last pre-plus release")
 endif()
 
+if(MINGW AND WIN32)
+    set(CMAKE_SHARED_LIBRARY_PREFIX "")
+endif()
+
 set(GAME_NAME "SonicMania" CACHE STRING "The game directory to look into")
 set(GAME_OUTPUT_NAME "Game" CACHE STRING "The name of the built library")
 
