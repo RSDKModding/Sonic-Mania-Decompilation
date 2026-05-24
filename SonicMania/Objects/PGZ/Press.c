@@ -286,13 +286,13 @@ void Press_HandleMovement(void)
     {
         self->position.y += self->offBottom;
 
-        if (MathHelpers_CheckBoxCollision(self, &Press->hitbox, crate, &crate->hitbox) == C_TOP) {
+        if (RSDK.CheckObjectCollisionBox(self, &Press->hitbox, crate, &crate->hitbox, false) == C_TOP) {
             bottom = true;
             Crate_MoveY(crate, -floorOffset);
         }
 
         self->position.y += self->offTop - self->offBottom;
-        if (MathHelpers_CheckBoxCollision(crate, &crate->hitbox, self, &Press->hitbox) == C_TOP) {
+        if (RSDK.CheckObjectCollisionBox(crate, &crate->hitbox, self, &Press->hitbox, false) == C_TOP) {
             top = true;
 
             switch (crate->frameID) {
