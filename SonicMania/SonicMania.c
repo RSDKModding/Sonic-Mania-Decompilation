@@ -4,10 +4,8 @@
 #endif
 
 // -------------------------
-// GAME VARIABLES
+// LINK GAME/MOD LOGIC
 // -------------------------
-
-GlobalVariables *globals;
 
 void LinkGameLogic(EngineInfo *info)
 {
