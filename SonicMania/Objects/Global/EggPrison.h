@@ -1,7 +1,7 @@
 #ifndef OBJ_EGGPRISON_H
 #define OBJ_EGGPRISON_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     EGGPRISON_NORMAL,

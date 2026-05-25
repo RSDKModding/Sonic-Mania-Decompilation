@@ -1,7 +1,7 @@
 #ifndef OBJ_LRZSPIRAL_H
 #define OBJ_LRZSPIRAL_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     LRZSPIRAL_CYLINDER,

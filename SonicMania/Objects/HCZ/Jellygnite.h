@@ -1,7 +1,7 @@
 #ifndef OBJ_JELLYGNITE_H
 #define OBJ_JELLYGNITE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     JELLYGNITE_ANI_FLOATING,

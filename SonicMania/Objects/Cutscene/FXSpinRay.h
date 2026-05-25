@@ -1,7 +1,7 @@
 #ifndef OBJ_FXSPINRAY_H
 #define OBJ_FXSPINRAY_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectFXSpinRay {

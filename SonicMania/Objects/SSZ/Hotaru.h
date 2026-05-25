@@ -1,7 +1,7 @@
 #ifndef OBJ_HOTARU_H
 #define OBJ_HOTARU_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     HOTARU_GOOD,

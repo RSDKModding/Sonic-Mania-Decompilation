@@ -1,7 +1,7 @@
 #ifndef OBJ_UIPICTURE_H
 #define OBJ_UIPICTURE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectUIPicture {

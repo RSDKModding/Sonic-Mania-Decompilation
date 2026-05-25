@@ -246,4 +246,3 @@ Ignored/
 android/local.properties
 
 *.res
-dependencies/*

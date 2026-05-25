@@ -1,7 +1,7 @@
 #ifndef OBJ_PIMPOM_H
 #define OBJ_PIMPOM_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     PIMPOM_SINGLE,

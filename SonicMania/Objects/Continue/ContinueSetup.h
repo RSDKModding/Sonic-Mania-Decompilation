@@ -1,7 +1,7 @@
 #ifndef OBJ_CONTINUESETUP_H
 #define OBJ_CONTINUESETUP_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectContinueSetup {

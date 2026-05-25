@@ -1,7 +1,7 @@
 #ifndef OBJ_SCOREBONUS_H
 #define OBJ_SCOREBONUS_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectScoreBonus {

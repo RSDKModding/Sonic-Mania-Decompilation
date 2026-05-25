@@ -1,7 +1,7 @@
 #ifndef OBJ_UITAZONEMODULE_H
 #define OBJ_UITAZONEMODULE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectUITAZoneModule {

@@ -1,7 +1,7 @@
 #ifndef OBJ_SPLATS_H
 #define OBJ_SPLATS_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     // GHZ

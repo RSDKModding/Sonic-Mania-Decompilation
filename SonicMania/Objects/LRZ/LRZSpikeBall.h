@@ -1,7 +1,7 @@
 #ifndef OBJ_LRZSPIKEBALL_H
 #define OBJ_LRZSPIKEBALL_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectLRZSpikeBall {

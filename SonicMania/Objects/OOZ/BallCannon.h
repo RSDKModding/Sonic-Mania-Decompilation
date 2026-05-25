@@ -1,7 +1,7 @@
 #ifndef OBJ_BALLCANNON_H
 #define OBJ_BALLCANNON_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     BALLCANNON_CANNON,

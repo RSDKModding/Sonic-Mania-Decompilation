@@ -1,7 +1,7 @@
 #ifndef OBJ_TORNADO_H
 #define OBJ_TORNADO_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     TORNADO_MODE_IDLE,

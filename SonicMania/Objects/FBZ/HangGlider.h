@@ -1,7 +1,7 @@
 #ifndef OBJ_HANGGLIDER_H
 #define OBJ_HANGGLIDER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #if MANIA_USE_PLUS
 

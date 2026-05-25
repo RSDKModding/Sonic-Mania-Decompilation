@@ -1,7 +1,7 @@
 #ifndef OBJ_NEWSPAPER_H
 #define OBJ_NEWSPAPER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #if MANIA_USE_PLUS
 typedef enum {

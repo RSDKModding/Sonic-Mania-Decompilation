@@ -1,7 +1,7 @@
 #ifndef OBJ_CLUCKER_H
 #define OBJ_CLUCKER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectClucker {

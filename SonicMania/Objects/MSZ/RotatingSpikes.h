@@ -1,7 +1,7 @@
 #ifndef OBJ_ROTATINGSPIKES_H
 #define OBJ_ROTATINGSPIKES_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     ROTSPIKES_PRIO_LOW,

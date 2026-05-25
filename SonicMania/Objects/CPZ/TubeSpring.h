@@ -1,7 +1,7 @@
 #ifndef OBJ_TUBESPRING_H
 #define OBJ_TUBESPRING_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectTubeSpring {

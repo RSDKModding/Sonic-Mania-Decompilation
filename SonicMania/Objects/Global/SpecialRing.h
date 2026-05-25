@@ -1,7 +1,7 @@
 #ifndef OBJ_SPECIALRING_H
 #define OBJ_SPECIALRING_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectSpecialRing {

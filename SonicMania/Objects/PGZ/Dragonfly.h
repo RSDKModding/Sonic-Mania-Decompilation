@@ -1,7 +1,7 @@
 #ifndef OBJ_DRAGONFLY_H
 #define OBJ_DRAGONFLY_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #define DRAGONFLY_SPINE_COUNT (6)
 

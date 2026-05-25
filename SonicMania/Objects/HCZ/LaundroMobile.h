@@ -1,7 +1,7 @@
 #ifndef OBJ_LAUNDROMOBILE_H
 #define OBJ_LAUNDROMOBILE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     LAUNDROMOBILE_BOSS,

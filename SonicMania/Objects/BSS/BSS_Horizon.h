@@ -1,7 +1,7 @@
 #ifndef OBJ_BSS_HORIZON_H
 #define OBJ_BSS_HORIZON_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectBSS_Horizon {

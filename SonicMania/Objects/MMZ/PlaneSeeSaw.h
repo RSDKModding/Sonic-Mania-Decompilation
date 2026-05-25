@@ -1,7 +1,7 @@
 #ifndef OBJ_PLANESEESAW_H
 #define OBJ_PLANESEESAW_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectPlaneSeeSaw {

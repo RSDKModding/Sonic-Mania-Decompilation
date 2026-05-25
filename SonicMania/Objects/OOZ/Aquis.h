@@ -1,7 +1,7 @@
 #ifndef OBJ_AQUIS_H
 #define OBJ_AQUIS_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectAquis {

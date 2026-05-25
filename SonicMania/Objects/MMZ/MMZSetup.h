@@ -1,7 +1,7 @@
 #ifndef OBJ_MMZSETUP_H
 #define OBJ_MMZSETUP_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectMMZSetup {

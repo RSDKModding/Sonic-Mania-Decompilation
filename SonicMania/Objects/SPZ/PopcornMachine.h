@@ -1,7 +1,7 @@
 #ifndef OBJ_POPCORNMACHINE_H
 #define OBJ_POPCORNMACHINE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     POPCORNMACHINE_LEFT,

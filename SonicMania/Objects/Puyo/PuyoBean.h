@@ -1,7 +1,7 @@
 #ifndef OBJ_PUYOBEAN_H
 #define OBJ_PUYOBEAN_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #define PUYO_PLAYFIELD_W (6)
 #define PUYO_PLAYFIELD_H (14)

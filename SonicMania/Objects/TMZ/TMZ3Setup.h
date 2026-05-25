@@ -1,7 +1,7 @@
 #ifndef OBJ_TMZ3SETUP_H
 #define OBJ_TMZ3SETUP_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectTMZ3Setup {

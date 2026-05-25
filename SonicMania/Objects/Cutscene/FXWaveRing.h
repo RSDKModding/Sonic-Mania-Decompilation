@@ -1,7 +1,7 @@
 #ifndef OBJ_FXWAVERING_H
 #define OBJ_FXWAVERING_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #if MANIA_USE_PLUS
 // Object Class

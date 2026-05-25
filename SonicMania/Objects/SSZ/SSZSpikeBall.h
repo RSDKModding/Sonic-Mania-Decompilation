@@ -1,7 +1,7 @@
 #ifndef OBJ_SSZSPIKEBALL_H
 #define OBJ_SSZSPIKEBALL_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     SSZSPIKEBALL_LAUNCHER_UP,

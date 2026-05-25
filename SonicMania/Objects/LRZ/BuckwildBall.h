@@ -1,7 +1,7 @@
 #ifndef OBJ_BUCKWILDBALL_H
 #define OBJ_BUCKWILDBALL_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum { BUCKWILDBALL_PATROLLING, BUCKWILDBALL_ROLLING } BuckwildBallModes;
 

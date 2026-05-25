@@ -1,7 +1,7 @@
 #ifndef OBJ_PINATA_H
 #define OBJ_PINATA_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum { PINATA_PRIO_HIGH, PINATA_PRIO_LOW } PinataPriorities;
 

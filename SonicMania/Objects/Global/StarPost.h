@@ -1,7 +1,7 @@
 #ifndef OBJ_STARPOST_H
 #define OBJ_STARPOST_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectStarPost {

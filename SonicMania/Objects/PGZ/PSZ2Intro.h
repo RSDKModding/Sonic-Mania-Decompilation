@@ -1,7 +1,7 @@
 #ifndef OBJ_PSZ2INTRO_H
 #define OBJ_PSZ2INTRO_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectPSZ2Intro {

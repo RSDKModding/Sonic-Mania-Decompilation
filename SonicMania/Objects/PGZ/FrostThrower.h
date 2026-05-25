@@ -1,7 +1,7 @@
 #ifndef OBJ_FROSTTHROWER_H
 #define OBJ_FROSTTHROWER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectFrostThrower {

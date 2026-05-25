@@ -1,7 +1,7 @@
 #ifndef OBJ_ERZMYSTIC_H
 #define OBJ_ERZMYSTIC_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectERZMystic {

@@ -1,7 +1,7 @@
 #ifndef OBJ_TITLE3DSPRITE_H
 #define OBJ_TITLE3DSPRITE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     TITLE3DSPRITE_MOUNTAIN_L,

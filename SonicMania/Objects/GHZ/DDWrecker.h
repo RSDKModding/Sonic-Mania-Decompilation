@@ -1,7 +1,7 @@
 #ifndef OBJ_DDWRECKER_H
 #define OBJ_DDWRECKER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     DDWRECKER_SETUP,

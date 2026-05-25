@@ -1,7 +1,7 @@
 #ifndef OBJ_NEWTRON_H
 #define OBJ_NEWTRON_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     NEWTRON_SHOOT,

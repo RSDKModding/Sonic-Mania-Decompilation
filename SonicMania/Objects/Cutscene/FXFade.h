@@ -1,7 +1,7 @@
 #ifndef OBJ_FXFADE_H
 #define OBJ_FXFADE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectFXFade {

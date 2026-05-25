@@ -5,7 +5,7 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // NOTE:
 // This is a mania-fied version of the spikeballs present on S3 hang conveyors.

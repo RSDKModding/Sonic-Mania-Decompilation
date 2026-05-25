@@ -1,7 +1,7 @@
 #ifndef OBJ_PARALLAXSPRITE_H
 #define OBJ_PARALLAXSPRITE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     PARALLAXSPRITE_ATTR_STANDARD,

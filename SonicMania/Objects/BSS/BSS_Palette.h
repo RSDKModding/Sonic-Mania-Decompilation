@@ -1,7 +1,7 @@
 #ifndef OBJ_BSS_PALETTE_H
 #define OBJ_BSS_PALETTE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectBSS_Palette {

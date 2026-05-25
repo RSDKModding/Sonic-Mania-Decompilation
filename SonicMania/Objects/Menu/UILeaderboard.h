@@ -1,7 +1,7 @@
 #ifndef OBJ_UILEADERBOARD_H
 #define OBJ_UILEADERBOARD_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectUILeaderboard {

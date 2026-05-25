@@ -1,7 +1,7 @@
 #ifndef OBJ_MONARCHPLANS_H
 #define OBJ_MONARCHPLANS_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #if MANIA_USE_PLUS
 // Object Class

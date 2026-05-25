@@ -1,7 +1,7 @@
 #ifndef OBJ_PSZLAUNCHER_H
 #define OBJ_PSZLAUNCHER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectPSZLauncher {

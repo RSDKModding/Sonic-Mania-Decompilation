@@ -1,7 +1,7 @@
 #ifndef OBJ_POHBEE_H
 #define OBJ_POHBEE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectPohBee {
@@ -27,7 +27,7 @@ struct EntityPohBee {
     Hitbox hitboxes[2];
     uint8 spikeCount;
     Vector2 amplitude;
-    PlaneFilterTypes planeFilter;
+    ManiaPlaneFilterTypes planeFilter;
 };
 
 // Object Struct

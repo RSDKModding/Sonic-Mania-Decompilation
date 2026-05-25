@@ -1,7 +1,7 @@
 #ifndef OBJ_GAMEOVER_H
 #define OBJ_GAMEOVER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #define GAMEOVER_LETTER_COUNT (8)
 

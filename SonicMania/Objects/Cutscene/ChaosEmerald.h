@@ -1,7 +1,7 @@
 #ifndef OBJ_CHAOSEMERALD_H
 #define OBJ_CHAOSEMERALD_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     CHAOSEMERALD_GREEN,

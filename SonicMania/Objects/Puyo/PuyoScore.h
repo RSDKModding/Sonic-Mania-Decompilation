@@ -1,7 +1,7 @@
 #ifndef OBJ_PUYOSCORE_H
 #define OBJ_PUYOSCORE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectPuyoScore {

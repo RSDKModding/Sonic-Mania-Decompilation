@@ -1,7 +1,7 @@
 #ifndef OBJ_SP500_H
 #define OBJ_SP500_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectSP500 {

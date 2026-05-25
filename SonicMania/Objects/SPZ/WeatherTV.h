@@ -1,7 +1,7 @@
 #ifndef OBJ_WEATHERTV_H
 #define OBJ_WEATHERTV_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectWeatherTV {

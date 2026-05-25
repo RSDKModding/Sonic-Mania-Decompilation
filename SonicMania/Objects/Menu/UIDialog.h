@@ -1,7 +1,7 @@
 #ifndef OBJ_UIDIALOG_H
 #define OBJ_UIDIALOG_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #define UIDIALOG_OPTION_COUNT (3)
 

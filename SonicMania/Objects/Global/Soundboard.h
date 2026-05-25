@@ -1,7 +1,7 @@
 #ifndef OBJ_SOUNDBOARD_H
 #define OBJ_SOUNDBOARD_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #define SOUNDBOARD_SFX_COUNT (32)
 

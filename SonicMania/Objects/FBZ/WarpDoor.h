@@ -1,7 +1,7 @@
 #ifndef OBJ_WARPDOOR_H
 #define OBJ_WARPDOOR_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum { WARPDOOR_EFFECT_NONE } WarpDoorEffects;
 

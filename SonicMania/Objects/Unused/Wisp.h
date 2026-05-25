@@ -1,7 +1,7 @@
 #ifndef OBJ_WISP_H
 #define OBJ_WISP_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectWisp {

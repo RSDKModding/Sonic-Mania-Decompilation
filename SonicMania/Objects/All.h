@@ -1,3 +1,6 @@
+#ifndef ALL_H
+#define ALL_H
+
 //Forward Declarations
 typedef struct ObjectAcetone ObjectAcetone;
 typedef struct EntityAcetone EntityAcetone;
@@ -1828,3 +1831,5 @@ typedef struct EntityZone EntityZone;
 #include "SSZ/YoyoPulley.h"
 #include "GHZ/ZipLine.h"
 #include "Global/Zone.h"
+
+#endif // !ALL_H

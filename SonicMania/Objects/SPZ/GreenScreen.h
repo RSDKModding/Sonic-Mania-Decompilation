@@ -1,7 +1,7 @@
 #ifndef OBJ_GREENSCREEN_H
 #define OBJ_GREENSCREEN_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectGreenScreen {

@@ -1,7 +1,7 @@
 #ifndef OBJ_BGSWITCH_H
 #define OBJ_BGSWITCH_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectBGSwitch {

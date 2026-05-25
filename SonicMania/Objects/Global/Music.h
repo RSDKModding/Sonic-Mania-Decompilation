@@ -1,7 +1,7 @@
 #ifndef OBJ_MUSIC_H
 #define OBJ_MUSIC_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     TRACK_NONE         = -1,

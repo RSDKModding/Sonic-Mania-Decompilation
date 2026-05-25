@@ -1,7 +1,7 @@
 #ifndef OBJ_MINE_H
 #define OBJ_MINE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectMine {

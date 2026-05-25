@@ -1,7 +1,7 @@
 #ifndef OBJ_CACTULA_H
 #define OBJ_CACTULA_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectCactula {

@@ -1,7 +1,7 @@
 #ifndef OBJ_MANIAMODEMENU_H
 #define OBJ_MANIAMODEMENU_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #if MANIA_USE_PLUS
 

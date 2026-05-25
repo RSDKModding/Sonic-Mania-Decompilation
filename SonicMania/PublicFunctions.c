@@ -1,3 +1,5 @@
+#include "All.h"
+
 #define ADD_PUBLIC_FUNC(func) Mod.AddPublicFunction(#func, (void *)(func))
 
 // NOTE:

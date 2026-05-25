@@ -1,7 +1,7 @@
 #ifndef OBJ_TWISTINGDOOR_H
 #define OBJ_TWISTINGDOOR_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     TWISTINGDOOR_V_SHORT,

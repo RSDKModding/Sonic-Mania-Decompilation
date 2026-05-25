@@ -1,7 +1,7 @@
 #ifndef OBJ_REPLAYRECORDER_H
 #define OBJ_REPLAYRECORDER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #if MANIA_USE_PLUS
 

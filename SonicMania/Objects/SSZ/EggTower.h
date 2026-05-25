@@ -1,7 +1,7 @@
 #ifndef OBJ_EGGTOWER_H
 #define OBJ_EGGTOWER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectEggTower {

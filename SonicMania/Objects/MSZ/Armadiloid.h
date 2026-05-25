@@ -1,7 +1,7 @@
 #ifndef OBJ_ARMADILOID_H
 #define OBJ_ARMADILOID_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum { ARMADILOID_SHOOTER, ARMADILOID_RIDER } ArmadiloidTypes;
 

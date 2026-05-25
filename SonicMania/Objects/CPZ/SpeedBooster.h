@@ -1,7 +1,7 @@
 #ifndef OBJ_SPEEDBOOSTER_H
 #define OBJ_SPEEDBOOSTER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectSpeedBooster {

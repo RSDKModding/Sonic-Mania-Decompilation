@@ -1,7 +1,7 @@
 #ifndef OBJ_LIGHTBARRIER_H
 #define OBJ_LIGHTBARRIER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectLightBarrier {

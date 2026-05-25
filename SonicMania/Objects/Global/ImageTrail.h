@@ -1,7 +1,7 @@
 #ifndef OBJ_IMAGETRAIL_H
 #define OBJ_IMAGETRAIL_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Constants
 #define IMAGETRAIL_TRACK_COUNT (7)

@@ -1,7 +1,7 @@
 #ifndef OBJ_PHANTOMHAND_H
 #define OBJ_PHANTOMHAND_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectPhantomHand {

@@ -1,7 +1,7 @@
 #ifndef OBJ_BREAKBAR_H
 #define OBJ_BREAKBAR_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     BREAKBAR_V,

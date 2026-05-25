@@ -1,7 +1,7 @@
 #ifndef OBJ_SYRINGE_H
 #define OBJ_SYRINGE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectSyringe {

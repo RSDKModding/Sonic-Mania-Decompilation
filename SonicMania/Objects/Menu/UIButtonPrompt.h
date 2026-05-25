@@ -1,7 +1,7 @@
 #ifndef OBJ_UIBUTTONPROMPT_H
 #define OBJ_UIBUTTONPROMPT_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     UIBUTTONPROMPT_NONE,

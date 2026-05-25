@@ -1,7 +1,7 @@
 #ifndef OBJ_FARPLANE_H
 #define OBJ_FARPLANE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #define FARPLANE_ENTITY_COUNT (256)
 

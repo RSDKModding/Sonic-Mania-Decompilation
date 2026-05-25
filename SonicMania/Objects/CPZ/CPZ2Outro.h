@@ -1,7 +1,7 @@
 #ifndef OBJ_CPZ2OUTRO_H
 #define OBJ_CPZ2OUTRO_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectCPZ2Outro {

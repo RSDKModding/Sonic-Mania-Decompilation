@@ -1,7 +1,7 @@
 #ifndef OBJ_UIVIDEO_H
 #define OBJ_UIVIDEO_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectUIVideo {

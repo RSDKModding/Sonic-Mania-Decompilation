@@ -1,7 +1,7 @@
 #ifndef OBJ_SCARAB_H
 #define OBJ_SCARAB_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectScarab {
@@ -25,7 +25,7 @@ struct EntityScarab {
     Animator backLegAnimator;
     int32 amplitude;
     uint8 childCount;
-    PlaneFilterTypes planeFilter;
+    ManiaPlaneFilterTypes planeFilter;
     uint8 drawGroupLow;
     uint8 drawGroupHigh;
     uint8 pullCount;

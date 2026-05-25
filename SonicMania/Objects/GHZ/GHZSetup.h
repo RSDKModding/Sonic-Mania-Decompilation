@@ -1,7 +1,7 @@
 #ifndef OBJ_GHZSETUP_H
 #define OBJ_GHZSETUP_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     GHZ_BG_OUTSIDE,

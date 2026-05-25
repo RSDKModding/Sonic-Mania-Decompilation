@@ -1,7 +1,7 @@
 #ifndef OBJ_TITLELOGO_H
 #define OBJ_TITLELOGO_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     TITLELOGO_EMBLEM,

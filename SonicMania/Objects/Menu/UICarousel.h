@@ -1,7 +1,7 @@
 #ifndef OBJ_UICAROUSEL_H
 #define OBJ_UICAROUSEL_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #if MANIA_USE_PLUS
 // Object Class

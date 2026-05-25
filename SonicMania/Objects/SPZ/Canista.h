@@ -1,7 +1,7 @@
 #ifndef OBJ_CANISTA_H
 #define OBJ_CANISTA_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     CANISTA_TRIGGER_STATIC,

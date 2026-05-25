@@ -1,7 +1,7 @@
 #ifndef OBJ_UIOPTIONPANEL_H
 #define OBJ_UIOPTIONPANEL_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectUIOptionPanel {

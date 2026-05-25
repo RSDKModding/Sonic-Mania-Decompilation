@@ -1,7 +1,7 @@
 #ifndef OBJ_UIPOPOVER_H
 #define OBJ_UIPOPOVER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #if MANIA_USE_PLUS
 

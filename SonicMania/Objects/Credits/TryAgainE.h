@@ -1,7 +1,7 @@
 #ifndef OBJ_TRYAGAINE_H
 #define OBJ_TRYAGAINE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #if MANIA_USE_PLUS
 // Object Class

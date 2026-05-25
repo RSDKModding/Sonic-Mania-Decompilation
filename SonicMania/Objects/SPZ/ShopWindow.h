@@ -1,7 +1,7 @@
 #ifndef OBJ_SHOPWINDOW_H
 #define OBJ_SHOPWINDOW_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectShopWindow {

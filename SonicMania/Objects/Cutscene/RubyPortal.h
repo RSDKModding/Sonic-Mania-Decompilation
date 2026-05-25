@@ -1,7 +1,7 @@
 #ifndef OBJ_RUBYPORTAL_H
 #define OBJ_RUBYPORTAL_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectRubyPortal {

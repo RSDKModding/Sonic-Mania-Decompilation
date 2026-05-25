@@ -1,7 +1,7 @@
 #ifndef OBJ_LEVELSELECT_H
 #define OBJ_LEVELSELECT_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     LSELECT_PLAYER_NONE,

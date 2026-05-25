@@ -1,7 +1,7 @@
 #ifndef OBJ_OPTIONS_H
 #define OBJ_OPTIONS_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Using a seperate OptionsRAM struct
 // Normally (and officially) the EntityOptions struct was used here

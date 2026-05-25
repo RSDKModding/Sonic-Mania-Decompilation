@@ -1,7 +1,7 @@
 #ifndef OBJ_HEAVYSHINOBI_H
 #define OBJ_HEAVYSHINOBI_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     SHINOBI_MAIN,

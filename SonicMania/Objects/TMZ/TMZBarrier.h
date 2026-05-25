@@ -1,7 +1,7 @@
 #ifndef OBJ_TMZBARRIER_H
 #define OBJ_TMZBARRIER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     TMZBARRIER_LONG,
