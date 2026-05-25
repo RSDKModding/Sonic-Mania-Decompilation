@@ -1,7 +1,7 @@
 #ifndef OBJ_GONDOLA_H
 #define OBJ_GONDOLA_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectGondola {

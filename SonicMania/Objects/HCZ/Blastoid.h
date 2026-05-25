@@ -1,7 +1,7 @@
 #ifndef OBJ_BLASTOID_H
 #define OBJ_BLASTOID_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectBlastoid {

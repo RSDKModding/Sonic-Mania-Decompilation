@@ -1,7 +1,7 @@
 #ifndef OBJ_FLIPPER_H
 #define OBJ_FLIPPER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectFlipper {

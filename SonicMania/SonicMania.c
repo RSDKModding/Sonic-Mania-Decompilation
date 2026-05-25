@@ -1,122 +1,13 @@
-#include "Game.h"
+#include "SonicMania.h"
+#if RETRO_USE_MOD_LOADER
+#include "PublicFunctions.c"
+#endif
 
 // -------------------------
-// ENGINE VARIABLES
+// LINK GAME/MOD LOGIC
 // -------------------------
 
-RSDKFunctionTable RSDK;
-#if MANIA_USE_PLUS
-APIFunctionTable API;
-#endif
-#if RETRO_USE_MOD_LOADER
-ModFunctionTable Mod;
-
-DLLExport ModVersionInfo modInfo = { RETRO_REVISION, GAME_VERSION, RETRO_MOD_LOADER_VER };
-
-const char *modID = "SonicMania";
-#endif
-
-int32 RSDKRevision = RETRO_REVISION;
-
-RSDKSceneInfo *SceneInfo = NULL;
-
-RSDKGameInfo *GameInfo = NULL;
-#if MANIA_USE_PLUS
-RSDKSKUInfo *SKU = NULL;
-#endif
-
-RSDKControllerState *ControllerInfo = NULL;
-RSDKAnalogState *AnalogStickInfoL   = NULL; // should be called "AnalogStickInfo" for Pre-Plus but its easier to be consistent this way
-#if MANIA_USE_PLUS
-RSDKAnalogState *AnalogStickInfoR = NULL;
-RSDKTriggerState *TriggerInfoL    = NULL;
-RSDKTriggerState *TriggerInfoR    = NULL;
-#endif
-RSDKTouchInfo *TouchInfo = NULL;
-
-#if MANIA_USE_PLUS
-RSDKUnknownInfo *UnknownInfo = NULL;
-#endif
-
-RSDKScreenInfo *ScreenInfo = NULL;
-
-// -------------------------
-// GAME VARIABLES
-// -------------------------
-
-GlobalVariables *globals;
-
-void InitGameLogic(void);
-#if RETRO_USE_MOD_LOADER
-void InitModAPI(void);
-#endif
-
-#include "GameMain.h"
-
-#if MANIA_USE_PLUS
-void LinkGameLogicDLL(EngineInfo *info)
-{
-    memset(&API, 0, sizeof(APIFunctionTable));
-    memset(&RSDK, 0, sizeof(RSDKFunctionTable));
-
-    if (info->functionTable)
-        memcpy(&RSDK, info->functionTable, sizeof(RSDKFunctionTable));
-
-    if (info->APITable)
-        memcpy(&API, info->APITable, sizeof(APIFunctionTable));
-
-#if RETRO_USE_MOD_LOADER
-    if (info->modTable)
-        memcpy(&Mod, info->modTable, sizeof(ModFunctionTable));
-#endif
-
-    GameInfo       = info->gameInfo;
-    SKU            = info->currentSKU;
-    SceneInfo      = info->sceneInfo;
-    ControllerInfo = info->controllerInfo;
-
-    AnalogStickInfoL = info->stickInfoL;
-    AnalogStickInfoR = info->stickInfoR;
-    TriggerInfoL     = info->triggerInfoL;
-    TriggerInfoR     = info->triggerInfoR;
-    TouchInfo        = info->touchInfo;
-
-    UnknownInfo = info->unknownInfo;
-    ScreenInfo  = info->screenInfo;
-
-    InitGameLogic();
-}
-#else
-void LinkGameLogicDLL(EngineInfo info)
-{
-    // Actual params are:
-    // void LinkGameLogicDLL(void *functionTable, RSDKGameInfo *gameInfo, RSDKSceneInfo *sceneInfo, RSDKControllerState *controllerInfo,
-    //                       RSDKAnalogState *stickInfoL, RSDKTouchInfo *touchInfo, RSDKScreenInfo *screenInfo)
-    // But by passing EngineInfo by value we can create a sorta "container" for it, to keep things consistent & easy to manage
-
-    memset(&RSDK, 0, sizeof(RSDKFunctionTable));
-
-    if (info.functionTable)
-        memcpy(&RSDK, info.functionTable, sizeof(RSDKFunctionTable));
-
-#if RETRO_USE_MOD_LOADER
-    if (info.modTable)
-        memcpy(&Mod, info.modTable, sizeof(ModFunctionTable));
-#endif
-
-    GameInfo         = info.gameInfo;
-    SceneInfo        = info.sceneInfo;
-    ControllerInfo   = info.controllerInfo;
-    AnalogStickInfoL = info.stickInfoL;
-    TouchInfo        = info.touchInfo;
-    ScreenInfo       = info.screenInfo;
-
-    InitGameLogic();
-}
-#endif
-
-// This is actually part of "LinkGameLogicDLL" but since we have 2 versions of it, its easier to use shared code this way
-void InitGameLogic(void)
+void LinkGameLogic(EngineInfo *info)
 {
     RSDK.RegisterGlobalVariables((void **)&globals, sizeof(GlobalVariables));
 
@@ -829,26 +720,21 @@ void InitGameLogic(void)
     RSDK_REGISTER_OBJECT(Zone);
 
 #if RETRO_USE_MOD_LOADER
-    InitModAPI();
+    InitPublicFunctions();
 #endif
 }
 
 #if RETRO_USE_MOD_LOADER
-#include "PublicFunctions.c"
-
-void InitModAPI(void)
-{
-    // Init Public Functions
-    InitPublicFunctions();
-}
-
 bool32 LinkModLogic(EngineInfo *info, const char *id)
 {
+    modID = "SonicMania";
+
 #if RETRO_REV02
     LinkGameLogicDLL(info);
 #else
     LinkGameLogicDLL(*info);
 #endif
+
     return true;
 }
 #endif

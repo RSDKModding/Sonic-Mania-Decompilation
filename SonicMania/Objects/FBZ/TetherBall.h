@@ -1,7 +1,7 @@
 #ifndef OBJ_TETHERBALL_H
 #define OBJ_TETHERBALL_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum { TETHERBALL_DOWN, TETHERBALL_UP, TETHERBALL_LEFT, TETHERBALL_RIGHT } TetherBallTypes;
 

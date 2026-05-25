@@ -1,7 +1,7 @@
 #ifndef OBJ_DUST_H
 #define OBJ_DUST_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectDust {

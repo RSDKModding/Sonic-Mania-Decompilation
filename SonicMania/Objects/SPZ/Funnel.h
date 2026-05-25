@@ -1,7 +1,7 @@
 #ifndef OBJ_FUNNEL_H
 #define OBJ_FUNNEL_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectFunnel {

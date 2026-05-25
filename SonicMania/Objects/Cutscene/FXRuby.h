@@ -1,7 +1,7 @@
 #ifndef OBJ_FXRUBY_H
 #define OBJ_FXRUBY_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectFXRuby {

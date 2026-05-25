@@ -1,7 +1,7 @@
 #ifndef OBJ_BUBBLER_H
 #define OBJ_BUBBLER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectBubbler {

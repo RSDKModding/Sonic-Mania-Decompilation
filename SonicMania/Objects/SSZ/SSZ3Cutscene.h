@@ -1,7 +1,7 @@
 #ifndef OBJ_SSZ3CUTSCENE_H
 #define OBJ_SSZ3CUTSCENE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectSSZ3Cutscene {

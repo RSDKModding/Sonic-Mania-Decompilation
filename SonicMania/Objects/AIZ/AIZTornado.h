@@ -1,7 +1,7 @@
 #ifndef OBJ_AIZTORNADO_H
 #define OBJ_AIZTORNADO_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectAIZTornado {

@@ -1,7 +1,7 @@
 #ifndef OBJ_DRILLERDROIDO_H
 #define OBJ_DRILLERDROIDO_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     DRILLERDROIDO_MAIN,

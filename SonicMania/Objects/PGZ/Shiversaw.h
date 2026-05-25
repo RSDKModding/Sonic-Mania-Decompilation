@@ -1,7 +1,7 @@
 #ifndef OBJ_SHIVERSAW_H
 #define OBJ_SHIVERSAW_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #define SHIVERSAW_SAW_COUNT (2)
 

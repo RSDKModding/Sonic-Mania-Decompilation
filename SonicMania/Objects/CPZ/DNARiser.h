@@ -1,7 +1,7 @@
 #ifndef OBJ_DNARISER_H
 #define OBJ_DNARISER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectDNARiser {

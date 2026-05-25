@@ -1,7 +1,7 @@
 #ifndef OBJ_WATER_H
 #define OBJ_WATER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     WATER_WATERLEVEL,

@@ -1,7 +1,7 @@
 #ifndef OBJ_PETALPILE_H
 #define OBJ_PETALPILE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     PETALPILE_FGHIGH,

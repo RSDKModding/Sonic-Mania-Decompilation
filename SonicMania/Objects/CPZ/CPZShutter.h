@@ -1,7 +1,7 @@
 #ifndef OBJ_CPZSHUTTER_H
 #define OBJ_CPZSHUTTER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectCPZShutter {

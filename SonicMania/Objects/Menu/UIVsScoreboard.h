@@ -1,7 +1,7 @@
 #ifndef OBJ_UIVSSCOREBOARD_H
 #define OBJ_UIVSSCOREBOARD_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectUIVsScoreboard {

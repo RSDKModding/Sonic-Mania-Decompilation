@@ -1,7 +1,7 @@
 #ifndef OBJ_FXEXPANDRING_H
 #define OBJ_FXEXPANDRING_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectFXExpandRing {

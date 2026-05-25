@@ -1,7 +1,7 @@
 #ifndef OBJ_BATBOT_H
 #define OBJ_BATBOT_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectBatbot {

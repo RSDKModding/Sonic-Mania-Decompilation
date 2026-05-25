@@ -1,7 +1,7 @@
 #ifndef OBJ_BUGGERNAUT_H
 #define OBJ_BUGGERNAUT_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectBuggernaut {

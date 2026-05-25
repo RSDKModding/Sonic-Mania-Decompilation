@@ -1,7 +1,7 @@
 #ifndef OBJ_CHECKERBALL_H
 #define OBJ_CHECKERBALL_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectCheckerBall {

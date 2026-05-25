@@ -1,7 +1,7 @@
 #ifndef OBJ_JACOBSLADDER_H
 #define OBJ_JACOBSLADDER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectJacobsLadder {

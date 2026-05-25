@@ -1,7 +1,7 @@
 #ifndef OBJ_EGGPISTONSMKII_H
 #define OBJ_EGGPISTONSMKII_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     EGGPISTON_PISTON,

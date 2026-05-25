@@ -1,7 +1,7 @@
 #ifndef OBJ_MSORB_H
 #define OBJ_MSORB_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectMSOrb {

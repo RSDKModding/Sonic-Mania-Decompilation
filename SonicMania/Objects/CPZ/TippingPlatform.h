@@ -1,7 +1,7 @@
 #ifndef OBJ_TIPPINGPLATFORM_H
 #define OBJ_TIPPINGPLATFORM_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     TIPPINGPLATFORM_NONE,

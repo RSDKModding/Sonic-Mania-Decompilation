@@ -1,7 +1,7 @@
 #ifndef OBJ_UFO_SETUP_H
 #define OBJ_UFO_SETUP_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     UFO_TFLAGS_NORMAL,

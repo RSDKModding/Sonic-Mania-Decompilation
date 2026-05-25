@@ -1,7 +1,7 @@
 #ifndef OBJ_SIGNPOST_H
 #define OBJ_SIGNPOST_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     SIGNPOST_RUNPAST,

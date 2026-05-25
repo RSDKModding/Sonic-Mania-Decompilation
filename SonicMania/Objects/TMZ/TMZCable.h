@@ -1,7 +1,7 @@
 #ifndef OBJ_TMZCABLE_H
 #define OBJ_TMZCABLE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #define TMZCABLE_JOINT_COUNT (8)
 

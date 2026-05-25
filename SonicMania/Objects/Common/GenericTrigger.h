@@ -1,7 +1,7 @@
 #ifndef OBJ_GENERICTRIGGER_H
 #define OBJ_GENERICTRIGGER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     GENERICTRIGGER_NONE,

@@ -1,7 +1,7 @@
 #ifndef OBJ_ENCOREINTRO_H
 #define OBJ_ENCOREINTRO_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #if MANIA_USE_PLUS
 

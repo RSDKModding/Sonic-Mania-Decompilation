@@ -1,7 +1,7 @@
 #ifndef OBJ_BIGSQUEEZE_H
 #define OBJ_BIGSQUEEZE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     BIGSQUEEZE_MANAGER,

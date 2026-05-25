@@ -1,7 +1,7 @@
 #ifndef OBJ_EXTRASMENU_H
 #define OBJ_EXTRASMENU_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #if MANIA_USE_PLUS
 // Object Class

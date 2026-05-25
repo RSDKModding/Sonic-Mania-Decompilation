@@ -1,7 +1,7 @@
 #ifndef OBJ_OOZ2OUTRO_H
 #define OBJ_OOZ2OUTRO_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #if MANIA_USE_PLUS
 // Object Class

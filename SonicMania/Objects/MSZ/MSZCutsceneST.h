@@ -1,7 +1,7 @@
 #ifndef OBJ_MSZCUTSCENEST_H
 #define OBJ_MSZCUTSCENEST_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectMSZCutsceneST {

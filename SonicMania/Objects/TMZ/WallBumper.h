@@ -1,7 +1,7 @@
 #ifndef OBJ_WALLBUMPER_H
 #define OBJ_WALLBUMPER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     WALLBUMPER_H,

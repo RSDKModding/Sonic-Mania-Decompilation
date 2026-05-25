@@ -1,7 +1,7 @@
 #ifndef OBJ_MICDROP_H
 #define OBJ_MICDROP_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectMicDrop {

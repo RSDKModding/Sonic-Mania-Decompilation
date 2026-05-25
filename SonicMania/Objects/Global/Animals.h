@@ -1,7 +1,7 @@
 #ifndef OBJ_ANIMALS_H
 #define OBJ_ANIMALS_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     ANIMAL_FLICKY,

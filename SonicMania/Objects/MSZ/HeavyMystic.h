@@ -1,7 +1,7 @@
 #ifndef OBJ_HEAVYMYSTIC_H
 #define OBJ_HEAVYMYSTIC_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     MYSTIC_MISCHIEF,

@@ -1,7 +1,7 @@
 #ifndef OBJ_COLLAPSINGPLATFORM_H
 #define OBJ_COLLAPSINGPLATFORM_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     COLLAPSEPLAT_LEFT,

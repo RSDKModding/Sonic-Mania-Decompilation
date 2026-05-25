@@ -1,7 +1,7 @@
 #ifndef OBJ_SPIKECORRIDOR_H
 #define OBJ_SPIKECORRIDOR_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectSpikeCorridor {

@@ -1,7 +1,7 @@
 #ifndef OBJ_ITEMBOX_H
 #define OBJ_ITEMBOX_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     ITEMBOX_RING,
@@ -56,7 +56,7 @@ struct EntityItemBox {
     bool32 isFalling;
     bool32 isContents;
     bool32 hidden;
-    PlaneFilterTypes planeFilter;
+    ManiaPlaneFilterTypes planeFilter;
     bool32 lrzConvPhys;
     Animator boxAnimator;
     Animator contentsAnimator;

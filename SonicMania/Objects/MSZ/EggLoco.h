@@ -1,7 +1,7 @@
 #ifndef OBJ_EGGLOCO_H
 #define OBJ_EGGLOCO_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectEggLoco {

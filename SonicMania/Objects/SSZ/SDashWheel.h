@@ -1,7 +1,7 @@
 #ifndef OBJ_SDASHWHEEL_H
 #define OBJ_SDASHWHEEL_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class (Old)
 // Found this by digging into the static object files, just looks like an older version of the "SDashWheel" obj, nothing special here

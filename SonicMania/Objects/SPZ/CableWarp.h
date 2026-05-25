@@ -1,7 +1,7 @@
 #ifndef OBJ_CABLEWARP_H
 #define OBJ_CABLEWARP_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     CABLEWARP_ENTRY,

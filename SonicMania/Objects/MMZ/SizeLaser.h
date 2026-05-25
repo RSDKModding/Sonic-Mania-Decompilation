@@ -1,7 +1,7 @@
 #ifndef OBJ_SIZELASER_H
 #define OBJ_SIZELASER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     SIZELASER_SHRINK,

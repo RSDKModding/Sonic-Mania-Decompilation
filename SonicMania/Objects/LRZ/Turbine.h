@@ -1,7 +1,7 @@
 #ifndef OBJ_TURBINE_H
 #define OBJ_TURBINE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum { TURBINE_HANDLES, TURBINE_SPIKES, TURBINE_WALLDECOR } TurbineTypes;
 

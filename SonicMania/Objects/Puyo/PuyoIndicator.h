@@ -1,7 +1,7 @@
 #ifndef OBJ_PUYOINDICATOR_H
 #define OBJ_PUYOINDICATOR_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectPuyoIndicator {

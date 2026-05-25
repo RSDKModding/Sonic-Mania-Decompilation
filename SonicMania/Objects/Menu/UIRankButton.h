@@ -1,7 +1,7 @@
 #ifndef OBJ_UIRANKBUTTON_H
 #define OBJ_UIRANKBUTTON_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #if MANIA_USE_PLUS
 // Object Class

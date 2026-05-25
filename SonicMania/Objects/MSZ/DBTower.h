@@ -1,7 +1,7 @@
 #ifndef OBJ_DBTOWER_H
 #define OBJ_DBTOWER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #define DBTOWER_SEGMENT_COUNT (4)
 

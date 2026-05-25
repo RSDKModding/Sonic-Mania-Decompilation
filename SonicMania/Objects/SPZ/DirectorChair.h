@@ -1,7 +1,7 @@
 #ifndef OBJ_DIRECTORCHAIR_H
 #define OBJ_DIRECTORCHAIR_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     DIRECTORCHAIR_CLOSED,

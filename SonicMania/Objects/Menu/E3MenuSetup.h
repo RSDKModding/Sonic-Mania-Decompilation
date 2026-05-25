@@ -1,7 +1,7 @@
 #ifndef OBJ_E3MENUSETUP_H
 #define OBJ_E3MENUSETUP_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #if !MANIA_USE_PLUS
 // Object Class

@@ -1,7 +1,7 @@
 #ifndef OBJ_TIMEPOST_H
 #define OBJ_TIMEPOST_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectTimePost {

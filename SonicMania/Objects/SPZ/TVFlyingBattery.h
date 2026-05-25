@@ -1,7 +1,7 @@
 #ifndef OBJ_TVFLYINGBATTERY_H
 #define OBJ_TVFLYINGBATTERY_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectTVFlyingBattery {

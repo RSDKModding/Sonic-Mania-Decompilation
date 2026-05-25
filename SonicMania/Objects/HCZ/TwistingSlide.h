@@ -1,7 +1,7 @@
 #ifndef OBJ_TWISTINGSLIDE_H
 #define OBJ_TWISTINGSLIDE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     TWISTINGSLIDE_START,

@@ -1,7 +1,7 @@
 #ifndef OBJ_BOMB_H
 #define OBJ_BOMB_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectBomb {

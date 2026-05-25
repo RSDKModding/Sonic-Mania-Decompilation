@@ -1,7 +1,7 @@
 #ifndef OBJ_INVINCIBLESTARS_H
 #define OBJ_INVINCIBLESTARS_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectInvincibleStars {

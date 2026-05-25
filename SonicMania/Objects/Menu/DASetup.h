@@ -1,7 +1,7 @@
 #ifndef OBJ_DASETUP_H
 #define OBJ_DASETUP_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectDASetup {

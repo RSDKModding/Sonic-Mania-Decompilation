@@ -1,7 +1,7 @@
 #ifndef OBJ_UIKEYBINDER_H
 #define OBJ_UIKEYBINDER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     UIKEYBINDER_UP,

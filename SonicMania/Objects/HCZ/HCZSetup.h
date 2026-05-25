@@ -1,7 +1,7 @@
 #ifndef OBJ_HCZSETUP_H
 #define OBJ_HCZSETUP_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectHCZSetup {

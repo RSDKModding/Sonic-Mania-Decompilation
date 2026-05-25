@@ -1,7 +1,7 @@
 #ifndef OBJ_UIBUTTONLABEL_H
 #define OBJ_UIBUTTONLABEL_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectUIButtonLabel {

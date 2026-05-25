@@ -1,7 +1,7 @@
 #ifndef OBJ_CRASHTEST_H
 #define OBJ_CRASHTEST_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectCrashTest {

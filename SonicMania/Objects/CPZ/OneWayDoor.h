@@ -1,7 +1,7 @@
 #ifndef OBJ_ONEWAYDOOR_H
 #define OBJ_ONEWAYDOOR_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectOneWayDoor {

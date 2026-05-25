@@ -1,7 +1,7 @@
 #ifndef OBJ_UISAVESLOT_H
 #define OBJ_UISAVESLOT_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     UISAVESLOT_REGULAR,

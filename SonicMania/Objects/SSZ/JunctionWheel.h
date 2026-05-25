@@ -1,7 +1,7 @@
 #ifndef OBJ_JUNCTIONWHEEL_H
 #define OBJ_JUNCTIONWHEEL_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectJunctionWheel {

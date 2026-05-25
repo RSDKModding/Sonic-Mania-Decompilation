@@ -1,7 +1,7 @@
 #ifndef OBJ_MENUSETUP_H
 #define OBJ_MENUSETUP_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     MAINMENU_MAIN,

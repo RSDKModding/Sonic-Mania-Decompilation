@@ -1,7 +1,7 @@
 #ifndef OBJ_PUYOLABEL_H
 #define OBJ_PUYOLABEL_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectPuyoLabel {

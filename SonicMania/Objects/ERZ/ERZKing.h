@@ -1,7 +1,7 @@
 #ifndef OBJ_ERZKING_H
 #define OBJ_ERZKING_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     ERZKING_KING,

@@ -1,7 +1,7 @@
 #ifndef OBJ_UFO_SHADOW_H
 #define OBJ_UFO_SHADOW_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectUFO_Shadow {

@@ -1,7 +1,7 @@
 #ifndef OBJ_BSS_SETUP_H
 #define OBJ_BSS_SETUP_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #define BSS_PLAYFIELD_W (0x20)
 #define BSS_PLAYFIELD_H (0x20)

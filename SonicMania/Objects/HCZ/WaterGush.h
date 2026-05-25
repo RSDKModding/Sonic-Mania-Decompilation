@@ -1,7 +1,7 @@
 #ifndef OBJ_WATERGUSH_H
 #define OBJ_WATERGUSH_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     WATERGUSH_UP,

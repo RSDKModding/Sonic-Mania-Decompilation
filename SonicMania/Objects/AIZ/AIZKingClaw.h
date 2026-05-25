@@ -1,7 +1,7 @@
 #ifndef OBJ_AIZKINGCLAW_H
 #define OBJ_AIZKINGCLAW_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #define AIZKingClaw_ChainCount (12)
 

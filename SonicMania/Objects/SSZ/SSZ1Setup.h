@@ -1,7 +1,7 @@
 #ifndef OBJ_SSZ1SETUP_H
 #define OBJ_SSZ1SETUP_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum { GENERICTRIGGER_SSZ1_DESTROYHOTARUMKII } GenericTriggerTypesSSZ1;
 

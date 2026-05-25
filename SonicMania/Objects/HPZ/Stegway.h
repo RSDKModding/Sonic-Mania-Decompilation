@@ -1,7 +1,7 @@
 #ifndef OBJ_STEGWAY_H
 #define OBJ_STEGWAY_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectStegway {

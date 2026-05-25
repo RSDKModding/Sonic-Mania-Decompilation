@@ -1,7 +1,7 @@
 #ifndef OBJ_EGGMAN_H
 #define OBJ_EGGMAN_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectEggman {

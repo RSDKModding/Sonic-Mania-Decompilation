@@ -1,7 +1,7 @@
 #ifndef OBJ_LRZ1INTRO_H
 #define OBJ_LRZ1INTRO_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #if MANIA_USE_PLUS
 // Object Class

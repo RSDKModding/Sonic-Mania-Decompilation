@@ -1,7 +1,7 @@
 #ifndef OBJ_PUYOMATCH_H
 #define OBJ_PUYOMATCH_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectPuyoMatch {

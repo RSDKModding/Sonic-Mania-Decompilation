@@ -1,7 +1,7 @@
 #ifndef OBJ_REAGENT_H
 #define OBJ_REAGENT_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectReagent {

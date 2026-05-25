@@ -1,7 +1,7 @@
 #ifndef OBJ_PHANTOMMISSILE_H
 #define OBJ_PHANTOMMISSILE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectPhantomMissile {

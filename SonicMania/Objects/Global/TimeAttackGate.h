@@ -1,7 +1,7 @@
 #ifndef OBJ_TIMEATTACKGATE_H
 #define OBJ_TIMEATTACKGATE_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectTimeAttackGate {

@@ -1,7 +1,7 @@
 #ifndef OBJ_FBZSTORM_H
 #define OBJ_FBZSTORM_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectFBZStorm {

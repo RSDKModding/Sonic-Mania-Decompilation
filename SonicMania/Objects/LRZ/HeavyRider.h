@@ -1,7 +1,7 @@
 #ifndef OBJ_HEAVYRIDER_H
 #define OBJ_HEAVYRIDER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     HEAVYRIDER_RIDER,

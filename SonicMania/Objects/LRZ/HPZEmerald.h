@@ -1,7 +1,7 @@
 #ifndef OBJ_HPZEMERALD_H
 #define OBJ_HPZEMERALD_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     HPZEMERALD_MASTER,

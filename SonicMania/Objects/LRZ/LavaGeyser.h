@@ -1,7 +1,7 @@
 #ifndef OBJ_LAVAGEYSER_H
 #define OBJ_LAVAGEYSER_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     LAVAGEYSER_INTERVAL,

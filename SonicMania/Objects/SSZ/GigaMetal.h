@@ -1,7 +1,7 @@
 #ifndef OBJ_GIGAMETAL_H
 #define OBJ_GIGAMETAL_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 #if MANIA_USE_PLUS
 

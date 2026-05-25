@@ -1,7 +1,7 @@
 #ifndef OBJ_ICEBOMBA_H
 #define OBJ_ICEBOMBA_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectIceBomba {

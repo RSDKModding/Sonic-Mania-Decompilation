@@ -1,7 +1,7 @@
 #ifndef OBJ_INVISIBLEBLOCK_H
 #define OBJ_INVISIBLEBLOCK_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectInvisibleBlock {
@@ -15,7 +15,7 @@ struct EntityInvisibleBlock {
     RSDK_ENTITY
     uint8 width;
     uint8 height;
-    PlaneFilterTypes planeFilter;
+    ManiaPlaneFilterTypes planeFilter;
     bool32 noCrush;
     bool32 activeNormal;
     bool32 timeAttackOnly;

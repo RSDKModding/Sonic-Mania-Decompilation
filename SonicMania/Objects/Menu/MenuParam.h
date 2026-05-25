@@ -1,7 +1,7 @@
 #ifndef OBJ_MENUPARAM_H
 #define OBJ_MENUPARAM_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     BSS_SELECTION_NONE,

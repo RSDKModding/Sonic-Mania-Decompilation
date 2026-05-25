@@ -1,7 +1,7 @@
 #ifndef OBJ_ERZSHINOBI_H
 #define OBJ_ERZSHINOBI_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 // Object Class
 struct ObjectERZShinobi {

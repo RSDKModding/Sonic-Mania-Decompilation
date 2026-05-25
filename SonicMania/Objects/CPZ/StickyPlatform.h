@@ -1,7 +1,7 @@
 #ifndef OBJ_STICKYPLATFORM_H
 #define OBJ_STICKYPLATFORM_H
 
-#include "Game.h"
+#include "SonicMania.h"
 
 typedef enum {
     STICKYPLATFORM_UP,
