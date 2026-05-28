@@ -151,8 +151,11 @@ void BSS_Player_StageLoad(void)
     BSS_Player->sonicFrames  = RSDK.LoadSpriteAnimation("SpecialBS/Sonic.bin", SCOPE_STAGE);
     BSS_Player->tailsFrames  = RSDK.LoadSpriteAnimation("SpecialBS/Tails.bin", SCOPE_STAGE);
     BSS_Player->knuxFrames   = RSDK.LoadSpriteAnimation("SpecialBS/Knuckles.bin", SCOPE_STAGE);
+
+#if MANIA_USE_PLUS
     BSS_Player->mightyFrames = RSDK.LoadSpriteAnimation("SpecialBS/Mighty.bin", SCOPE_STAGE);
     BSS_Player->rayFrames    = RSDK.LoadSpriteAnimation("SpecialBS/Ray.bin", SCOPE_STAGE);
+#endif
 
     if (globals->playerID == ID_NONE)
         globals->playerID = ID_DEFAULT_PLAYER;

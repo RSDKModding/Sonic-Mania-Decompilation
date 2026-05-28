@@ -11,8 +11,10 @@ struct ObjectBSS_Player {
     uint16 sonicFrames;
     uint16 tailsFrames;
     uint16 knuxFrames;
+#if MANIA_USE_PLUS
     uint16 mightyFrames;
     uint16 rayFrames;
+#endif
     uint16 sfxJump;
 };
 
