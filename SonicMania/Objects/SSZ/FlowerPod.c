@@ -111,7 +111,7 @@ void FlowerPod_State_Exploding(void)
 
     if (++self->timer == 30) {
         RSDK.SetSpriteAnimation(FlowerPod->aniFrames, 2, &self->podAnimator, true, 0);
-        self->state = 0;
+        self->state = StateMachine_None;
         RSDK.PlaySfx(FlowerPod->sfxTwinkle, false, 255);
 
         FlowerPod_SpawnSeeds();
