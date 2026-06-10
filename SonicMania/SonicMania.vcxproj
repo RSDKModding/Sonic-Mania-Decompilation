@@ -1951,10 +1951,11 @@
       <EnableCOMDATFolding>false</EnableCOMDATFolding>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(OutDir)Game.dll" "$(SolutionDir)build\Game.dll"</Command>
+      <Command>copy /Y "$(OutDir)Game.dll" "$(SolutionDir)build\Game.dll"
+"$(ProjectDir)buildstatic.bat"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
-      <Message>Copying Binary to Build Folder...</Message>
+      <Message>Building Static Object Files...</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -1977,10 +1978,11 @@
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(OutDir)Game.dll" "$(SolutionDir)build\Game.dll"</Command>
+      <Command>copy /Y "$(OutDir)Game.dll" "$(SolutionDir)build\Game.dll"
+"$(ProjectDir)buildstatic.bat"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
-      <Message>Copying Binary to Build Folder...</Message>
+      <Message>Building Static Object Files...</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -2000,10 +2002,11 @@
       <EnableCOMDATFolding>false</EnableCOMDATFolding>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(OutDir)Game.dll" "$(SolutionDir)build\Game.dll"</Command>
+      <Command>copy /Y "$(OutDir)Game.dll" "$(SolutionDir)build\Game.dll"
+"$(ProjectDir)buildstatic.bat"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
-      <Message>Copying Binary to Build Folder...</Message>
+      <Message>Building Static Object Files...</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -2026,10 +2029,11 @@
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(OutDir)Game.dll" "$(SolutionDir)build\Game.dll"</Command>
+      <Command>copy /Y "$(OutDir)Game.dll" "$(SolutionDir)build\Game.dll"
+"$(ProjectDir)buildstatic.bat"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
-      <Message>Copying Binary to Build Folder...</Message>
+      <Message>Building Static Object Files...</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
