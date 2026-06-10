@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Dust.h"
+#include "Player.h"
+#include "Zone.h"
 
-ObjectDust *Dust;
+ObjectDust *Dust = NULL;
 
 void Dust_Update(void) {}
 

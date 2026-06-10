@@ -1,16 +1,16 @@
 #ifndef OBJ_UIINFOLABEL_H
 #define OBJ_UIINFOLABEL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectUIInfoLabel {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectUIInfoLabel;
 
 // Entity Class
-struct EntityUIInfoLabel {
+typedef struct {
     RSDK_ENTITY
     Animator unusedAnimator;
     int32 unused1;
@@ -19,7 +19,7 @@ struct EntityUIInfoLabel {
     String text;
     int32 width;
     Animator textAnimator;
-};
+} EntityUIInfoLabel;
 
 // Object Struct
 extern ObjectUIInfoLabel *UIInfoLabel;

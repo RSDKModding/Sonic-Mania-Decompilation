@@ -5,9 +5,17 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "FBZ1Outro.h"
+#include "FBZTrash.h"
+#include "FBZSinkTrash.h"
+#include "Common/ParallaxSprite.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Cutscene/CutsceneSeq.h"
+#include "Global/Camera.h"
+#include "Global/SignPost.h"
+#include "Global/Zone.h"
 
-ObjectFBZ1Outro *FBZ1Outro;
+ObjectFBZ1Outro *FBZ1Outro = NULL;
 
 void FBZ1Outro_Update(void)
 {

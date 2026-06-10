@@ -1,7 +1,7 @@
 #ifndef OBJ_LRZCONVITEM_H
 #define OBJ_LRZCONVITEM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     LRZCONVITEM_ROCK,
@@ -9,23 +9,23 @@ typedef enum {
 } LRZConvItemTypes;
 
 // Object Class
-struct ObjectLRZConvItem {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxRock;
     Hitbox hitboxSpikeball;
     uint16 aniFrames;
     uint16 sfxSizzle;
-};
+} ObjectLRZConvItem;
 
 // Entity Class
-struct EntityLRZConvItem {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
     Vector2 startPos;
     int32 unused;
     Animator animator;
-};
+} EntityLRZConvItem;
 
 // Object Struct
 extern ObjectLRZConvItem *LRZConvItem;

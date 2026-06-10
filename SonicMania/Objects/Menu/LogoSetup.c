@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "LogoSetup.h"
+#include "UIPicture.h"
+#include "Global/APICallback.h"
 
-ObjectLogoSetup *LogoSetup;
+ObjectLogoSetup *LogoSetup = NULL;
 
 void LogoSetup_Update(void)
 {

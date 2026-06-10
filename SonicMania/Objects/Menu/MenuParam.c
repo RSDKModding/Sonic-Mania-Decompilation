@@ -5,9 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "MenuParam.h"
 
-ObjectMenuParam *MenuParam;
+ObjectMenuParam *MenuParam = NULL;
 
 void MenuParam_Update(void) {}
 

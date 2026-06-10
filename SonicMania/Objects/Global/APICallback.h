@@ -1,7 +1,7 @@
 #ifndef OBJ_APICALLBACK_H
 #define OBJ_APICALLBACK_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 #define sku_platform SKU->platform
@@ -60,7 +60,7 @@
 // 90% sure this is "DialogRunner" in plus/1.05
 #if !MANIA_USE_PLUS
 // Object Class
-struct ObjectAPICallback {
+typedef struct {
     RSDK_OBJECT
     int32 (*LaunchManual)(void);
     int32 (*ExitGame)(void);
@@ -113,10 +113,10 @@ struct ObjectAPICallback {
     int32 authStatus;
     int32 storageStatus;
     bool32 achievementsDisabled;
-};
+} ObjectAPICallback;
 
 // Entity Class
-struct EntityAPICallback {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -130,7 +130,7 @@ struct EntityAPICallback {
     int32 deviceID;
     int32 unused3;
     int32 status;
-};
+} EntityAPICallback;
 
 // Object Struct
 extern ObjectAPICallback *APICallback;

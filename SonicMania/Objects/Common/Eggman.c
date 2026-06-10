@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Eggman.h"
+#include "Global/Zone.h"
 
-ObjectEggman *Eggman;
+ObjectEggman *Eggman = NULL;
 
 void Eggman_Update(void)
 {

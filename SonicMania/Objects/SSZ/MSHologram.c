@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "MSHologram.h"
+#include "Global/Animals.h"
+#include "Global/Explosion.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectMSHologram *MSHologram;
+ObjectMSHologram *MSHologram = NULL;
 
 void MSHologram_Update(void)
 {

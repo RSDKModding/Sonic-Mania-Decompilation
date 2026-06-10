@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SpinSign.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectSpinSign *SpinSign;
+ObjectSpinSign *SpinSign = NULL;
 
 void SpinSign_Update(void)
 {

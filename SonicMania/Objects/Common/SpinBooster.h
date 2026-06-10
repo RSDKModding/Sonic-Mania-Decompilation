@@ -1,16 +1,17 @@
 #ifndef OBJ_SPINBOOSTER_H
 #define OBJ_SPINBOOSTER_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 // Object Class
-struct ObjectSpinBooster {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectSpinBooster;
 
 // Entity Class
-struct EntitySpinBooster {
+typedef struct {
     RSDK_ENTITY
     uint8 autoGrip;
     uint8 bias;
@@ -23,7 +24,7 @@ struct EntitySpinBooster {
     uint8 activePlayers;
     int32 unused;
     Animator animator;
-};
+} EntitySpinBooster;
 
 // Object Struct
 extern ObjectSpinBooster *SpinBooster;

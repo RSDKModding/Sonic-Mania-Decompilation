@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Blaster.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectBlaster *Blaster;
+ObjectBlaster *Blaster = NULL;
 
 void Blaster_Update(void)
 {

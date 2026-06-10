@@ -1,10 +1,10 @@
 #ifndef OBJ_GIANTPISTOL_H
 #define OBJ_GIANTPISTOL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectGiantPistol {
+typedef struct {
     RSDK_OBJECT
 #if MANIA_USE_PLUS
     bool32 inCutscene;
@@ -15,10 +15,10 @@ struct ObjectGiantPistol {
     uint16 sfxClack;
     uint16 sfxCannonFire;
     uint16 aniFrames;
-};
+} ObjectGiantPistol;
 
 // Entity Class
-struct EntityGiantPistol {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -35,7 +35,7 @@ struct EntityGiantPistol {
     Animator handHighAnimator;
     Animator triggerAnimator;
     Animator triggerFingerAnimator;
-};
+} EntityGiantPistol;
 
 // Object Struct
 extern ObjectGiantPistol *GiantPistol;

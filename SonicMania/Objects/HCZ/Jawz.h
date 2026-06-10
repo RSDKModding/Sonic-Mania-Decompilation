@@ -1,7 +1,7 @@
 #ifndef OBJ_JAWZ_H
 #define OBJ_JAWZ_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     JAWS_TRIGGER_BOTH,
@@ -10,20 +10,20 @@ typedef enum {
 } JawzTriggerDirs;
 
 // Object Class
-struct ObjectJawz {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     uint16 aniFrames;
-};
+} ObjectJawz;
 
 // Entity Class
-struct EntityJawz {
+typedef struct {
     RSDK_ENTITY
     uint8 triggerDir;
     StateMachine(state);
     Vector2 startPos;
     Animator animator;
-};
+} EntityJawz;
 
 // Object Struct
 extern ObjectJawz *Jawz;

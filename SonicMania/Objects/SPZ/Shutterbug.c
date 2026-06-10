@@ -5,9 +5,16 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Shutterbug.h"
+#include "Global/APICallback.h"
+#include "Global/DebugMode.h"
+#include "Global/Zone.h"
+#include "Helpers/GameProgress.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectShutterbug *Shutterbug;
+ObjectShutterbug *Shutterbug = NULL;
 
 void Shutterbug_Update(void)
 {

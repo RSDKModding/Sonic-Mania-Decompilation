@@ -1,7 +1,8 @@
 #ifndef OBJ_SSZ1SETUP_H
 #define OBJ_SSZ1SETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "SSZ1Outro.h"
 
 typedef enum { GENERICTRIGGER_SSZ1_DESTROYHOTARUMKII } GenericTriggerTypesSSZ1;
 
@@ -10,17 +11,17 @@ typedef enum {
 } DecorTypesSSZ1;
 
 // Object Class
-struct ObjectSSZ1Setup {
+typedef struct {
     RSDK_OBJECT
     int32 unused;
     TileLayer *background2;
     EntitySSZ1Outro *outro;
-};
+} ObjectSSZ1Setup;
 
 // Entity Class
-struct EntitySSZ1Setup {
+typedef struct {
     RSDK_ENTITY
-};
+} EntitySSZ1Setup;
 
 // Object Struct
 extern ObjectSSZ1Setup *SSZ1Setup;

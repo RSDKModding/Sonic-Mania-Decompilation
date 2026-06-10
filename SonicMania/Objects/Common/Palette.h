@@ -1,7 +1,7 @@
 #ifndef OBJ_PALETTE_H
 #define OBJ_PALETTE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 
@@ -17,14 +17,14 @@ typedef enum {
 } PaletteBankIDs;
 
 // Object Class
-struct ObjectPalette {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint8 count;
-};
+} ObjectPalette;
 
 // Entity Class
-struct EntityPalette {
+typedef struct {
     RSDK_ENTITY
     int32 state;
     String paletteFile;
@@ -32,7 +32,7 @@ struct EntityPalette {
     uint8 bankID;
     bool32 loadOnce;
     Animator animator;
-};
+} EntityPalette;
 
 // Object Struct
 extern ObjectPalette *Palette;

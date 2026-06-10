@@ -1,17 +1,17 @@
 #ifndef OBJ_EGGTOWER_H
 #define OBJ_EGGTOWER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectEggTower {
+typedef struct {
     RSDK_OBJECT
     uint16 modelIndex;
     uint16 sceneIndex;
-};
+} ObjectEggTower;
 
 // Entity Class
-struct EntityEggTower {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state); // unused
     int32 unused2;
@@ -20,7 +20,7 @@ struct EntityEggTower {
     Matrix matWorld;
     Matrix matTemp;
     Matrix unusedMatrix2;
-};
+} EntityEggTower;
 
 // Object Struct
 extern ObjectEggTower *EggTower;

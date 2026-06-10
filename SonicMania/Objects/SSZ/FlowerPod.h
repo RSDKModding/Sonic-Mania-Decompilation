@@ -1,27 +1,27 @@
 #ifndef OBJ_FLOWERPOD_H
 #define OBJ_FLOWERPOD_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectFlowerPod {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxPod;
     int32 unused;
     uint16 sfxExplosion;
     uint16 sfxTwinkle;
-};
+} ObjectFlowerPod;
 
 // Entity Class
-struct EntityFlowerPod {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
     Vector2 startPos;
     Animator stemAnimator;
     Animator podAnimator;
-};
+} EntityFlowerPod;
 
 // Object Struct
 extern ObjectFlowerPod *FlowerPod;

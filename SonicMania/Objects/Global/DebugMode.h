@@ -1,13 +1,13 @@
 #ifndef OBJ_DEBUGMODE_H
 #define OBJ_DEBUGMODE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define DEBUGMODE_ADD_OBJ(object) DebugMode_AddObject(object->classID, object##_DebugDraw, object##_DebugSpawn)
 #define DEBUGMODE_OBJECT_COUNT    (0x100)
 
 // Object Class
-struct ObjectDebugMode {
+typedef struct {
     RSDK_OBJECT
     // Never used, only set, prolly leftover from S1/S2
     int16 classIDs[DEBUGMODE_OBJECT_COUNT];
@@ -20,12 +20,12 @@ struct ObjectDebugMode {
     uint8 itemType;
     uint8 itemTypeCount;
     int32 unused1; // no clue, though it could be "exitTimer" assuming this was based on v4's debugMode object?
-};
+} ObjectDebugMode;
 
 // Entity Class
-struct EntityDebugMode {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityDebugMode;
 
 // Object Struct
 extern ObjectDebugMode *DebugMode;

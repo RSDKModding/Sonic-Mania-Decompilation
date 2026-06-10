@@ -1,7 +1,8 @@
 #ifndef OBJ_TVVAN_H
 #define OBJ_TVVAN_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 typedef enum {
     TVVAN_VAN_LEFT,
@@ -23,7 +24,7 @@ typedef enum {
 } TVVanTypes;
 
 // Object Class
-struct ObjectTVVan {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxFloor;
@@ -35,9 +36,10 @@ struct ObjectTVVan {
     uint16 sfxSatellite1;
     uint16 sfxSatellite2;
     uint16 sfxExplosion;
-};
+} ObjectTVVan;
 
 // Entity Class
+typedef struct EntityTVVan EntityTVVan;
 struct EntityTVVan {
     RSDK_ENTITY
     StateMachine(state);

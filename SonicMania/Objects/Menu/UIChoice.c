@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIChoice.h"
+#include "UIButton.h"
+#include "UIWidgets.h"
 
-ObjectUIChoice *UIChoice;
+ObjectUIChoice *UIChoice = NULL;
 
 void UIChoice_Update(void)
 {

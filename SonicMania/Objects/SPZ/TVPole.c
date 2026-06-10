@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TVPole.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectTVPole *TVPole;
+ObjectTVPole *TVPole = NULL;
 
 void TVPole_Update(void)
 {

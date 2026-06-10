@@ -5,9 +5,17 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "HeavyShinobi.h"
+#include "Ice.h"
+#include "WoodChipper.h"
+#include "Global/Explosion.h"
+#include "Global/Music.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectHeavyShinobi *HeavyShinobi;
+ObjectHeavyShinobi *HeavyShinobi = NULL;
 
 void HeavyShinobi_Update(void)
 {

@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "FXExpandRing.h"
+#include "Global/Zone.h"
 
-ObjectFXExpandRing *FXExpandRing;
+ObjectFXExpandRing *FXExpandRing = NULL;
 
 void FXExpandRing_Update(void)
 {

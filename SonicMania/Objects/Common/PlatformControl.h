@@ -1,7 +1,10 @@
 #ifndef OBJ_PLATFORMCONTROL_H
 #define OBJ_PLATFORMCONTROL_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Button.h"
+#include "Platform.h"
+#include "PlatformNode.h"
 
 typedef enum {
     PLATFORMCONTROL_CIRCUIT,
@@ -11,12 +14,12 @@ typedef enum {
 } PlatformControlTypes;
 
 // Object Class
-struct ObjectPlatformControl {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectPlatformControl;
 
 // Entity Class
-struct EntityPlatformControl {
+typedef struct {
     RSDK_ENTITY
     int32 nodeCount;
     int32 childCount;
@@ -26,7 +29,7 @@ struct EntityPlatformControl {
     bool32 isActive;
     int32 buttonTag;
     EntityButton *taggedButton;
-};
+} EntityPlatformControl;
 
 // Object Struct
 extern ObjectPlatformControl *PlatformControl;

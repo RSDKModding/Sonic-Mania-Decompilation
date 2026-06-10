@@ -5,9 +5,16 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Crate.h"
+#include "Ice.h"
+#include "Common/Platform.h"
+#include "Global/Shield.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectCrate *Crate;
+ObjectCrate *Crate = NULL;
 
 void Crate_Update(void)
 {

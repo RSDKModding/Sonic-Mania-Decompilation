@@ -1,7 +1,8 @@
 #ifndef OBJ_ITEMBOX_H
 #define OBJ_ITEMBOX_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Player.h"
 
 typedef enum {
     ITEMBOX_RING,
@@ -28,7 +29,7 @@ typedef enum {
 } ItemBoxTypes;
 
 // Object Class
-struct ObjectItemBox {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxItemBox;
     Hitbox hitboxHidden;
@@ -41,10 +42,10 @@ struct ObjectItemBox {
     uint16 sfxPowerDown;
     uint16 sfxRecovery;
 #endif
-};
+} ObjectItemBox;
 
 // Entity Class
-struct EntityItemBox {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     ItemBoxTypes type;
@@ -65,7 +66,7 @@ struct EntityItemBox {
 #if MANIA_USE_PLUS
     Entity *parent;
 #endif
-};
+} EntityItemBox;
 
 // Object Struct
 extern ObjectItemBox *ItemBox;

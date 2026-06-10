@@ -5,9 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIPicture.h"
 
-ObjectUIPicture *UIPicture;
+ObjectUIPicture *UIPicture = NULL;
 
 void UIPicture_Update(void)
 {
@@ -51,7 +51,7 @@ void UIPicture_Create(void *data)
             self->visible   = true;
             self->drawGroup = 2;
         }
-        // Uncomment this to fix the "Thanks for playing screen"
+        // Uncomment this to fix the "Thanks for playing" screen
         // Not sure what happened, but sometime during dev this must've been shuffled around
         // setting it to ACTIVE_NORMAL fixes the sonic ball sprites
         // setting the draw order to 8 fixes the thanks for playing sprite

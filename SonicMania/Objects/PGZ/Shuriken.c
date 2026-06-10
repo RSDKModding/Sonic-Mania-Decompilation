@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Shuriken.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectShuriken *Shuriken;
+ObjectShuriken *Shuriken = NULL;
 
 void Shuriken_Update(void)
 {

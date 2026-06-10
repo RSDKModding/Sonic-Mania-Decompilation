@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PlayerProbe.h"
+#include "LogHelpers.h"
+#include "Global/DebugMode.h"
+#include "Global/Zone.h"
 
-ObjectPlayerProbe *PlayerProbe;
+ObjectPlayerProbe *PlayerProbe = NULL;
 
 void PlayerProbe_Update(void)
 {

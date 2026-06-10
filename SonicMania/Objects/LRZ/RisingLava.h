@@ -1,25 +1,25 @@
 #ifndef OBJ_RISINGLAVA_H
 #define OBJ_RISINGLAVA_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectRisingLava {
+typedef struct {
     RSDK_OBJECT
     Animator animator;
     uint16 aniFrames;
     uint16 sfxRumble;
-};
+} ObjectRisingLava;
 
 // Entity Class
-struct EntityRisingLava {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 size;
     Vector2 offset;
     int32 limit;
     Hitbox hitbox;
-};
+} EntityRisingLava;
 
 // Object Struct
 extern ObjectRisingLava *RisingLava;

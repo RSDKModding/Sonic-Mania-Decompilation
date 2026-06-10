@@ -1,7 +1,8 @@
 #ifndef OBJ_BREAKBAR_H
 #define OBJ_BREAKBAR_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 typedef enum {
     BREAKBAR_V,
@@ -9,14 +10,14 @@ typedef enum {
 } BreakBarOrientations;
 
 // Object Class
-struct ObjectBreakBar {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxBreak;
-};
+} ObjectBreakBar;
 
 // Entity Class
-struct EntityBreakBar {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 orientation;
@@ -29,7 +30,7 @@ struct EntityBreakBar {
     bool32 isBroken;
     Hitbox hitbox;
     Animator animator;
-};
+} EntityBreakBar;
 
 // Object Struct
 extern ObjectBreakBar *BreakBar;

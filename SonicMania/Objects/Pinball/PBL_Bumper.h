@@ -1,11 +1,11 @@
 #ifndef OBJ_PBL_BUMPER_H
 #define OBJ_PBL_BUMPER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 // Object Class
-struct ObjectPBL_Bumper {
+typedef struct {
     RSDK_OBJECT
     Animator unusedAnimator1;
     Hitbox hitbox;
@@ -13,10 +13,10 @@ struct ObjectPBL_Bumper {
     uint16 modelFrames;
     uint16 sceneIndex;
     uint16 sfxBumper;
-};
+} ObjectPBL_Bumper;
 
 // Entity Class
-struct EntityPBL_Bumper {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 height;
@@ -28,7 +28,7 @@ struct EntityPBL_Bumper {
     Matrix matWorld;
     Matrix matNormal;
     Animator animator;
-};
+} EntityPBL_Bumper;
 
 // Object Struct
 extern ObjectPBL_Bumper *PBL_Bumper;

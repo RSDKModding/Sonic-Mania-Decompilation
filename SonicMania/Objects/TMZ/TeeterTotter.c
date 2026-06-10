@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TeeterTotter.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectTeeterTotter *TeeterTotter;
+ObjectTeeterTotter *TeeterTotter = NULL;
 
 void TeeterTotter_Update(void)
 {

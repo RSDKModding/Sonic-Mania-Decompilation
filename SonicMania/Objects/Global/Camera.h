@@ -1,7 +1,7 @@
 #ifndef OBJ_CAMERA_H
 #define OBJ_CAMERA_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     CAMERA_LERP_NORMAL,
@@ -11,13 +11,13 @@ typedef enum {
 } CameraLerpType;
 
 // Object Class
-struct ObjectCamera {
+typedef struct {
     RSDK_OBJECT
     Vector2 centerBounds;
-};
+} ObjectCamera;
 
 // Entity Class
-struct EntityCamera {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Entity *target;
@@ -41,7 +41,7 @@ struct EntityCamera {
     int32 boundsR;
     int32 boundsT;
     int32 boundsB;
-};
+} EntityCamera;
 
 // Object Struct
 extern ObjectCamera *Camera;

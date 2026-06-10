@@ -1,19 +1,21 @@
 #ifndef OBJ_TTCUTSCENE_H
 #define OBJ_TTCUTSCENE_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Cutscene/CutsceneSeq.h"
+#include "Cutscene/FXFade.h"
 
 // Object Class
-struct ObjectTTCutscene {
+typedef struct {
     RSDK_OBJECT
     int32 unused;
     EntityFXFade *fxFade;
-};
+} ObjectTTCutscene;
 
 // Entity Class
-struct EntityTTCutscene {
+typedef struct {
     MANIA_CUTSCENE_BASE
-};
+} EntityTTCutscene;
 
 // Object Struct
 extern ObjectTTCutscene *TTCutscene;

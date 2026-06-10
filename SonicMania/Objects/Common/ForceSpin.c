@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ForceSpin.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectForceSpin *ForceSpin;
+ObjectForceSpin *ForceSpin = NULL;
 
 void ForceSpin_Update(void)
 {

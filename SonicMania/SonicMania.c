@@ -1,4 +1,5 @@
-#include "SonicMania.h"
+#include "Game.h"
+#include "All.h"
 #if RETRO_USE_MOD_LOADER
 #include "PublicFunctions.c"
 #endif

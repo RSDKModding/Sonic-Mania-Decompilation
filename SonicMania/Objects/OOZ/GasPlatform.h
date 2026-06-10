@@ -1,7 +1,7 @@
 #ifndef OBJ_GASPLATFORM_H
 #define OBJ_GASPLATFORM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     GASPLATFORM_INTERVAL,
@@ -10,21 +10,21 @@ typedef enum {
 } GasPlatformTypes;
 
 // Object Class
-struct ObjectGasPlatform {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxGas;
     Vector2 range;
     uint16 sfxGasPop;
     uint16 sfxSpring;
-};
+} ObjectGasPlatform;
 
 // Entity Class
-struct EntityGasPlatform {
+typedef struct {
     MANIA_PLATFORM_BASE
     uint16 interval;
     uint16 intervalOffset;
     Animator gasAnimator;
-};
+} EntityGasPlatform;
 
 // Object Struct
 extern ObjectGasPlatform *GasPlatform;

@@ -5,9 +5,16 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SilverSonic.h"
+#include "MetalSonic.h"
+#if MANIA_USE_PLUS
+#include "MSBomb.h"
+#endif
+#include "Global/Explosion.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectSilverSonic *SilverSonic;
+ObjectSilverSonic *SilverSonic = NULL;
 
 void SilverSonic_Update(void)
 {

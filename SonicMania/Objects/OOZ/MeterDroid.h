@@ -1,10 +1,11 @@
 #ifndef OBJ_METERDROID_H
 #define OBJ_METERDROID_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Valve.h"
 
 // Object Class
-struct ObjectMeterDroid {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 debrisSpeeds[21],
           { 5, 0, 0, -0x20000, -0x28000, 1, 0, 0x20000, -0x20000, 2, 0, -0x28000, -0x10000, 3, 0, 0x28000, -0x10000, 4, 0, 0x10000, 0x10000 });
@@ -24,10 +25,10 @@ struct ObjectMeterDroid {
     uint16 sfxValve;
     uint16 sfxWrench;
     uint16 aniFrames;
-};
+} ObjectMeterDroid;
 
 // Entity Class
-struct EntityMeterDroid {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -47,7 +48,7 @@ struct EntityMeterDroid {
     Animator propellorAnimator;
     Animator armAnimator;
     Animator wrenchAnimator;
-};
+} EntityMeterDroid;
 
 // Object Struct
 extern ObjectMeterDroid *MeterDroid;

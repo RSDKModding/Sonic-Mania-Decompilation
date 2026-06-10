@@ -1,10 +1,12 @@
 #ifndef OBJ_COMPETITION_H
 #define OBJ_COMPETITION_H
 
-#include "SonicMania.h"
+#include "Game.h"
+
+typedef struct EntityCompetition EntityCompetition;
 
 // Object Class
-struct ObjectCompetition {
+typedef struct {
     RSDK_OBJECT
     int32 unused1;
     int32 unused2;
@@ -17,7 +19,7 @@ struct ObjectCompetition {
     uint16 aniFrames;
     EntityCompetition *sessionManager;
     int32 unused9;
-};
+} ObjectCompetition;
 
 // Entity Class
 struct EntityCompetition {

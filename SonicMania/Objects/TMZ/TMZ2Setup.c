@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TMZ2Setup.h"
+#include "TMZ1Outro.h"
+#include "Cutscene/CutsceneRules.h"
+#include "FBZ/WarpDoor.h"
+#include "Global/Animals.h"
+#include "Global/Zone.h"
 
-ObjectTMZ2Setup *TMZ2Setup;
+ObjectTMZ2Setup *TMZ2Setup = NULL;
 
 void TMZ2Setup_Update(void) {}
 

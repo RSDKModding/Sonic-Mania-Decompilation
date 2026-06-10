@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "CPZShutter.h"
+#include "Global/Zone.h"
 
-ObjectCPZShutter *CPZShutter;
+ObjectCPZShutter *CPZShutter = NULL;
 
 void CPZShutter_Update(void)
 {

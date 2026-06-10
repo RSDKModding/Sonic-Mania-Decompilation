@@ -1,30 +1,30 @@
 #ifndef OBJ_SDASHWHEEL_H
 #define OBJ_SDASHWHEEL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class (Old)
 // Found this by digging into the static object files, just looks like an older version of the "SDashWheel" obj, nothing special here
-struct ObjectRollSwitch {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
     TABLE(int32 heightTable[33], { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6, 6, 7, 8, 9, 10, 11, 12, 14, 15, 17, 19, 22, 26 });
     uint16 sfxBumper;
-};
+} ObjectRollSwitch;
 
 // Object Class
-struct ObjectSDashWheel {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxWheel;
     TABLE(int32 heightTable[33], { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6, 6, 7, 8, 9, 10, 11, 12, 14, 15, 17, 19, 22, 26 });
     uint16 sfxBumper;
     uint16 unused;
-};
+} ObjectSDashWheel;
 
 // Entity Class
-struct EntitySDashWheel {
+typedef struct {
     MANIA_BUTTON_BASE
 
     Animator mainAnimator;
@@ -32,7 +32,7 @@ struct EntitySDashWheel {
     Animator shineAnimator;
     int32 cooldown;
     uint8 rotateOffset;
-};
+} EntitySDashWheel;
 
 // Object Struct
 extern ObjectSDashWheel *SDashWheel;

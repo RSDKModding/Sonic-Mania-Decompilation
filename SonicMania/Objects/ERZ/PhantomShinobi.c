@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PhantomShinobi.h"
+#include "PhantomEgg.h"
+#include "Global/Player.h"
+#include "Global/Soundboard.h"
+#include "Global/Zone.h"
 
-ObjectPhantomShinobi *PhantomShinobi;
+ObjectPhantomShinobi *PhantomShinobi = NULL;
 
 void PhantomShinobi_Update(void)
 {

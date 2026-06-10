@@ -1,7 +1,7 @@
 #ifndef OBJ_UFO_ITEMBOX_H
 #define OBJ_UFO_ITEMBOX_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     UFO_ITEMBOX_RING,
@@ -13,7 +13,7 @@ typedef enum {
 } UFO_ItemBoxTypes;
 
 // Object Class
-struct ObjectUFO_ItemBox {
+typedef struct {
     RSDK_OBJECT
     int32 breakCount;
     int32 unused1;
@@ -24,10 +24,10 @@ struct ObjectUFO_ItemBox {
     uint16 sfxDestroy;
     uint16 sfxRockemSockem;
     uint16 sfxBumper;
-};
+} ObjectUFO_ItemBox;
 
 // Entity Class
-struct EntityUFO_ItemBox {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 type;
@@ -44,7 +44,7 @@ struct EntityUFO_ItemBox {
     int32 sfxTimer;
     Animator contentsAnimator;
     Animator unusedAnimator1;
-};
+} EntityUFO_ItemBox;
 
 // Object Struct
 extern ObjectUFO_ItemBox *UFO_ItemBox;

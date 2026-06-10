@@ -1,16 +1,16 @@
 #ifndef OBJ_UICREDITSTEXT_H
 #define OBJ_UICREDITSTEXT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectUICreditsText {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectUICreditsText;
 
 // Entity Class
-struct EntityUICreditsText {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     String text;
@@ -26,7 +26,7 @@ struct EntityUICreditsText {
     int16 charTimers[64];
     int32 clipY2;
     Animator animator;
-};
+} EntityUICreditsText;
 
 // Object Struct
 extern ObjectUICreditsText *UICreditsText;

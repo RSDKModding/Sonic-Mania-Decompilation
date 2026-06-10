@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ImageTrail.h"
+#include "DebugMode.h"
 
-ObjectImageTrail *ImageTrail;
+ObjectImageTrail *ImageTrail = NULL;
 
 void ImageTrail_Update(void) {}
 

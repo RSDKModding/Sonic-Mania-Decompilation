@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Competition.h"
+#include "Music.h"
+#include "Player.h"
+#include "Zone.h"
+#include "Helpers/CompetitionSession.h"
+#include "Helpers/LogHelpers.h"
 
-ObjectCompetition *Competition;
+ObjectCompetition *Competition = NULL;
 
 void Competition_Update(void)
 {

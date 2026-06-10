@@ -5,9 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "LRZConvItem.h"
+#include "Iwamodoki.h"
+#include "LRZ2Setup.h"
+#include "LRZConveyor.h"
+#include "Global/ItemBox.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectLRZConvItem *LRZConvItem;
+ObjectLRZConvItem *LRZConvItem = NULL;
 
 void LRZConvItem_Update(void)
 {

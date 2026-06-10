@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SpeedGate.h"
+#include "Zone.h"
 
-ObjectSpeedGate *SpeedGate;
+ObjectSpeedGate *SpeedGate = NULL;
 
 void SpeedGate_Update(void)
 {

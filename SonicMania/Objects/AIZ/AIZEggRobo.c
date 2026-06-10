@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "AIZEggRobo.h"
+#include "Global/Zone.h"
 
-ObjectAIZEggRobo *AIZEggRobo;
+ObjectAIZEggRobo *AIZEggRobo = NULL;
 
 void AIZEggRobo_Update(void)
 {

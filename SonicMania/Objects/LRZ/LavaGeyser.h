@@ -1,7 +1,7 @@
 #ifndef OBJ_LAVAGEYSER_H
 #define OBJ_LAVAGEYSER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     LAVAGEYSER_INTERVAL,
@@ -9,17 +9,17 @@ typedef enum {
 } LavaGeyserTypes;
 
 // Object Class
-struct ObjectLavaGeyser {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxHit;
     uint16 sfxExplosion;
     uint16 sfxDrill;
     uint16 sfxLavaGeyser;
-};
+} ObjectLavaGeyser;
 
 // Entity Class
-struct EntityLavaGeyser {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -34,7 +34,7 @@ struct EntityLavaGeyser {
     uint16 intervalOffset;
     uint16 duration;
     int32 force;
-};
+} EntityLavaGeyser;
 
 // Object Struct
 extern ObjectLavaGeyser *LavaGeyser;

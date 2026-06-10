@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "BurningLog.h"
+#include "Global/Player.h"
+#include "Global/Shield.h"
+#include "Global/Zone.h"
 
-ObjectBurningLog *BurningLog;
+ObjectBurningLog *BurningLog = NULL;
 
 void BurningLog_Update(void)
 {

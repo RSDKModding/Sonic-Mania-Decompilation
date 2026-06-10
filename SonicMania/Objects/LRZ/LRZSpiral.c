@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "LRZSpiral.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectLRZSpiral *LRZSpiral;
+ObjectLRZSpiral *LRZSpiral = NULL;
 
 void LRZSpiral_Update(void)
 {

@@ -5,9 +5,16 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "BSS_Message.h"
+#include "BSS_Player.h"
+#include "BSS_Setup.h"
+#include "Global/Music.h"
+#include "Global/SaveGame.h"
+#include "Helpers/GameProgress.h"
+#include "Menu/MenuParam.h"
+#include "Menu/UIWaitSpinner.h"
 
-ObjectBSS_Message *BSS_Message;
+ObjectBSS_Message *BSS_Message = NULL;
 
 void BSS_Message_Update(void)
 {

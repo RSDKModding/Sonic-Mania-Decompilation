@@ -1,15 +1,15 @@
 #ifndef OBJ_FXEXPANDRING_H
 #define OBJ_FXEXPANDRING_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectFXExpandRing {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectFXExpandRing;
 
 // Entity Class
-struct EntityFXExpandRing {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -20,7 +20,7 @@ struct EntityFXExpandRing {
     int32 outerRadius;
     Entity *parent;
     Vector2 posOffset;
-};
+} EntityFXExpandRing;
 
 // Object Struct
 extern ObjectFXExpandRing *FXExpandRing;

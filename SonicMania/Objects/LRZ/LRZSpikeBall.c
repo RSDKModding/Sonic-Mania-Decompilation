@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "LRZSpikeBall.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectLRZSpikeBall *LRZSpikeBall;
+ObjectLRZSpikeBall *LRZSpikeBall = NULL;
 
 void LRZSpikeBall_Update(void)
 {

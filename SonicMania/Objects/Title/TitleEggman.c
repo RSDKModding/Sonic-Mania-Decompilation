@@ -5,10 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TitleEggman.h"
 
 #if MANIA_USE_PLUS
-ObjectTitleEggman *TitleEggman;
+ObjectTitleEggman *TitleEggman = NULL;
 
 void TitleEggman_Update(void)
 {

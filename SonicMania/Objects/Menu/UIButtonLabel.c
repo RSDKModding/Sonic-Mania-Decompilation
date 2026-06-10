@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIButtonLabel.h"
+#include "UIWidgets.h"
 
-ObjectUIButtonLabel *UIButtonLabel;
+ObjectUIButtonLabel *UIButtonLabel = NULL;
 
 void UIButtonLabel_Update(void)
 {

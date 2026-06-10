@@ -1,18 +1,18 @@
 #ifndef OBJ_SPIRALPLATFORM_H
 #define OBJ_SPIRALPLATFORM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectSpiralPlatform {
+typedef struct {
     RSDK_OBJECT
     Animator animator;
     uint16 aniFrames;
     Hitbox hitboxPlatform;
-};
+} ObjectSpiralPlatform;
 
 // Entity Class
-struct EntitySpiralPlatform {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateCollide);
@@ -39,7 +39,7 @@ struct EntitySpiralPlatform {
     uint16 tiles[0x100];
 
     int32 fallY;
-};
+} EntitySpiralPlatform;
 
 // Object Struct
 extern ObjectSpiralPlatform *SpiralPlatform;

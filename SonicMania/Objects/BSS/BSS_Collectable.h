@@ -1,7 +1,7 @@
 #ifndef OBJ_BSS_COLLECTABLE_H
 #define OBJ_BSS_COLLECTABLE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     BSS_NONE          = 0,
@@ -35,7 +35,7 @@ typedef enum {
 } BSSCollectableTypes;
 
 // Object Class
-struct ObjectBSS_Collectable {
+typedef struct {
     RSDK_OBJECT
     Animator sphereAnimator[24];
     uint8 initializedTables;
@@ -49,14 +49,14 @@ struct ObjectBSS_Collectable {
     int32 medalScreenYVals[32];
     uint16 aniFrames;
     uint16 ringFrames;
-};
+} ObjectBSS_Collectable;
 
 // Entity Class
-struct EntityBSS_Collectable {
+typedef struct {
     RSDK_ENTITY
     int32 type;
     Animator animator;
-};
+} EntityBSS_Collectable;
 
 // Object Struct
 extern ObjectBSS_Collectable *BSS_Collectable;

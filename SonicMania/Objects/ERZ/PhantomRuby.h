@@ -1,7 +1,7 @@
 #ifndef OBJ_PHANTOMRUBY_H
 #define OBJ_PHANTOMRUBY_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     RUBYSFX_NONE,
@@ -15,15 +15,15 @@ typedef enum {
 } RubySfxIDs;
 
 // Object Class
-struct ObjectPhantomRuby {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxL[7];
     uint16 sfxR[7];
-};
+} ObjectPhantomRuby;
 
 // Entity Class
-struct EntityPhantomRuby {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -35,7 +35,7 @@ struct EntityPhantomRuby {
     int32 unused2;
     Animator rubyAnimator;
     Animator flashAnimator;
-};
+} EntityPhantomRuby;
 
 // Object Struct
 extern ObjectPhantomRuby *PhantomRuby;

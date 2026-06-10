@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "BladePole.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectBladePole *BladePole;
+ObjectBladePole *BladePole = NULL;
 
 void BladePole_Update(void)
 {

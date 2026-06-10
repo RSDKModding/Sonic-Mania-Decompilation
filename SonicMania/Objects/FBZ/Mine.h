@@ -1,22 +1,22 @@
 #ifndef OBJ_MINE_H
 #define OBJ_MINE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectMine {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxMine;
     uint16 sfxExplosion;
-};
+} ObjectMine;
 
 // Entity Class
-struct EntityMine {
+typedef struct {
     RSDK_ENTITY
     int32 timer;
     Animator animator;
-};
+} EntityMine;
 
 // Object Struct
 extern ObjectMine *Mine;

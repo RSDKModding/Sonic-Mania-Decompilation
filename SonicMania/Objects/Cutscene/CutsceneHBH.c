@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "CutsceneHBH.h"
+#include "FXTrail.h"
+#include "ERZ/PhantomRuby.h"
+#include "Global/Camera.h"
+#include "Global/Zone.h"
 
-ObjectCutsceneHBH *CutsceneHBH;
+ObjectCutsceneHBH *CutsceneHBH = NULL;
 
 void CutsceneHBH_Update(void)
 {

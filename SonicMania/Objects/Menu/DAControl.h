@@ -1,16 +1,16 @@
 #ifndef OBJ_DACONTROL_H
 #define OBJ_DACONTROL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectDAControl {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectDAControl;
 
 // Entity Class
-struct EntityDAControl {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 unused1;
@@ -21,7 +21,7 @@ struct EntityDAControl {
     Animator buttonAnimator;
     Animator optionsAnimator[5];
     Animator textAnimator;
-};
+} EntityDAControl;
 
 // Object Struct
 extern ObjectDAControl *DAControl;

@@ -1,19 +1,19 @@
 #ifndef OBJ_RHINOBOT_H
 #define OBJ_RHINOBOT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 // Object Class
-struct ObjectRhinobot {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     uint16 aniFrames;
     uint16 sfxHuff;
-};
+} ObjectRhinobot;
 
 // Entity Class
-struct EntityRhinobot {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDelay);
@@ -28,7 +28,7 @@ struct EntityRhinobot {
     uint8 startDir;
     Animator bodyAnimator;
     Animator dustAnimator;
-};
+} EntityRhinobot;
 
 // Object Struct
 extern ObjectRhinobot *Rhinobot;

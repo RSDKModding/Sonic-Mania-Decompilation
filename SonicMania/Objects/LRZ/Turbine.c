@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Turbine.h"
+#include "Global/PauseMenu.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectTurbine *Turbine;
+ObjectTurbine *Turbine = NULL;
 
 void Turbine_Update(void)
 {

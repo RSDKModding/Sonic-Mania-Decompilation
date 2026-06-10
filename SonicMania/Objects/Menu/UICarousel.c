@@ -5,10 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UICarousel.h"
 
 #if MANIA_USE_PLUS
-ObjectUICarousel *UICarousel;
+#include "UIButton.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
+
+ObjectUICarousel *UICarousel = NULL;
 
 void UICarousel_Update(void) {}
 

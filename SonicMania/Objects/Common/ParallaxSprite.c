@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ParallaxSprite.h"
+#include "Global/Zone.h"
 
-ObjectParallaxSprite *ParallaxSprite;
+ObjectParallaxSprite *ParallaxSprite = NULL;
 
 void ParallaxSprite_Update(void)
 {

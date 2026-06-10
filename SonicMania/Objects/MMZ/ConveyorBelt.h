@@ -1,22 +1,22 @@
 #ifndef OBJ_CONVEYORBELT_H
 #define OBJ_CONVEYORBELT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectConveyorBelt {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectConveyorBelt;
 
 // Entity Class
-struct EntityConveyorBelt {
+typedef struct {
     RSDK_ENTITY
     Vector2 size;
     int32 speed;
     Animator animator;
     Hitbox hitbox;
-};
+} EntityConveyorBelt;
 
 // Object Struct
 extern ObjectConveyorBelt *ConveyorBelt;

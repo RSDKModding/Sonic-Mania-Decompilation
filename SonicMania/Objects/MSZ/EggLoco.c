@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "EggLoco.h"
+#include "LocoSmoke.h"
+#include "Global/Dust.h"
+#include "Global/Soundboard.h"
+#include "Global/Zone.h"
+#include "Helpers/MathHelpers.h"
 
-ObjectEggLoco *EggLoco;
+ObjectEggLoco *EggLoco = NULL;
 
 void EggLoco_Update(void)
 {

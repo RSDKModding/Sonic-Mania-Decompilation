@@ -5,9 +5,16 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "CircleBumper.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/ScoreBonus.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectCircleBumper *CircleBumper;
+ObjectCircleBumper *CircleBumper = NULL;
 
 void CircleBumper_Update(void)
 {

@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SSZ1Setup.h"
+#include "Common/Decoration.h"
+#include "Common/GenericTrigger.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Global/Animals.h"
+#include "Global/Zone.h"
 
-ObjectSSZ1Setup *SSZ1Setup;
+ObjectSSZ1Setup *SSZ1Setup = NULL;
 
 void SSZ1Setup_Update(void) {}
 

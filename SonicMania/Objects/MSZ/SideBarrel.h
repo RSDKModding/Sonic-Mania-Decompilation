@@ -1,17 +1,17 @@
 #ifndef OBJ_SIDEBARREL_H
 #define OBJ_SIDEBARREL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectSideBarrel {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxDrop;
-};
+} ObjectSideBarrel;
 
 // Entity Class
-struct EntitySideBarrel {
+typedef struct {
     RSDK_ENTITY
     int32 unused1;
     int32 unused2;
@@ -21,7 +21,7 @@ struct EntitySideBarrel {
     bool32 timeAttackFreeze;
     Hitbox hitboxBarrel;
     Animator barrelAnimator;
-};
+} EntitySideBarrel;
 
 // Object Struct
 extern ObjectSideBarrel *SideBarrel;

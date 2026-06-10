@@ -1,22 +1,22 @@
 #ifndef OBJ_BURNINGLOG_H
 #define OBJ_BURNINGLOG_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectBurningLog {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxPlatform;
     Hitbox hitboxFlame;
-};
+} ObjectBurningLog;
 
 // Entity Class
-struct EntityBurningLog {
+typedef struct {
     RSDK_ENTITY
     Animator animator;
     int32 timer;
-};
+} EntityBurningLog;
 
 // Object Struct
 extern ObjectBurningLog *BurningLog;

@@ -1,7 +1,7 @@
 #ifndef OBJ_THOUGHTBUBBLE_H
 #define OBJ_THOUGHTBUBBLE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     THOUGHTBUBBLE_1DOT,
@@ -11,14 +11,14 @@ typedef enum {
 } ThoughtBubbleTypes;
 
 // Object Class
-struct ObjectThoughtBubble {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 dustFrames;
-};
+} ObjectThoughtBubble;
 
 // Entity Class
-struct EntityThoughtBubble {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 type;
@@ -28,7 +28,7 @@ struct EntityThoughtBubble {
     Animator thoughtAnimator;
     Animator dotAnimator1;
     Animator dotAnimator2;
-};
+} EntityThoughtBubble;
 
 // Object Struct
 extern ObjectThoughtBubble *ThoughtBubble;

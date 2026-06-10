@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "FlingRamp.h"
+#include "Global/Player.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectFlingRamp *FlingRamp;
+ObjectFlingRamp *FlingRamp = NULL;
 
 void FlingRamp_Update(void)
 {

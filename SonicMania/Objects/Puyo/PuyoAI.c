@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PuyoAI.h"
+#include "PuyoBean.h"
+#include "Global/Zone.h"
 
-ObjectPuyoAI *PuyoAI;
+ObjectPuyoAI *PuyoAI = NULL;
 
 void PuyoAI_Update(void) {}
 

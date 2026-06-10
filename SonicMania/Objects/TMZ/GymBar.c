@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "GymBar.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectGymBar *GymBar;
+ObjectGymBar *GymBar = NULL;
 
 void GymBar_Update(void) { GymBar_HandlePlayerInteractions(); }
 

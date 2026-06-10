@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIVideo.h"
+#include "Global/Music.h"
 
-ObjectUIVideo *UIVideo;
+ObjectUIVideo *UIVideo = NULL;
 
 void UIVideo_Update(void)
 {

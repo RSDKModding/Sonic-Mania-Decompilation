@@ -1,20 +1,20 @@
 #ifndef OBJ_VANISHPLATFORM_H
 #define OBJ_VANISHPLATFORM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectVanishPlatform {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectVanishPlatform;
 
 // Entity Class
-struct EntityVanishPlatform {
+typedef struct {
     MANIA_PLATFORM_BASE
     uint16 interval;
     uint16 intervalOffset;
     uint16 duration;
-};
+} EntityVanishPlatform;
 
 // Object Struct
 extern ObjectVanishPlatform *VanishPlatform;

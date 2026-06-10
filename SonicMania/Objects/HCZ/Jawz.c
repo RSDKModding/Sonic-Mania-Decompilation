@@ -5,9 +5,16 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Jawz.h"
+#include "Global/DebugMode.h"
+#include "Global/Explosion.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectJawz *Jawz;
+ObjectJawz *Jawz = NULL;
 
 void Jawz_Update(void)
 {

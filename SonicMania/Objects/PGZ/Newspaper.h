@@ -1,7 +1,7 @@
 #ifndef OBJ_NEWSPAPER_H
 #define OBJ_NEWSPAPER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 typedef enum {
@@ -13,16 +13,16 @@ typedef enum {
 #endif
 
 // Object Class
-struct ObjectNewspaper {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
 #if MANIA_USE_PLUS
     uint16 sfxPaperStack;
 #endif
-};
+} ObjectNewspaper;
 
 // Entity Class
-struct EntityNewspaper {
+typedef struct {
     RSDK_ENTITY
 #if MANIA_USE_PLUS
     StateMachine(state);
@@ -53,7 +53,7 @@ struct EntityNewspaper {
     Animator animator;
     int32 childCount;
 #endif
-};
+} EntityNewspaper;
 
 // Object Struct
 extern ObjectNewspaper *Newspaper;

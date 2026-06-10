@@ -1,10 +1,15 @@
 #ifndef OBJ_TMZ2OUTRO_H
 #define OBJ_TMZ2OUTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "EscapeCar.h"
+#if MANIA_USE_PLUS
+#include "Cutscene/CutsceneHBH.h"
+#endif
+#include "Cutscene/CutsceneSeq.h"
 
 // Object Class
-struct ObjectTMZ2Outro {
+typedef struct {
     RSDK_OBJECT
     TABLE(color colors[7], { 0x400168, 0x700178, 0x900188, 0xB80188, 0xF00198, 0xF060B0, 0xF0A0C8 });
     uint16 sfxAlarm;
@@ -17,16 +22,16 @@ struct ObjectTMZ2Outro {
     uint16 sfxRubyGet;
     bool32 finishedSaving;
     int32 playerID;
-};
+} ObjectTMZ2Outro;
 
 // Entity Class
-struct EntityTMZ2Outro {
+typedef struct {
     RSDK_ENTITY
     EntityEscapeCar *escapeCar;
 #if MANIA_USE_PLUS
     EntityCutsceneHBH *heavyKing;
 #endif
-};
+} EntityTMZ2Outro;
 
 // Object Struct
 extern ObjectTMZ2Outro *TMZ2Outro;

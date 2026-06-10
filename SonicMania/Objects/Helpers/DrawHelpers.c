@@ -5,7 +5,7 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "DrawHelpers.h"
 
 ObjectDrawHelpers *DrawHelpers = NULL;
 

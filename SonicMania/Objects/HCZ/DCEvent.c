@@ -5,9 +5,18 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "DCEvent.h"
+#include "WaterGush.h"
+#include "Common/Water.h"
+#include "Global/Debris.h"
+#include "Global/Explosion.h"
+#include "Global/Music.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectDCEvent *DCEvent;
+ObjectDCEvent *DCEvent = NULL;
 
 void DCEvent_Update(void)
 {

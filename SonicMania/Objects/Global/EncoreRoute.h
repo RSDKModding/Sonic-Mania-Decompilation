@@ -1,7 +1,7 @@
 #ifndef OBJ_ENCOREROUTE_H
 #define OBJ_ENCOREROUTE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 
@@ -10,21 +10,21 @@ typedef enum { EROUTE_LAYER_FGLOW, EROUTE_LAYER_FGHIGH, EROUTE_LAYER_MOVE, EROUT
 typedef enum { EROUTE_FRAME_UNUSED } EncoreRouteFrameIDs;
 
 // Object Class
-struct ObjectEncoreRoute {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Animator animator;
-};
+} ObjectEncoreRoute;
 
 // Entity Class
-struct EntityEncoreRoute {
+typedef struct {
     RSDK_ENTITY
     Vector2 offset;
     Vector2 size;
     uint8 layerSrc;
     uint8 layerDest;
     EncoreRouteFrameIDs frameID;
-};
+} EntityEncoreRoute;
 
 // Object Struct
 extern ObjectEncoreRoute *EncoreRoute;

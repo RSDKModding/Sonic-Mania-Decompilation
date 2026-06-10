@@ -1,7 +1,9 @@
 #ifndef OBJ_UIPOPOVER_H
 #define OBJ_UIPOPOVER_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "UIButton.h"
+#include "UIControl.h"
 
 #if MANIA_USE_PLUS
 
@@ -13,13 +15,15 @@ typedef enum {
     POPOVER_DELETE    = 9,
 } PopoverOptions;
 
+typedef struct EntityUIPopover EntityUIPopover;
+
 // Object Class
-struct ObjectUIPopover {
+typedef struct {
     RSDK_OBJECT
     EntityUIPopover *activePopover;
     EntityUIControl *storedControl;
     StateMachine(storedControlState);
-};
+} ObjectUIPopover;
 
 // Entity Class
 struct EntityUIPopover {

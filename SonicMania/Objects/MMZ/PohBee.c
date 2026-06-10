@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PohBee.h"
+#include "Global/DebugMode.h"
+#include "Global/Explosion.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectPohBee *PohBee;
+ObjectPohBee *PohBee = NULL;
 
 void PohBee_Update(void)
 {

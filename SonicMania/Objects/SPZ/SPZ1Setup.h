@@ -1,10 +1,10 @@
 #ifndef OBJ_SPZ1SETUP_H
 #define OBJ_SPZ1SETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectSPZ1Setup {
+typedef struct {
     RSDK_OBJECT
     int32 fgLightsPalTimer;
     int32 bgLightsPalTimer;
@@ -16,12 +16,12 @@ struct ObjectSPZ1Setup {
     uint16 aniTiles;
     TileLayer *cityBGLow;
     TileLayer *cityBGHigh;
-};
+} ObjectSPZ1Setup;
 
 // Entity Class
-struct EntitySPZ1Setup {
+typedef struct {
     RSDK_ENTITY
-};
+} EntitySPZ1Setup;
 
 // Object Struct
 extern ObjectSPZ1Setup *SPZ1Setup;

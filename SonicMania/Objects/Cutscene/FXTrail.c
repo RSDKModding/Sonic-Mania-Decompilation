@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "FXTrail.h"
+#include "Global/ImageTrail.h"
 
-ObjectFXTrail *FXTrail;
+ObjectFXTrail *FXTrail = NULL;
 
 void FXTrail_Update(void) {}
 

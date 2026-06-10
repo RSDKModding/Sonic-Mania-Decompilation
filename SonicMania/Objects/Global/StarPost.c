@@ -5,9 +5,17 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "StarPost.h"
+#include "APICallback.h"
+#include "DebugMode.h"
+#include "Music.h"
+#include "Player.h"
+#include "SaveGame.h"
+#include "Zone.h"
+#include "Helpers/GameProgress.h"
+#include "TMZ/TMZ2Setup.h"
 
-ObjectStarPost *StarPost;
+ObjectStarPost *StarPost = NULL;
 
 void StarPost_Update(void)
 {

@@ -1,14 +1,14 @@
 #ifndef OBJ_JUGGLESAW_H
 #define OBJ_JUGGLESAW_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { JUGGLESAW_NO_SAW = 0, JUGGLESAW_HAS_SAW = 1, JUGGLESAW_AWAITING_SAW = 2 } JuggleSawMode;
 
 #define JUGGLESAW_MAX_FRIENDS (8)
 
 // Object Class
-struct ObjectJuggleSaw {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxFriendRange;
@@ -19,9 +19,10 @@ struct ObjectJuggleSaw {
     uint16 sfxExplode;
     uint16 sfxJuggle;
     uint16 sfxThrow;
-};
+} ObjectJuggleSaw;
 
 // Entity Class
+typedef struct EntityJuggleSaw EntityJuggleSaw;
 struct EntityJuggleSaw {
     RSDK_ENTITY
     StateMachine(state);

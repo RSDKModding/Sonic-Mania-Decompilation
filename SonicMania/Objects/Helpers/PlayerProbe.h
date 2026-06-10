@@ -1,22 +1,23 @@
 #ifndef OBJ_PLAYERPROBE_H
 #define OBJ_PLAYERPROBE_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 // Object Class
-struct ObjectPlayerProbe {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectPlayerProbe;
 
 // Entity Class
-struct EntityPlayerProbe {
+typedef struct {
     RSDK_ENTITY
     int32 size;
     uint8 activePlayers;
     int32 negAngle;
     Animator animator;
-};
+} EntityPlayerProbe;
 
 // Object Struct
 extern ObjectPlayerProbe *PlayerProbe;

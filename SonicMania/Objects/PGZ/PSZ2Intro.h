@@ -1,21 +1,24 @@
 #ifndef OBJ_PSZ2INTRO_H
 #define OBJ_PSZ2INTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Cutscene/CutsceneSeq.h"
+#include "Cutscene/FXFade.h"
+#include "Global/SignPost.h"
 
 // Object Class
-struct ObjectPSZ2Intro {
+typedef struct {
     RSDK_OBJECT
     int32 unused;
     uint16 sfxExplosion3;
     EntityFXFade *fxFade;
     EntitySignPost *signPost;
-};
+} ObjectPSZ2Intro;
 
 // Entity Class
-struct EntityPSZ2Intro {
+typedef struct {
     MANIA_CUTSCENE_BASE
-};
+} EntityPSZ2Intro;
 
 // Object Struct
 extern ObjectPSZ2Intro *PSZ2Intro;

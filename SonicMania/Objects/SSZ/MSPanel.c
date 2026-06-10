@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "MSPanel.h"
+#include "MetalSonic.h"
+#include "Global/Explosion.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectMSPanel *MSPanel;
+ObjectMSPanel *MSPanel = NULL;
 
 void MSPanel_Update(void)
 {

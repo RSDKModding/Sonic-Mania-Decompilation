@@ -1,25 +1,25 @@
 #ifndef OBJ_HONKYTONK_H
 #define OBJ_HONKYTONK_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectHonkytonk {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxTrigger;
     Hitbox hitboxRebound;
     uint16 sfxPiano;
     uint16 aniFrames;
-};
+} ObjectHonkytonk;
 
 // Entity Class
-struct EntityHonkytonk {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 negAngle;
     int32 depression;
     Animator animator;
-};
+} EntityHonkytonk;
 
 // Object Struct
 extern ObjectHonkytonk *Honkytonk;

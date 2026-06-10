@@ -1,7 +1,7 @@
 #ifndef OBJ_ICESPRING_H
 #define OBJ_ICESPRING_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     ICESPRING_VERTICAL,
@@ -10,16 +10,16 @@ typedef enum {
 } IceSpringTypes;
 
 // Object Class
-struct ObjectIceSpring {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxBounce;
     uint16 sfxShatter;
     Animator animators[PLAYER_COUNT];
-};
+} ObjectIceSpring;
 
 // Entity Class
-struct EntityIceSpring {
+typedef struct {
     // Spring "Inherit"
     RSDK_ENTITY
     StateMachine(state);
@@ -33,7 +33,7 @@ struct EntityIceSpring {
 
     int32 shatterTimer;
     uint8 activePlayers;
-};
+} EntityIceSpring;
 
 // Object Struct
 extern ObjectIceSpring *IceSpring;

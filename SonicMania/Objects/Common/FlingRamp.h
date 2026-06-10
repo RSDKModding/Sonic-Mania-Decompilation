@@ -1,18 +1,18 @@
 #ifndef OBJ_FLINGRAMP_H
 #define OBJ_FLINGRAMP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectFlingRamp {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxRamp;
-};
+} ObjectFlingRamp;
 
 // Entity Class
-struct EntityFlingRamp {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityFlingRamp;
 
 // Object Struct
 extern ObjectFlingRamp *FlingRamp;

@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PhantomMissile.h"
+#include "Global/Dust.h"
+#include "Global/Explosion.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectPhantomMissile *PhantomMissile;
+ObjectPhantomMissile *PhantomMissile = NULL;
 
 void PhantomMissile_Update(void) {}
 

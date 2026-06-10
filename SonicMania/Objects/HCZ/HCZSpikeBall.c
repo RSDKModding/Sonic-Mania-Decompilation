@@ -5,14 +5,17 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "HCZSpikeBall.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#include "Helpers/MathHelpers.h"
 
 // NOTE:
 // This is a mania-fied version of the spikeballs present on S3 hang conveyors.
 // This object is 100% fully functional.
 // However, they're never placed in any stage, Making them unused.
 
-ObjectHCZSpikeBall *HCZSpikeBall;
+ObjectHCZSpikeBall *HCZSpikeBall = NULL;
 
 void HCZSpikeBall_Update(void)
 {

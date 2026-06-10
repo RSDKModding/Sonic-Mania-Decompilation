@@ -1,16 +1,16 @@
 #ifndef OBJ_UIUSERNAMEPOPUP_H
 #define OBJ_UIUSERNAMEPOPUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectUIUsernamePopup {
+typedef struct {
     RSDK_OBJECT
     Entity *popup;
-};
+} ObjectUIUsernamePopup;
 
 // Entity Class
-struct EntityUIUsernamePopup {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -20,7 +20,7 @@ struct EntityUIUsernamePopup {
     Vector2 drawPos;
     String username;
     Animator animator;
-};
+} EntityUIUsernamePopup;
 
 // Object Struct
 extern ObjectUIUsernamePopup *UIUsernamePopup;

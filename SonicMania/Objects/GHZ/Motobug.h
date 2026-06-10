@@ -1,17 +1,17 @@
 #ifndef OBJ_MOTOBUG_H
 #define OBJ_MOTOBUG_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectMotobug {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     uint16 aniFrames;
-};
+} ObjectMotobug;
 
 // Entity Class
-struct EntityMotobug {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 turnTimer;
@@ -20,7 +20,7 @@ struct EntityMotobug {
     uint8 startDir;
     bool32 wasTurning;
     Animator animator;
-};
+} EntityMotobug;
 
 // Object Struct
 extern ObjectMotobug *Motobug;

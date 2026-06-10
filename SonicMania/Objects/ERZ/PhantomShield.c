@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PhantomShield.h"
+#include "PhantomEgg.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectPhantomShield *PhantomShield;
+ObjectPhantomShield *PhantomShield = NULL;
 
 void PhantomShield_Update(void)
 {

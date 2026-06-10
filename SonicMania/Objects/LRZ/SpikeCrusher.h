@@ -1,21 +1,21 @@
 #ifndef OBJ_SPIKECRUSHER_H
 #define OBJ_SPIKECRUSHER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectSpikeCrusher {
+typedef struct {
     RSDK_OBJECT
     uint16 sfxHuff;
     uint16 sfxImpact;
-};
+} ObjectSpikeCrusher;
 
 // Entity Class
-struct EntitySpikeCrusher {
+typedef struct {
     MANIA_PLATFORM_BASE
     int32 startDir;
     Animator spikeAnimator;
-};
+} EntitySpikeCrusher;
 
 // Object Struct
 extern ObjectSpikeCrusher *SpikeCrusher;

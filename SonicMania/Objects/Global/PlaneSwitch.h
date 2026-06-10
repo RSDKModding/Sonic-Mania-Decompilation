@@ -1,7 +1,7 @@
 #ifndef OBJ_PLANESWITCH_H
 #define OBJ_PLANESWITCH_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     PLANESWITCH_LOWLAYER_LEFT   = 0,
@@ -15,20 +15,20 @@ typedef enum {
 } PlaneSwitchFlags;
 
 // Object Class
-struct ObjectPlaneSwitch {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectPlaneSwitch;
 
 // Entity Class
-struct EntityPlaneSwitch {
+typedef struct {
     RSDK_ENTITY
     int32 flags;
     int32 size;
     bool32 onPath;
     int32 negAngle;
     Animator animator;
-};
+} EntityPlaneSwitch;
 
 // Object Struct
 extern ObjectPlaneSwitch *PlaneSwitch;

@@ -1,10 +1,10 @@
 #ifndef OBJ_ANNOUNCER_H
 #define OBJ_ANNOUNCER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectAnnouncer {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxThree;
@@ -38,10 +38,10 @@ struct ObjectAnnouncer {
     uint16 sfxDrawRound;
     uint16 sfxDrawSet;
     bool32 finishedCountdown;
-};
+} ObjectAnnouncer;
 
 // Entity Class
-struct EntityAnnouncer {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -51,7 +51,7 @@ struct EntityAnnouncer {
     Vector2 drawOffset;
     Animator animator;
     Animator playerIconAnimator;
-};
+} EntityAnnouncer;
 
 // Object Struct
 extern ObjectAnnouncer *Announcer;

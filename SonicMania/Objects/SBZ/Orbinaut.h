@@ -1,20 +1,20 @@
 #ifndef OBJ_ORBINAUT_H
 #define OBJ_ORBINAUT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define ORBINAUT_ORB_COUNT (4)
 
 // Object Class
-struct ObjectOrbinaut {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxOrb;
     uint16 aniFrames;
-};
+} ObjectOrbinaut;
 
 // Entity Class
-struct EntityOrbinaut {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 planeFilter;
@@ -25,7 +25,7 @@ struct EntityOrbinaut {
     bool32 fireOrbs;
     Animator animatorFace;
     Animator animatorOrb;
-};
+} EntityOrbinaut;
 
 // Object Entity
 extern ObjectOrbinaut *Orbinaut;

@@ -1,11 +1,11 @@
 #ifndef OBJ_DIALOGRUNNER_H
 #define OBJ_DIALOGRUNNER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 // Object Class
-struct ObjectDialogRunner {
+typedef struct {
     RSDK_OBJECT
     int32 authForbidden;
     bool32 signedOut;
@@ -15,10 +15,10 @@ struct ObjectDialogRunner {
     void *activeCallback;
     int32 unused3;
     int32 unused4;
-};
+} ObjectDialogRunner;
 
 // Entity Class
-struct EntityDialogRunner {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -33,7 +33,7 @@ struct EntityDialogRunner {
     int32 unused8;
     int32 status;
     bool32 useGenericText;
-};
+} EntityDialogRunner;
 
 // Object Struct
 extern ObjectDialogRunner *DialogRunner;

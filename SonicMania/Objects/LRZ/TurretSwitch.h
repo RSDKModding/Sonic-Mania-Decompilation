@@ -1,18 +1,19 @@
 #ifndef OBJ_TURRETSWITCH_H
 #define OBJ_TURRETSWITCH_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 // Object Class
-struct ObjectTurretSwitch {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxShot;
     Hitbox hitboxProjectile;
-};
+} ObjectTurretSwitch;
 
 // Entity Class
-struct EntityTurretSwitch {
+typedef struct {
     MANIA_BUTTON_BASE
 
     Animator animator;
@@ -21,7 +22,7 @@ struct EntityTurretSwitch {
     Vector2 startPos;
     Hitbox hitbox;
     Hitbox hitboxRange;
-};
+} EntityTurretSwitch;
 
 // Object Struct
 extern ObjectTurretSwitch *TurretSwitch;

@@ -1,16 +1,16 @@
 #ifndef OBJ_METALARM_H
 #define OBJ_METALARM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectMetalArm {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectMetalArm;
 
 // Entity Class
-struct EntityMetalArm {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 startAngleA;
@@ -32,7 +32,7 @@ struct EntityMetalArm {
     Animator armAAnimator;
     Animator armBAnimator;
     Animator platformAnimator;
-};
+} EntityMetalArm;
 
 // Object Struct
 extern ObjectMetalArm *MetalArm;

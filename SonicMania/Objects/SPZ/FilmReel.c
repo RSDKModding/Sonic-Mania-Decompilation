@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "FilmReel.h"
+#include "Global/Camera.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectFilmReel *FilmReel;
+ObjectFilmReel *FilmReel = NULL;
 
 void FilmReel_Update(void)
 {

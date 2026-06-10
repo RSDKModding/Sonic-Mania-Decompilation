@@ -1,17 +1,17 @@
 #ifndef OBJ_LOGHELPERS_H
 #define OBJ_LOGHELPERS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectLogHelpers {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectLogHelpers;
 
 // Entity Class
-struct EntityLogHelpers {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityLogHelpers;
 
 // Object Entity
 extern ObjectLogHelpers *LogHelpers;

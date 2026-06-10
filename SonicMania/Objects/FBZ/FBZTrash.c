@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "FBZTrash.h"
+#include "BigSqueeze.h"
+#include "Global/Animals.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectFBZTrash *FBZTrash;
+ObjectFBZTrash *FBZTrash = NULL;
 
 void FBZTrash_Update(void)
 {

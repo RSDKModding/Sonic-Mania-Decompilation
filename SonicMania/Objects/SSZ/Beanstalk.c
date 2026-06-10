@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Beanstalk.h"
+#include "Global/Explosion.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#include "Helpers/MathHelpers.h"
 
-ObjectBeanstalk *Beanstalk;
+ObjectBeanstalk *Beanstalk = NULL;
 
 void Beanstalk_Update(void)
 {

@@ -5,9 +5,16 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ERZGunner.h"
+#include "ERZKing.h"
+#include "Global/Debris.h"
+#include "Global/Dust.h"
+#include "Global/Explosion.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#include "Helpers/BadnikHelpers.h"
 
-ObjectERZGunner *ERZGunner;
+ObjectERZGunner *ERZGunner = NULL;
 
 void ERZGunner_Update(void)
 {

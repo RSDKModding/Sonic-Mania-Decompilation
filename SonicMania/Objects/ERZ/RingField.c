@@ -5,9 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "RingField.h"
+#include "Global/Player.h"
+#include "Global/Ring.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectRingField *RingField;
+ObjectRingField *RingField = NULL;
 
 void RingField_Update(void)
 {

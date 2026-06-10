@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SpikeCrusher.h"
+#include "Common/Platform.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectSpikeCrusher *SpikeCrusher;
+ObjectSpikeCrusher *SpikeCrusher = NULL;
 
 void SpikeCrusher_Update(void) { Platform_Update(); }
 

@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SP500MkII.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#include "Helpers/DrawHelpers.h"
 
-ObjectSP500MkII *SP500MkII;
+ObjectSP500MkII *SP500MkII = NULL;
 
 void SP500MkII_Update(void)
 {

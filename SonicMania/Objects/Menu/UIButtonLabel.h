@@ -1,16 +1,16 @@
 #ifndef OBJ_UIBUTTONLABEL_H
 #define OBJ_UIBUTTONLABEL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectUIButtonLabel {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectUIButtonLabel;
 
 // Entity Class
-struct EntityUIButtonLabel {
+typedef struct {
     RSDK_ENTITY
     int32 unused1;
     int32 unused2;
@@ -22,7 +22,7 @@ struct EntityUIButtonLabel {
     Animator frameAnimator;
     Animator textAnimator;
     uint16 textSprite;
-};
+} EntityUIButtonLabel;
 
 // Object Struct
 extern ObjectUIButtonLabel *UIButtonLabel;

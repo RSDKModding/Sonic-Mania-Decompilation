@@ -1,18 +1,18 @@
 #ifndef OBJ_MONARCHBG_H
 #define OBJ_MONARCHBG_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectMonarchBG {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 meshIndex;
     uint16 sceneIndex;
-};
+} ObjectMonarchBG;
 
 // Entity Class
-struct EntityMonarchBG {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 unused;
@@ -22,7 +22,7 @@ struct EntityMonarchBG {
     Matrix unusedMatrix2;
     Matrix unusedMatrix3;
     Matrix unusedMatrix4;
-};
+} EntityMonarchBG;
 
 // Object Struct
 extern ObjectMonarchBG *MonarchBG;

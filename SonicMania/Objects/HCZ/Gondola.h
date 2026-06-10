@@ -1,18 +1,18 @@
 #ifndef OBJ_GONDOLA_H
 #define OBJ_GONDOLA_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectGondola {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     bool32 taggedBoatIDs[3];
     bool32 hasAchievement;
-};
+} ObjectGondola;
 
 // Entity Class
-struct EntityGondola {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 minY;
@@ -33,7 +33,7 @@ struct EntityGondola {
     int32 floatAngle;
     Hitbox hitbox;
     Animator animator;
-};
+} EntityGondola;
 
 // Object Struct
 extern ObjectGondola *Gondola;

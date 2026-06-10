@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "LightBarrier.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectLightBarrier *LightBarrier;
+ObjectLightBarrier *LightBarrier = NULL;
 
 void LightBarrier_Update(void) {}
 

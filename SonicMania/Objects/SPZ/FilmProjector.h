@@ -1,16 +1,16 @@
 #ifndef OBJ_FILMPROJECTOR_H
 #define OBJ_FILMPROJECTOR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectFilmProjector {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectFilmProjector;
 
 // Entity Class
-struct EntityFilmProjector {
+typedef struct {
     RSDK_ENTITY
     uint8 pathMovement;
     Vector2 filmPos;
@@ -20,7 +20,7 @@ struct EntityFilmProjector {
     Animator reelEdgeAnimator;
     Animator celluoidAnimator;
     Animator eggmanAnimator;
-};
+} EntityFilmProjector;
 
 // Object Struct
 extern ObjectFilmProjector *FilmProjector;

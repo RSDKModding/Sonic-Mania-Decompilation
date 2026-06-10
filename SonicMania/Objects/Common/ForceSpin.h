@@ -1,21 +1,22 @@
 #ifndef OBJ_FORCESPIN_H
 #define OBJ_FORCESPIN_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 // Object Class
-struct ObjectForceSpin {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectForceSpin;
 
 // Entity Class
-struct EntityForceSpin {
+typedef struct {
     RSDK_ENTITY
     int32 size;
     int32 negAngle;
     Animator animator;
-};
+} EntityForceSpin;
 
 // Object Struct
 extern ObjectForceSpin *ForceSpin;

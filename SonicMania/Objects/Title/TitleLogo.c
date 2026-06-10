@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TitleLogo.h"
+#include "Global/APICallback.h"
+#include "Global/Localization.h"
 
-ObjectTitleLogo *TitleLogo;
+ObjectTitleLogo *TitleLogo = NULL;
 
 void TitleLogo_Update(void)
 {

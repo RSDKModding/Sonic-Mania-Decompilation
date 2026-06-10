@@ -1,19 +1,19 @@
 #ifndef OBJ_SP500MKII_H
 #define OBJ_SP500MKII_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectSP500MkII {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxSolid;
     Hitbox hitboxButton;
     Hitbox hitboxPrinter;
-};
+} ObjectSP500MkII;
 
 // Entity Class
-struct EntitySP500MkII {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 start;
@@ -34,7 +34,7 @@ struct EntitySP500MkII {
     Vector2 printMoveOffset;
     int32 timer;
     Animator animator;
-};
+} EntitySP500MkII;
 
 // Object Struct
 extern ObjectSP500MkII *SP500MkII;

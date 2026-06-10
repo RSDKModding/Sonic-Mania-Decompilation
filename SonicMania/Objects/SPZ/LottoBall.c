@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "LottoBall.h"
+#include "Global/Zone.h"
 
-ObjectLottoBall *LottoBall;
+ObjectLottoBall *LottoBall = NULL;
 
 void LottoBall_Update(void)
 {

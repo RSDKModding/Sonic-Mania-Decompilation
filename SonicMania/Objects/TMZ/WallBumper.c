@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "WallBumper.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectWallBumper *WallBumper;
+ObjectWallBumper *WallBumper = NULL;
 
 void WallBumper_Update(void) { WallBumper_HandleInteractions(); }
 

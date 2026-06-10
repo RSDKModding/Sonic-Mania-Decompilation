@@ -5,9 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SpecialRing.h"
+#include "DebugMode.h"
+#include "Music.h"
+#include "Player.h"
+#include "Ring.h"
+#include "SaveGame.h"
+#include "Zone.h"
 
-ObjectSpecialRing *SpecialRing;
+ObjectSpecialRing *SpecialRing = NULL;
 
 void SpecialRing_Update(void)
 {

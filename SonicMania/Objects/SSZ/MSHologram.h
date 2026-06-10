@@ -1,18 +1,18 @@
 #ifndef OBJ_MSHOLOGRAM_H
 #define OBJ_MSHOLOGRAM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectMSHologram {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
     uint16 sfxExplosion;
-};
+} ObjectMSHologram;
 
 // Entity Class
-struct EntityMSHologram {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -22,7 +22,7 @@ struct EntityMSHologram {
     Animator metalSonicAnimator;
     Animator rabbitAnimator;
     Animator canaryAnimator;
-};
+} EntityMSHologram;
 
 // Object Struct
 extern ObjectMSHologram *MSHologram;

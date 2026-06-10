@@ -1,16 +1,16 @@
 #ifndef OBJ_HANGCONVEYOR_H
 #define OBJ_HANGCONVEYOR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectHangConveyor {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectHangConveyor;
 
 // Entity Class
-struct EntityHangConveyor {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 length;
@@ -34,7 +34,7 @@ struct EntityHangConveyor {
     Animator endAnimator;
     Animator startAnimator;
     Animator middleAnimator;
-};
+} EntityHangConveyor;
 
 // Object Struct
 extern ObjectHangConveyor *HangConveyor;

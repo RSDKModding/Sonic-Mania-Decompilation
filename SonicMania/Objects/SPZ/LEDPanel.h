@@ -1,21 +1,21 @@
 #ifndef OBJ_LEDPANEL_H
 #define OBJ_LEDPANEL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define LEDPANEL_TEXT_COUNT (8)
 #define LEDPANEL_ROW_COUNT  (2)
 
 // Object Class
-struct ObjectLEDPanel {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     String text;
     color panelColor;
-};
+} ObjectLEDPanel;
 
 // Entity Class
-struct EntityLEDPanel {
+typedef struct {
     RSDK_ENTITY
     String text[LEDPANEL_TEXT_COUNT];
     String seq[LEDPANEL_ROW_COUNT];
@@ -48,7 +48,7 @@ struct EntityLEDPanel {
     int32 rowDelay[LEDPANEL_ROW_COUNT];
     uint8 row;
     Animator animatorText;
-};
+} EntityLEDPanel;
 
 // Object Struct
 extern ObjectLEDPanel *LEDPanel;

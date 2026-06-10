@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Spear.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectSpear *Spear;
+ObjectSpear *Spear = NULL;
 
 void Spear_Update(void)
 {

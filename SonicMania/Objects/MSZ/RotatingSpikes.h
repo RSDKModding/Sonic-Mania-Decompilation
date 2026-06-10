@@ -1,7 +1,7 @@
 #ifndef OBJ_ROTATINGSPIKES_H
 #define OBJ_ROTATINGSPIKES_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     ROTSPIKES_PRIO_LOW,
@@ -9,13 +9,13 @@ typedef enum {
 } RotatingSpikesPriorities;
 
 // Object Class
-struct ObjectRotatingSpikes {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectRotatingSpikes;
 
 // Entity Class
-struct EntityRotatingSpikes {
+typedef struct {
     RSDK_ENTITY
     Animator pivotAnimator;
     Animator spikeBallAnimator;
@@ -25,7 +25,7 @@ struct EntityRotatingSpikes {
     int32 rotSpeed;
     int32 angleOffset;
     int32 priority;
-};
+} EntityRotatingSpikes;
 
 // Object Struct
 extern ObjectRotatingSpikes *RotatingSpikes;

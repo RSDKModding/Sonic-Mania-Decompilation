@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Rexon.h"
+#include "Global/DebugMode.h"
+#include "Global/Explosion.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#include "Helpers/BadnikHelpers.h"
 
-ObjectRexon *Rexon;
+ObjectRexon *Rexon = NULL;
 
 void Rexon_Update(void)
 {

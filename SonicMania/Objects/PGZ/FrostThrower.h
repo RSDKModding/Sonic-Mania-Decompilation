@@ -1,18 +1,18 @@
 #ifndef OBJ_FROSTTHROWER_H
 #define OBJ_FROSTTHROWER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectFrostThrower {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxFrostThrower;
     uint16 sfxFreeze;
-};
+} ObjectFrostThrower;
 
 // Entity Class
-struct EntityFrostThrower {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint16 timer;
@@ -26,7 +26,7 @@ struct EntityFrostThrower {
     int32 maxGustCount[4];
     int32 gustCount[4];
     Vector2 gustPos[12];
-};
+} EntityFrostThrower;
 
 // Object Struct
 extern ObjectFrostThrower *FrostThrower;

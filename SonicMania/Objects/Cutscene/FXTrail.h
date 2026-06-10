@@ -1,18 +1,18 @@
 #ifndef OBJ_FXTRAIL_H
 #define OBJ_FXTRAIL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Extras lol
 #define FXTRAIL_TRACK_COUNT 7
 
 // Object Class
-struct ObjectFXTrail {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectFXTrail;
 
 // Entity Class
-struct EntityFXTrail {
+typedef struct {
     RSDK_ENTITY
     Entity *parent;
     Vector2 currentPos;
@@ -27,7 +27,7 @@ struct EntityFXTrail {
     Animator stateAnim[FXTRAIL_TRACK_COUNT];
     Animator *animatorPtr;
     int32 baseAlpha;
-};
+} EntityFXTrail;
 
 // Object Struct
 extern ObjectFXTrail *FXTrail;

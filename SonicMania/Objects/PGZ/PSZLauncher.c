@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PSZLauncher.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectPSZLauncher *PSZLauncher;
+ObjectPSZLauncher *PSZLauncher = NULL;
 
 void PSZLauncher_Update(void)
 {

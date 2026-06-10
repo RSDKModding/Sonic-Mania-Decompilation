@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PKingAttack.h"
+#include "ERZStart.h"
+#include "Global/Player.h"
+#include "Global/Ring.h"
+#include "Global/Zone.h"
 
-ObjectPKingAttack *PKingAttack;
+ObjectPKingAttack *PKingAttack = NULL;
 
 // NOTE:
 // This object is likely highly based off LRZ/KingAttack

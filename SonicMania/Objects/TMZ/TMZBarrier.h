@@ -1,7 +1,7 @@
 #ifndef OBJ_TMZBARRIER_H
 #define OBJ_TMZBARRIER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     TMZBARRIER_LONG,
@@ -9,20 +9,20 @@ typedef enum {
 } TMZBarrierTypes;
 
 // Object Class
-struct ObjectTMZBarrier {
+typedef struct {
     RSDK_OBJECT
     uint8 clearedBarriers;
     int32 postID;
-};
+} ObjectTMZBarrier;
 
 // Entity Class
-struct EntityTMZBarrier {
+typedef struct {
     RSDK_ENTITY
     uint8 type;
     uint8 warpTag;
     uint8 iD;
     bool32 cleared;
-};
+} EntityTMZBarrier;
 
 // Object Struct
 extern ObjectTMZBarrier *TMZBarrier;

@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TMZFlames.h"
+#include "Global/Zone.h"
 
-ObjectTMZFlames *TMZFlames;
+ObjectTMZFlames *TMZFlames = NULL;
 
 void TMZFlames_Update(void)
 {

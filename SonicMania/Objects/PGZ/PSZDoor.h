@@ -1,7 +1,8 @@
 #ifndef OBJ_PSZDOOR_H
 #define OBJ_PSZDOOR_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "DoorTrigger.h"
 
 typedef enum {
     PSZDOOR_ORIENATION_D,
@@ -17,15 +18,15 @@ typedef enum {
 } PSZDoorAutomaticIDs;
 
 // Object Class
-struct ObjectPSZDoor {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxes[2];
     uint16 aniFrames;
     uint16 sfxOpen;
-};
+} ObjectPSZDoor;
 
 // Entity Class
-struct EntityPSZDoor {
+typedef struct {
     RSDK_ENTITY
     uint8 orientation;
     bool32 open;
@@ -40,7 +41,7 @@ struct EntityPSZDoor {
     Vector2 targetPos;
     Animator doorAnimator;
     Animator cogAnimator;
-};
+} EntityPSZDoor;
 
 // Object Struct
 extern ObjectPSZDoor *PSZDoor;

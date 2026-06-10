@@ -5,9 +5,17 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "CreditsSetup.h"
+#include "Cutscene/FXFade.h"
+#include "Global/Camera.h"
+#include "Global/Music.h"
+#include "Global/Player.h"
+#include "Global/SaveGame.h"
+#include "Global/Zone.h"
+#include "Menu/MenuParam.h"
+#include "Menu/UICreditsText.h"
 
-ObjectCreditsSetup *CreditsSetup;
+ObjectCreditsSetup *CreditsSetup = NULL;
 
 void CreditsSetup_Update(void) {}
 

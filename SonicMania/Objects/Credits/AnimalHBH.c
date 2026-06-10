@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "AnimalHBH.h"
+#include "Cutscene/FXFade.h"
 
-ObjectAnimalHBH *AnimalHBH;
+ObjectAnimalHBH *AnimalHBH = NULL;
 
 void AnimalHBH_Update(void)
 {

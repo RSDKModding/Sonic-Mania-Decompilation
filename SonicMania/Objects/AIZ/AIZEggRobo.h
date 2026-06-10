@@ -1,16 +1,16 @@
 #ifndef OBJ_AIZEGGROBO_H
 #define OBJ_AIZEGGROBO_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectAIZEggRobo {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectAIZEggRobo;
 
 // Entity Class
-struct EntityAIZEggRobo {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state); // unused
     bool32 oscillate;
@@ -25,7 +25,7 @@ struct EntityAIZEggRobo {
     Animator animatorBody;
     Animator animatorArm;
     Animator animatorLegs;
-};
+} EntityAIZEggRobo;
 
 // Object Struct
 extern ObjectAIZEggRobo *AIZEggRobo;

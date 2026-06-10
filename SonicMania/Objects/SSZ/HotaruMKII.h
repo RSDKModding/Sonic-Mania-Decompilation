@@ -1,7 +1,8 @@
 #ifndef OBJ_HOTARUMKII_H
 #define OBJ_HOTARUMKII_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 typedef enum {
     HOTARUMKII_MAIN,
@@ -10,7 +11,7 @@ typedef enum {
 } HotaruMKIITypes;
 
 // Object Class
-struct ObjectHotaruMKII {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxLaser;
@@ -19,10 +20,10 @@ struct ObjectHotaruMKII {
     uint16 sfxLaser;
     uint16 sfxFly;
     uint16 sfxCharge;
-};
+} ObjectHotaruMKII;
 
 // Entity Class
-struct EntityHotaruMKII {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -45,7 +46,7 @@ struct EntityHotaruMKII {
     Animator mainAnimator;
     Animator flashAnimator;
     Animator unusedAnimator;
-};
+} EntityHotaruMKII;
 
 // Object Struct
 extern ObjectHotaruMKII *HotaruMKII;

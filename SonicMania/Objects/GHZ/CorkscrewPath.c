@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "CorkscrewPath.h"
+#include "Global/Player.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectCorkscrewPath *CorkscrewPath;
+ObjectCorkscrewPath *CorkscrewPath = NULL;
 
 void CorkscrewPath_Update(void)
 {

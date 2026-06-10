@@ -1,12 +1,12 @@
 #ifndef OBJ_LRZ1SETUP_H
 #define OBJ_LRZ1SETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { LRZ1_TFLAGS_NORMAL, LRZ1_TFLAGS_LAVA } TileFlagsLRZ1;
 
 // Object Class
-struct ObjectLRZ1Setup {
+typedef struct {
     RSDK_OBJECT
     int32 palTimer;
     int32 fadeTimer;
@@ -19,12 +19,12 @@ struct ObjectLRZ1Setup {
     TABLE(int32 deformBG[32],
           { -2, -2, -2, 0, -2, 0, -4, -2, 0, -4, -4, -1, 0, 0, -3, -4, -4, -1, -4, -4, -3, -4, -1, 0, 0, 0, -3, -1, -1, -1, -2, 0 });
 #endif
-};
+} ObjectLRZ1Setup;
 
 // Entity Class
-struct EntityLRZ1Setup {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityLRZ1Setup;
 
 // Object Struct
 extern ObjectLRZ1Setup *LRZ1Setup;

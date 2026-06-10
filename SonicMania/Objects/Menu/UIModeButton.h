@@ -1,7 +1,7 @@
 #ifndef OBJ_UIMODEBUTTON_H
 #define OBJ_UIMODEBUTTON_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     UIMODEBUTTON_MANIA,
@@ -11,13 +11,13 @@ typedef enum {
 } UIModeButtonIDs;
 
 // Object Class
-struct ObjectUIModeButton {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectUIModeButton;
 
 // Entity Class
-struct EntityUIModeButton {
+typedef struct {
     MANIA_UI_ITEM_BASE
     int32 buttonID;
     bool32 stopMusic;
@@ -37,7 +37,7 @@ struct EntityUIModeButton {
     Animator altShadowAnimator;
     Animator textAnimator;
     uint16 textFrames;
-};
+} EntityUIModeButton;
 
 // Object Struct
 extern ObjectUIModeButton *UIModeButton;

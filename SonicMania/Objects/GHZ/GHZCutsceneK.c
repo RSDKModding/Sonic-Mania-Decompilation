@@ -5,11 +5,16 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "GHZCutsceneK.h"
+#include "GHZCutsceneST.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Cutscene/CutsceneSeq.h"
+#include "Global/Camera.h"
+#include "Global/Player.h"
 
 // This Object is COMPLETELY unused, knux uses GHZCutsceneST anyways, so it's no surprise that its not finished either
 
-ObjectGHZCutsceneK *GHZCutsceneK;
+ObjectGHZCutsceneK *GHZCutsceneK = NULL;
 
 void GHZCutsceneK_Update(void)
 {

@@ -1,7 +1,7 @@
 #ifndef OBJ_TORNADO_H
 #define OBJ_TORNADO_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     TORNADO_MODE_IDLE,
@@ -11,17 +11,17 @@ typedef enum {
 } TornadoCollideModes;
 
 // Object Class
-struct ObjectTornado {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 flameOffsets[5], { -0x20000, -0x10000, 0, 0x10000, 0x20000 });
     uint16 aniFrames;
     uint16 knuxFrames;
     uint16 sfxExplosion;
     uint16 sfxImpact;
-};
+} ObjectTornado;
 
 // Entity Class
-struct EntityTornado {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 collideTimer;
@@ -43,7 +43,7 @@ struct EntityTornado {
     Animator animatorPilot;
     Animator animatorFlame;
     Animator animatorKnux;
-};
+} EntityTornado;
 
 // Object Struct
 extern ObjectTornado *Tornado;

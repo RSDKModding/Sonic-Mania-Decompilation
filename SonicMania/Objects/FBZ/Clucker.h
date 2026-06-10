@@ -1,10 +1,10 @@
 #ifndef OBJ_CLUCKER_H
 #define OBJ_CLUCKER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectClucker {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxRange;
@@ -12,10 +12,10 @@ struct ObjectClucker {
     Hitbox hitboxEgg;
     uint16 aniFrames;
     uint16 sfxShot;
-};
+} ObjectClucker;
 
 // Entity Class
-struct EntityClucker {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 yOffset;
@@ -24,7 +24,7 @@ struct EntityClucker {
     uint16 delay;
     bool32 hasParent;
     Animator animator;
-};
+} EntityClucker;
 
 // Object Struct
 extern ObjectClucker *Clucker;

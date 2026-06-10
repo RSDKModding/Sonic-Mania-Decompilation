@@ -5,7 +5,7 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PlayerHelpers.h"
 
 ObjectPlayerHelpers *PlayerHelpers = NULL;
 

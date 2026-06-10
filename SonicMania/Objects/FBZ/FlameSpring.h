@@ -1,7 +1,7 @@
 #ifndef OBJ_FLAMESPRING_H
 #define OBJ_FLAMESPRING_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     FLAMESPRING_BOTH,
@@ -23,17 +23,17 @@ typedef enum {
 } FlameSpringPAniTypes;
 
 // Object Class
-struct ObjectFlameSpring {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxSpring;
     Hitbox hitboxFlame;
     uint16 sfxSpring;
     uint16 sfxFlame;
-};
+} ObjectFlameSpring;
 
 // Entity Class
-struct EntityFlameSpring {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -47,7 +47,7 @@ struct EntityFlameSpring {
     uint8 timer;
     Animator mainAnimator;
     Animator nozzleAnimator;
-};
+} EntityFlameSpring;
 
 // Object Struct
 extern ObjectFlameSpring *FlameSpring;

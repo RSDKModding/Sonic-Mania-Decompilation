@@ -1,7 +1,7 @@
 #ifndef OBJ_SSZSPOTLIGHT_H
 #define OBJ_SSZSPOTLIGHT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     SSZSPOTLIGHT_CLR_CYAN,
@@ -21,7 +21,7 @@ typedef enum {
 } SSZSpotlightDrawFlags;
 
 // Object Class
-struct ObjectSSZSpotlight {
+typedef struct {
     RSDK_OBJECT
     TABLE(color cyanSpotlightColors[8], { 0x000020, 0x000020, 0x40D080, 0x40D080, 0x40D080, 0x40D080, 0x000020, 0x000020 });
     TABLE(color pinkSpotlightColors[8], { 0x000020, 0x000020, 0xE850D8, 0xE850D8, 0xE850D8, 0xE850D8, 0x000020, 0x000020 });
@@ -30,10 +30,10 @@ struct ObjectSSZSpotlight {
     TABLE(color yellowSpotlightColors[8], { 0x000020, 0x000020, 0xD0B018, 0xD0B018, 0xD0B018, 0xD0B018, 0x000020, 0x000020 });
 #endif
     uint16 aniFrames;
-};
+} ObjectSSZSpotlight;
 
 // Entity Class
-struct EntitySSZSpotlight {
+typedef struct {
     RSDK_ENTITY
     uint8 color;
     uint8 size;
@@ -46,7 +46,7 @@ struct EntitySSZSpotlight {
     Vector2 drawVertices[8];
     color *colorTable;
     Animator animator;
-};
+} EntitySSZSpotlight;
 
 // Object Struct
 extern ObjectSSZSpotlight *SSZSpotlight;

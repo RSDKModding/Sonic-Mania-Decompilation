@@ -1,20 +1,21 @@
 #ifndef OBJ_KINGCLAW_H
 #define OBJ_KINGCLAW_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "HPZEmerald.h"
 
 #define KINGCLAW_CHAIN_COUNT (12)
 
 // Object Class
-struct ObjectKingClaw {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxClack;
     uint16 sfxWalkerLegs;
-};
+} ObjectKingClaw;
 
 // Entity Class
-struct EntityKingClaw {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -27,7 +28,7 @@ struct EntityKingClaw {
     Animator hingeAnimator;
     Animator clawBackAnimator;
     Animator clawFrontAnimator;
-};
+} EntityKingClaw;
 
 // Object Struct
 extern ObjectKingClaw *KingClaw;

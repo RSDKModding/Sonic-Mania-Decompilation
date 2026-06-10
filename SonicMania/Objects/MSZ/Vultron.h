@@ -1,7 +1,7 @@
 #ifndef OBJ_VULTRON_H
 #define OBJ_VULTRON_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     VULTRON_DIVE,
@@ -9,15 +9,15 @@ typedef enum {
 } VultronTypes;
 
 // Object Class
-struct ObjectVultron {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxRange;
     uint16 aniFrames;
     uint16 sfxVultron;
-};
+} ObjectVultron;
 
 // Entity Class
-struct EntityVultron {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -29,7 +29,7 @@ struct EntityVultron {
     Hitbox hitboxBadnik;
     Animator bodyAnimator;
     Animator flameAnimator;
-};
+} EntityVultron;
 
 // Object Struct
 extern ObjectVultron *Vultron;

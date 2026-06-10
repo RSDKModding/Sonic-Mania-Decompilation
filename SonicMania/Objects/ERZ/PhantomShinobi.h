@@ -1,19 +1,19 @@
 #ifndef OBJ_PHANTOMSHINOBI_H
 #define OBJ_PHANTOMSHINOBI_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectPhantomShinobi {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
     uint16 sfxBlade;
     uint16 sfxHit;
-};
+} ObjectPhantomShinobi;
 
 // Entity Class
-struct EntityPhantomShinobi {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -31,7 +31,7 @@ struct EntityPhantomShinobi {
     Animator bodyAnimator;
     Animator armAnimator;
     Animator finAnimator;
-};
+} EntityPhantomShinobi;
 
 // Object Struct
 extern ObjectPhantomShinobi *PhantomShinobi;

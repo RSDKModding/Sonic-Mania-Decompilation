@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Camera.h"
+#include "Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
+#include "Helpers/MathHelpers.h"
 
-ObjectCamera *Camera;
+ObjectCamera *Camera = NULL;
 
 void Camera_Update(void) {}
 

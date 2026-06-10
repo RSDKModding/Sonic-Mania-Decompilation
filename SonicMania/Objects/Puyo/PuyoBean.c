@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PuyoBean.h"
+#include "PuyoGame.h"
+#include "Global/Debris.h"
+#include "Global/Zone.h"
 
-ObjectPuyoBean *PuyoBean;
+ObjectPuyoBean *PuyoBean = NULL;
 
 void PuyoBean_Update(void)
 {

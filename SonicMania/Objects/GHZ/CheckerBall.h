@@ -1,10 +1,10 @@
 #ifndef OBJ_CHECKERBALL_H
 #define OBJ_CHECKERBALL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectCheckerBall {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBall;
     Hitbox innerBox;
@@ -12,10 +12,10 @@ struct ObjectCheckerBall {
     uint8 heightArray[24];
     uint8 unusedArray[24];
     uint16 aniFrames;
-};
+} ObjectCheckerBall;
 
 // Entity Class
-struct EntityCheckerBall {
+typedef struct {
     RSDK_ENTITY
     bool32 playerControlled;
     int32 angleVel;
@@ -24,7 +24,7 @@ struct EntityCheckerBall {
     Vector2 collisionOffset;
     uint8 activePlayers;
     Animator animator;
-};
+} EntityCheckerBall;
 
 // Object Struct
 extern ObjectCheckerBall *CheckerBall;

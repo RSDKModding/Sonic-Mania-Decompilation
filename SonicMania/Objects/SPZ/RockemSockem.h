@@ -1,21 +1,21 @@
 #ifndef OBJ_ROCKEMSOCKEM_H
 #define OBJ_ROCKEMSOCKEM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Extras
 #define ROCKEMSOCKEM_COIL_COUNT (6)
 
 // Object Class
-struct ObjectRockemSockem {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
     uint16 sfxRockemSockem;
-};
+} ObjectRockemSockem;
 
 // Entity Class
-struct EntityRockemSockem {
+typedef struct {
     RSDK_ENTITY
     int32 bounceTimer;
     int32 reboundTimer;
@@ -29,7 +29,7 @@ struct EntityRockemSockem {
     Animator baseAnimator;
     Animator jointAnimator;
     Animator ballAnimator;
-};
+} EntityRockemSockem;
 
 // Object Struct
 extern ObjectRockemSockem *RockemSockem;

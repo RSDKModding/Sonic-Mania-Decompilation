@@ -1,20 +1,20 @@
 #ifndef OBJ_OCTUS_H
 #define OBJ_OCTUS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectOctus {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxProjectile;
     Hitbox hitboxRange;
     uint16 aniFrames;
     uint16 sfxShot;
-};
+} ObjectOctus;
 
 // Entity Class
-struct EntityOctus {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -23,7 +23,7 @@ struct EntityOctus {
     uint8 startDir;
     int32 unused2;
     Animator animator;
-};
+} EntityOctus;
 
 // Object Struct
 extern ObjectOctus *Octus;

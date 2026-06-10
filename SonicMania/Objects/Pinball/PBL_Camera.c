@@ -5,10 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PBL_Camera.h"
 
 #if MANIA_USE_PLUS
-ObjectPBL_Camera *PBL_Camera;
+#include "PBL_Setup.h"
+
+ObjectPBL_Camera *PBL_Camera = NULL;
 
 void PBL_Camera_Update(void) {}
 

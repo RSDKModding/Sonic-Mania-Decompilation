@@ -1,13 +1,13 @@
 #ifndef OBJ_BSS_SETUP_H
 #define OBJ_BSS_SETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define BSS_PLAYFIELD_W (0x20)
 #define BSS_PLAYFIELD_H (0x20)
 
 // Object Class
-struct ObjectBSS_Setup {
+typedef struct {
     RSDK_OBJECT
     uint8 randomNumbers[4]; // used to calculate the map (& colours) for Random BSS mode
     int32 sphereCount;
@@ -68,10 +68,10 @@ struct ObjectBSS_Setup {
     uint16 sfxMedal;
     uint16 sfxMedalCaught;
     uint16 sfxTeleport;
-};
+} ObjectBSS_Setup;
 
 // Entity Class
-struct EntityBSS_Setup {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 spinTimer;
@@ -101,7 +101,7 @@ struct EntityBSS_Setup {
     int32 stopMovement;
     Animator globeSpinAnimator;
     Animator shadowAnimator;
-};
+} EntityBSS_Setup;
 
 // Object Struct
 extern ObjectBSS_Setup *BSS_Setup;

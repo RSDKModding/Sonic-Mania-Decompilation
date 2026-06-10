@@ -5,9 +5,22 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "HeavyGunner.h"
+#include "Common/ParallaxSprite.h"
+#include "Global/Debris.h"
+#include "Global/Explosion.h"
+#include "Global/ImageTrail.h"
+#include "Global/Music.h"
+#include "Global/Player.h"
+#include "Global/Ring.h"
+#include "Global/SignPost.h"
+#include "Global/Soundboard.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectHeavyGunner *HeavyGunner;
+ObjectHeavyGunner *HeavyGunner = NULL;
 
 void HeavyGunner_Update(void)
 {

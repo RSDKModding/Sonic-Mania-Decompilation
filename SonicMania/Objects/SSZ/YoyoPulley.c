@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "YoyoPulley.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectYoyoPulley *YoyoPulley;
+ObjectYoyoPulley *YoyoPulley = NULL;
 
 void YoyoPulley_Update(void)
 {

@@ -1,19 +1,19 @@
 #ifndef OBJ_SCHRODINGERSCAPSULE_H
 #define OBJ_SCHRODINGERSCAPSULE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 // Object Class
-struct ObjectSchrodingersCapsule {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxExplosion2;
     uint16 sfxExplosion3;
-};
+} ObjectSchrodingersCapsule;
 
 // Entity Class
-struct EntitySchrodingersCapsule {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -29,7 +29,7 @@ struct EntitySchrodingersCapsule {
     Animator buttonAnimator;
     Animator mightyAnimator;
     Animator rayAnimator;
-};
+} EntitySchrodingersCapsule;
 
 // Object Struct
 extern ObjectSchrodingersCapsule *SchrodingersCapsule;

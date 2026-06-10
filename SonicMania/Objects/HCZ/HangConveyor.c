@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "HangConveyor.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#include "Helpers/MathHelpers.h"
 
-ObjectHangConveyor *HangConveyor;
+ObjectHangConveyor *HangConveyor = NULL;
 
 void HangConveyor_Update(void)
 {

@@ -1,12 +1,14 @@
 #ifndef OBJ_PAUSEMENU_H
 #define OBJ_PAUSEMENU_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Menu/UIButton.h"
+#include "Menu/UIControl.h"
 
 #define PAUSEMENU_BUTTON_COUNT (3)
 
 // Object Class
-struct ObjectPauseMenu {
+typedef struct {
     RSDK_OBJECT
     uint16 sfxBleep;
     uint16 sfxAccept;
@@ -21,10 +23,10 @@ struct ObjectPauseMenu {
 #if MANIA_USE_PLUS
     uint16 tintLookupTable[0x10000];
 #endif
-};
+} ObjectPauseMenu;
 
 // Entity Class
-struct EntityPauseMenu {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -47,7 +49,7 @@ struct EntityPauseMenu {
     void (*fadeoutCB)(void);
     int32 unused1;
     int32 unused2; // these may possibly be leftover or editor things
-};
+} EntityPauseMenu;
 
 // Object Struct
 extern ObjectPauseMenu *PauseMenu;

@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Dragonfly.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectDragonfly *Dragonfly;
+ObjectDragonfly *Dragonfly = NULL;
 
 void Dragonfly_Update(void)
 {

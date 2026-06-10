@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TwistedTubes.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectTwistedTubes *TwistedTubes;
+ObjectTwistedTubes *TwistedTubes = NULL;
 
 void TwistedTubes_Update(void)
 {

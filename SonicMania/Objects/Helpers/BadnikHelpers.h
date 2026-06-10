@@ -1,17 +1,17 @@
 #ifndef OBJ_BADNIKHELPERS_H
 #define OBJ_BADNIKHELPERS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectBadnikHelpers {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectBadnikHelpers;
 
 // Entity Class
-struct EntityBadnikHelpers {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityBadnikHelpers;
 
 // Object Entity
 extern ObjectBadnikHelpers *BadnikHelpers;

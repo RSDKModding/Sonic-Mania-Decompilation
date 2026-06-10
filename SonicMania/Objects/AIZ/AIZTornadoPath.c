@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "AIZTornadoPath.h"
+#include "AIZTornado.h"
+#include "Global/Camera.h"
+#include "Global/Player.h"
+#include "Global/StarPost.h"
+#include "Global/Zone.h"
 
-ObjectAIZTornadoPath *AIZTornadoPath;
+ObjectAIZTornadoPath *AIZTornadoPath = NULL;
 
 void AIZTornadoPath_Update(void)
 {

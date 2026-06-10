@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "FlowerPod.h"
+#include "Beanstalk.h"
+#include "Global/Explosion.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectFlowerPod *FlowerPod;
+ObjectFlowerPod *FlowerPod = NULL;
 
 void FlowerPod_Update(void)
 {

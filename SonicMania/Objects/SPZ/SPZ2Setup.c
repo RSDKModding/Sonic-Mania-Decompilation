@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SPZ2Setup.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Global/Animals.h"
+#include "Global/Zone.h"
 
-ObjectSPZ2Setup *SPZ2Setup;
+ObjectSPZ2Setup *SPZ2Setup = NULL;
 
 void SPZ2Setup_Update(void)
 {

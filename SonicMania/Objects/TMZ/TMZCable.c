@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TMZCable.h"
+#include "ERZ/PhantomEgg.h"
+#include "Global/Debris.h"
+#include "Global/Explosion.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectTMZCable *TMZCable;
+ObjectTMZCable *TMZCable = NULL;
 
 void TMZCable_Update(void)
 {

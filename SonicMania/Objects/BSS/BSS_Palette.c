@@ -5,9 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "BSS_Palette.h"
 
-ObjectBSS_Palette *BSS_Palette;
+ObjectBSS_Palette *BSS_Palette = NULL;
 
 void BSS_Palette_Update(void) {}
 

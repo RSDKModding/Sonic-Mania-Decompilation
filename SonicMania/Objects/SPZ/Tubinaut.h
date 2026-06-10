@@ -1,12 +1,13 @@
 #ifndef OBJ_TUBINAUT_H
 #define OBJ_TUBINAUT_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 #define TUBINAUT_ORB_COUNT (3)
 
 // Object Class
-struct ObjectTubinaut {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxFace;
     Hitbox hitboxOrb;
@@ -14,10 +15,10 @@ struct ObjectTubinaut {
     uint16 aniFrames;
     uint16 sfxPowerdown;
     uint16 sfxRepel;
-};
+} ObjectTubinaut;
 
 // Entity Class
-struct EntityTubinaut {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(orbState);
@@ -36,7 +37,7 @@ struct EntityTubinaut {
     int32 timer;
     uint16 distanceRemain;
     uint16 distance;
-};
+} EntityTubinaut;
 
 // Object Struct
 extern ObjectTubinaut *Tubinaut;

@@ -1,24 +1,24 @@
 #ifndef OBJ_FERNPARALLAX_H
 #define OBJ_FERNPARALLAX_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 // Object Class
-struct ObjectFernParallax {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     EntityBase entityBuffer[2];
-};
+} ObjectFernParallax;
 
 // Entity Class
-struct EntityFernParallax {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state); // unused
     Animator animator;
     uint8 aniID;
     Vector2 parallaxFactor;
-};
+} EntityFernParallax;
 
 // Object Struct
 extern ObjectFernParallax *FernParallax;

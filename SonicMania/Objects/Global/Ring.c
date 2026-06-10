@@ -5,9 +5,20 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Ring.h"
+#include "DebugMode.h"
+#include "Spikes.h"
+#include "Zone.h"
+#include "FBZ/BigSqueeze.h"
+#include "GHZ/Bridge.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
+#include "MMZ/SpikeCorridor.h"
+#include "PGZ/Crate.h"
+#include "PGZ/Ice.h"
 
-ObjectRing *Ring;
+ObjectRing *Ring = NULL;
 
 void Ring_Update(void)
 {

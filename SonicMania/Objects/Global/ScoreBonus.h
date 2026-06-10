@@ -1,20 +1,20 @@
 #ifndef OBJ_SCOREBONUS_H
 #define OBJ_SCOREBONUS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectScoreBonus {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectScoreBonus;
 
 // Entity Class
-struct EntityScoreBonus {
+typedef struct {
     RSDK_ENTITY
     int32 timer;
     Animator animator;
-};
+} EntityScoreBonus;
 
 // Object Struct
 extern ObjectScoreBonus *ScoreBonus;

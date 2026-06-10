@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Projectile.h"
+#include "Global/Player.h"
+#include "Global/Shield.h"
 
-ObjectProjectile *Projectile;
+ObjectProjectile *Projectile = NULL;
 
 void Projectile_Update(void)
 {

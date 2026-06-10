@@ -1,18 +1,18 @@
 #ifndef OBJ_EGGLOCO_H
 #define OBJ_EGGLOCO_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectEggLoco {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxSmoke;
     uint16 sfxWhistle;
-};
+} ObjectEggLoco;
 
 // Entity Class
-struct EntityEggLoco {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -33,7 +33,7 @@ struct EntityEggLoco {
     Animator lanternAnimator;
     Animator pistonRodAnimator;
     Animator whistleCableAnimator;
-};
+} EntityEggLoco;
 
 // Object Struct
 extern ObjectEggLoco *EggLoco;

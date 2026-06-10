@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TimeAttackData.h"
+#include "LogHelpers.h"
+#include "Global/APICallback.h"
+#include "Global/Zone.h"
+#include "Menu/MenuParam.h"
 
-ObjectTimeAttackData *TimeAttackData;
+ObjectTimeAttackData *TimeAttackData = NULL;
 
 #if MANIA_USE_PLUS
 static const char *playerNames[] = { "Invalid", "Sonic", "Tails", "Knuckles", "Mighty", "Ray" };

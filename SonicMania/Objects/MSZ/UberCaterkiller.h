@@ -1,12 +1,12 @@
 #ifndef OBJ_UBERCATERKILLER_H
 #define OBJ_UBERCATERKILLER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define UBERCATERKILLER_SEGMENT_COUNT (10)
 
 // Object Class
-struct ObjectUberCaterkiller {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxSegment;
     bool32 defeated;
@@ -18,10 +18,10 @@ struct ObjectUberCaterkiller {
     uint16 sfxBumper3;
     uint16 sfxCaterJump;
     uint16 aniFrames;
-};
+} ObjectUberCaterkiller;
 
 // Entity Class
-struct EntityUberCaterkiller {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -41,7 +41,7 @@ struct EntityUberCaterkiller {
     uint8 playerTimers[PLAYER_COUNT];
     Animator headAnimator;
     Animator bodyAnimator;
-};
+} EntityUberCaterkiller;
 
 // Object Struct
 extern ObjectUberCaterkiller *UberCaterkiller;

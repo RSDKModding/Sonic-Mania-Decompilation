@@ -1,17 +1,17 @@
 #ifndef OBJ_PROPELLER_H
 #define OBJ_PROPELLER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectPropeller {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxFan;
-};
+} ObjectPropeller;
 
 // Entity Class
-struct EntityPropeller {
+typedef struct {
     RSDK_ENTITY
     Hitbox hitboxPlayer;
     Hitbox hitboxFan;
@@ -19,7 +19,7 @@ struct EntityPropeller {
     bool32 fanEnabled;
     uint8 activePlayers;
     Animator animator;
-};
+} EntityPropeller;
 
 // Object Struct
 extern ObjectPropeller *Propeller;

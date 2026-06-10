@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "LRZ3Cutscene.h"
+#include "Global/TitleCard.h"
 
-ObjectLRZ3Cutscene *LRZ3Cutscene;
+ObjectLRZ3Cutscene *LRZ3Cutscene = NULL;
 
 // INFO: This is the LRZ3 Intro
 

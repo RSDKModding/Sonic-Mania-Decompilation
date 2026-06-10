@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "GreenScreen.h"
+#include "Global/Zone.h"
 
-ObjectGreenScreen *GreenScreen;
+ObjectGreenScreen *GreenScreen = NULL;
 
 void GreenScreen_Update(void) {}
 

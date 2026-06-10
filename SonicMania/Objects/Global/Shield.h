@@ -1,7 +1,8 @@
 #ifndef OBJ_SHIELD_H
 #define OBJ_SHIELD_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Player.h"
 
 typedef enum {
     SHIELDANI_BLUE,
@@ -18,7 +19,7 @@ typedef enum {
 } ShieldAniIDs;
 
 // Object Class
-struct ObjectShield {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxBlueShield;
@@ -29,10 +30,10 @@ struct ObjectShield {
     uint16 sfxBubbleBounce;
     uint16 sfxFireDash;
     uint16 sfxLightningJump;
-};
+} ObjectShield;
 
 // Entity Class
-struct EntityShield {
+typedef struct {
     RSDK_ENTITY
     EntityPlayer *player;
     StateMachine(state);
@@ -42,7 +43,7 @@ struct EntityShield {
     bool32 forceVisible;
     Animator shieldAnimator;
     Animator fxAnimator;
-};
+} EntityShield;
 
 // Object Struct
 extern ObjectShield *Shield;

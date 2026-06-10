@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIVsCharSelector.h"
+#include "UICharButton.h"
+#include "UIControl.h"
+#include "UIWidgets.h"
+#include "Global/Announcer.h"
+#include "Global/APICallback.h"
 
-ObjectUIVsCharSelector *UIVsCharSelector;
+ObjectUIVsCharSelector *UIVsCharSelector = NULL;
 
 void UIVsCharSelector_Update(void)
 {
@@ -286,7 +291,7 @@ void UIVsCharSelector_ProcessButtonCB(void)
         else
             pressed = ControllerInfo[CONT_P1 + self->playerID].keyA.press;
 #else
-    pressed = UIControl->confirmPress[self->playerID];
+        pressed = UIControl->confirmPress[self->playerID];
 #endif
 
         if (pressed) {
@@ -324,7 +329,7 @@ void UIVsCharSelector_ProcessButtonCB_CharSelected(void)
         else
             pressed = ControllerInfo[CONT_P1 + self->playerID].keyA.press;
 #else
-    pressed = UIControl->backPress[self->playerID];
+        pressed = UIControl->backPress[self->playerID];
 #endif
 
         if (pressed) {

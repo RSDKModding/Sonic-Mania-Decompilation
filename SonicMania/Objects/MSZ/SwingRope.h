@@ -1,18 +1,18 @@
 #ifndef OBJ_SWINGROPE_H
 #define OBJ_SWINGROPE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectSwingRope {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxGrabHandle;
     Hitbox hitboxHandle;
     uint16 aniFrames;
-};
+} ObjectSwingRope;
 
 // Entity Class
-struct EntitySwingRope {
+typedef struct {
     RSDK_ENTITY
     uint8 ropeSize;
     int32 ropeGrabDelay;
@@ -25,7 +25,7 @@ struct EntitySwingRope {
     Animator ropeAnimator;
     Animator handleAnimator;
     Animator pivotAnimator;
-};
+} EntitySwingRope;
 
 // Object Struct
 extern ObjectSwingRope *SwingRope;

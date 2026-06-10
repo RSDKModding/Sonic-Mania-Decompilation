@@ -1,10 +1,10 @@
 #ifndef OBJ_ELECTROMAGNET_H
 #define OBJ_ELECTROMAGNET_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectElectroMagnet {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxPlayer;
@@ -12,10 +12,10 @@ struct ObjectElectroMagnet {
     uint8 magnetSfxTimer;
     bool32 playingMagnetSfx;
     uint16 sfxMagnet;
-};
+} ObjectElectroMagnet;
 
 // Entity Class
-struct EntityElectroMagnet {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Animator animator;
@@ -28,7 +28,7 @@ struct EntityElectroMagnet {
     bool32 invisible;
     Hitbox hitboxMagnetRange;
     Hitbox hitboxShieldRange;
-};
+} EntityElectroMagnet;
 
 // Object Struct
 extern ObjectElectroMagnet *ElectroMagnet;

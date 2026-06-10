@@ -1,7 +1,7 @@
 #ifndef OBJ_PBL_CRANE_H
 #define OBJ_PBL_CRANE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 
@@ -40,7 +40,7 @@ typedef enum {
 } PBL_CranePrizeIDs;
 
 // Object Class
-struct ObjectPBL_Crane {
+typedef struct {
     RSDK_OBJECT
     int32 prizeID;
     uint16 aniFrames;
@@ -51,9 +51,10 @@ struct ObjectPBL_Crane {
     uint16 sfxCraneRise;
     uint16 sfxPrizeGood;
     uint16 sfxPrizeBad;
-};
+} ObjectPBL_Crane;
 
 // Entity Class
+typedef struct EntityPBL_Crane EntityPBL_Crane;
 struct EntityPBL_Crane {
     RSDK_ENTITY
     StateMachine(state);

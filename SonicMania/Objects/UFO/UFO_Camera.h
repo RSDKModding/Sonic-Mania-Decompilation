@@ -1,19 +1,19 @@
 #ifndef OBJ_UFO_CAMERA_H
 #define OBJ_UFO_CAMERA_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectUFO_Camera {
+typedef struct {
     RSDK_OBJECT
     Matrix matWorld;
     Matrix matView;
     Matrix matTemp;
     bool32 isSS7;
-};
+} ObjectUFO_Camera;
 
 // Entity Class
-struct EntityUFO_Camera {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 unused1;
@@ -25,7 +25,7 @@ struct EntityUFO_Camera {
     Entity *target;
     Matrix matWorld;
     Matrix matView;
-};
+} EntityUFO_Camera;
 
 // Object Struct
 extern ObjectUFO_Camera *UFO_Camera;

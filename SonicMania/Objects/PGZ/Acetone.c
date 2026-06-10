@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Acetone.h"
+#include "Ink.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectAcetone *Acetone;
+ObjectAcetone *Acetone = NULL;
 
 // This object goes completely unused in regular gameplay
 // afterall, so does the entire PGZ1 ink gimmick

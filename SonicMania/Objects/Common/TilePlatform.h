@@ -1,17 +1,17 @@
 #ifndef OBJ_TILEPLATFORM_H
 #define OBJ_TILEPLATFORM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectTilePlatform {
+typedef struct {
     RSDK_OBJECT
     Animator animator;
     uint16 aniFrames;
-};
+} ObjectTilePlatform;
 
 // Entity Class
-struct EntityTilePlatform {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateCollide);
@@ -36,7 +36,7 @@ struct EntityTilePlatform {
     int32 childCount;
     Vector2 size;
     uint16 tiles[0x100];
-};
+} EntityTilePlatform;
 
 // Object Struct
 extern ObjectTilePlatform *TilePlatform;

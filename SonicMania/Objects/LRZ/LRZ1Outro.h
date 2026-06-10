@@ -1,19 +1,21 @@
 #ifndef OBJ_LRZ1OUTRO_H
 #define OBJ_LRZ1OUTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "DashLift.h"
+#include "Cutscene/CutsceneSeq.h"
 
 // Object Class
-struct ObjectLRZ1Outro {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectLRZ1Outro;
 
 // Entity Class
-struct EntityLRZ1Outro {
+typedef struct {
     RSDK_ENTITY
     EntityDashLift *lift;
     int32 timer;
-};
+} EntityLRZ1Outro;
 
 // Object Struct
 extern ObjectLRZ1Outro *LRZ1Outro;

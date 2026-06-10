@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "BSS_Player.h"
+#include "BSS_Setup.h"
+#include "Global/PauseMenu.h"
 
-ObjectBSS_Player *BSS_Player;
+ObjectBSS_Player *BSS_Player = NULL;
 
 void BSS_Player_Update(void)
 {

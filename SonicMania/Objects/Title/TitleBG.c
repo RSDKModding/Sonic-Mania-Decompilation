@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TitleBG.h"
+#include "Title3DSprite.h"
 
-ObjectTitleBG *TitleBG;
+ObjectTitleBG *TitleBG = NULL;
 
 void TitleBG_Update(void)
 {

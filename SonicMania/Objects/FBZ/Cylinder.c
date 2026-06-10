@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Cylinder.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectCylinder *Cylinder;
+ObjectCylinder *Cylinder = NULL;
 
 void Cylinder_Update(void)
 {

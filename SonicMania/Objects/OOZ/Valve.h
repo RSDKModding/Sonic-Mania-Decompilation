@@ -1,22 +1,22 @@
 #ifndef OBJ_VALVE_H
 #define OBJ_VALVE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectValve {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
     uint16 sfxClick;
-};
+} ObjectValve;
 
 // Entity Class
-struct EntityValve {
+typedef struct {
     RSDK_ENTITY
     Animator valveAnimator;
     Animator wheelAnimator;
-};
+} EntityValve;
 
 // Object Struct
 extern ObjectValve *Valve;

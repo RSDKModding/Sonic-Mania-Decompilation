@@ -5,9 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Flamethrower.h"
+#include "HeavyRider.h"
+#include "Global/PauseMenu.h"
+#include "Global/Player.h"
+#include "Global/Shield.h"
+#include "Global/Zone.h"
+#include "Helpers/MathHelpers.h"
 
-ObjectFlamethrower *Flamethrower;
+ObjectFlamethrower *Flamethrower = NULL;
 
 void Flamethrower_Update(void)
 {

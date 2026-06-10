@@ -5,9 +5,25 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PSZ1Setup.h"
+#include "Crate.h"
+#include "PetalPile.h"
+#include "PrintBlock.h"
+#include "Common/BGSwitch.h"
+#include "Common/GenericTrigger.h"
+#include "Common/Platform.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Global/Animals.h"
+#include "Global/APICallback.h"
+#include "Global/BoundsMarker.h"
+#include "Global/Player.h"
+#include "Global/SaveGame.h"
+#include "Global/StarPost.h"
+#include "Global/Zone.h"
+#include "Helpers/GameProgress.h"
+#include "Helpers/MathHelpers.h"
 
-ObjectPSZ1Setup *PSZ1Setup;
+ObjectPSZ1Setup *PSZ1Setup = NULL;
 
 void PSZ1Setup_Update(void) {}
 

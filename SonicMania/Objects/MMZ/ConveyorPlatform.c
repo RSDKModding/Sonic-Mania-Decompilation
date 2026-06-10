@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ConveyorPlatform.h"
+#include "Common/Platform.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectConveyorPlatform *ConveyorPlatform;
+ObjectConveyorPlatform *ConveyorPlatform = NULL;
 
 void ConveyorPlatform_Update(void)
 {

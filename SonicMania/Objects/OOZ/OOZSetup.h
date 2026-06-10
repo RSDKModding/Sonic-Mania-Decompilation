@@ -1,7 +1,7 @@
 #ifndef OBJ_OOZSETUP_H
 #define OBJ_OOZSETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { OOZ_WARPDOOR_EFFECT_TO_SUB = 1, OOZ_WARPDOOR_EFFECT_FROM_SUB = 2 } OOZWarpDoorEffects;
 typedef enum { OOZSETUP_FLAMES, OOZSETUP_FADE } OOZSetupTypes;
@@ -11,7 +11,7 @@ typedef enum { OOZ_TFLAGS_NORMAL, OOZ_TFLAGS_OILPOOL, OOZ_TFLAGS_OILSTRIP, OOZ_T
 typedef enum { OOZ_GENERICTRIGGER_ACHIEVEMENT } GenericTriggerTypesOOZ;
 
 // Object Class
-struct ObjectOOZSetup {
+typedef struct {
     RSDK_OBJECT
     int32 palTimer;
     uint16 aniTiles;
@@ -41,13 +41,13 @@ struct ObjectOOZSetup {
 #endif
     bool32 hasAchievement;
     Entity *cutscenePtr;
-};
+} ObjectOOZSetup;
 
 // Entity Class
-struct EntityOOZSetup {
+typedef struct {
     RSDK_ENTITY
     uint8 type;
-};
+} EntityOOZSetup;
 
 // Object Struct
 extern ObjectOOZSetup *OOZSetup;

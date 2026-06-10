@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Clapperboard.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectClapperboard *Clapperboard;
+ObjectClapperboard *Clapperboard = NULL;
 
 void Clapperboard_Update(void)
 {

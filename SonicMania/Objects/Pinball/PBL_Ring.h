@@ -1,20 +1,20 @@
 #ifndef OBJ_PBL_RING_H
 #define OBJ_PBL_RING_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 // Object Class
-struct ObjectPBL_Ring {
+typedef struct {
     RSDK_OBJECT
     int32 unused1;
     int32 unused2;
     uint16 aniFrames;
     uint16 sfxRing;
-};
+} ObjectPBL_Ring;
 
 // Entity Class
-struct EntityPBL_Ring {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 unused1;
@@ -23,7 +23,7 @@ struct EntityPBL_Ring {
     int32 worldX;
     int32 worldY;
     Animator animator;
-};
+} EntityPBL_Ring;
 
 // Object Struct
 extern ObjectPBL_Ring *PBL_Ring;

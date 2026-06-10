@@ -5,9 +5,23 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ERZKing.h"
+#include "ERZGunner.h"
+#include "ERZMystic.h"
+#include "Cutscene/FXRuby.h"
+#include "Global/APICallback.h"
+#include "Global/Explosion.h"
+#include "Global/Music.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#include "Helpers/BadnikHelpers.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
+#include "Helpers/GameProgress.h"
+#include "Helpers/MathHelpers.h"
 
-ObjectERZKing *ERZKing;
+ObjectERZKing *ERZKing = NULL;
 
 void ERZKing_Update(void)
 {

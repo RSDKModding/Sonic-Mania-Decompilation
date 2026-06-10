@@ -102,6 +102,9 @@
     <Filter Include="Sources\Objects\Title">
       <UniqueIdentifier>{8a833ffe-4dbd-4c40-9b83-8e3acafaf9b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\GameAPI">
+      <UniqueIdentifier>{1ae21c83-0700-46bf-a271-bed27db5257e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\Global\ActClear.h">
@@ -1931,17 +1934,17 @@
     <ClInclude Include="Objects\HCZ\Fan.h">
       <Filter>Sources\Objects\HCZ</Filter>
     </ClInclude>
+    <ClInclude Include="..\dependencies\RSDKv5-GameAPI\C\GameAPI\Game.h">
+      <Filter>Sources\GameAPI</Filter>
+    </ClInclude>
     <ClInclude Include="..\dependencies\RSDKv5-GameAPI\C\GameAPI\GameLink.h">
-      <Filter>Sources</Filter>
+      <Filter>Sources\GameAPI</Filter>
     </ClInclude>
     <ClInclude Include="..\dependencies\RSDKv5-GameAPI\C\GameAPI\GameObjects.h">
-      <Filter>Sources</Filter>
+      <Filter>Sources\GameAPI</Filter>
     </ClInclude>
     <ClInclude Include="..\dependencies\RSDKv5-GameAPI\C\GameAPI\GameVariables.h">
-      <Filter>Sources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\dependencies\RSDKv5-GameAPI\C\GameAPI\Game.h">
-      <Filter>Sources</Filter>
+      <Filter>Sources\GameAPI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -3766,9 +3769,6 @@
     <ClCompile Include="SonicMania.c">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\dependencies\RSDKv5-GameAPI\C\GameAPI\Game.c">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="Objects\Helpers\CompetitionSession.c">
       <Filter>Sources\Objects\Helpers</Filter>
     </ClCompile>
@@ -3780,6 +3780,9 @@
     </ClCompile>
     <ClCompile Include="Objects\HCZ\Jawz.c">
       <Filter>Sources\Objects\HCZ</Filter>
+    </ClCompile>
+    <ClCompile Include="..\dependencies\RSDKv5-GameAPI\C\GameAPI\Game.c">
+      <Filter>Sources\GameAPI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

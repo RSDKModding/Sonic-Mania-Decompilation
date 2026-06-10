@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TMZAlert.h"
+#include "Global/Zone.h"
 
-ObjectTMZAlert *TMZAlert;
+ObjectTMZAlert *TMZAlert = NULL;
 
 void TMZAlert_Update(void)
 {

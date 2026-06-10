@@ -5,9 +5,18 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PSZ2Setup.h"
+#include "PetalPile.h"
+#include "PSZ2Outro.h"
+#include "Common/GenericTrigger.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Cutscene/FXFade.h"
+#include "Global/Animals.h"
+#include "Global/Player.h"
+#include "Global/SaveGame.h"
+#include "Global/Zone.h"
 
-ObjectPSZ2Setup *PSZ2Setup;
+ObjectPSZ2Setup *PSZ2Setup = NULL;
 
 void PSZ2Setup_Update(void) {}
 

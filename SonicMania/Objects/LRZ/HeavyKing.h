@@ -1,10 +1,12 @@
 #ifndef OBJ_HEAVYKING_H
 #define OBJ_HEAVYKING_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "KingClaw.h"
+#include "HPZEmerald.h"
 
 // Object Class
-struct ObjectHeavyKing {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 attackPattern[32], { 0, 0, 1, 0, 2, 2, 1, 0, 0, 1, 1, 2, 0, 2, 0, 0, 2, 1, 1, 2, 1, 0, 1, 0, 2, 2, 0, 1, 0, 0, 2, 1 });
     int32 attackPatternPos;
@@ -29,10 +31,10 @@ struct ObjectHeavyKing {
     uint16 sfxImpact6;
     uint16 aniFrames;
     uint16 cutsceneFrames;
-};
+} ObjectHeavyKing;
 
 // Entity Class
-struct EntityHeavyKing {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateStore);
@@ -50,7 +52,7 @@ struct EntityHeavyKing {
     Animator electricityAnimator;
     Animator storedBodyAnimator;
     Animator storedScepterAnimator;
-};
+} EntityHeavyKing;
 
 // Object Struct
 extern ObjectHeavyKing *HeavyKing;

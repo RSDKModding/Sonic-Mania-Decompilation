@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SPZ1Intro.h"
+#include "Global/PauseMenu.h"
+#include "Global/TitleCard.h"
+#include "Global/Zone.h"
+#include "Cutscene/CutsceneRules.h"
 
-ObjectSPZ1Intro *SPZ1Intro;
+ObjectSPZ1Intro *SPZ1Intro = NULL;
 
 void SPZ1Intro_Update(void)
 {

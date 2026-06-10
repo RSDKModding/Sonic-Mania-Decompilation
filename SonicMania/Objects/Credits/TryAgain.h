@@ -1,16 +1,16 @@
 #ifndef OBJ_TRYAGAIN_H
 #define OBJ_TRYAGAIN_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectTryAgain {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectTryAgain;
 
 // Entity Class
-struct EntityTryAgain {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -24,7 +24,7 @@ struct EntityTryAgain {
     Animator debrisAnimator;
     Animator eggmanAnimator;
     Animator rubyAnimator;
-};
+} EntityTryAgain;
 
 // Object Struct
 extern ObjectTryAgain *TryAgain;

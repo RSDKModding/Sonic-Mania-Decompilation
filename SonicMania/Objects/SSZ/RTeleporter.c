@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "RTeleporter.h"
+#include "Global/Explosion.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#include "Helpers/BadnikHelpers.h"
 
-ObjectRTeleporter *RTeleporter;
+ObjectRTeleporter *RTeleporter = NULL;
 
 void RTeleporter_Update(void)
 {

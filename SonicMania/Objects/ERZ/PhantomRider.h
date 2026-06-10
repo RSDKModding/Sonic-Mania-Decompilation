@@ -1,19 +1,20 @@
 #ifndef OBJ_PHANTOMRIDER_H
 #define OBJ_PHANTOMRIDER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { PHANTOMRIDER_JIMMY = 3 } PhantomRiderTypes;
 
 // Object Class
-struct ObjectPhantomRider {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxRiderLaunch;
     uint16 unused;
-};
+} ObjectPhantomRider;
 
 // Entity Class
+typedef struct EntityPhantomRider EntityPhantomRider;
 struct EntityPhantomRider {
     RSDK_ENTITY
     StateMachine(state);

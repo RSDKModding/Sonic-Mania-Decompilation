@@ -1,12 +1,12 @@
 #ifndef OBJ_CHEMICALBALL_H
 #define OBJ_CHEMICALBALL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { CHEMICALBALL_ARC, CHEMICALBALL_VERTICAL } ChemicalBallTypes;
 
 // Object Class
-struct ObjectChemicalBall {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBall;
     TABLE(int32 arcOffsets[196],
@@ -39,10 +39,10 @@ struct ObjectChemicalBall {
             -0x220800, -0x22E000, -0x23A000, -0x244800, -0x24D800, -0x255000, -0x25B000, -0x25F800, -0x262800, -0x264000 });
     uint16 aniFrames;
     uint16 sfxBloop;
-};
+} ObjectChemicalBall;
 
 // Entity Class
-struct EntityChemicalBall {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -54,7 +54,7 @@ struct EntityChemicalBall {
     Animator animator;
     int32 unused2;
     bool32 master;
-};
+} EntityChemicalBall;
 
 // Object Struct
 extern ObjectChemicalBall *ChemicalBall;

@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Ink.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectInk *Ink;
+ObjectInk *Ink = NULL;
 
 void Ink_Update(void)
 {

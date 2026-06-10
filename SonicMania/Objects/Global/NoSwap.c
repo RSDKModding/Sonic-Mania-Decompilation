@@ -5,10 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "NoSwap.h"
+#include "Player.h"
 
 #if MANIA_USE_PLUS
-ObjectNoSwap *NoSwap;
+ObjectNoSwap *NoSwap = NULL;
 
 void NoSwap_Update(void)
 {

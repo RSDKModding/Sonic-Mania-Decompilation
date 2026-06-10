@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Spikes.h"
+#include "Shield.h"
+#include "Zone.h"
+#include "PGZ/Ice.h"
+#include "PGZ/Press.h"
 
-ObjectSpikes *Spikes;
+ObjectSpikes *Spikes = NULL;
 
 void Spikes_Update(void)
 {

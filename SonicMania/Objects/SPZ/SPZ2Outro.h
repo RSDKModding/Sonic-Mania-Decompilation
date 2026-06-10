@@ -1,22 +1,26 @@
 #ifndef OBJ_SPZ2OUTRO_H
 #define OBJ_SPZ2OUTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "TVFlyingBattery.h"
+#include "WeatherTV.h"
+#include "Cutscene/CutsceneSeq.h"
+#include "Global/EggPrison.h"
 
 // Object Class
-struct ObjectSPZ2Outro {
+typedef struct {
     RSDK_OBJECT
     bool32 ignoreP2;
     int32 unused;
     EntityTVFlyingBattery *tvFlyingBattery;
     EntityWeatherTV *weatherTV;
     EntityEggPrison *prison;
-};
+} ObjectSPZ2Outro;
 
 // Entity Class
-struct EntitySPZ2Outro {
+typedef struct {
     MANIA_CUTSCENE_BASE
-};
+} EntitySPZ2Outro;
 
 // Object Struct
 extern ObjectSPZ2Outro *SPZ2Outro;

@@ -1,7 +1,8 @@
 #ifndef OBJ_DIVEEGGMAN_H
 #define OBJ_DIVEEGGMAN_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "ScrewMobile.h"
 
 typedef enum {
     DIVEEGGMAN_EGGMAN,
@@ -9,7 +10,7 @@ typedef enum {
 } DiveEggmanTypes;
 
 // Object Class
-struct ObjectDiveEggman {
+typedef struct {
     RSDK_OBJECT
     Hitbox unusedHitbox1;
     Hitbox hitboxBomb;
@@ -21,10 +22,10 @@ struct ObjectDiveEggman {
     uint16 sfxHit;
     uint16 sfxExplosion;
     uint16 sfxRockemSockem;
-};
+} ObjectDiveEggman;
 
 // Entity Class
-struct EntityDiveEggman {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 startY;
@@ -32,7 +33,7 @@ struct EntityDiveEggman {
     int32 invincibilityTimer;
     uint8 health;
     Animator animator;
-};
+} EntityDiveEggman;
 
 // Object Struct
 extern ObjectDiveEggman *DiveEggman;

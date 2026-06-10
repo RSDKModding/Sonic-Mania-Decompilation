@@ -1,7 +1,7 @@
 #ifndef OBJ_UICHARBUTTON_H
 #define OBJ_UICHARBUTTON_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     UICHARBUTTON_SONIC,
@@ -14,13 +14,13 @@ typedef enum {
 } UICharButtonCharacterIDs;
 
 // Object Class
-struct ObjectUICharButton {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectUICharButton;
 
 // Entity Class
-struct EntityUICharButton {
+typedef struct {
     MANIA_UI_ITEM_BASE
     uint8 characterID;
     int32 triBounceVelocity;
@@ -32,7 +32,7 @@ struct EntityUICharButton {
     Animator playerAnimator;
     Animator shadowAnimator;
     Animator nameAnimator;
-};
+} EntityUICharButton;
 
 // Object Struct
 extern ObjectUICharButton *UICharButton;

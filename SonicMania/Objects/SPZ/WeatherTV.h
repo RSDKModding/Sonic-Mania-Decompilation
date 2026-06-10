@@ -1,10 +1,11 @@
 #ifndef OBJ_WEATHERTV_H
 #define OBJ_WEATHERTV_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "WeatherMobile.h"
 
 // Object Class
-struct ObjectWeatherTV {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     int32 prevCardAngle;
@@ -15,9 +16,14 @@ struct ObjectWeatherTV {
     bool32 playingTheBuzz;
     bool32 useHighLayer;
     uint8 attackList;
-};
+} ObjectWeatherTV;
 
 // Entity Class
+#ifndef ENTITYDEF_WEATHER
+#define ENTITYDEF_WEATHER
+typedef struct EntityWeatherMobile EntityWeatherMobile;
+typedef struct EntityWeatherTV EntityWeatherTV;
+#endif
 struct EntityWeatherTV {
     RSDK_ENTITY
     StateMachine(state);

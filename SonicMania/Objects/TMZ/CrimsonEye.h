@@ -1,7 +1,7 @@
 #ifndef OBJ_CRIMSONEYE_H
 #define OBJ_CRIMSONEYE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     CRIMSONEYE_CONTAINER,
@@ -19,7 +19,7 @@ typedef enum {
 } CrimsonEyeArrowTypes;
 
 // Object Class
-struct ObjectCrimsonEye {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 debrisInfo[97],
           { 24,       0,  0, -0x28000, -0x28000, 1,  0, -0x14000, -0x28000, 2,  0, 0x14000,  -0x26000, 3,  0, 0x28000,  -0x26000, 4,  0, -0x26000,
@@ -64,10 +64,10 @@ struct ObjectCrimsonEye {
     uint16 sfxImpact;
     TileLayer *liftBackground;
     TileLayer *bg2Layer;
-};
+} ObjectCrimsonEye;
 
 // Entity Class
-struct EntityCrimsonEye {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateEye);
@@ -78,7 +78,7 @@ struct EntityCrimsonEye {
     int32 ballRadiusTimer;
     Vector2 originPos;
     Animator animator;
-};
+} EntityCrimsonEye;
 
 // Object Struct
 extern ObjectCrimsonEye *CrimsonEye;

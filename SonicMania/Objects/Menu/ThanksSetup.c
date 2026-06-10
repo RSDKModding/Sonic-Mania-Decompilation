@@ -5,9 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ThanksSetup.h"
 
-ObjectThanksSetup *ThanksSetup;
+ObjectThanksSetup *ThanksSetup = NULL;
 
 void ThanksSetup_Update(void)
 {

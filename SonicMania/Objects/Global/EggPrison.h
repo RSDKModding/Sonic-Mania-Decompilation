@@ -1,7 +1,7 @@
 #ifndef OBJ_EGGPRISON_H
 #define OBJ_EGGPRISON_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     EGGPRISON_NORMAL,
@@ -13,15 +13,15 @@ typedef enum {
 } EggPrisonTypes;
 
 // Object Class
-struct ObjectEggPrison {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxDestroy;
     uint16 sfxSpring;
-};
+} ObjectEggPrison;
 
 // Entity Class
-struct EntityEggPrison {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     EggPrisonTypes type;
@@ -37,7 +37,7 @@ struct EntityEggPrison {
     Animator propellerAnimator;
     Animator panelAnimator;
     Animator buttonAnimator;
-};
+} EntityEggPrison;
 
 // Object Struct
 extern ObjectEggPrison *EggPrison;

@@ -1,17 +1,17 @@
 #ifndef OBJ_COLORHELPERS_H
 #define OBJ_COLORHELPERS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectColorHelpers {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectColorHelpers;
 
 // Entity Class
-struct EntityColorHelpers {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityColorHelpers;
 
 // Object Entity
 extern ObjectColorHelpers *ColorHelpers;

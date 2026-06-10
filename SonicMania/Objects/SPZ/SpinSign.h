@@ -1,7 +1,7 @@
 #ifndef OBJ_SPINSIGN_H
 #define OBJ_SPINSIGN_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     SPINSIGN_SONIC_H,
@@ -11,15 +11,15 @@ typedef enum {
 } SpinSignTypes;
 
 // Object Class
-struct ObjectSpinSign {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxes[4];
     uint16 sfxSignPost;
-};
+} ObjectSpinSign;
 
 // Entity Class
-struct EntitySpinSign {
+typedef struct {
     RSDK_ENTITY
     StateMachine(stateDraw);
     StateMachine(state);
@@ -28,7 +28,7 @@ struct EntitySpinSign {
     Animator eggmanAnimator;
     Animator frontAnimator;
     Animator sidesAnimator;
-};
+} EntitySpinSign;
 
 // Object Struct
 extern ObjectSpinSign *SpinSign;

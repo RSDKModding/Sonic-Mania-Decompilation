@@ -1,12 +1,13 @@
 #ifndef OBJ_SHIVERSAW_H
 #define OBJ_SHIVERSAW_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 #define SHIVERSAW_SAW_COUNT (2)
 
 // Object Class
-struct ObjectShiversaw {
+typedef struct {
     RSDK_OBJECT
     uint8 health;
     uint8 invincibilityTimer;
@@ -27,10 +28,10 @@ struct ObjectShiversaw {
     uint16 sfxTargeting;
     uint16 sfxRocketJet;
     uint16 sfxExplosion3;
-};
+} ObjectShiversaw;
 
 // Entity Class
-struct EntityShiversaw {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateSaw[SHIVERSAW_SAW_COUNT]);
@@ -54,7 +55,7 @@ struct EntityShiversaw {
     Animator armAnimator;
     Animator spinnerAnimator;
     Animator sawAnimator[SHIVERSAW_SAW_COUNT];
-};
+} EntityShiversaw;
 
 // Object Struct
 extern ObjectShiversaw *Shiversaw;

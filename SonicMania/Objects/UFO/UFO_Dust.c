@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UFO_Dust.h"
+#include "UFO_Camera.h"
 
-ObjectUFO_Dust *UFO_Dust;
+ObjectUFO_Dust *UFO_Dust = NULL;
 
 void UFO_Dust_Update(void) {}
 

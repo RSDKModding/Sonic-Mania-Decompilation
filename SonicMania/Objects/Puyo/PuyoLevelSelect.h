@@ -1,18 +1,18 @@
 #ifndef OBJ_PUYOLEVELSELECT_H
 #define OBJ_PUYOLEVELSELECT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectPuyoLevelSelect {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxMenuBleep;
     uint16 sfxMenuAccept;
-};
+} ObjectPuyoLevelSelect;
 
 // Entity Class
-struct EntityPuyoLevelSelect {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 playerID;
@@ -25,7 +25,7 @@ struct EntityPuyoLevelSelect {
     bool32 down;
     bool32 confirmPress;
     bool32 backPress;
-};
+} EntityPuyoLevelSelect;
 
 // Object Struct
 extern ObjectPuyoLevelSelect *PuyoLevelSelect;

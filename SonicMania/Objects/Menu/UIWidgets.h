@@ -1,10 +1,10 @@
 #ifndef OBJ_UIWIDGETS_H
 #define OBJ_UIWIDGETS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectUIWidgets {
+typedef struct {
     RSDK_OBJECT
 #if MANIA_USE_PLUS
     int32 buttonColors[16];
@@ -32,13 +32,13 @@ struct ObjectUIWidgets {
 #if MANIA_USE_PLUS
     color buttonColor;
 #endif
-};
+} ObjectUIWidgets;
 
 // Entity Class
-struct EntityUIWidgets {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state); // unused
-};
+} EntityUIWidgets;
 
 // Object Struct
 extern ObjectUIWidgets *UIWidgets;

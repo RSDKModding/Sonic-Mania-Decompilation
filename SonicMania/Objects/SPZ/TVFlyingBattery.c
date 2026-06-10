@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TVFlyingBattery.h"
+#include "WeatherTV.h"
+#include "Global/PauseMenu.h"
+#include "Global/Zone.h"
 
-ObjectTVFlyingBattery *TVFlyingBattery;
+ObjectTVFlyingBattery *TVFlyingBattery = NULL;
 
 void TVFlyingBattery_Update(void)
 {

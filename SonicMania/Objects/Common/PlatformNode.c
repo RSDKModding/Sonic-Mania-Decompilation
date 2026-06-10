@@ -5,9 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PlatformNode.h"
 
-ObjectPlatformNode *PlatformNode;
+ObjectPlatformNode *PlatformNode = NULL;
 
 void PlatformNode_Update(void) {}
 

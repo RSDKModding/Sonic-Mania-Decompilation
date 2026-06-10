@@ -5,7 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Stegway.h"
+#include "Global/DebugMode.h"
+#include "Global/Dust.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
 ObjectStegway *Stegway = NULL;
 

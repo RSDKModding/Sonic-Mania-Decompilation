@@ -1,7 +1,7 @@
 #ifndef OBJ_PBL_HUD_H
 #define OBJ_PBL_HUD_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 
@@ -17,14 +17,14 @@ typedef enum {
 } PBL_HUDMessageTypes;
 
 // Object Class
-struct ObjectPBL_HUD {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 unused1;
-};
+} ObjectPBL_HUD;
 
 // Entity Class
-struct EntityPBL_HUD {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -34,7 +34,7 @@ struct EntityPBL_HUD {
     Animator displayAnimator;
     Animator baseAnimator;
     Animator textAnimator;
-};
+} EntityPBL_HUD;
 
 // Object Struct
 extern ObjectPBL_HUD *PBL_HUD;

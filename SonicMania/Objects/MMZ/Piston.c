@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Piston.h"
+#include "Common/Platform.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#include "Helpers/DrawHelpers.h"
 
-ObjectPiston *Piston;
+ObjectPiston *Piston = NULL;
 
 void Piston_Update(void)
 {

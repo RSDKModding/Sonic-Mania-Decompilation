@@ -1,7 +1,7 @@
 #ifndef OBJ_SAVEGAME_H
 #define OBJ_SAVEGAME_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     SAVEGAME_BLANK,
@@ -48,7 +48,7 @@ typedef struct {
 } SaveRAM;
 
 // Object Class
-struct ObjectSaveGame {
+typedef struct {
 #if !MANIA_USE_PLUS
     RSDK_OBJECT
     Entity *loadEntityPtr;
@@ -63,15 +63,15 @@ struct ObjectSaveGame {
 #endif
     SaveRAM *saveRAM;
     int32 unused1;
-};
+} ObjectSaveGame;
 
 // Entity Class
-struct EntitySaveGame {
+typedef struct {
     RSDK_ENTITY
     // padding to match whatever it would be normally
     // not required, but its for safety :)
     uint8 padding[sizeof(SaveRAM) - sizeof(Entity)];
-};
+} EntitySaveGame;
 
 extern ObjectSaveGame *SaveGame;
 

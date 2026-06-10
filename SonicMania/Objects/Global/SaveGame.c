@@ -5,9 +5,20 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SaveGame.h"
+#include "ActClear.h"
+#include "APICallback.h"
+#include "ItemBox.h"
+#include "Player.h"
+#include "StarPost.h"
+#include "TitleCard.h"
+#include "Zone.h"
+#include "Helpers/GameProgress.h"
+#include "Helpers/LogHelpers.h"
+#include "Helpers/TimeAttackData.h"
+#include "Menu/UISaveSlot.h"
 
-ObjectSaveGame *SaveGame;
+ObjectSaveGame *SaveGame = NULL;
 
 void SaveGame_Update(void) {}
 

@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "OOZFlames.h"
+#include "Global/Zone.h"
 
-ObjectOOZFlames *OOZFlames;
+ObjectOOZFlames *OOZFlames = NULL;
 
 void OOZFlames_Update(void)
 {

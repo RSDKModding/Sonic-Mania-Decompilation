@@ -5,9 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Ice.h"
+#include "IceSpring.h"
+#include "Global/Ring.h"
+#include "Global/Shield.h"
+#include "Global/Spikes.h"
+#include "Global/Spring.h"
+#include "Global/Zone.h"
 
-ObjectIce *Ice;
+ObjectIce *Ice = NULL;
 
 void Ice_Update(void)
 {

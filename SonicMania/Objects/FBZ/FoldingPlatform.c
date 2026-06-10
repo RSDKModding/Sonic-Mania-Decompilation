@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "FoldingPlatform.h"
+#include "Common/Platform.h"
+#include "Global/Zone.h"
 
-ObjectFoldingPlatform *FoldingPlatform;
+ObjectFoldingPlatform *FoldingPlatform = NULL;
 
 void FoldingPlatform_Update(void)
 {

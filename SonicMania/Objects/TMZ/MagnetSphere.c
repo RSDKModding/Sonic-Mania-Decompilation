@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "MagnetSphere.h"
+#include "Global/DebugMode.h"
+#include "Global/Zone.h"
 
-ObjectMagnetSphere *MagnetSphere;
+ObjectMagnetSphere *MagnetSphere = NULL;
 
 void MagnetSphere_Update(void)
 {

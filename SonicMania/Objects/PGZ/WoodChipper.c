@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "WoodChipper.h"
+#include "Global/PauseMenu.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectWoodChipper *WoodChipper;
+ObjectWoodChipper *WoodChipper = NULL;
 
 void WoodChipper_Update(void)
 {

@@ -1,16 +1,16 @@
 #ifndef OBJ_DEMOMENU_H
 #define OBJ_DEMOMENU_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectDemoMenu {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectDemoMenu;
 
 // Entity Class
-struct EntityDemoMenu {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -26,7 +26,7 @@ struct EntityDemoMenu {
     Animator spzAnimator;
     SpriteFrame *ghzFrame;
     SpriteFrame *spzFrame;
-};
+} EntityDemoMenu;
 
 // Object Entity
 extern ObjectDemoMenu *DemoMenu;

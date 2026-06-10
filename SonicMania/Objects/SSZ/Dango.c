@@ -5,9 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Dango.h"
+#if MANIA_USE_PLUS
+#include "ERZ/PhantomRuby.h"
+#endif
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectDango *Dango;
+ObjectDango *Dango = NULL;
 
 void Dango_Update(void)
 {

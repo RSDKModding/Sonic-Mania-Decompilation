@@ -1,19 +1,19 @@
 #ifndef OBJ_BSS_HORIZON_H
 #define OBJ_BSS_HORIZON_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectBSS_Horizon {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectBSS_Horizon;
 
 // Entity Class
-struct EntityBSS_Horizon {
+typedef struct {
     RSDK_ENTITY
     Animator horizonAnimator;
-};
+} EntityBSS_Horizon;
 
 // Object Struct
 extern ObjectBSS_Horizon *BSS_Horizon;

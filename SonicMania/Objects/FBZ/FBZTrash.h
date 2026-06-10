@@ -1,7 +1,7 @@
 #ifndef OBJ_FBZTRASH_H
 #define OBJ_FBZTRASH_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     FBZTRASH_TRASH,
@@ -10,11 +10,13 @@ typedef enum {
     FBZTRASH_ORBINAUT,
 } FBZTrashTypes;
 
+typedef struct EntityFBZTrash EntityFBZTrash;
+
 // Object Class
-struct ObjectFBZTrash {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectFBZTrash;
 
 // Entity Class
 struct EntityFBZTrash {

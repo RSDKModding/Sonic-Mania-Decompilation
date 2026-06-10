@@ -5,9 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "MonarchBG.h"
 
-ObjectMonarchBG *MonarchBG;
+ObjectMonarchBG *MonarchBG = NULL;
 
 void MonarchBG_Update(void)
 {

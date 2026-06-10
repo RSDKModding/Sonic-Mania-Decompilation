@@ -1,7 +1,8 @@
 #ifndef OBJ_MSZSETUP_H
 #define OBJ_MSZSETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "MSZ2Cutscene.h"
 
 typedef enum { MSZ_GENERICTRIGGER_ACHIEVEMENT } GenericTriggerTypesMSZ;
 
@@ -26,7 +27,7 @@ typedef enum {
 } ParallaxSpriteAniIDsMSZ;
 
 // Object Class
-struct ObjectMSZSetup {
+typedef struct {
     RSDK_OBJECT
     int32 fadeTimer;
     uint16 aniTiles;
@@ -52,14 +53,14 @@ struct ObjectMSZSetup {
     int32 chuggaChannel;
     uint16 sfxLocoChugga;
 #endif
-};
+} ObjectMSZSetup;
 
 // Entity Class
-struct EntityMSZSetup {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-};
+} EntityMSZSetup;
 
 // Object Struct
 extern ObjectMSZSetup *MSZSetup;

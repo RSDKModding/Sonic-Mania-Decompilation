@@ -1,14 +1,14 @@
 #ifndef OBJ_EGGJANKEN_H
 #define OBJ_EGGJANKEN_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define EGGJANKEN_ARM_COUNT     (2)
 #define EGGJANKEN_JOINT_COUNT   (3)
 #define EGGJANKEN_SEGMENT_COUNT (EGGJANKEN_JOINT_COUNT + 1)
 
 // Object Class
-struct ObjectEggJanken {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Animator armAnimator;
@@ -26,10 +26,10 @@ struct ObjectEggJanken {
     uint16 sfxImpact4;
     uint16 sfxImpact3;
     uint16 sfxExplosion;
-};
+} ObjectEggJanken;
 
 // Entity Class
-struct EntityEggJanken {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -66,7 +66,7 @@ struct EntityEggJanken {
     Animator buttonAnimator;
     Animator propellorLAnimator;
     Animator propellorRAnimator;
-};
+} EntityEggJanken;
 
 // Object Entity
 extern ObjectEggJanken *EggJanken;

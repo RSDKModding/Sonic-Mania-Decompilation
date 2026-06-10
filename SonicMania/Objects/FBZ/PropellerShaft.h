@@ -1,15 +1,15 @@
 #ifndef OBJ_PROPELLERSHAFT_H
 #define OBJ_PROPELLERSHAFT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectPropellerShaft {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectPropellerShaft;
 
 // Entity Class
-struct EntityPropellerShaft {
+typedef struct {
     RSDK_ENTITY
     int32 size;
     int32 activePlayers;
@@ -17,7 +17,7 @@ struct EntityPropellerShaft {
     int32 unused1[PLAYER_COUNT];
     Hitbox hitbox;
     Animator animator;
-};
+} EntityPropellerShaft;
 
 // Object Struct
 extern ObjectPropellerShaft *PropellerShaft;

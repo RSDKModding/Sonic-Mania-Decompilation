@@ -1,24 +1,24 @@
 #ifndef OBJ_MMZLIGHTNING_H
 #define OBJ_MMZLIGHTNING_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 // Object Class
-struct ObjectMMZLightning {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectMMZLightning;
 
 // Entity Class
-struct EntityMMZLightning {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
     int32 unused1;
     int32 unused2;
     Animator animator;
-};
+} EntityMMZLightning;
 
 // Object Struct
 extern ObjectMMZLightning *MMZLightning;

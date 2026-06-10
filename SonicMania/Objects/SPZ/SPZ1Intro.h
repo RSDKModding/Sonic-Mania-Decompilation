@@ -1,23 +1,25 @@
 #ifndef OBJ_SPZ1INTRO_H
 #define OBJ_SPZ1INTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Debris.h"
+#include "Cutscene/CutsceneSeq.h"
 
 // Object Class
-struct ObjectSPZ1Intro {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxGasPop;
     uint16 sfxPon;
     EntityDebris *sewerLid;
-};
+} ObjectSPZ1Intro;
 
 // Entity Class
-struct EntitySPZ1Intro {
+typedef struct {
     MANIA_CUTSCENE_BASE
 
     int32 unused;
-};
+} EntitySPZ1Intro;
 
 // Object Struct
 extern ObjectSPZ1Intro *SPZ1Intro;

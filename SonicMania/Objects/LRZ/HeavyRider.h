@@ -1,7 +1,10 @@
 #ifndef OBJ_HEAVYRIDER_H
 #define OBJ_HEAVYRIDER_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#if MANIA_USE_PLUS
+#include "LRZ3Outro.h"
+#endif
 
 typedef enum {
     HEAVYRIDER_RIDER,
@@ -41,7 +44,7 @@ typedef enum {
 } HeavyRiderWheelStates;
 
 // Object Class
-struct ObjectHeavyRider {
+typedef struct {
     RSDK_OBJECT
     uint8 curAttack;
     uint8 spikeBallState;
@@ -76,10 +79,10 @@ struct ObjectHeavyRider {
     uint16 sfxJump;
     uint16 sfxCheer;
     uint16 sfxBumper;
-};
+} ObjectHeavyRider;
 
 // Entity Class
-struct EntityHeavyRider {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -93,7 +96,7 @@ struct EntityHeavyRider {
     Animator spikeBallAnimator;
     Animator fireballAnimator;
     Animator wheelieAnimator;
-};
+} EntityHeavyRider;
 
 // Object Struct
 extern ObjectHeavyRider *HeavyRider;

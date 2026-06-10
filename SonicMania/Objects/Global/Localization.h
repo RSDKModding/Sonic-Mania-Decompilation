@@ -1,7 +1,7 @@
 #ifndef OBJ_LOCALIZATION_H
 #define OBJ_LOCALIZATION_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     STR_TESTSTR,
@@ -117,18 +117,18 @@ typedef enum {
 } GameStrings;
 
 // Object Class
-struct ObjectLocalization {
+typedef struct {
     RSDK_OBJECT
     String text;
     String strings[STR_STRING_COUNT];
     bool32 loaded;
     uint8 language;
-};
+} ObjectLocalization;
 
 // Entity Class
-struct EntityLocalization {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityLocalization;
 
 // Object Struct
 extern ObjectLocalization *Localization;

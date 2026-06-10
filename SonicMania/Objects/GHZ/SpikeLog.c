@@ -5,9 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SpikeLog.h"
+#include "BurningLog.h"
+#include "Global/Player.h"
+#include "Global/Shield.h"
+#include "Global/Zone.h"
+#include "Helpers/GameProgress.h"
+#include "Global/APICallback.h"
 
-ObjectSpikeLog *SpikeLog;
+ObjectSpikeLog *SpikeLog = NULL;
 
 void SpikeLog_Update(void)
 {

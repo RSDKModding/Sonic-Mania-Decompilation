@@ -5,9 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UFO_Circuit.h"
+#include "UFO_Camera.h"
+#include "UFO_Player.h"
+#include "UFO_Setup.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectUFO_Circuit *UFO_Circuit;
+ObjectUFO_Circuit *UFO_Circuit = NULL;
 
 void UFO_Circuit_Update(void)
 {

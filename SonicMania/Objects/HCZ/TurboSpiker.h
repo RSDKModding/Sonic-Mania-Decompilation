@@ -1,7 +1,7 @@
 #ifndef OBJ_TURBOSPIKER_H
 #define OBJ_TURBOSPIKER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     TURBOSPIKER_VISIBLE,
@@ -9,7 +9,7 @@ typedef enum {
 } TurboSpikerTypes;
 
 // Object Class
-struct ObjectTurboSpiker {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxSpike;
@@ -17,9 +17,10 @@ struct ObjectTurboSpiker {
     uint16 aniFrames;
     uint16 sfxLaunch;
     uint16 sfxSplash;
-};
+} ObjectTurboSpiker;
 
 // Entity Class
+typedef struct EntityTurboSpiker EntityTurboSpiker;
 struct EntityTurboSpiker {
     RSDK_ENTITY
     StateMachine(state);

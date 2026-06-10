@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "MSZCutsceneK.h"
+#include "TornadoPath.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Global/Music.h"
+#include "Global/Zone.h"
+#include "Helpers/TimeAttackData.h"
 
-ObjectMSZCutsceneK *MSZCutsceneK;
+ObjectMSZCutsceneK *MSZCutsceneK = NULL;
 
 void MSZCutsceneK_Update(void)
 {

@@ -1,7 +1,7 @@
 #ifndef OBJ_FBZMISSILE_H
 #define OBJ_FBZMISSILE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     FBZMISSILE_LAUNCHER_V,
@@ -12,7 +12,7 @@ typedef enum {
 } FBZMissileTypes;
 
 // Object Class
-struct ObjectFBZMissile {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxMissileV;
     Hitbox hitboxMissileH;
@@ -23,10 +23,10 @@ struct ObjectFBZMissile {
     uint16 sfxPush;
     uint16 sfxPush2;
     uint16 sfxExplosion;
-};
+} ObjectFBZMissile;
 
 // Entity Class
-struct EntityFBZMissile {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -35,7 +35,7 @@ struct EntityFBZMissile {
     uint8 intervalOffset;
     int32 timer;
     Animator animator;
-};
+} EntityFBZMissile;
 
 // Object Struct
 extern ObjectFBZMissile *FBZMissile;

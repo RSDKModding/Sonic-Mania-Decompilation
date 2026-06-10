@@ -1,7 +1,14 @@
 #ifndef OBJ_UICONTROL_H
 #define OBJ_UICONTROL_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "UIButton.h"
+#include "UIHeading.h"
+#include "UIShifter.h"
+#if MANIA_USE_PLUS
+#include "UICarousel.h"
+#include "UIButtonPrompt.h"
+#endif
 
 #define UICONTROL_BUTTON_COUNT (64)
 #if MANIA_USE_PLUS
@@ -9,7 +16,7 @@
 #endif
 
 // Object Class
-struct ObjectUIControl {
+typedef struct {
     RSDK_OBJECT
     bool32 isProcessingInput;
     bool32 inputLocked;
@@ -41,9 +48,17 @@ struct ObjectUIControl {
     int32 timer;
     int32 unused1;
     uint16 aniFrames;
-};
+} ObjectUIControl;
 
 // Entity Class
+#ifndef ENTITYDEF_UI
+#define ENTITYDEF_UI
+typedef struct EntityUIControl EntityUIControl;
+typedef struct EntityUIShifter EntityUIShifter;
+#if MANIA_USE_PLUS
+typedef struct EntityUICarousel EntityUICarousel;
+#endif
+#endif
 struct EntityUIControl {
     RSDK_ENTITY
     StateMachine(state);

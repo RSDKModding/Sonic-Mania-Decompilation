@@ -1,7 +1,7 @@
 #ifndef OBJ_KINGATTACK_H
 #define OBJ_KINGATTACK_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     KINGATTACK_LASER,
@@ -14,7 +14,7 @@ typedef enum {
 } KingAttackTypes;
 
 // Object Class
-struct ObjectKingAttack {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 laserColors[8], { 0x000020, 0x000020, 0xE850D8, 0xE850D8, 0xE850D8, 0xE850D8, 0x000020, 0x000020 });
     uint16 aniFrames;
@@ -23,10 +23,10 @@ struct ObjectKingAttack {
     uint16 sfxElecPulse;
     uint16 sfxTwinShot;
     bool32 laserEruptActive;
-};
+} ObjectKingAttack;
 
 // Entity Class
-struct EntityKingAttack {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 type;
@@ -38,7 +38,7 @@ struct EntityKingAttack {
     int32 *laserColors;
     Hitbox hitbox;
     Animator animator;
-};
+} EntityKingAttack;
 
 // Object Struct
 extern ObjectKingAttack *KingAttack;

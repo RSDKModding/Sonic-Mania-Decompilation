@@ -1,7 +1,7 @@
 #ifndef OBJ_EXPLOSION_H
 #define OBJ_EXPLOSION_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     EXPLOSION_ITEMBOX,
@@ -11,18 +11,18 @@ typedef enum {
 } ExplosionTypes;
 
 // Object Class
-struct ObjectExplosion {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxDestroy;
-};
+} ObjectExplosion;
 
 // Entity Class
-struct EntityExplosion {
+typedef struct {
     RSDK_ENTITY
     Animator animator;
     int32 planeFilter;
-};
+} EntityExplosion;
 
 // Object Struct
 extern ObjectExplosion *Explosion;

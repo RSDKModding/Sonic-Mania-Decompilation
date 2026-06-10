@@ -1,21 +1,21 @@
 #ifndef OBJ_UISLIDER_H
 #define OBJ_UISLIDER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define UISLIDER_MIN       (0)
 #define UISLIDER_MAX       (0x400)
 #define UISLIDER_INCREMENT (UISLIDER_MAX / 0x10)
 
 // Object Class
-struct ObjectUISlider {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames; // prolly used in-editor
     Entity *activeEntity;
-};
+} ObjectUISlider;
 
 // Entity Class
-struct EntityUISlider {
+typedef struct {
     MANIA_UI_ITEM_BASE
     int32 listID;
     int32 frameID;
@@ -32,7 +32,7 @@ struct EntityUISlider {
     StateMachine(sliderChangedCB);
     Animator textAnimator;
     uint16 textFrames;
-};
+} EntityUISlider;
 
 // Object Struct
 extern ObjectUISlider *UISlider;

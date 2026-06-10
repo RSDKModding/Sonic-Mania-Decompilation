@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "COverlay.h"
+#include "DebugMode.h"
+#include "Player.h"
+#include "Zone.h"
 
-ObjectCOverlay *COverlay;
+ObjectCOverlay *COverlay = NULL;
 
 void COverlay_Update(void) {}
 

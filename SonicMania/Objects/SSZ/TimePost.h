@@ -1,20 +1,21 @@
 #ifndef OBJ_TIMEPOST_H
 #define OBJ_TIMEPOST_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Debris.h"
 
 // Object Class
-struct ObjectTimePost {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sparkleFrames;
     Hitbox hitbox;
     Hitbox hitboxItemBox;
     uint16 sfxFuture;
-};
+} ObjectTimePost;
 
 // Entity Class
-struct EntityTimePost {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -28,7 +29,7 @@ struct EntityTimePost {
     Animator faceplateAnimator;
     Animator sideAnimator;
     Animator standAnimator;
-};
+} EntityTimePost;
 
 // Object Struct
 extern ObjectTimePost *TimePost;

@@ -1,14 +1,15 @@
 #ifndef OBJ_LRZ2SETUP_H
 #define OBJ_LRZ2SETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Common/Button.h"
 
 typedef enum { GENERICTRIGGER_LRZ2_OUTRO } GenericTriggerTypesLRZ2;
 
 typedef enum { LRZ2_TFLAGS_NORMAL, LRZ2_TFLAGS_LAVA, LRZ2_TFLAGS_CONVEYOR_L, LRZ2_TFLAGS_CONVEYOR_R } TileFlagsLRZ2;
 
 // Object Class
-struct ObjectLRZ2Setup {
+typedef struct {
     RSDK_OBJECT
     int32 lavaPalTimer;
     int32 conveyorPalTimer;
@@ -16,12 +17,12 @@ struct ObjectLRZ2Setup {
     int32 conveyorSrcPal;
     bool32 conveyorOff;
     uint8 conveyorDir;
-};
+} ObjectLRZ2Setup;
 
 // Entity Class
-struct EntityLRZ2Setup {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityLRZ2Setup;
 
 // Object Struct
 extern ObjectLRZ2Setup *LRZ2Setup;

@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PhantomMystic.h"
+#include "PhantomEgg.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#include "Helpers/BadnikHelpers.h"
 
-ObjectPhantomMystic *PhantomMystic;
+ObjectPhantomMystic *PhantomMystic = NULL;
 
 void PhantomMystic_Update(void)
 {

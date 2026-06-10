@@ -5,9 +5,21 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "AmoebaDroid.h"
+#include "ChemicalPool.h"
+#include "Common/Water.h"
+#include "Global/Debris.h"
+#include "Global/Explosion.h"
+#include "Global/Music.h"
+#include "Global/Player.h"
+#include "Global/SignPost.h"
+#include "Global/Zone.h"
+#include "Helpers/BadnikHelpers.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectAmoebaDroid *AmoebaDroid;
+ObjectAmoebaDroid *AmoebaDroid = NULL;
 
 void AmoebaDroid_Update(void)
 {

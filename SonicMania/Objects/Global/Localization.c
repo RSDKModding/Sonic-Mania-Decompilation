@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Localization.h"
+#include "APICallback.h"
+#include "Zone.h"
+#include "Helpers/LogHelpers.h"
+#include "Helpers/Options.h"
 
-ObjectLocalization *Localization;
+ObjectLocalization *Localization = NULL;
 
 void Localization_Update(void) {}
 

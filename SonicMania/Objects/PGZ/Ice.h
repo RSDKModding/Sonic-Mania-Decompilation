@@ -1,7 +1,9 @@
 #ifndef OBJ_ICE_H
 #define OBJ_ICE_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/ItemBox.h"
+#include "Global/Player.h"
 
 #if MANIA_USE_PLUS
 typedef enum {
@@ -93,7 +95,7 @@ typedef enum {
 } IceChildTypes;
 
 // Object Class
-struct ObjectIce {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxPlayerBlockInner;
@@ -103,10 +105,10 @@ struct ObjectIce {
     uint16 sfxLedgeBreak;
     uint16 sfxWindowShatter;
     uint16 sfxStruggle;
-};
+} ObjectIce;
 
 // Entity Class
-struct EntityIce {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -129,7 +131,7 @@ struct EntityIce {
     Hitbox hitboxBlock;
     Hitbox hitboxFallCheck;
     Hitbox hitboxPlayerBlockCheck;
-};
+} EntityIce;
 
 // Object Struct
 extern ObjectIce *Ice;

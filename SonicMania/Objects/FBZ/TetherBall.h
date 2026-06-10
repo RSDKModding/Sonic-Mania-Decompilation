@@ -1,21 +1,22 @@
 #ifndef OBJ_TETHERBALL_H
 #define OBJ_TETHERBALL_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 typedef enum { TETHERBALL_DOWN, TETHERBALL_UP, TETHERBALL_LEFT, TETHERBALL_RIGHT } TetherBallTypes;
 
 // Object Class
-struct ObjectTetherBall {
+typedef struct {
     RSDK_OBJECT
     Animator animator;
     uint16 aniFrames;
     Hitbox hitbox;
     uint16 sfxWhack;
-};
+} ObjectTetherBall;
 
 // Entity Class
-struct EntityTetherBall {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -27,7 +28,7 @@ struct EntityTetherBall {
     int32 swingSpeed;
     Vector2 ballPos;
     EntityPlayer *player;
-};
+} EntityTetherBall;
 
 // Object Struct
 extern ObjectTetherBall *TetherBall;

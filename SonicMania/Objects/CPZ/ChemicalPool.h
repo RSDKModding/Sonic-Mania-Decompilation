@@ -1,12 +1,12 @@
 #ifndef OBJ_CHEMICALPOOL_H
 #define OBJ_CHEMICALPOOL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { CHEMICALPOOL_BLUE, CHEMICALPOOL_GREEN, CHEMICALPOOL_CYAN } ChemicalPoolTypes;
 
 // Object Class
-struct ObjectChemicalPool {
+typedef struct {
     RSDK_OBJECT
     TABLE(color surfaceColorsFlash[4], { 0xF0F0F0, 0xF0F0F0, 0xE0E0E0, 0xE0E0E0 });
     uint16 aniFrames;
@@ -17,10 +17,10 @@ struct ObjectChemicalPool {
     uint16 sfxChemYellow;
     uint16 sfxChemRed;
     uint16 sfxChemChange;
-};
+} ObjectChemicalPool;
 
 // Entity Class
-struct EntityChemicalPool {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 type;
@@ -41,7 +41,7 @@ struct EntityChemicalPool {
     Vector2 vertices[66];
     color surfaceColors[4];
     Animator animator;
-};
+} EntityChemicalPool;
 
 // Object Struct
 extern ObjectChemicalPool *ChemicalPool;

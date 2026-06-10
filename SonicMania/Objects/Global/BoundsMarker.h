@@ -1,7 +1,8 @@
 #ifndef OBJ_BOUNDSMARKER_H
 #define OBJ_BOUNDSMARKER_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Player.h"
 
 typedef enum {
     BOUNDSMARKER_ANY_Y,
@@ -11,19 +12,19 @@ typedef enum {
 } BoundsMarkerTypes;
 
 // Object Class
-struct ObjectBoundsMarker {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectBoundsMarker;
 
 // Entity Class
-struct EntityBoundsMarker {
+typedef struct {
     RSDK_ENTITY
     uint8 type;
     int32 width;
     bool32 vsDisable;
     int32 offset;
-};
+} EntityBoundsMarker;
 
 // Object Struct
 extern ObjectBoundsMarker *BoundsMarker;

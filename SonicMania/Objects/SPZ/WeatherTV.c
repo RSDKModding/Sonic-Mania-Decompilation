@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "WeatherTV.h"
+#include "Global/PauseMenu.h"
+#include "Global/Zone.h"
+#include "Helpers/MathHelpers.h"
 
-ObjectWeatherTV *WeatherTV;
+ObjectWeatherTV *WeatherTV = NULL;
 
 void WeatherTV_Update(void)
 {

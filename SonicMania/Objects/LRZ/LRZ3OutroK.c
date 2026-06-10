@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "LRZ3OutroK.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Global/HUD.h"
+#include "Global/Zone.h"
+#include "MSZ/MSZCutsceneK.h"
 
-ObjectLRZ3OutroK *LRZ3OutroK;
+ObjectLRZ3OutroK *LRZ3OutroK = NULL;
 
 void LRZ3OutroK_Update(void)
 {

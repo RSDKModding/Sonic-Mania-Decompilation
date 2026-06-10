@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UFO_Camera.h"
+#include "UFO_Player.h"
+#include "UFO_Setup.h"
 
-ObjectUFO_Camera *UFO_Camera;
+ObjectUFO_Camera *UFO_Camera = NULL;
 
 void UFO_Camera_Update(void) {}
 

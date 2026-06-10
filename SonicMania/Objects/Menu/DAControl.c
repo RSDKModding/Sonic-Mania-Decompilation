@@ -5,9 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "DAControl.h"
 
-ObjectDAControl *DAControl;
+ObjectDAControl *DAControl = NULL;
 
 void DAControl_Update(void)
 {

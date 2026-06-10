@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UFO_Player.h"
+#include "UFO_Dust.h"
+#include "UFO_Message.h"
+#include "UFO_Setup.h"
+#include "Global/PauseMenu.h"
 
-ObjectUFO_Player *UFO_Player;
+ObjectUFO_Player *UFO_Player = NULL;
 
 void UFO_Player_Update(void)
 {

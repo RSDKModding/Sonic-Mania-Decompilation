@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TAEmerald.h"
+#include "Global/SaveGame.h"
 
-ObjectTAEmerald *TAEmerald;
+ObjectTAEmerald *TAEmerald = NULL;
 
 void TAEmerald_Update(void)
 {

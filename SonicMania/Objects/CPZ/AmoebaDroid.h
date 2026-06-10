@@ -1,7 +1,7 @@
 #ifndef OBJ_AMOEBADROID_H
 #define OBJ_AMOEBADROID_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define AMOEBADROID_BLOB_COUNT (8)
 
@@ -14,7 +14,7 @@ typedef enum {
 } AmoebaDroidTypes;
 
 // Object Class
-struct ObjectAmoebaDroid {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 debrisInfo1[17], { 4, 0, 0, -0x20000, -0x28000, 1, 0, 0x20000, -0x28000, 2, 0, -0x28000, -0x20000, 3, 0, 0x28000, -0x20000 });
     TABLE(int32 debrisInfo2[13], { 3, 4, 0, 0, -0x20000, 5, 0, -0x28000, -0x20000, 5, 1, 0x28000, -0x20000 });
@@ -30,9 +30,10 @@ struct ObjectAmoebaDroid {
     uint16 sfxRelease;
     uint16 aniFrames;
     uint16 waterFrames;
-};
+} ObjectAmoebaDroid;
 
 // Entity Class
+typedef struct EntityAmoebaDroid EntityAmoebaDroid;
 struct EntityAmoebaDroid {
     RSDK_ENTITY
     StateMachine(state);

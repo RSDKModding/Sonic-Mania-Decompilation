@@ -5,9 +5,16 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "GHZ2Outro.h"
+#include "Cutscene/CutsceneHBH.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Global/Camera.h"
+#include "Global/EggPrison.h"
+#include "Global/HUD.h"
+#include "Global/Music.h"
+#include "Global/Zone.h"
 
-ObjectGHZ2Outro *GHZ2Outro;
+ObjectGHZ2Outro *GHZ2Outro = NULL;
 
 void GHZ2Outro_Update(void)
 {

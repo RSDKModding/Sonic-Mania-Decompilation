@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Grabber.h"
+#include "Global/DebugMode.h"
+#include "Global/Explosion.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectGrabber *Grabber;
+ObjectGrabber *Grabber = NULL;
 
 void Grabber_Update(void)
 {

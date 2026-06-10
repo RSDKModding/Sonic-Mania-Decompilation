@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TurretSwitch.h"
+#include "Global/Explosion.h"
+#include "Global/ItemBox.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#include "PGZ/Ice.h"
 
-ObjectTurretSwitch *TurretSwitch;
+ObjectTurretSwitch *TurretSwitch = NULL;
 
 void TurretSwitch_Update(void)
 {

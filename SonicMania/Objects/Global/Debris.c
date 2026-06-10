@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Debris.h"
+#include "Zone.h"
 
-ObjectDebris *Debris;
+ObjectDebris *Debris = NULL;
 
 void Debris_Update(void)
 {

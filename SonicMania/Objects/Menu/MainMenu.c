@@ -5,10 +5,21 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "MainMenu.h"
 
 #if MANIA_USE_PLUS
-ObjectMainMenu *MainMenu;
+#include "ManiaModeMenu.h"
+#include "MenuSetup.h"
+#include "TimeAttackMenu.h"
+#include "UIButton.h"
+#include "UIDialog.h"
+#include "UISaveSlot.h"
+#include "Global/APICallback.h"
+#include "Global/Localization.h"
+#include "Global/Music.h"
+#include "Helpers/GameProgress.h"
+
+ObjectMainMenu *MainMenu = NULL;
 
 void MainMenu_Update(void) {}
 

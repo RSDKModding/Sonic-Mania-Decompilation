@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "VanishPlatform.h"
+#include "Common/Platform.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectVanishPlatform *VanishPlatform;
+ObjectVanishPlatform *VanishPlatform = NULL;
 
 void VanishPlatform_Update(void)
 {

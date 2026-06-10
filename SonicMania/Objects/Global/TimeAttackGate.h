@@ -1,10 +1,13 @@
 #ifndef OBJ_TIMEATTACKGATE_H
 #define OBJ_TIMEATTACKGATE_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Player.h"
+
+typedef struct EntityTimeAttackGate EntityTimeAttackGate;
 
 // Object Class
-struct ObjectTimeAttackGate {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxGate;
     uint16 aniFrames;
@@ -20,7 +23,7 @@ struct ObjectTimeAttackGate {
     int32 teleportChannel;
     StateMachine(startCB);
     StateMachine(endCB);
-};
+} ObjectTimeAttackGate;
 
 // Entity Class
 struct EntityTimeAttackGate {

@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Propeller.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectPropeller *Propeller;
+ObjectPropeller *Propeller = NULL;
 
 void Propeller_Update(void)
 {

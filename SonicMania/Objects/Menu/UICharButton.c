@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UICharButton.h"
+#include "UIButton.h"
+#include "UIControl.h"
+#include "UITransition.h"
+#include "UIWidgets.h"
+#include "Global/Announcer.h"
 
-ObjectUICharButton *UICharButton;
+ObjectUICharButton *UICharButton = NULL;
 
 void UICharButton_Update(void)
 {

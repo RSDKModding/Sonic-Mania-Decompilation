@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SPZ1Setup.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Cutscene/FXFade.h"
+#include "Global/Animals.h"
+#include "Global/Zone.h"
 
-ObjectSPZ1Setup *SPZ1Setup;
+ObjectSPZ1Setup *SPZ1Setup = NULL;
 
 void SPZ1Setup_Update(void) {}
 

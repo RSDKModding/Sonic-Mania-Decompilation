@@ -5,9 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Constellation.h"
 
-ObjectConstellation *Constellation;
+ObjectConstellation *Constellation = NULL;
 
 void Constellation_Update(void)
 {

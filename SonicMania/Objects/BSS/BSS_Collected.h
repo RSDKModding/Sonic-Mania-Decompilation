@@ -1,7 +1,7 @@
 #ifndef OBJ_BSS_COLLECTED_H
 #define OBJ_BSS_COLLECTED_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     BSS_COLLECTED_RING,
@@ -13,16 +13,16 @@ typedef enum {
 } BSS_CollectedTypes;
 
 // Object Class
-struct ObjectBSS_Collected {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectBSS_Collected;
 
 // Entity Class
-struct EntityBSS_Collected {
+typedef struct {
     RSDK_ENTITY
     int32 type;
     int32 timer;
-};
+} EntityBSS_Collected;
 
 // Object Struct
 extern ObjectBSS_Collected *BSS_Collected;

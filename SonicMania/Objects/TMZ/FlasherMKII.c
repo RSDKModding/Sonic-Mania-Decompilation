@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "FlasherMKII.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectFlasherMKII *FlasherMKII;
+ObjectFlasherMKII *FlasherMKII = NULL;
 
 void FlasherMKII_Update(void)
 {

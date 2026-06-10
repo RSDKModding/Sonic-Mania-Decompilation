@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "FilmProjector.h"
+#include "Global/Zone.h"
 
-ObjectFilmProjector *FilmProjector;
+ObjectFilmProjector *FilmProjector = NULL;
 
 void FilmProjector_Update(void)
 {

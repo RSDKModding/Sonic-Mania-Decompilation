@@ -1,20 +1,20 @@
 #ifndef OBJ_TARGETBUMPER_H
 #define OBJ_TARGETBUMPER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { TARGETBUMP_HORIZONTAL, TARGETBUMP_VERTICAL, TARGETBUMP_DIAGONAL } TargetBumperTypes;
 
 typedef enum { TARGETBUMP_THREE_HIT, TARGETBUMP_TWO_HIT, TARGETBUMP_ONE_HIT } TargetBumperHitCount;
 
 // Object Class
-struct ObjectTargetBumper {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectTargetBumper;
 
 // Entity Class
-struct EntityTargetBumper {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 type;
@@ -23,7 +23,7 @@ struct EntityTargetBumper {
     Vector2 curPos;
     int32 hitTimer;
     Animator animator;
-};
+} EntityTargetBumper;
 
 // Object Entity
 extern ObjectTargetBumper *TargetBumper;

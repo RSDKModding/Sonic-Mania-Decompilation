@@ -1,20 +1,21 @@
 #ifndef OBJ_SWEEP_H
 #define OBJ_SWEEP_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Common/Water.h"
 
 // Object Class
-struct ObjectSweep {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxRange;
     Hitbox hitboxProjectile;
     uint16 aniFrames;
     uint16 sfxPon;
-};
+} ObjectSweep;
 
 // Entity Class
-struct EntitySweep {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateStore);
@@ -24,7 +25,7 @@ struct EntitySweep {
     uint8 startDir;
     EntityWater *water;
     Animator animator;
-};
+} EntitySweep;
 
 // Object Struct
 extern ObjectSweep *Sweep;

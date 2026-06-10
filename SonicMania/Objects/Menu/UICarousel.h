@@ -1,17 +1,26 @@
 #ifndef OBJ_UICAROUSEL_H
 #define OBJ_UICAROUSEL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
+#include "UIControl.h"
+
+
 // Object Class
-struct ObjectUICarousel {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;  // both of these aren't used, and are thus prolly editor-only
     Animator animator; // both of these aren't used, and are thus prolly editor-only
-};
+} ObjectUICarousel;
 
 // Entity Class
+#ifndef ENTITYDEF_UI
+#define ENTITYDEF_UI
+typedef struct EntityUIControl EntityUIControl;
+typedef struct EntityUIShifter EntityUIShifter;
+typedef struct EntityUICarousel EntityUICarousel;
+#endif
 struct EntityUICarousel {
     RSDK_ENTITY
     Vector2 shift;

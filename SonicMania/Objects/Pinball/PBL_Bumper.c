@@ -5,10 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PBL_Bumper.h"
 
 #if MANIA_USE_PLUS
-ObjectPBL_Bumper *PBL_Bumper;
+#include "PBL_Camera.h"
+#include "PBL_Player.h"
+#include "PBL_Setup.h"
+
+ObjectPBL_Bumper *PBL_Bumper = NULL;
 
 void PBL_Bumper_Update(void)
 {

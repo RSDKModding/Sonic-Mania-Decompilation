@@ -1,11 +1,11 @@
 #ifndef OBJ_PBL_SETUP_H
 #define OBJ_PBL_SETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 // Object Class
-struct ObjectPBL_Setup {
+typedef struct {
     RSDK_OBJECT
     int32 unused1;
     int32 timer;
@@ -20,16 +20,16 @@ struct ObjectPBL_Setup {
     uint8 tableLow;
     uint8 tableHigh;
     uint16 sfxContinue;
-};
+} ObjectPBL_Setup;
 
 // Entity Class
-struct EntityPBL_Setup {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
     int32 color;
     Matrix unusedMatrix1;
-};
+} EntityPBL_Setup;
 
 // Object Struct
 extern ObjectPBL_Setup *PBL_Setup;

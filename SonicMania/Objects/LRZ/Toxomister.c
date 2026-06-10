@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Toxomister.h"
+#include "Global/DebugMode.h"
+#include "Global/Ring.h"
+#include "Global/Zone.h"
 
-ObjectToxomister *Toxomister;
+ObjectToxomister *Toxomister = NULL;
 
 void Toxomister_Update(void)
 {

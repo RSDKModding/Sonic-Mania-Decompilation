@@ -5,9 +5,23 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TimeAttackGate.h"
+#include "ActClear.h"
+#include "Announcer.h"
+#include "DebugMode.h"
+#include "HUD.h"
+#include "Music.h"
+#include "PauseMenu.h"
+#include "Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
+#include "Helpers/MathHelpers.h"
+#include "Helpers/TimeAttackData.h"
+#include "Menu/MenuParam.h"
+#include "Menu/UIWaitSpinner.h"
 
-ObjectTimeAttackGate *TimeAttackGate;
+ObjectTimeAttackGate *TimeAttackGate = NULL;
 
 void TimeAttackGate_Update(void)
 {

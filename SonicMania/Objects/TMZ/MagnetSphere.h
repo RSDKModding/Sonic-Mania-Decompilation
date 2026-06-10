@@ -1,10 +1,11 @@
 #ifndef OBJ_MAGNETSPHERE_H
 #define OBJ_MAGNETSPHERE_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 // Object Class
-struct ObjectMagnetSphere {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     uint8 sphereAngle[PLAYER_COUNT];
@@ -13,10 +14,10 @@ struct ObjectMagnetSphere {
     uint16 aniFrames;
     uint16 sfxBumper;
     uint16 sfxPlasmaBall;
-};
+} ObjectMagnetSphere;
 
 // Entity Class
-struct EntityMagnetSphere {
+typedef struct {
     RSDK_ENTITY
     uint8 activePlayers;
     uint8 playerTimers[PLAYER_COUNT];
@@ -26,7 +27,7 @@ struct EntityMagnetSphere {
     Animator plasma1Animator;
     Animator plasma2Animator;
     Animator centerBallAnimator;
-};
+} EntityMagnetSphere;
 
 // Object Struct
 extern ObjectMagnetSphere *MagnetSphere;

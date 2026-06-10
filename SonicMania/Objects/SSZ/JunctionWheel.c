@@ -5,9 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "JunctionWheel.h"
+#include "Common/Button.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectJunctionWheel *JunctionWheel;
+ObjectJunctionWheel *JunctionWheel = NULL;
 
 void JunctionWheel_Update(void)
 {

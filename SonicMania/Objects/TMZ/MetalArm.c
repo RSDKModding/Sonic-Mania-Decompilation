@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "MetalArm.h"
+#include "Global/Player.h"
+#include "Global/Soundboard.h"
+#include "Global/Zone.h"
 
-ObjectMetalArm *MetalArm;
+ObjectMetalArm *MetalArm = NULL;
 
 void MetalArm_Update(void)
 {

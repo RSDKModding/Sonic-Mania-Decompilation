@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "BGSwitch.h"
+#include "Global/Camera.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectBGSwitch *BGSwitch;
+ObjectBGSwitch *BGSwitch = NULL;
 
 void BGSwitch_Update(void)
 {

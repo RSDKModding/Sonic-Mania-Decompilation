@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Crabmeat.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectCrabmeat *Crabmeat;
+ObjectCrabmeat *Crabmeat = NULL;
 
 void Crabmeat_Update(void)
 {

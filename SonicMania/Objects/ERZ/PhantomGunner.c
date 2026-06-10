@@ -5,9 +5,16 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PhantomGunner.h"
+#include "PhantomEgg.h"
+#include "Global/Debris.h"
+#include "Global/Dust.h"
+#include "Global/Explosion.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#include "Helpers/BadnikHelpers.h"
 
-ObjectPhantomGunner *PhantomGunner;
+ObjectPhantomGunner *PhantomGunner = NULL;
 
 void PhantomGunner_Update(void)
 {

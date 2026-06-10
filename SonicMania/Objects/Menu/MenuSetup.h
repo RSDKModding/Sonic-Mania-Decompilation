@@ -1,7 +1,17 @@
 #ifndef OBJ_MENUSETUP_H
 #define OBJ_MENUSETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Cutscene/FXFade.h"
+#if !MANIA_USE_PLUS
+#include "UIButtonPrompt.h"
+#include "UIControl.h"
+#include "UIDialog.h"
+#include "UIInfoLabel.h"
+#include "UILeaderboard.h"
+#include "UIVsScoreboard.h"
+#endif
+
 
 typedef enum {
     MAINMENU_MAIN,
@@ -14,7 +24,7 @@ typedef enum {
 } MainMenuIDs;
 
 // Object Class
-struct ObjectMenuSetup {
+typedef struct {
     RSDK_OBJECT
     int32 unused1;
     bool32 initializedMenuReturn;
@@ -65,10 +75,10 @@ struct ObjectMenuSetup {
     int32 unused6;
     EntityUIDialog *connectingDlg;
 #endif
-};
+} ObjectMenuSetup;
 
 // Entity Class
-struct EntityMenuSetup {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(callback);
@@ -77,7 +87,7 @@ struct EntityMenuSetup {
     int32 fadeShift;
     int32 fadeTimer;
     int32 fadeColor;
-};
+} EntityMenuSetup;
 
 // Object Struct
 extern ObjectMenuSetup *MenuSetup;

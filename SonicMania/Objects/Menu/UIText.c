@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIText.h"
+#include "UIWidgets.h"
 
-ObjectUIText *UIText;
+ObjectUIText *UIText = NULL;
 
 void UIText_Update(void)
 {

@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Batbrain.h"
+#include "Global/DebugMode.h"
+#include "Global/Zone.h"
 
-ObjectBatbrain *Batbrain;
+ObjectBatbrain *Batbrain = NULL;
 
 void Batbrain_Update(void)
 {

@@ -1,7 +1,7 @@
 #ifndef OBJ_TITLELOGO_H
 #define OBJ_TITLELOGO_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     TITLELOGO_EMBLEM,
@@ -17,17 +17,17 @@ typedef enum {
 } TitleLogoTypes;
 
 // Object Class
-struct ObjectTitleLogo {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
 #if MANIA_USE_PLUS
     uint16 plusFrames;
     uint16 sfxPlus;
 #endif
-};
+} ObjectTitleLogo;
 
 // Entity Class
-struct EntityTitleLogo {
+typedef struct {
     RSDK_ENTITY
     int32 type;
 #if MANIA_USE_PLUS
@@ -41,7 +41,7 @@ struct EntityTitleLogo {
     Animator plusAnimator;
 #endif
     Animator ribbonCenterAnimator;
-};
+} EntityTitleLogo;
 
 // Object Struct
 extern ObjectTitleLogo *TitleLogo;

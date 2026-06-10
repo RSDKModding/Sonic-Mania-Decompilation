@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Snowflakes.h"
+#include "Global/Zone.h"
 
-ObjectSnowflakes *Snowflakes;
+ObjectSnowflakes *Snowflakes = NULL;
 
 void Snowflakes_Update(void)
 {

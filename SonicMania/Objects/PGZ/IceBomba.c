@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "IceBomba.h"
+#include "Ice.h"
+#include "Global/DebugMode.h"
+#include "Global/Explosion.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectIceBomba *IceBomba;
+ObjectIceBomba *IceBomba = NULL;
 
 void IceBomba_Update(void)
 {

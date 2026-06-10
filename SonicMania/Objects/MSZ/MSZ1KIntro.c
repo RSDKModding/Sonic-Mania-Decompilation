@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "MSZ1KIntro.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Global/Music.h"
+#include "Global/TitleCard.h"
 
-ObjectMSZ1KIntro *MSZ1KIntro;
+ObjectMSZ1KIntro *MSZ1KIntro = NULL;
 
 void MSZ1KIntro_Update(void)
 {

@@ -1,11 +1,11 @@
 #ifndef OBJ_PBL_PLAYER_H
 #define OBJ_PBL_PLAYER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 // Object Class
-struct ObjectPBL_Player {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 unused1;
@@ -15,10 +15,10 @@ struct ObjectPBL_Player {
     uint16 jumpFrames;
     uint16 ballFrames;
     uint16 sceneIndex;
-};
+} ObjectPBL_Player;
 
 // Entity Class
-struct EntityPBL_Player {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -39,7 +39,7 @@ struct EntityPBL_Player {
     bool32 jumpPress;
     bool32 jumpHold; // completely unused, but probably pretty likely
     Animator animator;
-};
+} EntityPBL_Player;
 
 // Object Struct
 extern ObjectPBL_Player *PBL_Player;

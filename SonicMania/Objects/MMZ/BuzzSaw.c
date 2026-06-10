@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "BuzzSaw.h"
+#include "Global/Player.h"
+#include "Global/Soundboard.h"
+#include "Global/Zone.h"
+#include "Helpers/MathHelpers.h"
 
-ObjectBuzzSaw *BuzzSaw;
+ObjectBuzzSaw *BuzzSaw = NULL;
 
 void BuzzSaw_Update(void)
 {

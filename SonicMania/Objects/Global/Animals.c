@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Animals.h"
+#include "Player.h"
+#include "Zone.h"
+#include "Common/Platform.h"
+#include "GHZ/Bridge.h"
 
-ObjectAnimals *Animals;
+ObjectAnimals *Animals = NULL;
 
 void Animals_Update(void)
 {

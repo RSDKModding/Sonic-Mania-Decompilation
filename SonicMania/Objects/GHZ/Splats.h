@@ -1,7 +1,7 @@
 #ifndef OBJ_SPLATS_H
 #define OBJ_SPLATS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     // GHZ
@@ -14,7 +14,7 @@ typedef enum {
 } SplatsTypes;
 
 // Object Class
-struct ObjectSplats {
+typedef struct {
     RSDK_OBJECT
     StateMachine(initialState);
     Hitbox hitboxBadnikGHZ;
@@ -23,9 +23,10 @@ struct ObjectSplats {
     uint16 aniFrames;
     uint16 sfxSplatsSpawn;
     uint16 sfxSplatsLand;
-};
+} ObjectSplats;
 
 // Entity Class
+typedef struct EntitySplats EntitySplats;
 struct EntitySplats {
     RSDK_ENTITY
     StateMachine(state);

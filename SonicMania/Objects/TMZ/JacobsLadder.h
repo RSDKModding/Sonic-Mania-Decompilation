@@ -1,17 +1,17 @@
 #ifndef OBJ_JACOBSLADDER_H
 #define OBJ_JACOBSLADDER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectJacobsLadder {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxLadder;
-};
+} ObjectJacobsLadder;
 
 // Entity Class
-struct EntityJacobsLadder {
+typedef struct {
     RSDK_ENTITY
     int32 height;
     int32 interval;
@@ -30,7 +30,7 @@ struct EntityJacobsLadder {
     Hitbox hitbox;
     Animator sideAnimator;
     Animator electricAnimator;
-};
+} EntityJacobsLadder;
 
 // Object Struct
 extern ObjectJacobsLadder *JacobsLadder;

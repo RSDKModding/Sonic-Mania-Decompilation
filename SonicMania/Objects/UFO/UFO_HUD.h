@@ -1,16 +1,16 @@
 #ifndef OBJ_UFO_HUD_H
 #define OBJ_UFO_HUD_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectUFO_HUD {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectUFO_HUD;
 
 // Entity Class
-struct EntityUFO_HUD {
+typedef struct {
     RSDK_ENTITY
     bool32 showRingCount;
     int32 timer;
@@ -19,7 +19,7 @@ struct EntityUFO_HUD {
     Animator numbersAnimator;
     Animator machAnimator;
     Animator stripeAnimator;
-};
+} EntityUFO_HUD;
 
 // Object Struct
 extern ObjectUFO_HUD *UFO_HUD;

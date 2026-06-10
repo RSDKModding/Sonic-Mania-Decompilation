@@ -1,15 +1,17 @@
 #ifndef OBJ_UIWAITSPINNER_H
 #define OBJ_UIWAITSPINNER_H
 
-#include "SonicMania.h"
+#include "Game.h"
+
+typedef struct EntityUIWaitSpinner EntityUIWaitSpinner;
 
 // Object Class
-struct ObjectUIWaitSpinner {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     int32 timer;
     EntityUIWaitSpinner *activeSpinner;
-};
+} ObjectUIWaitSpinner;
 
 // Entity Class
 struct EntityUIWaitSpinner {

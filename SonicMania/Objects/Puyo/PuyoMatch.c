@@ -5,9 +5,16 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PuyoMatch.h"
+#include "PuyoAttack.h"
+#include "PuyoBean.h"
+#include "Common/CollapsingPlatform.h"
+#include "Common/PlatformNode.h"
+#include "Global/APICallback.h"
+#include "Global/Zone.h"
+#include "Helpers/GameProgress.h"
 
-ObjectPuyoMatch *PuyoMatch;
+ObjectPuyoMatch *PuyoMatch = NULL;
 
 void PuyoMatch_Update(void)
 {

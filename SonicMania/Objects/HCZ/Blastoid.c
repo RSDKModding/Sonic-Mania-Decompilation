@@ -5,9 +5,17 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Blastoid.h"
+#include "Common/CollapsingPlatform.h"
+#include "Common/Water.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectBlastoid *Blastoid;
+ObjectBlastoid *Blastoid = NULL;
 
 void Blastoid_Update(void)
 {

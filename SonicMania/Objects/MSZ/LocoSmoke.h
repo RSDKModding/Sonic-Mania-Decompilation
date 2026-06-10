@@ -1,21 +1,21 @@
 #ifndef OBJ_LOCOSMOKE_H
 #define OBJ_LOCOSMOKE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectLocoSmoke {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 unused;
-};
+} ObjectLocoSmoke;
 
 // Entity Class
-struct EntityLocoSmoke {
+typedef struct {
     RSDK_ENTITY
     int32 timer;
     Animator animator;
-};
+} EntityLocoSmoke;
 
 // Object Struct
 extern ObjectLocoSmoke *LocoSmoke;

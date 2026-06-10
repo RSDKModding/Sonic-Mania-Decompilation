@@ -1,7 +1,7 @@
 #ifndef OBJ_UFO_CIRCUIT_H
 #define OBJ_UFO_CIRCUIT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { UFO_CIRCUIT_MODE_UNUSED } UFO_CircuitModes;
 
@@ -14,7 +14,7 @@ typedef enum {
 } UFO_CircuitThrottles;
 
 // Object Class
-struct ObjectUFO_Circuit {
+typedef struct {
     RSDK_OBJECT
     int32 nodeCount;
     int32 decelerationNoMach;
@@ -25,9 +25,10 @@ struct ObjectUFO_Circuit {
     int32 unused1;
     uint16 emeraldModel;
     uint16 sceneIndex;
-};
+} ObjectUFO_Circuit;
 
 // Entity Class
+typedef struct EntityUFO_Circuit EntityUFO_Circuit;
 struct EntityUFO_Circuit {
     RSDK_ENTITY
     StateMachine(state);

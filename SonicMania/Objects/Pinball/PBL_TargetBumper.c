@@ -5,10 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PBL_TargetBumper.h"
 
 #if MANIA_USE_PLUS
-ObjectPBL_TargetBumper *PBL_TargetBumper;
+#include "PBL_Camera.h"
+#include "PBL_Player.h"
+#include "PBL_Setup.h"
+#include "Global/Zone.h"
+
+ObjectPBL_TargetBumper *PBL_TargetBumper = NULL;
 
 void PBL_TargetBumper_Update(void)
 {

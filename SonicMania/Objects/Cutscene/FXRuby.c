@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "FXRuby.h"
+#include "Global/Zone.h"
+#include "Menu/UIWidgets.h"
 
-ObjectFXRuby *FXRuby;
+ObjectFXRuby *FXRuby = NULL;
 
 void FXRuby_Update(void)
 {

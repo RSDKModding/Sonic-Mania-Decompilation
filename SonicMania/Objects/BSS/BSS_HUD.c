@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "BSS_HUD.h"
+#include "BSS_Setup.h"
 
-ObjectBSS_HUD *BSS_HUD;
+ObjectBSS_HUD *BSS_HUD = NULL;
 
 void BSS_HUD_Update(void) {}
 

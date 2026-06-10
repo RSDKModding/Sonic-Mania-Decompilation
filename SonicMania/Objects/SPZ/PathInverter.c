@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PathInverter.h"
+#include "Global/Zone.h"
 
-ObjectPathInverter *PathInverter;
+ObjectPathInverter *PathInverter = NULL;
 
 void PathInverter_Update(void)
 {

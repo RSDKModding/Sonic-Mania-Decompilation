@@ -5,9 +5,16 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Rattlekiller.h"
+#include "Global/Debris.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectRattlekiller *Rattlekiller;
+ObjectRattlekiller *Rattlekiller = NULL;
 
 void Rattlekiller_Update(void)
 {

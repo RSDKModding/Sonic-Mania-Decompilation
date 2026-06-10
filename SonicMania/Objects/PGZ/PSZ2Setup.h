@@ -1,12 +1,12 @@
 #ifndef OBJ_PSZ2SETUP_H
 #define OBJ_PSZ2SETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { GENERICTRIGGER_PSZ2_PETALSINACTIVE, GENERICTRIGGER_PSZ2_PETALSACTIVE } GenericTriggerTypesPSZ2;
 
 // Object Class
-struct ObjectPSZ2Setup {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 petalAniDurationTable[8], { 9, 7, 6, 7, 9, 7, 6, 7 });
     int32 petalAniDuration;
@@ -15,12 +15,12 @@ struct ObjectPSZ2Setup {
     int16 petalTimer;
     uint16 aniTiles1;
     uint16 aniTiles2;
-};
+} ObjectPSZ2Setup;
 
 // Entity Class
-struct EntityPSZ2Setup {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityPSZ2Setup;
 
 // Object Struct
 extern ObjectPSZ2Setup *PSZ2Setup;

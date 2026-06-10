@@ -5,7 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "DemoMenu.h"
+#include "Global/Music.h"
+#include "Title/TitleSetup.h"
 
 ObjectDemoMenu *DemoMenu = NULL;
 

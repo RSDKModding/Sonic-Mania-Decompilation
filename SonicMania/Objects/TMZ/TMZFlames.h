@@ -1,22 +1,22 @@
 #ifndef OBJ_TMZFLAMES_H
 #define OBJ_TMZFLAMES_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectTMZFlames {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectTMZFlames;
 
 // Entity Class
-struct EntityTMZFlames {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
     int32 offset;
     Animator animator;
-};
+} EntityTMZFlames;
 
 // Object Struct
 extern ObjectTMZFlames *TMZFlames;

@@ -5,10 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "HangGlider.h"
 
 #if MANIA_USE_PLUS
-ObjectHangGlider *HangGlider;
+#include "Global/Zone.h"
+
+ObjectHangGlider *HangGlider = NULL;
 
 void HangGlider_Update(void)
 {

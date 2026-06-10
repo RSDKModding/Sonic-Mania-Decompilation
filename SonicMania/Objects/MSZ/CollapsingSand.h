@@ -1,18 +1,18 @@
 #ifndef OBJ_COLLAPSINGSAND_H
 #define OBJ_COLLAPSINGSAND_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectCollapsingSand {
+typedef struct {
     RSDK_OBJECT
     Animator animator;
     uint16 aniFrames;
     uint16 sfxSandFall;
-};
+} ObjectCollapsingSand;
 
 // Entity Class
-struct EntityCollapsingSand {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 size;
@@ -23,7 +23,7 @@ struct EntityCollapsingSand {
     Vector2 tilePos;
     Vector2 tileEndPos;
     Hitbox hitbox;
-};
+} EntityCollapsingSand;
 
 // Object Struct
 extern ObjectCollapsingSand *CollapsingSand;

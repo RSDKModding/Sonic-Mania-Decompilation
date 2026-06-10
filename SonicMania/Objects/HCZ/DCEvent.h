@@ -1,7 +1,7 @@
 #ifndef OBJ_DCEVENT_H
 #define OBJ_DCEVENT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     DCEVENT_EGGMAN,
@@ -15,7 +15,7 @@ typedef enum {
 } DCEventEggmanTypes;
 
 // Object Class
-struct ObjectDCEvent {
+typedef struct {
     RSDK_OBJECT
     Hitbox unusedHitbox1;
     Hitbox hitboxBomb;
@@ -26,10 +26,10 @@ struct ObjectDCEvent {
     uint16 sfxRumble;
     uint16 sfxImpact6;
     uint16 sfxImpact4;
-};
+} ObjectDCEvent;
 
 // Entity Class
-struct EntityDCEvent {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 numChildren;
@@ -38,7 +38,7 @@ struct EntityDCEvent {
     int32 startY;
     int32 timer;
     Animator animator;
-};
+} EntityDCEvent;
 
 // Object Struct
 extern ObjectDCEvent *DCEvent;

@@ -5,10 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "LRZ3Outro.h"
 
 #if MANIA_USE_PLUS
-ObjectLRZ3Outro *LRZ3Outro;
+#include "Global/Explosion.h"
+#include "Global/HUD.h"
+#include "Global/Zone.h"
+
+ObjectLRZ3Outro *LRZ3Outro = NULL;
 
 void LRZ3Outro_Update(void)
 {

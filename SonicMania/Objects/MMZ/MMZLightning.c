@@ -5,10 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "MMZLightning.h"
 
 #if MANIA_USE_PLUS
-ObjectMMZLightning *MMZLightning;
+ObjectMMZLightning *MMZLightning = NULL;
 
 void MMZLightning_Update(void)
 {

@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "HandLauncher.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectHandLauncher *HandLauncher;
+ObjectHandLauncher *HandLauncher = NULL;
 
 void HandLauncher_Update(void)
 {

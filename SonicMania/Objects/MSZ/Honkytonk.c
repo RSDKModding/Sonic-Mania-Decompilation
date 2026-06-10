@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Honkytonk.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectHonkytonk *Honkytonk;
+ObjectHonkytonk *Honkytonk = NULL;
 
 void Honkytonk_Update(void)
 {

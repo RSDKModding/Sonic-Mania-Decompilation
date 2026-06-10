@@ -1,7 +1,7 @@
 #ifndef OBJ_CYLINDER_H
 #define OBJ_CYLINDER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     CYLINDER_TUBE_H,
@@ -15,16 +15,16 @@ typedef enum {
 } CylinderTypes;
 
 // Object Class
-struct ObjectCylinder {
+typedef struct {
     RSDK_OBJECT
     // unused, all frames are calculated on the fly
     TABLE(int32 frameTable[24], { 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13 });
     Animator animator;
     uint16 aniFrames;
-};
+} ObjectCylinder;
 
 // Entity Class
-struct EntityCylinder {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -37,7 +37,7 @@ struct EntityCylinder {
     Hitbox hitboxSize;
     Hitbox hitboxL;
     Hitbox hitboxR;
-};
+} EntityCylinder;
 
 // Object Struct
 extern ObjectCylinder *Cylinder;

@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SuperSparkle.h"
+#include "Debris.h"
+#include "Player.h"
+#include "Ring.h"
+#include "Zone.h"
 
-ObjectSuperSparkle *SuperSparkle;
+ObjectSuperSparkle *SuperSparkle = NULL;
 
 void SuperSparkle_Update(void)
 {

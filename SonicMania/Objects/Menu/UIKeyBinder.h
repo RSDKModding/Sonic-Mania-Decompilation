@@ -1,7 +1,7 @@
 #ifndef OBJ_UIKEYBINDER_H
 #define OBJ_UIKEYBINDER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     UIKEYBINDER_UP,
@@ -27,8 +27,10 @@ typedef enum {
     UIKEYBINDER_FRAME_START = 12,
 } UIKeyBinderKeyFrameIDs;
 
+typedef struct EntityUIKeyBinder EntityUIKeyBinder;
+
 // Object Class
-struct ObjectUIKeyBinder {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxFail;
@@ -38,7 +40,7 @@ struct ObjectUIKeyBinder {
     int32 activeButtonID;
     bool32 isSelected;
 #endif
-};
+} ObjectUIKeyBinder;
 
 // Entity Class
 struct EntityUIKeyBinder {

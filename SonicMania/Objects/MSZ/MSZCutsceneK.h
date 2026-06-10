@@ -1,10 +1,13 @@
 #ifndef OBJ_MSZCUTSCENEK_H
 #define OBJ_MSZCUTSCENEK_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "HeavyMystic.h"
+#include "Tornado.h"
+#include "Cutscene/CutsceneSeq.h"
 
 // Object Class
-struct ObjectMSZCutsceneK {
+typedef struct {
     RSDK_OBJECT
     int32 unused;
     uint16 playerFrames;
@@ -15,12 +18,12 @@ struct ObjectMSZCutsceneK {
     Vector2 pos3;
     EntityTornado *tornado;
     EntityHeavyMystic *mystic;
-};
+} ObjectMSZCutsceneK;
 
 // Entity Class
-struct EntityMSZCutsceneK {
+typedef struct {
     MANIA_CUTSCENE_BASE
-};
+} EntityMSZCutsceneK;
 
 // Object Struct
 extern ObjectMSZCutsceneK *MSZCutsceneK;

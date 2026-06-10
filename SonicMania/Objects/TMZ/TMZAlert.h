@@ -1,22 +1,22 @@
 #ifndef OBJ_TMZALERT_H
 #define OBJ_TMZALERT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectTMZAlert {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectTMZAlert;
 
 // Entity Class
-struct EntityTMZAlert {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
     Animator screenAnimator;
     Animator messageAnimator;
-};
+} EntityTMZAlert;
 
 // Object Struct
 extern ObjectTMZAlert *TMZAlert;

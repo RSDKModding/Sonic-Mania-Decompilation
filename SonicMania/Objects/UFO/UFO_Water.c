@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UFO_Water.h"
+#include "UFO_Setup.h"
 
-ObjectUFO_Water *UFO_Water;
+ObjectUFO_Water *UFO_Water = NULL;
 
 void UFO_Water_Update(void) {}
 

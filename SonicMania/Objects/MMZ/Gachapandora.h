@@ -1,7 +1,7 @@
 #ifndef OBJ_GACHAPANDORA_H
 #define OBJ_GACHAPANDORA_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define GACHAPANDORA_CAPSULE_COUNT (4)
 
@@ -17,8 +17,10 @@ typedef enum {
     GACHAPANDORA_SPARK,
 } GachapandoraTypes;
 
+typedef struct EntityGachapandora EntityGachapandora;
+
 // Object Class
-struct ObjectGachapandora {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 capsuleOffsets[56],
           { 37, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 49, 50, 50, 50, 51, 51, 51, 51, 52, 52, 52, 52, 53, 53, 53, 53,
@@ -64,7 +66,7 @@ struct ObjectGachapandora {
     uint16 sfxPon;
     uint16 sfxFireball;
     uint16 sfxGiggle;
-};
+} ObjectGachapandora;
 
 // Entity Class
 struct EntityGachapandora {

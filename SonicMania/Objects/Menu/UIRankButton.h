@@ -1,17 +1,17 @@
 #ifndef OBJ_UIRANKBUTTON_H
 #define OBJ_UIRANKBUTTON_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 // Object Class
-struct ObjectUIRankButton {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectUIRankButton;
 
 // Entity Class
-struct EntityUIRankButton {
+typedef struct {
     MANIA_UI_ITEM_BASE
     bool32 showsName;
     LeaderboardEntry *leaderboardEntry;
@@ -41,7 +41,7 @@ struct EntityUIRankButton {
     Animator replayIconAnimator;
     Animator rankingAnimator;
     uint16 textFrames;
-};
+} EntityUIRankButton;
 
 // Object Struct
 extern ObjectUIRankButton *UIRankButton;

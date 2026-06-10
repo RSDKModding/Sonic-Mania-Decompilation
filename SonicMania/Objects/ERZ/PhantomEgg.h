@@ -1,7 +1,7 @@
 #ifndef OBJ_PHANTOMEGG_H
 #define OBJ_PHANTOMEGG_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     PHANTOMEGG_EGGMAN,
@@ -18,7 +18,7 @@ typedef enum {
 } PhantomEggAttackIDs;
 
 // Object Class
-struct ObjectPhantomEgg {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 debrisInfo[29], { 4,        0, 0, -0x20000, -0x28000, 1, 0, -0x20000, -0x28000, 2, 0, 0x20000, -0x20000, 3, 0, 0x28000,
                                   -0x20000, 4, 0, -0x10000, -0x10000, 5, 0, 0x10000,  -0x10000, 6, 0, -0x8000, -0x10000 });
@@ -51,10 +51,10 @@ struct ObjectPhantomEgg {
     uint16 sfxMissile;
     uint16 aniFrames;
     bool32 disableSuperForm;
-};
+} ObjectPhantomEgg;
 
 // Entity Class
-struct EntityPhantomEgg {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -78,7 +78,7 @@ struct EntityPhantomEgg {
     Animator eggmanAnimator;
     Animator rubyAnimator;
     Hitbox hitbox;
-};
+} EntityPhantomEgg;
 
 // Object Struct
 extern ObjectPhantomEgg *PhantomEgg;

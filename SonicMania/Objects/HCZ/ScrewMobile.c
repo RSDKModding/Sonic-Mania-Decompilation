@@ -5,9 +5,17 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ScrewMobile.h"
+#include "DCEvent.h"
+#include "DiveEggman.h"
+#include "Common/Water.h"
+#include "Global/Explosion.h"
+#include "Global/Player.h"
+#include "Global/Music.h"
+#include "Global/Zone.h"
+#include "Helpers/BadnikHelpers.h"
 
-ObjectScrewMobile *ScrewMobile;
+ObjectScrewMobile *ScrewMobile = NULL;
 
 void ScrewMobile_Update(void)
 {

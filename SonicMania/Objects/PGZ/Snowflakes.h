@@ -1,18 +1,18 @@
 #ifndef OBJ_SNOWFLAKES_H
 #define OBJ_SNOWFLAKES_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectSnowflakes {
+typedef struct {
     RSDK_OBJECT
     uint8 count;
     int32 unused;
     uint16 aniFrames;
-};
+} ObjectSnowflakes;
 
 // Entity Class
-struct EntitySnowflakes {
+typedef struct {
     RSDK_ENTITY
     int32 unused1;
     int32 unused2;
@@ -23,7 +23,7 @@ struct EntitySnowflakes {
     Vector2 positions[0x40];
     uint8 priority[0x40];
     uint16 angles[0x40];
-};
+} EntitySnowflakes;
 
 // Object Struct
 extern ObjectSnowflakes *Snowflakes;

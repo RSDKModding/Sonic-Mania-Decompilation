@@ -1,16 +1,17 @@
 #ifndef OBJ_HCZSPIKEBALL_H
 #define OBJ_HCZSPIKEBALL_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "HangConveyor.h"
 
 // Object Class
-struct ObjectHCZSpikeBall {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectHCZSpikeBall;
 
 // Entity Class
-struct EntityHCZSpikeBall {
+typedef struct {
     RSDK_ENTITY
     int32 unused1;
     Vector2 startPos;
@@ -19,7 +20,7 @@ struct EntityHCZSpikeBall {
     EntityHangConveyor *conveyor;
     Hitbox hitbox;
     Animator animator;
-};
+} EntityHCZSpikeBall;
 
 // Object Struct
 extern ObjectHCZSpikeBall *HCZSpikeBall;

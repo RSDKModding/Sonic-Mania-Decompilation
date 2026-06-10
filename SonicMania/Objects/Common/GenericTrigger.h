@@ -1,28 +1,28 @@
 #ifndef OBJ_GENERICTRIGGER_H
 #define OBJ_GENERICTRIGGER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     GENERICTRIGGER_NONE,
 } GenericTriggerIDs;
 
 // Object Class
-struct ObjectGenericTrigger {
+typedef struct {
     RSDK_OBJECT
     StateMachine(callbacks[16]);
     int32 playerID;
     uint16 aniFrames;
-};
+} ObjectGenericTrigger;
 
 // Entity Class
-struct EntityGenericTrigger {
+typedef struct {
     RSDK_ENTITY
     Vector2 size;
     uint8 triggerID;
     Hitbox hitbox;
     Animator animator;
-};
+} EntityGenericTrigger;
 
 // Object Struct
 extern ObjectGenericTrigger *GenericTrigger;

@@ -1,7 +1,7 @@
 #ifndef OBJ_UIVSCHARSELECTOR_H
 #define OBJ_UIVSCHARSELECTOR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     UIVSCHARSELECTOR_1P,
@@ -13,13 +13,13 @@ typedef enum {
 } UIVsCharSelectorPlayerIDs;
 
 // Object Class
-struct ObjectUIVsCharSelector {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectUIVsCharSelector;
 
 // Entity Class
-struct EntityUIVsCharSelector {
+typedef struct {
     MANIA_UI_ITEM_BASE
     uint8 playerID;
     bool32 prevSelected;
@@ -38,7 +38,7 @@ struct EntityUIVsCharSelector {
     Animator waitingAnimator;
     uint16 textFrames;
     int32 prevFrameID;
-};
+} EntityUIVsCharSelector;
 
 // Object Struct
 extern ObjectUIVsCharSelector *UIVsCharSelector;

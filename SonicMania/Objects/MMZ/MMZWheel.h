@@ -1,7 +1,7 @@
 #ifndef OBJ_MMZWHEEL_H
 #define OBJ_MMZWHEEL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     MMZWHEEL_MOTION_STIFF,
@@ -9,13 +9,13 @@ typedef enum {
 } MMZWheelMotionTypes;
 
 // Object Class
-struct ObjectMMZWheel {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectMMZWheel;
 
 // Entity Class
-struct EntityMMZWheel {
+typedef struct {
     RSDK_ENTITY
     int32 amplitude;
     uint8 childCount;
@@ -25,7 +25,7 @@ struct EntityMMZWheel {
     Vector2 offset;
     int32 unused;
     Animator animator;
-};
+} EntityMMZWheel;
 
 // Object Struct
 extern ObjectMMZWheel *MMZWheel;

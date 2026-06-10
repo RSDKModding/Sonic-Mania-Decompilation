@@ -5,10 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ReplayDB.h"
 
 #if MANIA_USE_PLUS
-ObjectReplayDB *ReplayDB;
+#include "LogHelpers.h"
+#include "TimeAttackData.h"
+#include "Global/APICallback.h"
+#include "Global/ReplayRecorder.h"
+
+ObjectReplayDB *ReplayDB = NULL;
 
 void ReplayDB_Update(void) {}
 

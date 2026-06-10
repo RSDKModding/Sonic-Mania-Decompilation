@@ -1,7 +1,7 @@
 #ifndef OBJ_TUESDAY_H
 #define OBJ_TUESDAY_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     TUESDAY_GONDOLA,
@@ -9,7 +9,7 @@ typedef enum {
 } TuesdayTypes;
 
 // Object Class
-struct ObjectTuesday {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxNode;
     Hitbox hitboxGondola;
@@ -19,9 +19,10 @@ struct ObjectTuesday {
     uint16 sfxBossHit;
     uint16 sfxExplosion;
     uint16 sfxDrop;
-};
+} ObjectTuesday;
 
 // Entity Class
+typedef struct EntityTuesday EntityTuesday;
 struct EntityTuesday {
     RSDK_ENTITY
     StateMachine(state);

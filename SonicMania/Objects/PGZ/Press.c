@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Press.h"
+#include "Crate.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectPress *Press;
+ObjectPress *Press = NULL;
 
 void Press_Update(void)
 {

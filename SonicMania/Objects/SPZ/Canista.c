@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Canista.h"
+#include "Global/DebugMode.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectCanista *Canista;
+ObjectCanista *Canista = NULL;
 
 // This object looks like it was based on Unused/WallCrawl
 // Would explain WallCrawl's presence in the blueprint sheet, being a "proto" form of this

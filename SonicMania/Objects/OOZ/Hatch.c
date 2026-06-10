@@ -5,9 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Hatch.h"
+#include "OOZSetup.h"
+#include "FBZ/WarpDoor.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectHatch *Hatch;
+ObjectHatch *Hatch = NULL;
 
 void Hatch_Update(void)
 {

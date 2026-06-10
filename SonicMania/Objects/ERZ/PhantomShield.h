@@ -1,17 +1,17 @@
 #ifndef OBJ_PHANTOMSHIELD_H
 #define OBJ_PHANTOMSHIELD_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectPhantomShield {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
-};
+} ObjectPhantomShield;
 
 // Entity Class
-struct EntityPhantomShield {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     bool32 shieldActive;
@@ -19,7 +19,7 @@ struct EntityPhantomShield {
     int32 playerTimer[PLAYER_COUNT];
     Entity *parent;
     Animator animator;
-};
+} EntityPhantomShield;
 
 // Object Struct
 extern ObjectPhantomShield *PhantomShield;

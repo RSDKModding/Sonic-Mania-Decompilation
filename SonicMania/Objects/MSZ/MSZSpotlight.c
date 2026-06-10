@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "MSZSpotlight.h"
+#include "HeavyMystic.h"
+#include "Global/Zone.h"
 
-ObjectMSZSpotlight *MSZSpotlight;
+ObjectMSZSpotlight *MSZSpotlight = NULL;
 
 void MSZSpotlight_Update(void)
 {

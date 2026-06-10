@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "E3MenuSetup.h"
 
 #if !MANIA_USE_PLUS
+#include "MenuParam.h"
+#include "UICharButton.h"
+#include "UITAZoneModule.h"
+#include "Helpers/TimeAttackData.h"
+
 ObjectE3MenuSetup *E3MenuSetup = NULL;
 
 void E3MenuSetup_Update(void)

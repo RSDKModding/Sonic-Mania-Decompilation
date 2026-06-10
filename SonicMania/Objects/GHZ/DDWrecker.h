@@ -1,7 +1,7 @@
 #ifndef OBJ_DDWRECKER_H
 #define OBJ_DDWRECKER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     DDWRECKER_SETUP,
@@ -12,7 +12,7 @@ typedef enum {
 } DDWreckerTypes;
 
 // Object Class
-struct ObjectDDWrecker {
+typedef struct {
     RSDK_OBJECT
     int32 camBoundL;
     int32 camBoundR;
@@ -30,9 +30,10 @@ struct ObjectDDWrecker {
     uint16 sfxAssemble;
     uint16 sfxRotate;
     uint16 sfxSharp;
-};
+} ObjectDDWrecker;
 
 // Entity Class
+typedef struct EntityDDWrecker EntityDDWrecker;
 struct EntityDDWrecker {
     RSDK_ENTITY
     StateMachine(state);

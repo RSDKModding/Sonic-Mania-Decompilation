@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Button.h"
+#include "Eggman.h"
+#include "ERZ/PhantomRider.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectButton *Button;
+ObjectButton *Button = NULL;
 
 void Button_Update(void)
 {

@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "CrashTest.h"
+#include "Global/Debris.h"
+#include "Global/Explosion.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectCrashTest *CrashTest;
+ObjectCrashTest *CrashTest = NULL;
 
 void CrashTest_Update(void)
 {

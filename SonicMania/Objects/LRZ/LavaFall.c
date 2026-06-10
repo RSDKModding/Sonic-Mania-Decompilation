@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "LavaFall.h"
+#include "Global/Player.h"
+#include "Global/Shield.h"
+#include "Global/Zone.h"
 
-ObjectLavaFall *LavaFall;
+ObjectLavaFall *LavaFall = NULL;
 
 void LavaFall_Update(void)
 {

@@ -5,9 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIKeyBinder.h"
+#include "UIButtonPrompt.h"
+#include "UIControl.h"
+#include "UIDialog.h"
+#include "UIWidgets.h"
+#include "Global/Localization.h"
+#include "Helpers/LogHelpers.h"
 
-ObjectUIKeyBinder *UIKeyBinder;
+ObjectUIKeyBinder *UIKeyBinder = NULL;
 
 void UIKeyBinder_Update(void)
 {

@@ -1,12 +1,12 @@
 #ifndef OBJ_MONKEYDUDE_H
 #define OBJ_MONKEYDUDE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define MonkeyDude_ArmJointCount (4)
 
 // Object Class
-struct ObjectMonkeyDude {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxCoconut;
@@ -17,10 +17,10 @@ struct ObjectMonkeyDude {
 #if MANIA_USE_PLUS
     uint16 sfxDrop;
 #endif
-};
+} ObjectMonkeyDude;
 
 // Entity Class
-struct EntityMonkeyDude {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -41,7 +41,7 @@ struct EntityMonkeyDude {
     Animator bodyAnimator;
     Animator handAnimator;
     int32 coconutFrame;
-};
+} EntityMonkeyDude;
 
 // Object Struct
 extern ObjectMonkeyDude *MonkeyDude;

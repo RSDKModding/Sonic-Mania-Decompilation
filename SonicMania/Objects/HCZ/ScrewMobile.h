@@ -1,7 +1,8 @@
 #ifndef OBJ_SCREWMOBILE_H
 #define OBJ_SCREWMOBILE_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Whirlpool.h"
 
 typedef enum {
     SCREWMOBILE_MOBILE,
@@ -9,7 +10,7 @@ typedef enum {
 } ScrewMobileTypes;
 
 // Object Class
-struct ObjectScrewMobile {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxCockpit;
     Hitbox hitboxDepthCharge;
@@ -20,10 +21,10 @@ struct ObjectScrewMobile {
     uint16 sfxEggMobile;
     uint16 sfxBigFan;
     uint16 sfxImpact;
-};
+} ObjectScrewMobile;
 
 // Entity Class
-struct EntityScrewMobile {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -41,7 +42,7 @@ struct EntityScrewMobile {
     Animator whirlpoolAnimator;
     Animator whirlpoolTopAnimator;
     Animator whirlpoolBottomAnimator;
-};
+} EntityScrewMobile;
 
 // Object Struct
 extern ObjectScrewMobile *ScrewMobile;

@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "GiantPistol.h"
+#include "MSZSetup.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectGiantPistol *GiantPistol;
+ObjectGiantPistol *GiantPistol = NULL;
 
 void GiantPistol_Update(void)
 {

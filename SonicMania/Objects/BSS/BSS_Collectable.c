@@ -5,9 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "BSS_Collectable.h"
 
-ObjectBSS_Collectable *BSS_Collectable;
+ObjectBSS_Collectable *BSS_Collectable = NULL;
 
 void BSS_Collectable_Update(void) {}
 

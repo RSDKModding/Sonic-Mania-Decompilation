@@ -1,7 +1,7 @@
 #ifndef OBJ_UITEXT_H
 #define OBJ_UITEXT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     UITEXT_ALIGN_LEFT,
@@ -10,13 +10,13 @@ typedef enum {
 } UITextAlignments;
 
 // Object Class
-struct ObjectUIText {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectUIText;
 
 // Entity Class
-struct EntityUIText {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -31,7 +31,7 @@ struct EntityUIText {
     int32 data3;
     bool32 highlighted;
     Animator animator;
-};
+} EntityUIText;
 
 // Object Struct
 extern ObjectUIText *UIText;

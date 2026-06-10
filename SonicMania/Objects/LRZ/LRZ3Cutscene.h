@@ -1,19 +1,20 @@
 #ifndef OBJ_LRZ3CUTSCENE_H
 #define OBJ_LRZ3CUTSCENE_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Cutscene/CutsceneSeq.h"
 
 // Object Class
-struct ObjectLRZ3Cutscene {
+typedef struct {
     RSDK_OBJECT
     int32 unused; // possibly aniFrames?
-};
+} ObjectLRZ3Cutscene;
 
 // Entity Class
-struct EntityLRZ3Cutscene {
+typedef struct {
     RSDK_ENTITY
     int32 unused;
-};
+} EntityLRZ3Cutscene;
 
 // Object Struct
 extern ObjectLRZ3Cutscene *LRZ3Cutscene;

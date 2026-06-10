@@ -1,19 +1,19 @@
 #ifndef OBJ_PHANTOMMYSTIC_H
 #define OBJ_PHANTOMMYSTIC_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectPhantomMystic {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxCupSwap;
     uint16 sfxBigLaser;
     uint16 sfxImpact;
-};
+} ObjectPhantomMystic;
 
 // Entity Class
-struct EntityPhantomMystic {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -41,7 +41,7 @@ struct EntityPhantomMystic {
     Animator cupSpikeAnimator; // Not actually ever drawn...
     Animator cupBlastAnimator;
     Hitbox hitbox;
-};
+} EntityPhantomMystic;
 
 // Object Struct
 extern ObjectPhantomMystic *PhantomMystic;

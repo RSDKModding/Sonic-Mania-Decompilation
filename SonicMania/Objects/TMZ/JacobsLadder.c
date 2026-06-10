@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "JacobsLadder.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectJacobsLadder *JacobsLadder;
+ObjectJacobsLadder *JacobsLadder = NULL;
 
 void JacobsLadder_Update(void)
 {

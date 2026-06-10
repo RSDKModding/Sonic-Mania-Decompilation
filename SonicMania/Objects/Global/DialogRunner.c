@@ -5,10 +5,27 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "DialogRunner.h"
 
 #if MANIA_USE_PLUS
-ObjectDialogRunner *DialogRunner;
+#include "APICallback.h"
+#include "Localization.h"
+#include "Music.h"
+#include "SaveGame.h"
+#include "Zone.h"
+#include "Cutscene/FXFade.h"
+#include "Helpers/GameProgress.h"
+#include "Helpers/LogHelpers.h"
+#include "Helpers/Options.h"
+#include "Helpers/TimeAttackData.h"
+#include "Menu/ManiaModeMenu.h"
+#include "Menu/MenuSetup.h"
+#include "Menu/UIControl.h"
+#include "Menu/UIDialog.h"
+#include "Menu/UIWaitSpinner.h"
+#include "UFO/UFO_Setup.h"
+
+ObjectDialogRunner *DialogRunner = NULL;
 
 void DialogRunner_Update(void)
 {

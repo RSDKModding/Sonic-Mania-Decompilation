@@ -5,9 +5,16 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Newspaper.h"
+#include "Global/Debris.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#if !MANIA_USE_PLUS
+#include "Common/Platform.h"
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectNewspaper *Newspaper;
+ObjectNewspaper *Newspaper = NULL;
 
 void Newspaper_Update(void)
 {

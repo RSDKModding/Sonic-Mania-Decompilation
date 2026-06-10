@@ -1,20 +1,23 @@
 #ifndef OBJ_PSZ1INTRO_H
 #define OBJ_PSZ1INTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
+#include "Cutscene/CutsceneSeq.h"
+#include "FBZ/HangGlider.h"
+
 // Object Class
-struct ObjectPSZ1Intro {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectPSZ1Intro;
 
 // Entity Class
-struct EntityPSZ1Intro {
+typedef struct {
     RSDK_ENTITY
     int32 timer;
     EntityHangGlider *gliders[PLAYER_COUNT];
-};
+} EntityPSZ1Intro;
 
 // Object Struct
 extern ObjectPSZ1Intro *PSZ1Intro;

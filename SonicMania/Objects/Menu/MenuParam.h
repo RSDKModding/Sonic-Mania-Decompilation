@@ -1,7 +1,7 @@
 #ifndef OBJ_MENUPARAM_H
 #define OBJ_MENUPARAM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     BSS_SELECTION_NONE,
@@ -28,12 +28,12 @@ typedef enum {
 } ExtrasSelectionIDs;
 
 // Object Class
-struct ObjectMenuParam {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectMenuParam;
 
 // Entity Class
-struct EntityMenuParam {
+typedef struct {
     RSDK_ENTITY
     uint8 puyoSelection;
     uint8 bssSelection;
@@ -63,7 +63,7 @@ struct EntityMenuParam {
     int32 vsZoneID;
     int32 vsActID;
     int32 creditsReturnToMenu;
-};
+} EntityMenuParam;
 
 // Object Struct
 extern ObjectMenuParam *MenuParam;

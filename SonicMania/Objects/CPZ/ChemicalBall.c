@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ChemicalBall.h"
+#include "Global/Player.h"
+#include "Global/TimeAttackGate.h"
+#include "Global/Zone.h"
 
-ObjectChemicalBall *ChemicalBall;
+ObjectChemicalBall *ChemicalBall = NULL;
 
 void ChemicalBall_Update(void)
 {

@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UICreditsText.h"
+#include "UIWidgets.h"
 
-ObjectUICreditsText *UICreditsText;
+ObjectUICreditsText *UICreditsText = NULL;
 
 void UICreditsText_Update(void)
 {

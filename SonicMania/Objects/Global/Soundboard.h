@@ -1,12 +1,12 @@
 #ifndef OBJ_SOUNDBOARD_H
 #define OBJ_SOUNDBOARD_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define SOUNDBOARD_SFX_COUNT (32)
 
 // Object Class
-struct ObjectSoundboard {
+typedef struct {
     RSDK_OBJECT
     int32 sfxCount;
     uint16 sfxList[SOUNDBOARD_SFX_COUNT];
@@ -18,12 +18,12 @@ struct ObjectSoundboard {
     int32 sfxPlayingTimer[SOUNDBOARD_SFX_COUNT];
     int32 sfxFadeOutTimer[SOUNDBOARD_SFX_COUNT];
     int32 sfxFadeOutDuration[SOUNDBOARD_SFX_COUNT];
-};
+} ObjectSoundboard;
 
 // Entity Class
-struct EntitySoundboard {
+typedef struct {
     RSDK_ENTITY
-};
+} EntitySoundboard;
 
 // Object Struct
 extern ObjectSoundboard *Soundboard;

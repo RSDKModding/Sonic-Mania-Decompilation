@@ -5,7 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "GameProgress.h"
+#include "LogHelpers.h"
+#include "Global/APICallback.h"
+#include "Global/Localization.h"
+#include "Global/SaveGame.h"
+#include "Global/Zone.h"
 
 // clang-format off
 AchievementID achievementList[] = {
@@ -30,7 +35,7 @@ AchievementID achievementList[] = {
 };
 // clang-format on
 
-ObjectGameProgress *GameProgress;
+ObjectGameProgress *GameProgress = NULL;
 
 void GameProgress_Update(void) {}
 

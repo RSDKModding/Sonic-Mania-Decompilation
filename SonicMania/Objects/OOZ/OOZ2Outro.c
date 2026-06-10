@@ -5,10 +5,17 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "OOZ2Outro.h"
 
 #if MANIA_USE_PLUS
-ObjectOOZ2Outro *OOZ2Outro;
+#include "MegaOctus.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Global/HUD.h"
+#include "Global/Music.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+
+ObjectOOZ2Outro *OOZ2Outro = NULL;
 
 void OOZ2Outro_Update(void)
 {

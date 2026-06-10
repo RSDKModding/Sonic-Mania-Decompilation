@@ -1,10 +1,11 @@
 #ifndef OBJ_SENTRYBUG_H
 #define OBJ_SENTRYBUG_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 // Object Class
-struct ObjectSentryBug {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 orbOffsets_Attached[84], { -0x50000, 0x30000,  -0x90000, 0xA0000,  -0x70000, 0x100000, 0x70000,  0x30000,  0x30000,  0xA0000,
                                             -0x30000, 0x100000, -0x70000, 0x30000,  -0xB0000, 0xA0000,  -0x80000, 0x100000, 0x90000,  0x30000,
@@ -23,10 +24,10 @@ struct ObjectSentryBug {
     uint16 aniFrames;
     uint16 sfxPon;
     uint16 sfxSwarm;
-};
+} ObjectSentryBug;
 
 // Entity Class
-struct EntitySentryBug {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateOrbs);
@@ -50,7 +51,7 @@ struct EntitySentryBug {
     Matrix matWorld;
     Animator bugAnimator;
     Animator orbAnimator;
-};
+} EntitySentryBug;
 
 // Object Struct
 extern ObjectSentryBug *SentryBug;

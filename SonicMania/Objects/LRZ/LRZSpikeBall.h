@@ -1,18 +1,18 @@
 #ifndef OBJ_LRZSPIKEBALL_H
 #define OBJ_LRZSPIKEBALL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectLRZSpikeBall {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxCharge;
     uint16 sfxExplosion;
-};
+} ObjectLRZSpikeBall;
 
 // Entity Class
-struct EntityLRZSpikeBall {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 interval;
@@ -26,7 +26,7 @@ struct EntityLRZSpikeBall {
     Hitbox hitboxBall;
     Animator baseAnimator;
     Animator ballAnimator;
-};
+} EntityLRZSpikeBall;
 
 // Object Struct
 extern ObjectLRZSpikeBall *LRZSpikeBall;

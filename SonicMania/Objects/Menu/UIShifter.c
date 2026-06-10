@@ -5,10 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIShifter.h"
 
 #if MANIA_USE_PLUS
-ObjectUIShifter *UIShifter;
+ObjectUIShifter *UIShifter = NULL;
 
 void UIShifter_Update(void) {}
 

@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "BreakBar.h"
+#include "Global/Debris.h"
+#include "Global/Zone.h"
 
-ObjectBreakBar *BreakBar;
+ObjectBreakBar *BreakBar = NULL;
 
 void BreakBar_Update(void)
 {

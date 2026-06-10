@@ -5,9 +5,16 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "GHZSetup.h"
+#include "GHZ2Outro.h"
+#include "Common/BGSwitch.h"
+#include "Common/Decoration.h"
+#include "Common/Water.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Global/Animals.h"
+#include "Global/Zone.h"
 
-ObjectGHZSetup *GHZSetup;
+ObjectGHZSetup *GHZSetup = NULL;
 
 void GHZSetup_Update(void) {}
 

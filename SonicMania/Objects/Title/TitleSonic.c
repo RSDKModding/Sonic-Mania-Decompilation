@@ -5,9 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TitleSonic.h"
 
-ObjectTitleSonic *TitleSonic;
+ObjectTitleSonic *TitleSonic = NULL;
 
 void TitleSonic_Update(void)
 {

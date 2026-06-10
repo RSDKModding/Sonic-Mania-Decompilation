@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TimeTravelSetup.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#include "Helpers/ParticleHelpers.h"
 
-ObjectTimeTravelSetup *TimeTravelSetup;
+ObjectTimeTravelSetup *TimeTravelSetup = NULL;
 
 void TimeTravelSetup_Update(void) {}
 

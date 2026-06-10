@@ -1,16 +1,16 @@
 #ifndef OBJ_PUYOINDICATOR_H
 #define OBJ_PUYOINDICATOR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectPuyoIndicator {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectPuyoIndicator;
 
 // Entity Class
-struct EntityPuyoIndicator {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 playerID;
@@ -19,7 +19,7 @@ struct EntityPuyoIndicator {
     int32 unused2;
     int32 unused3;
     Animator animator;
-};
+} EntityPuyoIndicator;
 
 // Object Struct
 extern ObjectPuyoIndicator *PuyoIndicator;

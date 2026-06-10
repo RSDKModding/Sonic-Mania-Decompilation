@@ -1,7 +1,7 @@
 #ifndef OBJ_TURNTABLE_H
 #define OBJ_TURNTABLE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     TURNTABLE_SMALL,
@@ -9,13 +9,13 @@ typedef enum {
 } TurntableTypes;
 
 // Object Class
-struct ObjectTurntable {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectTurntable;
 
 // Entity Class
-struct EntityTurntable {
+typedef struct {
     RSDK_ENTITY
     uint8 type;
     int32 angleVel;
@@ -28,7 +28,7 @@ struct EntityTurntable {
     int32 playerFrames[PLAYER_COUNT];
     Hitbox hitbox;
     Animator animator;
-};
+} EntityTurntable;
 
 // Object Struct
 extern ObjectTurntable *Turntable;

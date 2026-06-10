@@ -1,7 +1,7 @@
 #ifndef OBJ_TITLEBG_H
 #define OBJ_TITLEBG_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     TITLEBG_MOUNTAIN1,
@@ -12,21 +12,21 @@ typedef enum {
 } TitleBGTypes;
 
 // Object Class
-struct ObjectTitleBG {
+typedef struct {
     RSDK_OBJECT
     int32 palTimer;
     int32 timer;
     int32 angle;
     uint16 aniFrames;
-};
+} ObjectTitleBG;
 
 // Entity Class
-struct EntityTitleBG {
+typedef struct {
     RSDK_ENTITY
     TitleBGTypes type;
     int32 timer;
     Animator animator;
-};
+} EntityTitleBG;
 
 // Object Struct
 extern ObjectTitleBG *TitleBG;

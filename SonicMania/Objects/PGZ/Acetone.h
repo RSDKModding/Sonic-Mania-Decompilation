@@ -1,18 +1,18 @@
 #ifndef OBJ_ACETONE_H
 #define OBJ_ACETONE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectAcetone {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxFrostThrower;
     uint16 sfxFreeze;
-};
+} ObjectAcetone;
 
 // Entity Class
-struct EntityAcetone {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint16 timer;
@@ -26,7 +26,7 @@ struct EntityAcetone {
     int32 maxGustCount[4];
     int32 gustCount[4];
     Vector2 gustPos[12];
-};
+} EntityAcetone;
 
 // Object Entity
 extern ObjectAcetone *Acetone;

@@ -1,19 +1,19 @@
 #ifndef OBJ_CATERKILLERJR_H
 #define OBJ_CATERKILLERJR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define CATERKILLERJR_SEGMENT_COUNT (7)
 
 // Object Class
-struct ObjectCaterkillerJr {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
-};
+} ObjectCaterkillerJr;
 
 // Entity Class
-struct EntityCaterkillerJr {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -26,7 +26,7 @@ struct EntityCaterkillerJr {
     int32 boundsR;
     Animator bodyAnimators[CATERKILLERJR_SEGMENT_COUNT];
     Animator smokePuffAnimators[3];
-};
+} EntityCaterkillerJr;
 
 // Object Struct
 extern ObjectCaterkillerJr *CaterkillerJr;

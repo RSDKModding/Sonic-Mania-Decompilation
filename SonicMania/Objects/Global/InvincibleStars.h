@@ -1,16 +1,17 @@
 #ifndef OBJ_INVINCIBLESTARS_H
 #define OBJ_INVINCIBLESTARS_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Player.h"
 
 // Object Class
-struct ObjectInvincibleStars {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectInvincibleStars;
 
 // Entity Class
-struct EntityInvincibleStars {
+typedef struct {
     RSDK_ENTITY
     EntityPlayer *player;
     Vector2 starPos[8];
@@ -18,7 +19,7 @@ struct EntityInvincibleStars {
     int32 starFrame[2];
     int32 starOffset;
     Animator starAnimator[4];
-};
+} EntityInvincibleStars;
 
 // Object Struct
 extern ObjectInvincibleStars *InvincibleStars;

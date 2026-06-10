@@ -5,9 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UFO_Message.h"
 
-ObjectUFO_Message *UFO_Message;
+ObjectUFO_Message *UFO_Message = NULL;
 
 void UFO_Message_Update(void)
 {

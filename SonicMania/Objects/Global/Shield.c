@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Shield.h"
+#include "Debris.h"
+#include "Player.h"
+#include "Zone.h"
 
-ObjectShield *Shield;
+ObjectShield *Shield = NULL;
 
 void Shield_Update(void)
 {

@@ -5,10 +5,33 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "EncoreIntro.h"
 
 #if MANIA_USE_PLUS
-ObjectEncoreIntro *EncoreIntro;
+#include "AIZEncoreTutorial.h"
+#include "SchrodingersCapsule.h"
+#include "Cutscene/CutsceneHBH.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Cutscene/CutsceneSeq.h"
+#include "Cutscene/FXRuby.h"
+#include "Cutscene/RubyPortal.h"
+#include "ERZ/PhantomRuby.h"
+#include "Global/ActClear.h"
+#include "Global/Animals.h"
+#include "Global/Camera.h"
+#include "Global/Explosion.h"
+#include "Global/HUD.h"
+#include "Global/Music.h"
+#include "Global/Player.h"
+#include "Global/SaveGame.h"
+#include "Global/StarPost.h"
+#include "Global/TitleCard.h"
+#include "Global/Zone.h"
+#include "Helpers/BadnikHelpers.h"
+#include "Menu/UIWaitSpinner.h"
+#include "MSZ/HeavyMystic.h"
+
+ObjectEncoreIntro *EncoreIntro = NULL;
 
 void EncoreIntro_Update(void)
 {

@@ -1,7 +1,8 @@
 #ifndef OBJ_CPZBOSS_H
 #define OBJ_CPZBOSS_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Puyo/PuyoMatch.h"
 
 typedef enum {
     CPZBOSS_PLAYER,
@@ -9,7 +10,7 @@ typedef enum {
 } CPZBossTypes;
 
 // Object Class
-struct ObjectCPZBoss {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxPlayerTrigger;
     EntityPuyoMatch *managers[2];
@@ -17,10 +18,10 @@ struct ObjectCPZBoss {
     uint16 aniFrames;
     uint16 playerFrames;
     uint16 sfxExplosion;
-};
+} ObjectCPZBoss;
 
 // Entity Class
-struct EntityCPZBoss {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -30,7 +31,7 @@ struct EntityCPZBoss {
     Animator panelAnimator;
     Animator enterAnimator;
     Animator characterAnimator;
-};
+} EntityCPZBoss;
 
 // Object Struct
 extern ObjectCPZBoss *CPZBoss;

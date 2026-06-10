@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIMedallionPanel.h"
+#include "Global/APICallback.h"
+#include "Helpers/GameProgress.h"
 
-ObjectUIMedallionPanel *UIMedallionPanel;
+ObjectUIMedallionPanel *UIMedallionPanel = NULL;
 
 void UIMedallionPanel_Update(void) {}
 

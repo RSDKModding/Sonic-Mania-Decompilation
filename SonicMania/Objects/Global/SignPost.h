@@ -1,7 +1,7 @@
 #ifndef OBJ_SIGNPOST_H
 #define OBJ_SIGNPOST_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     SIGNPOST_RUNPAST,
@@ -23,7 +23,7 @@ typedef enum {
 } SignPostAniIDs;
 
 // Object Class
-struct ObjectSignPost {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxSignPost;
@@ -34,10 +34,10 @@ struct ObjectSignPost {
     uint16 sfxBubbleBounce;
     uint16 sfxSlide;
     uint8 maxPlayerCount;
-};
+} ObjectSignPost;
 
 // Entity Class
-struct EntitySignPost {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -60,7 +60,7 @@ struct EntitySignPost {
     Animator standAnimator;
     uint8 activePlayers;
     bool32 spawnedByDebugMode;
-};
+} EntitySignPost;
 
 // Object Struct
 extern ObjectSignPost *SignPost;

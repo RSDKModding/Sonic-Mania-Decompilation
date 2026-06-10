@@ -1,7 +1,8 @@
 #ifndef OBJ_LAUNDROMOBILE_H
 #define OBJ_LAUNDROMOBILE_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Whirlpool.h"
 
 typedef enum {
     LAUNDROMOBILE_BOSS,
@@ -13,8 +14,10 @@ typedef enum {
     LAUNDROMOBILE_DELAYEDSPLASH,
 } LaundroMobileTypes;
 
+typedef struct EntityLaundroMobile EntityLaundroMobile;
+
 // Object Class
-struct ObjectLaundroMobile {
+typedef struct {
     RSDK_OBJECT
     uint8 health;
     uint8 invincibilityTimer;
@@ -67,7 +70,7 @@ struct ObjectLaundroMobile {
     uint16 sfxRumble;
     uint16 sfxImpact;
 #endif
-};
+} ObjectLaundroMobile;
 
 // Entity Class
 struct EntityLaundroMobile {

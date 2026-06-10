@@ -5,10 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PSZ1Intro.h"
+#include "Common/BGSwitch.h"
+#include "Cutscene/CutsceneRules.h"
 
 #if MANIA_USE_PLUS
-ObjectPSZ1Intro *PSZ1Intro;
+ObjectPSZ1Intro *PSZ1Intro = NULL;
 
 void PSZ1Intro_Update(void)
 {

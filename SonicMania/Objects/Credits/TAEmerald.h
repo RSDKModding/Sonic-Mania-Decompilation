@@ -1,23 +1,23 @@
 #ifndef OBJ_TAEMERALD_H
 #define OBJ_TAEMERALD_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectTAEmerald {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectTAEmerald;
 
 // Entity Class
-struct EntityTAEmerald {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 color;
     int32 timer;
     Vector2 originPos;
     Animator animator;
-};
+} EntityTAEmerald;
 
 // Object Struct
 extern ObjectTAEmerald *TAEmerald;

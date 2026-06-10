@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ContinuePlayer.h"
+#include "Global/Player.h"
 
-ObjectContinuePlayer *ContinuePlayer;
+ObjectContinuePlayer *ContinuePlayer = NULL;
 
 void ContinuePlayer_Update(void)
 {

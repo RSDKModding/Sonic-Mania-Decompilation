@@ -1,20 +1,21 @@
 #ifndef OBJ_MSZ1KINTRO_H
 #define OBJ_MSZ1KINTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Cutscene/CutsceneSeq.h"
 
 // Object Class
-struct ObjectMSZ1KIntro {
+typedef struct {
     RSDK_OBJECT
     int32 unused;
     uint16 sfxImpact;
     uint16 playerFrames;
-};
+} ObjectMSZ1KIntro;
 
 // Entity Class
-struct EntityMSZ1KIntro {
+typedef struct {
     MANIA_CUTSCENE_BASE
-};
+} EntityMSZ1KIntro;
 
 // Object Struct
 extern ObjectMSZ1KIntro *MSZ1KIntro;

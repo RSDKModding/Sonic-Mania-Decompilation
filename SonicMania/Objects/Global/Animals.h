@@ -1,7 +1,7 @@
 #ifndef OBJ_ANIMALS_H
 #define OBJ_ANIMALS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     ANIMAL_FLICKY,
@@ -25,7 +25,7 @@ typedef enum {
 } AnimalBehaviours;
 
 // Object Class
-struct ObjectAnimals {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 hitboxes[12], { 0x70000, 0x70000, 0xC0000, 0xA0000, 0x80000, 0x80000, 0x80000, 0x80000, 0x70000, 0x50000, 0x70000, 0x60000 });
     TABLE(int32 gravityStrength[12], { 0x1800, 0x3800, 0x3800, 0x3800, 0x3800, 0x3800, 0x3800, 0x3800, 0x1800, 0x3800, 0x3800, 0x3800 });
@@ -37,10 +37,10 @@ struct ObjectAnimals {
     int32 animalTypes[2];
     bool32 hasPlatform;
     bool32 hasBridge;
-};
+} ObjectAnimals;
 
 // Entity Class
-struct EntityAnimals {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -48,7 +48,7 @@ struct EntityAnimals {
     AnimalBehaviours behaviour;
     Animator animator;
     Hitbox hitboxAnimal;
-};
+} EntityAnimals;
 
 // Object Struct
 extern ObjectAnimals *Animals;

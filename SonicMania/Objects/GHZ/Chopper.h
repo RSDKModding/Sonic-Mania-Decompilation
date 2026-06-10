@@ -1,22 +1,22 @@
 #ifndef OBJ_CHOPPER_H
 #define OBJ_CHOPPER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { CHOPPER_JUMP, CHOPPER_SWIM } ChopperTypes;
 
 // Object Class
-struct ObjectChopper {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxJump;
     Hitbox hitboxSwim;
     Hitbox hitboxRange;
     Hitbox hitboxWater;
     uint16 aniFrames;
-};
+} ObjectChopper;
 
 // Entity Class
-struct EntityChopper {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -25,7 +25,7 @@ struct EntityChopper {
     Vector2 startPos;
     uint8 startDir;
     Animator animator;
-};
+} EntityChopper;
 
 // Object Struct
 extern ObjectChopper *Chopper;

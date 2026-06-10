@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "CaterkillerJr.h"
+#include "Global/Debris.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectCaterkillerJr *CaterkillerJr;
+ObjectCaterkillerJr *CaterkillerJr = NULL;
 
 void CaterkillerJr_Update(void)
 {

@@ -1,27 +1,27 @@
 #ifndef OBJ_SMOG_H
 #define OBJ_SMOG_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectSmog {
+typedef struct {
     RSDK_OBJECT
     bool32 forceEnabled;
     ScanlineInfo *scanlines;
     ScanlineInfo scanlineList[0x100];
     uint16 aniFrames;
     int32 starPostID;
-};
+} ObjectSmog;
 
 // Entity Class
-struct EntitySmog {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state); // unused
     int32 timer;
     Animator animator; // unused
     int32 unused1;     // unused
     int32 unused2;     // unused
-};
+} EntitySmog;
 
 // Object Struct
 extern ObjectSmog *Smog;

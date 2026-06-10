@@ -1,25 +1,25 @@
 #ifndef OBJ_ANIMALHBH_H
 #define OBJ_ANIMALHBH_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectAnimalHBH {
+typedef struct {
     RSDK_OBJECT
     int32 currentColor;
     int32 colorCount;
     uint16 aniFrames;
     uint16 silhouetteFrames;
-};
+} ObjectAnimalHBH;
 
 // Entity Class
-struct EntityAnimalHBH {
+typedef struct {
     RSDK_ENTITY
     uint8 type;
     int32 timer;
     Animator animalHBHAnimator;
     Animator silhouetteAnimator;
-};
+} EntityAnimalHBH;
 
 // Object Struct
 extern ObjectAnimalHBH *AnimalHBH;

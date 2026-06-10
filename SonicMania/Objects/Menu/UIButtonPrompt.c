@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIButtonPrompt.h"
+#include "UIControl.h"
+#include "UIHeading.h"
+#include "UIWidgets.h"
+#include "Global/APICallback.h"
+#include "Global/Localization.h"
 
-ObjectUIButtonPrompt *UIButtonPrompt;
+ObjectUIButtonPrompt *UIButtonPrompt = NULL;
 
 void UIButtonPrompt_Update(void)
 {

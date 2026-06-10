@@ -1,7 +1,9 @@
 #ifndef OBJ_UIDIALOG_H
 #define OBJ_UIDIALOG_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "UIButton.h"
+#include "UIControl.h"
 
 #define UIDIALOG_OPTION_COUNT (3)
 
@@ -13,13 +15,15 @@ typedef enum {
     DIALOG_CONTINUE,
 } DialogOptions;
 
+typedef struct EntityUIDialog EntityUIDialog;
+
 // Object Class
-struct ObjectUIDialog {
+typedef struct {
     RSDK_OBJECT
     EntityUIDialog *activeDialog;
     EntityUIControl *controlStore;
     StateMachine(controlStateStore);
-};
+} ObjectUIDialog;
 
 // Entity Class
 struct EntityUIDialog {

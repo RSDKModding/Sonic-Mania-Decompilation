@@ -1,20 +1,20 @@
 #ifndef OBJ_PBL_CAMERA_H
 #define OBJ_PBL_CAMERA_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 // Object Class
-struct ObjectPBL_Camera {
+typedef struct {
     RSDK_OBJECT
     Matrix matWorld;
     Matrix matNormalItem;
     Matrix matNormal;
     bool32 useAltMatNormal;
-};
+} ObjectPBL_Camera;
 
 // Entity Class
-struct EntityPBL_Camera {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 unused1;
@@ -31,7 +31,7 @@ struct EntityPBL_Camera {
     Matrix matTransform;
     Matrix unusedMatrix1;
     Vector2 targetPos;
-};
+} EntityPBL_Camera;
 
 // Object Struct
 extern ObjectPBL_Camera *PBL_Camera;

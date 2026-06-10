@@ -1,25 +1,25 @@
 #ifndef OBJ_MSBOMB_H
 #define OBJ_MSBOMB_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 // Object Class
-struct ObjectMSBomb {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxExplosion;
-};
+} ObjectMSBomb;
 
 // Entity Class
-struct EntityMSBomb {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 unused;
     int32 timer;
     Hitbox hitbox;
     Animator animator;
-};
+} EntityMSBomb;
 
 // Object Struct
 extern ObjectMSBomb *MSBomb;

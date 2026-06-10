@@ -1,7 +1,7 @@
 #ifndef OBJ_BALLCANNON_H
 #define OBJ_BALLCANNON_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     BALLCANNON_CANNON,
@@ -22,7 +22,7 @@ typedef enum {
 } BallCannonAngles;
 
 // Object Class
-struct ObjectBallCannon {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxCannon;
     Hitbox hitboxCorkBlock;
@@ -36,10 +36,10 @@ struct ObjectBallCannon {
                                           0x38000,  0x20000,  -0x34000, 0x40000,  -0x14000, 0x40000,  0x14000, 0x40000,  0x34000,  0x40000 });
     uint16 sfxLedgeBreak;
     uint16 sfxFire;
-};
+} ObjectBallCannon;
 
 // Entity Class
-struct EntityBallCannon {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -50,7 +50,7 @@ struct EntityBallCannon {
     int32 unused2;
     int32 rotationSpeed;
     Animator animator;
-};
+} EntityBallCannon;
 
 // Object Struct
 extern ObjectBallCannon *BallCannon;

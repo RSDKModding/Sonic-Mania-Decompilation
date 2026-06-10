@@ -1,24 +1,24 @@
 #ifndef OBJ_BLASTOID_H
 #define OBJ_BLASTOID_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectBlastoid {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBody;
     Hitbox hitboxProjectile;
     uint16 aniFrames;
     uint16 sfxShot;
-};
+} ObjectBlastoid;
 
 // Entity Class
-struct EntityBlastoid {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 timer;
     Animator animator;
-};
+} EntityBlastoid;
 
 // Object Struct
 extern ObjectBlastoid *Blastoid;

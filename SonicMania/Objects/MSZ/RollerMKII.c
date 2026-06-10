@@ -5,9 +5,16 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "RollerMKII.h"
+#include "Common/BreakableWall.h"
+#include "Global/DebugMode.h"
+#include "Global/Dust.h"
+#include "Global/PlaneSwitch.h"
+#include "Global/Player.h"
+#include "Global/Spikes.h"
+#include "Global/Zone.h"
 
-ObjectRollerMKII *RollerMKII;
+ObjectRollerMKII *RollerMKII = NULL;
 
 void RollerMKII_Update(void)
 {

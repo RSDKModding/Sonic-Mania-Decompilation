@@ -1,18 +1,18 @@
 #ifndef OBJ_SCARAB_H
 #define OBJ_SCARAB_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectScarab {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxGrab;
     uint16 aniFrames;
-};
+} ObjectScarab;
 
 // Entity Class
-struct EntityScarab {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -31,7 +31,7 @@ struct EntityScarab {
     uint8 pullCount;
     int8 moveDir;
     uint8 grabbedPlayers;
-};
+} EntityScarab;
 
 // Object Struct
 extern ObjectScarab *Scarab;

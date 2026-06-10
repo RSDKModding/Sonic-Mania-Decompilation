@@ -1,7 +1,7 @@
 #ifndef OBJ_ERZGUNNER_H
 #define OBJ_ERZGUNNER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     ERZGUNNER_BOSS,
@@ -14,7 +14,7 @@ typedef enum {
 } ERZGunnerTypes;
 
 // Object Class
-struct ObjectERZGunner {
+typedef struct {
     RSDK_OBJECT
     // Technically a "Vector2" but since that can't be saved in static objects, it's an int32 array
     TABLE(int32 rocketOffsets[32], { -22, -24, -10, -24, -22, -31, -10, -31, -22, -38, -10, -38, -22, -45, -10, -45,
@@ -24,9 +24,11 @@ struct ObjectERZGunner {
     Hitbox hitboxMortar;
     Hitbox hitboxDud;
     uint16 aniFrames;
-};
+} ObjectERZGunner;
+
 
 // Entity Class
+typedef struct EntityERZGunner EntityERZGunner;
 struct EntityERZGunner {
     RSDK_ENTITY
     StateMachine(state);

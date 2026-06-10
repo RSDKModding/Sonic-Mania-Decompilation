@@ -1,10 +1,10 @@
 #ifndef OBJ_MMZSETUP_H
 #define OBJ_MMZSETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectMMZSetup {
+typedef struct {
     RSDK_OBJECT
     int32 pistonAniFrame;
     STATIC(int32 pistonAniDuration, 60);
@@ -17,12 +17,12 @@ struct ObjectMMZSetup {
     int32 spinLightsAniFrame;
     int32 generatorAniFrame;
     uint16 aniTiles;
-};
+} ObjectMMZSetup;
 
 // Entity Class
-struct EntityMMZSetup {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityMMZSetup;
 
 // Object Struct
 extern ObjectMMZSetup *MMZSetup;

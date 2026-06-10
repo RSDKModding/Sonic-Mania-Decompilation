@@ -1,11 +1,15 @@
 #ifndef OBJ_COMPETITIONMENU_H
 #define OBJ_COMPETITIONMENU_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
+#include "UIButtonPrompt.h"
+#include "UIControl.h"
+#include "UIInfoLabel.h"
+
 // Object Class
-struct ObjectCompetitionMenu {
+typedef struct {
     RSDK_OBJECT
     EntityUIControl *competitionControl;
     EntityUIControl *competitionControl_Legacy;
@@ -19,12 +23,12 @@ struct ObjectCompetitionMenu {
     EntityUIControl *compTotalControl;
     EntityUIInfoLabel *resultsLabel_Total;
     int32 timer;
-};
+} ObjectCompetitionMenu;
 
 // Entity Class
-struct EntityCompetitionMenu {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityCompetitionMenu;
 
 // Object Struct
 extern ObjectCompetitionMenu *CompetitionMenu;

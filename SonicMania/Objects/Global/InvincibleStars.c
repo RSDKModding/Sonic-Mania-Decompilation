@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "InvincibleStars.h"
+#include "PGZ/Ice.h"
 
-ObjectInvincibleStars *InvincibleStars;
+ObjectInvincibleStars *InvincibleStars = NULL;
 
 void InvincibleStars_Update(void)
 {

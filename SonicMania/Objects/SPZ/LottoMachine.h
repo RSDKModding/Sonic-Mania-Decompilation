@@ -1,10 +1,11 @@
 #ifndef OBJ_LOTTOMACHINE_H
 #define OBJ_LOTTOMACHINE_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 // Object Class
-struct ObjectLottoMachine {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBottom;
     Hitbox hitboxMotor;
@@ -13,10 +14,10 @@ struct ObjectLottoMachine {
     uint16 sfxFail;
     Animator shineAnimator;
     uint16 aniFrames;
-};
+} ObjectLottoMachine;
 
 // Entity Class
-struct EntityLottoMachine {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 playerCount;
@@ -37,7 +38,7 @@ struct EntityLottoMachine {
     Animator chuteAnimator;
     Animator motorAnimator;
     Animator glassAnimator;
-};
+} EntityLottoMachine;
 
 // Object Struct
 extern ObjectLottoMachine *LottoMachine;

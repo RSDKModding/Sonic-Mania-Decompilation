@@ -1,20 +1,20 @@
 #ifndef OBJ_DRAGONFLY_H
 #define OBJ_DRAGONFLY_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define DRAGONFLY_SPINE_COUNT (6)
 
 // Object Class
-struct ObjectDragonfly {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxSpine;
     uint16 aniFrames;
-};
+} ObjectDragonfly;
 
 // Entity Class
-struct EntityDragonfly {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 dir;
@@ -26,7 +26,7 @@ struct EntityDragonfly {
     Animator animator;
     Animator wingAnimator;
     Animator bodyAnimator;
-};
+} EntityDragonfly;
 
 // Object Struct
 extern ObjectDragonfly *Dragonfly;

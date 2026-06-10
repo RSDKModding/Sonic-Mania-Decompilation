@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Bridge.h"
+#include "BurningLog.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectBridge *Bridge;
+ObjectBridge *Bridge = NULL;
 
 void Bridge_Update(void)
 {

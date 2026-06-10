@@ -5,9 +5,20 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "CPZ1Intro.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Cutscene/CutsceneSeq.h"
+#include "Cutscene/FXRuby.h"
+#include "ERZ/PhantomRuby.h"
+#include "Global/Camera.h"
+#include "Global/Debris.h"
+#include "Global/Music.h"
+#include "Global/Player.h"
+#include "Global/TitleCard.h"
+#include "Global/Zone.h"
+#include "Helpers/ParticleHelpers.h"
 
-ObjectCPZ1Intro *CPZ1Intro;
+ObjectCPZ1Intro *CPZ1Intro = NULL;
 
 void CPZ1Intro_Update(void)
 {

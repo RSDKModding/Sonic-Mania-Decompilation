@@ -1,7 +1,7 @@
 #ifndef OBJ_UIBUTTON_H
 #define OBJ_UIBUTTON_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     UIBUTTON_ALIGN_LEFT,
@@ -10,12 +10,12 @@ typedef enum {
 } UIButtonAlignments;
 
 // Object Class
-struct ObjectUIButton {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectUIButton;
 
 // Entity Class
-struct EntityUIButton {
+typedef struct {
     MANIA_UI_ITEM_BASE
     Vector2 size;
     int32 listID;
@@ -43,7 +43,7 @@ struct EntityUIButton {
     uint16 textFrames;
     int32 startListID;
     int32 startFrameID;
-};
+} EntityUIButton;
 
 // Object Struct
 extern ObjectUIButton *UIButton;

@@ -5,9 +5,16 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "MSFactory.h"
+#include "MetalSonic.h"
+#include "SilverSonic.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectMSFactory *MSFactory;
+ObjectMSFactory *MSFactory = NULL;
 
 void MSFactory_Update(void)
 {

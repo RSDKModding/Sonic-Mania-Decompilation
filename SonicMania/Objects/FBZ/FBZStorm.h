@@ -1,10 +1,10 @@
 #ifndef OBJ_FBZSTORM_H
 #define OBJ_FBZSTORM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectFBZStorm {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 thunderFade[20],
           { 0x40, 0x80, 0xC0, 0x100, 0x100, 0x80, 0x00, 0x20, 0x40, 0x80, 0xC0, 0x100, 0x100, 0xC0, 0x80, 0x60, 0x40, 0x20, 0x10, 0x00 });
@@ -14,10 +14,10 @@ struct ObjectFBZStorm {
     bool32 playingRainSfx; // should be uint8 according to the static vars file, bool32 actually *breaks* outsideBank, but that's how mania is so..
     uint16 sfxThunder;
     STATIC(uint8 outsideBank, 1);
-};
+} ObjectFBZStorm;
 
 // Entity Class
-struct EntityFBZStorm {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 thunderTimer;
@@ -26,7 +26,7 @@ struct EntityFBZStorm {
     int32 screenPosX[SCREEN_COUNT];
     bool32 enabled;
     Animator animator;
-};
+} EntityFBZStorm;
 
 // Object Struct
 extern ObjectFBZStorm *FBZStorm;

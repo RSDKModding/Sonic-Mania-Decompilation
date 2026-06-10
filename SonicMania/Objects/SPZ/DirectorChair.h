@@ -1,7 +1,7 @@
 #ifndef OBJ_DIRECTORCHAIR_H
 #define OBJ_DIRECTORCHAIR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     DIRECTORCHAIR_CLOSED,
@@ -9,7 +9,7 @@ typedef enum {
 } DirectorChairTypes;
 
 // Object Class
-struct ObjectDirectorChair {
+typedef struct {
     RSDK_OBJECT
     uint8 extendCount;
     uint8 retractCount;
@@ -20,10 +20,10 @@ struct ObjectDirectorChair {
     uint16 sfxUnravel;
     uint16 sfxExtend;
     uint16 sfxRetract;
-};
+} ObjectDirectorChair;
 
 // Entity Class
-struct EntityDirectorChair {
+typedef struct {
     // Platform "Inherit"
     RSDK_ENTITY
     StateMachine(state);
@@ -52,7 +52,7 @@ struct EntityDirectorChair {
     int32 extendVel;
     int32 minRetract;
     int32 initExtendVel;
-};
+} EntityDirectorChair;
 
 // Object Struct
 extern ObjectDirectorChair *DirectorChair;

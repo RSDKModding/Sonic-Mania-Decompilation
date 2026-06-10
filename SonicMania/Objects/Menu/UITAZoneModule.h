@@ -1,10 +1,14 @@
 #ifndef OBJ_UITAZONEMODULE_H
 #define OBJ_UITAZONEMODULE_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "UIButtonPrompt.h"
+#if !MANIA_USE_PLUS
+#include "UIControl.h"
+#endif
 
 // Object Class
-struct ObjectUITAZoneModule {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     EntityUIButtonPrompt *leaderboardsPrompt;
@@ -12,10 +16,10 @@ struct ObjectUITAZoneModule {
     bool32 isEncoreMode;
 #endif
     bool32 showLBPrompt;
-};
+} ObjectUITAZoneModule;
 
 // Entity Class
-struct EntityUITAZoneModule {
+typedef struct {
     MANIA_UI_ITEM_BASE
 #if !MANIA_USE_PLUS
     bool32 isExpanding;
@@ -59,7 +63,7 @@ struct EntityUITAZoneModule {
     Animator timeAttackAnimator;
     Animator medLetterAnimator1;
     Animator medLetterAnimator2;
-};
+} EntityUITAZoneModule;
 
 // Object Struct
 extern ObjectUITAZoneModule *UITAZoneModule;

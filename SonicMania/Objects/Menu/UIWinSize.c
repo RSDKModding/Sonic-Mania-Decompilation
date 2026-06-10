@@ -5,10 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIWinSize.h"
 
 #if GAME_VERSION != VER_100
-ObjectUIWinSize *UIWinSize;
+#include "UIControl.h"
+#include "UIWidgets.h"
+#include "Global/APICallback.h"
+#include "Global/Localization.h"
+
+ObjectUIWinSize *UIWinSize = NULL;
 
 void UIWinSize_Update(void)
 {

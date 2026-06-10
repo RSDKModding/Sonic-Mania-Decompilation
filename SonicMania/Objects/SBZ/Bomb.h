@@ -1,20 +1,20 @@
 #ifndef OBJ_BOMB_H
 #define OBJ_BOMB_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectBomb {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxHurt;
     Hitbox hitboxRange;
     Hitbox hitboxShrapnel;
     uint16 aniFrames;
     uint16 sfxExplosion;
-};
+} ObjectBomb;
 
 // Entity Class
-struct EntityBomb {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 planeFilter;
@@ -24,7 +24,7 @@ struct EntityBomb {
     int32 fuseOffset;
     Animator mainAnimator;
     Animator fuseAnimator;
-};
+} EntityBomb;
 
 // Object Entity
 extern ObjectBomb *Bomb;

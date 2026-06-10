@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "LargeGear.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectLargeGear *LargeGear;
+ObjectLargeGear *LargeGear = NULL;
 
 void LargeGear_Update(void)
 {

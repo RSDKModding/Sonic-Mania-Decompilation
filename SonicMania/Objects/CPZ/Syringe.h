@@ -1,19 +1,19 @@
 #ifndef OBJ_SYRINGE_H
 #define OBJ_SYRINGE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectSyringe {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBody;
     Hitbox hitboxHandle;
     uint16 aniFrames;
     uint16 sfxBloop;
-};
+} ObjectSyringe;
 
 // Entity Class
-struct EntitySyringe {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state); // unused
     int32 type;
@@ -23,7 +23,7 @@ struct EntitySyringe {
     uint8 tag;
     Animator containerAnimator;
     Animator handleAnimator;
-};
+} EntitySyringe;
 
 // Object Struct
 extern ObjectSyringe *Syringe;

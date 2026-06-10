@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "LottoMachine.h"
+#include "LottoBall.h"
+#include "SPZ2Setup.h"
+#include "Global/Player.h"
+#include "Global/Ring.h"
+#include "Global/Zone.h"
 
-ObjectLottoMachine *LottoMachine;
+ObjectLottoMachine *LottoMachine = NULL;
 
 void LottoMachine_Update(void)
 {

@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SentryBug.h"
+#include "Global/DebugMode.h"
+#include "Global/Zone.h"
+#include "Helpers/BadnikHelpers.h"
 
-ObjectSentryBug *SentryBug;
+ObjectSentryBug *SentryBug = NULL;
 
 void SentryBug_Update(void)
 {

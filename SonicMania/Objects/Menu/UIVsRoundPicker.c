@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIVsRoundPicker.h"
+#include "UIControl.h"
+#include "UIWidgets.h"
 
-ObjectUIVsRoundPicker *UIVsRoundPicker;
+ObjectUIVsRoundPicker *UIVsRoundPicker = NULL;
 
 void UIVsRoundPicker_Update(void)
 {

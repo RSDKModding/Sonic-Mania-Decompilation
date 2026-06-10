@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Hotaru.h"
+#include "Global/DebugMode.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectHotaru *Hotaru;
+ObjectHotaru *Hotaru = NULL;
 
 void Hotaru_Update(void)
 {

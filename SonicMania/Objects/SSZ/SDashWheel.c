@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SDashWheel.h"
+#include "Common/PlatformControl.h"
+#include "Global/Player.h"
+#include "Global/Soundboard.h"
+#include "Global/Zone.h"
 
-ObjectSDashWheel *SDashWheel;
+ObjectSDashWheel *SDashWheel = NULL;
 
 void SDashWheel_Update(void)
 {

@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "InkWipe.h"
+#include "Global/Zone.h"
 
-ObjectInkWipe *InkWipe;
+ObjectInkWipe *InkWipe = NULL;
 
 // This object doesn't look like it was ever fully finished, a bummer indeed
 

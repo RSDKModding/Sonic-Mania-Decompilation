@@ -5,9 +5,20 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "MSZCutsceneST.h"
+#include "HeavyMystic.h"
+#include "MSZSetup.h"
+#include "UberCaterkiller.h"
+#include "Common/ParallaxSprite.h"
+#include "Common/Projectile.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Global/Debris.h"
+#include "Global/Music.h"
+#include "Global/PauseMenu.h"
+#include "Global/Zone.h"
+#include "Helpers/MathHelpers.h"
 
-ObjectMSZCutsceneST *MSZCutsceneST;
+ObjectMSZCutsceneST *MSZCutsceneST = NULL;
 
 void MSZCutsceneST_Update(void)
 {

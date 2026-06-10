@@ -1,7 +1,8 @@
 #ifndef OBJ_SIZELASER_H
 #define OBJ_SIZELASER_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 typedef enum {
     SIZELASER_SHRINK,
@@ -15,7 +16,7 @@ typedef enum {
 } SizeLaserOrientations;
 
 // Object Class
-struct ObjectSizeLaser {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     Hitbox playerOuterBox[PLAYER_COUNT];
@@ -32,10 +33,10 @@ struct ObjectSizeLaser {
 #endif
     uint16 sfxShrink2;
     uint16 sfxGrow2;
-};
+} ObjectSizeLaser;
 
 // Entity Class
-struct EntitySizeLaser {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -45,7 +46,7 @@ struct EntitySizeLaser {
     int32 extend;
     Animator mainAnimator;
     Animator impactAnimator;
-};
+} EntitySizeLaser;
 
 // Object Struct
 extern ObjectSizeLaser *SizeLaser;

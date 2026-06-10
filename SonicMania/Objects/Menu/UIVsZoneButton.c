@@ -5,9 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIVsZoneButton.h"
+#include "MenuParam.h"
+#include "UIControl.h"
+#include "UIWidgets.h"
+#include "Global/Localization.h"
+#include "Global/Music.h"
+#include "Helpers/TimeAttackData.h"
 
-ObjectUIVsZoneButton *UIVsZoneButton;
+ObjectUIVsZoneButton *UIVsZoneButton = NULL;
 
 void UIVsZoneButton_Update(void)
 {

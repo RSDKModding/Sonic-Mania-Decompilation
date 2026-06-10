@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "HCZ1Intro.h"
+#include "Common/Water.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Global/TitleCard.h"
+#include "Global/Zone.h"
 
-ObjectHCZ1Intro *HCZ1Intro;
+ObjectHCZ1Intro *HCZ1Intro = NULL;
 
 void HCZ1Intro_Update(void)
 {

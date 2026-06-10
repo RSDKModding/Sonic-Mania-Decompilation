@@ -1,17 +1,17 @@
 #ifndef OBJ_POHBEE_H
 #define OBJ_POHBEE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectPohBee {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
-};
+} ObjectPohBee;
 
 // Entity Class
-struct EntityPohBee {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -28,7 +28,7 @@ struct EntityPohBee {
     uint8 spikeCount;
     Vector2 amplitude;
     ManiaPlaneFilterTypes planeFilter;
-};
+} EntityPohBee;
 
 // Object Struct
 extern ObjectPohBee *PohBee;

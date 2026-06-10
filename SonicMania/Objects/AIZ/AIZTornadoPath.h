@@ -1,7 +1,9 @@
 #ifndef OBJ_AIZTORNADOPATH_H
 #define OBJ_AIZTORNADOPATH_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "AIZTornado.h"
+#include "Global/Camera.h"
 
 typedef enum {
     AIZTORNADOPATH_START,
@@ -15,17 +17,17 @@ typedef enum {
 } AIZTornadoPathTypes;
 
 // Object Class
-struct ObjectAIZTornadoPath {
+typedef struct {
     RSDK_OBJECT
     EntityAIZTornado *tornado;
     EntityCamera *camera;
     Vector2 moveVel;
     uint16 aniFrames; // prolly editor-only
     Animator unusedAnimator;
-};
+} ObjectAIZTornadoPath;
 
 // Entity Class
-struct EntityAIZTornadoPath {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 type;
@@ -34,7 +36,7 @@ struct EntityAIZTornadoPath {
     bool32 easeToSpeed;
     int32 speed;
     Animator unusedAnimator;
-};
+} EntityAIZTornadoPath;
 
 // Object Struct
 extern ObjectAIZTornadoPath *AIZTornadoPath;

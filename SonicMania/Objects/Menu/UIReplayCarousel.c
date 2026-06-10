@@ -5,10 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIReplayCarousel.h"
 
 #if MANIA_USE_PLUS
-ObjectUIReplayCarousel *UIReplayCarousel;
+#include "UIControl.h"
+#include "UIWidgets.h"
+#include "Global/Localization.h"
+
+ObjectUIReplayCarousel *UIReplayCarousel = NULL;
 
 void UIReplayCarousel_Update(void)
 {

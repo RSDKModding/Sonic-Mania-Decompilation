@@ -1,7 +1,7 @@
 #ifndef OBJ_BEANSTALK_H
 #define OBJ_BEANSTALK_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     BEANSTALK_BEGIN,
@@ -11,7 +11,7 @@ typedef enum {
 } BeanstalkTypes;
 
 // Object Class
-struct ObjectBeanstalk {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxSeed;
@@ -20,10 +20,10 @@ struct ObjectBeanstalk {
     uint16 sfxImpact;
     uint16 sfxBeanNode;
     uint16 sfxBeanChomp;
-};
+} ObjectBeanstalk;
 
 // Entity Class
-struct EntityBeanstalk {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -50,7 +50,7 @@ struct EntityBeanstalk {
     bool32 startGrowth;
     bool32 shown;
     bool32 finished;
-};
+} EntityBeanstalk;
 
 // Object Struct
 extern ObjectBeanstalk *Beanstalk;

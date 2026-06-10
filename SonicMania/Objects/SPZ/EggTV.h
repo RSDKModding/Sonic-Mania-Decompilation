@@ -1,17 +1,17 @@
 #ifndef OBJ_EGGTV_H
 #define OBJ_EGGTV_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectEggTV {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Animator animator;
-};
+} ObjectEggTV;
 
 // Entity Class
-struct EntityEggTV {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 size;
@@ -19,7 +19,7 @@ struct EntityEggTV {
     int32 scanlineAlpha;
     Hitbox hitbox;
     Animator unusedAnimator;
-};
+} EntityEggTV;
 
 // Object Struct
 extern ObjectEggTV *EggTV;

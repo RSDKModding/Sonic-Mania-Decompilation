@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Sweep.h"
+#include "Common/Water.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/Shield.h"
+#include "Global/Zone.h"
 
-ObjectSweep *Sweep;
+ObjectSweep *Sweep = NULL;
 
 void Sweep_Update(void)
 {

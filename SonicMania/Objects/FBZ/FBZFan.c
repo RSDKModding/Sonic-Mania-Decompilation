@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "FBZFan.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectFBZFan *FBZFan;
+ObjectFBZFan *FBZFan = NULL;
 
 void FBZFan_Update(void)
 {

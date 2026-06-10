@@ -1,17 +1,17 @@
 #ifndef OBJ_KANABUN_H
 #define OBJ_KANABUN_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectKanabun {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     uint16 aniFrames;
-};
+} ObjectKanabun;
 
 // Entity Class
-struct EntityKanabun {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 unused;
@@ -22,7 +22,7 @@ struct EntityKanabun {
     uint8 bobDist;
     uint8 angleVel;
     Animator animator;
-};
+} EntityKanabun;
 
 // Object Struct
 extern ObjectKanabun *Kanabun;

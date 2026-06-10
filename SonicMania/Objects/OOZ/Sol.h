@@ -1,20 +1,20 @@
 #ifndef OBJ_SOL_H
 #define OBJ_SOL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define SOL_FLAMEORB_COUNT (4)
 
 // Object Class
-struct ObjectSol {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxOrb;
     uint16 aniFrames;
-};
+} ObjectSol;
 
 // Entity Class
-struct EntitySol {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -26,7 +26,7 @@ struct EntitySol {
     bool32 fireOrbs;
     Animator mainAnimator;
     Animator ballAnimator;
-};
+} EntitySol;
 
 // Object Struct
 extern ObjectSol *Sol;

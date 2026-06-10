@@ -5,9 +5,16 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "MSZ2Cutscene.h"
+#include "MSZSetup.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Global/HUD.h"
+#include "Global/Music.h"
+#include "Global/Shield.h"
+#include "Global/Zone.h"
+#include "Helpers/MathHelpers.h"
 
-ObjectMSZ2Cutscene *MSZ2Cutscene;
+ObjectMSZ2Cutscene *MSZ2Cutscene = NULL;
 
 void MSZ2Cutscene_Update(void)
 {

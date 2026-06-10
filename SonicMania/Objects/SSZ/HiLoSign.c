@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "HiLoSign.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectHiLoSign *HiLoSign;
+ObjectHiLoSign *HiLoSign = NULL;
 
 void HiLoSign_Update(void)
 {

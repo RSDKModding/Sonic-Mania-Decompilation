@@ -1,21 +1,21 @@
 #ifndef OBJ_FIREWORM_H
 #define OBJ_FIREWORM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define FIREWORM_SEGMENT_COUNT (1 + 4) // Head + 4 Segments
 
 // Object Class
-struct ObjectFireworm {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxRange;
     Animator holeAnimator;
     uint16 aniFrames;
-};
+} ObjectFireworm;
 
 // Entity Class
-struct EntityFireworm {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -32,7 +32,7 @@ struct EntityFireworm {
     int32 boundsR;
     Animator bodyAnimators[FIREWORM_SEGMENT_COUNT];
     Animator flameAnimators[FIREWORM_SEGMENT_COUNT];
-};
+} EntityFireworm;
 
 // Object Struct
 extern ObjectFireworm *Fireworm;

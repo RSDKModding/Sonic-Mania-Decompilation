@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ChaosEmerald.h"
+#include "Global/Zone.h"
 
-ObjectChaosEmerald *ChaosEmerald;
+ObjectChaosEmerald *ChaosEmerald = NULL;
 
 void ChaosEmerald_Update(void)
 {

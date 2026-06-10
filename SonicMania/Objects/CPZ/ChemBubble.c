@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ChemBubble.h"
+#include "ChemicalPool.h"
+#include "Global/Zone.h"
 
-ObjectChemBubble *ChemBubble;
+ObjectChemBubble *ChemBubble = NULL;
 
 void ChemBubble_Update(void)
 {

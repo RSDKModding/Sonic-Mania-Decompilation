@@ -1,7 +1,7 @@
 #ifndef OBJ_PROJECTILE_H
 #define OBJ_PROJECTILE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     PROJECTILE_NOTHING,
@@ -15,12 +15,12 @@ typedef enum {
 } ProjectileTypes;
 
 // Object Class
-struct ObjectProjectile {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectProjectile;
 
 // Entity Class
-struct EntityProjectile {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 type;
@@ -31,7 +31,7 @@ struct EntityProjectile {
     int32 rotationSpeed;
     Hitbox hitbox;
     Animator animator;
-};
+} EntityProjectile;
 
 // Object Struct
 extern ObjectProjectile *Projectile;

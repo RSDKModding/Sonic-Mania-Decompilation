@@ -5,9 +5,17 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PhantomKing.h"
+#include "ERZOutro.h"
+#include "KleptoMobile.h"
+#include "PhantomRuby.h"
+#include "PKingAttack.h"
+#include "Global/Explosion.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#include "Helpers/MathHelpers.h"
 
-ObjectPhantomKing *PhantomKing;
+ObjectPhantomKing *PhantomKing = NULL;
 
 void PhantomKing_Update(void)
 {

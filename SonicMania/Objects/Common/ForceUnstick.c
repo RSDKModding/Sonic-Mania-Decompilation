@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ForceUnstick.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectForceUnstick *ForceUnstick;
+ObjectForceUnstick *ForceUnstick = NULL;
 
 void ForceUnstick_Update(void)
 {

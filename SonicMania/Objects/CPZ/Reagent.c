@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Reagent.h"
+#include "ChemicalPool.h"
+#include "Global/Zone.h"
 
-ObjectReagent *Reagent;
+ObjectReagent *Reagent = NULL;
 
 void Reagent_Update(void)
 {

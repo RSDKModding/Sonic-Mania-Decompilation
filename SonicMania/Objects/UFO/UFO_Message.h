@@ -1,7 +1,7 @@
 #ifndef OBJ_UFO_MESSAGE_H
 #define OBJ_UFO_MESSAGE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     UFO_MESSAGE_CATCHUFO,
@@ -11,13 +11,13 @@ typedef enum {
 } UFO_MessageTypes;
 
 // Object Class
-struct ObjectUFO_Message {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectUFO_Message;
 
 // Entity Class
-struct EntityUFO_Message {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 displayTime;
@@ -26,7 +26,7 @@ struct EntityUFO_Message {
     Animator rightAnimator;
     int32 unused1;
     int32 unused2;
-};
+} EntityUFO_Message;
 
 // Object Struct
 extern ObjectUFO_Message *UFO_Message;

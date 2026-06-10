@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "BSS_Horizon.h"
+#include "BSS_Palette.h"
 
-ObjectBSS_Horizon *BSS_Horizon;
+ObjectBSS_Horizon *BSS_Horizon = NULL;
 
 void BSS_Horizon_Update(void) {}
 

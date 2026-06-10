@@ -1,17 +1,17 @@
 #ifndef OBJ_AIZTORNADO_H
 #define OBJ_AIZTORNADO_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectAIZTornado {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 flameOffsets[5], { -0x20000, -0x10000, 0x00000, 0x10000, 0x20000 });
     uint16 aniFrames;
-};
+} ObjectAIZTornado;
 
 // Entity Class
-struct EntityAIZTornado {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 collideTimer; // unused here (used in MSZ/Tornado)
@@ -30,7 +30,7 @@ struct EntityAIZTornado {
     Animator animatorPropeller;
     Animator animatorFlame;
     Animator animatorPilot;
-};
+} EntityAIZTornado;
 
 // Object Struct
 extern ObjectAIZTornado *AIZTornado;

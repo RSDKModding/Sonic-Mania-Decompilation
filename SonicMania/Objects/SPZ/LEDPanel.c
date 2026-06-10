@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "LEDPanel.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectLEDPanel *LEDPanel;
+ObjectLEDPanel *LEDPanel = NULL;
 
 void LEDPanel_Update(void)
 {

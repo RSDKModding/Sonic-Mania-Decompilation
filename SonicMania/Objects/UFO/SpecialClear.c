@@ -5,9 +5,17 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SpecialClear.h"
+#include "UFO_Setup.h"
+#include "BSS/BSS_Setup.h"
+#include "Global/APICallback.h"
+#include "Global/Music.h"
+#include "Global/SaveGame.h"
+#include "Helpers/GameProgress.h"
+#include "Menu/MenuParam.h"
+#include "Menu/UIWaitSpinner.h"
 
-ObjectSpecialClear *SpecialClear;
+ObjectSpecialClear *SpecialClear = NULL;
 
 void SpecialClear_Update(void) {}
 

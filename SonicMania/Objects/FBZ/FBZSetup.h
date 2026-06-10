@@ -1,7 +1,8 @@
 #ifndef OBJ_FBZSETUP_H
 #define OBJ_FBZSETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "FBZ1Outro.h"
 
 typedef enum { FBZ_GENERICTRIGGER_EXTERIOR, FBZ_GENERICTRIGGER_INTERIOR } GenericTriggerTypesFBZ;
 
@@ -21,7 +22,7 @@ typedef enum {
 } ParallaxSpriteAniIDsFBZ;
 
 // Object Class
-struct ObjectFBZSetup {
+typedef struct {
     RSDK_OBJECT
     int32 unused;
     int32 cylinderAniFrame;
@@ -34,12 +35,12 @@ struct ObjectFBZSetup {
     uint16 aniTiles;
     uint16 backgroundOutside;
     EntityFBZ1Outro *outro;
-};
+} ObjectFBZSetup;
 
 // Entity Class
-struct EntityFBZSetup {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityFBZSetup;
 
 // Object Struct
 extern ObjectFBZSetup *FBZSetup;

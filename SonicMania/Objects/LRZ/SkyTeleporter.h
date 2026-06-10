@@ -1,16 +1,16 @@
 #ifndef OBJ_SKYTELEPORTER_H
 #define OBJ_SKYTELEPORTER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectSkyTeleporter {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectSkyTeleporter;
 
 // Entity Class
-struct EntitySkyTeleporter {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state); // unused
     int32 unused1;
@@ -19,7 +19,7 @@ struct EntitySkyTeleporter {
     int32 timer;
     Hitbox hitbox;
     Animator animator;
-};
+} EntitySkyTeleporter;
 
 // Object Struct
 extern ObjectSkyTeleporter *SkyTeleporter;

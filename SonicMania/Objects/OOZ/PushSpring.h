@@ -1,20 +1,20 @@
 #ifndef OBJ_PUSHSPRING_H
 #define OBJ_PUSHSPRING_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { PUSHSPRING_V, PUSHSPRING_H } PushSpringTypes;
 
 // Object Class
-struct ObjectPushSpring {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxPush;
     uint16 sfxSpring;
-};
+} ObjectPushSpring;
 
 // Entity Class
-struct EntityPushSpring {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -25,7 +25,7 @@ struct EntityPushSpring {
     Hitbox hitbox;
     bool32 beingPushed;
     Animator animator;
-};
+} EntityPushSpring;
 
 // Object Struct
 extern ObjectPushSpring *PushSpring;

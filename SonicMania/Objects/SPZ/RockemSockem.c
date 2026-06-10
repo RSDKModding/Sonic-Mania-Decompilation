@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "RockemSockem.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectRockemSockem *RockemSockem;
+ObjectRockemSockem *RockemSockem = NULL;
 
 void RockemSockem_Update(void)
 {

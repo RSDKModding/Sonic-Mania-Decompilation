@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SideBarrel.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectSideBarrel *SideBarrel;
+ObjectSideBarrel *SideBarrel = NULL;
 
 void SideBarrel_Update(void)
 {

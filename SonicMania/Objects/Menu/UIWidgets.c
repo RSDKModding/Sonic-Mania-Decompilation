@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIWidgets.h"
+#include "Global/Localization.h"
+#include "Helpers/LogHelpers.h"
 
-ObjectUIWidgets *UIWidgets;
+ObjectUIWidgets *UIWidgets = NULL;
 
 void UIWidgets_Update(void) {}
 

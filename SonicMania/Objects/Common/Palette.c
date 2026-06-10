@@ -5,10 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Palette.h"
 
 #if MANIA_USE_PLUS
-ObjectPalette *Palette;
+ObjectPalette *Palette = NULL;
 
 void Palette_Update(void) {}
 

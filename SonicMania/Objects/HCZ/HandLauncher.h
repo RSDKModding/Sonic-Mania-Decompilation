@@ -1,10 +1,10 @@
 #ifndef OBJ_HANDLAUNCHER_H
 #define OBJ_HANDLAUNCHER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectHandLauncher {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxRange;
@@ -12,10 +12,10 @@ struct ObjectHandLauncher {
     Hitbox hitboxUnused;
     bool32 dunkeyMode;
     uint16 sfxDunkey;
-};
+} ObjectHandLauncher;
 
 // Entity Class
-struct EntityHandLauncher {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 speed;
@@ -27,7 +27,7 @@ struct EntityHandLauncher {
     int32 grabDelay;
     Animator baseAnimator;
     Animator handAnimator;
-};
+} EntityHandLauncher;
 
 // Object Struct
 extern ObjectHandLauncher *HandLauncher;

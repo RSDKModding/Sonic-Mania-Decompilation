@@ -1,19 +1,21 @@
 #ifndef OBJ_FBZ2OUTRO_H
 #define OBJ_FBZ2OUTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
+#include "Cutscene/CutsceneSeq.h"
+
 // Object Class
-struct ObjectFBZ2Outro {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectFBZ2Outro;
 
 // Entity Class
-struct EntityFBZ2Outro {
+typedef struct {
     RSDK_ENTITY
     int32 unused1;
-};
+} EntityFBZ2Outro;
 
 // Object Struct
 extern ObjectFBZ2Outro *FBZ2Outro;

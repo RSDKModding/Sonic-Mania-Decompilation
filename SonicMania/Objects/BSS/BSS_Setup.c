@@ -5,10 +5,23 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "BSS_Setup.h"
+#include "BSS_Collectable.h"
+#include "BSS_Collected.h"
+#include "BSS_Message.h"
+#include "BSS_Player.h"
+#include "BSS_Palette.h"
+#include "Cutscene/FXFade.h"
+#include "Helpers/GameProgress.h"
+#include "Global/APICallback.h"
+#include "Global/Localization.h"
+#include "Global/Music.h"
+#include "Global/PauseMenu.h"
+#include "Global/SaveGame.h"
+#include "Menu/MenuParam.h"
 #include <time.h>
 
-ObjectBSS_Setup *BSS_Setup;
+ObjectBSS_Setup *BSS_Setup = NULL;
 
 void BSS_Setup_Update(void)
 {

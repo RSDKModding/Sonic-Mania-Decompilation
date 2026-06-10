@@ -1,7 +1,7 @@
 #ifndef OBJ_PARALLAXSPRITE_H
 #define OBJ_PARALLAXSPRITE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     PARALLAXSPRITE_ATTR_STANDARD,
@@ -18,13 +18,13 @@ typedef enum {
 } ParallaxSpriteAniIDs;
 
 // Object Class
-struct ObjectParallaxSprite {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectParallaxSprite;
 
 // Entity Class
-struct EntityParallaxSprite {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Animator animator;
@@ -41,7 +41,7 @@ struct EntityParallaxSprite {
     int32 sprX;
     int32 timerSpeed;
     int32 xSpeed;
-};
+} EntityParallaxSprite;
 
 // Object Struct
 extern ObjectParallaxSprite *ParallaxSprite;

@@ -1,10 +1,10 @@
 #ifndef OBJ_BSS_PLAYER_H
 #define OBJ_BSS_PLAYER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectBSS_Player {
+typedef struct {
     RSDK_OBJECT
     uint16 jumpPressState;
     uint16 unused1; // set to 4 when hitting a yellow sphere, never *used* though
@@ -16,10 +16,10 @@ struct ObjectBSS_Player {
     uint16 rayFrames;
 #endif
     uint16 sfxJump;
-};
+} ObjectBSS_Player;
 
 // Entity Class
-struct EntityBSS_Player {
+typedef struct {
     RSDK_ENTITY
     int32 gravityStrength;
     bool32 sidekick;
@@ -33,7 +33,7 @@ struct EntityBSS_Player {
     Animator animator;
     Animator tailAnimator;
     uint16 aniFrames;
-};
+} EntityBSS_Player;
 
 // Object Struct
 extern ObjectBSS_Player *BSS_Player;

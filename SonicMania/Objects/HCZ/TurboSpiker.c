@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TurboSpiker.h"
+#include "Common/Water.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectTurboSpiker *TurboSpiker;
+ObjectTurboSpiker *TurboSpiker = NULL;
 
 // back in 3mixed, i was assigned this object
 // i was never able to get it properly working

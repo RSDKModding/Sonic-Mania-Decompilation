@@ -1,19 +1,19 @@
 #ifndef OBJ_LETTERBOARD_H
 #define OBJ_LETTERBOARD_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectLetterboard {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBoard;
     uint16 aniFrames;
     uint16 sfxLetterTurn;
     uint16 sfxWin;
-};
+} ObjectLetterboard;
 
 // Entity Class
-struct EntityLetterboard {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     bool32 controller;
@@ -22,7 +22,7 @@ struct EntityLetterboard {
     int32 timer;
     Animator animatorFront;
     Animator animatorBack;
-};
+} EntityLetterboard;
 
 // Object Struct
 extern ObjectLetterboard *Letterboard;

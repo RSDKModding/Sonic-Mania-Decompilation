@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PopcornMachine.h"
+#include "PopcornKernel.h"
+#include "Global/Zone.h"
 
-ObjectPopcornMachine *PopcornMachine;
+ObjectPopcornMachine *PopcornMachine = NULL;
 
 void PopcornMachine_Update(void)
 {

@@ -1,7 +1,8 @@
 #ifndef OBJ_EGGPISTONSMKII_H
 #define OBJ_EGGPISTONSMKII_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 typedef enum {
     EGGPISTON_PISTON,
@@ -12,8 +13,10 @@ typedef enum {
     EGGPISTON_ALARM,
 } EggPistonMKIITypes;
 
+typedef struct EntityEggPistonsMKII EntityEggPistonsMKII;
+
 // Object Class
-struct ObjectEggPistonsMKII {
+typedef struct {
     RSDK_OBJECT
     int32 invincibilityTimer;
     int32 health;
@@ -31,7 +34,7 @@ struct ObjectEggPistonsMKII {
     uint16 sfxElectrify;
     uint16 sfxExplosion;
     uint16 sfxAlarm;
-};
+} ObjectEggPistonsMKII;
 
 // Entity Class
 struct EntityEggPistonsMKII {

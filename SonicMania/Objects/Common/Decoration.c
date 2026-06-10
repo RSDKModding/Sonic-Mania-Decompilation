@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Decoration.h"
+#include "Global/Zone.h"
 
-ObjectDecoration *Decoration;
+ObjectDecoration *Decoration = NULL;
 
 void Decoration_Update(void)
 {

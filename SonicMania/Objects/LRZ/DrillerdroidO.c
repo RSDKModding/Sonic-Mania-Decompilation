@@ -5,9 +5,20 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "DrillerdroidO.h"
+#include "Drillerdroid.h"
+#include "LavaGeyser.h"
+#include "LRZFireball.h"
+#include "LRZRockPile.h"
+#include "Global/Debris.h"
+#include "Global/Explosion.h"
+#include "Global/Music.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectDrillerdroidO *DrillerdroidO;
+ObjectDrillerdroidO *DrillerdroidO = NULL;
 
 void DrillerdroidO_Update(void)
 {

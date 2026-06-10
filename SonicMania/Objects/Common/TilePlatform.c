@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TilePlatform.h"
+#include "Platform.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectTilePlatform *TilePlatform;
+ObjectTilePlatform *TilePlatform = NULL;
 
 void TilePlatform_Update(void) { Platform_Update(); }
 

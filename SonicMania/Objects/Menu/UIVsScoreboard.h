@@ -1,16 +1,16 @@
 #ifndef OBJ_UIVSSCOREBOARD_H
 #define OBJ_UIVSSCOREBOARD_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectUIVsScoreboard {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectUIVsScoreboard;
 
 // Entity Class
-struct EntityUIVsScoreboard {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);     // unused
     Animator unusedAnimator; // unused
@@ -28,7 +28,7 @@ struct EntityUIVsScoreboard {
     Animator winnerAnimator;
     Animator winsAnimator;
     uint16 textFrames;
-};
+} EntityUIVsScoreboard;
 
 // Object Struct
 extern ObjectUIVsScoreboard *UIVsScoreboard;

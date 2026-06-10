@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PuyoLevelSelect.h"
+#include "Global/APICallback.h"
+#include "Global/Zone.h"
 
-ObjectPuyoLevelSelect *PuyoLevelSelect;
+ObjectPuyoLevelSelect *PuyoLevelSelect = NULL;
 
 void PuyoLevelSelect_Update(void)
 {

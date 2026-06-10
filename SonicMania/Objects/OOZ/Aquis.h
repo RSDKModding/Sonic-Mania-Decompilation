@@ -1,20 +1,20 @@
 #ifndef OBJ_AQUIS_H
 #define OBJ_AQUIS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectAquis {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxRange;
     Hitbox hitboxProjectile;
     uint16 aniFrames;
     uint16 sfxShot;
-};
+} ObjectAquis;
 
 // Entity Class
-struct EntityAquis {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -24,7 +24,7 @@ struct EntityAquis {
     uint8 startDir;
     Animator mainAnimator;
     Animator wingAnimator;
-};
+} EntityAquis;
 
 // Object Struct
 extern ObjectAquis *Aquis;

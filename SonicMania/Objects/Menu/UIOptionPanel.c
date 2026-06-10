@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIOptionPanel.h"
+#include "UIWidgets.h"
 
-ObjectUIOptionPanel *UIOptionPanel;
+ObjectUIOptionPanel *UIOptionPanel = NULL;
 
 void UIOptionPanel_Update(void)
 {

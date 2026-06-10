@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PSZ2Outro.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Global/HUD.h"
+#include "Global/Music.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectPSZ2Outro *PSZ2Outro;
+ObjectPSZ2Outro *PSZ2Outro = NULL;
 
 void PSZ2Outro_Update(void)
 {

@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "BarStool.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectBarStool *BarStool;
+ObjectBarStool *BarStool = NULL;
 
 void BarStool_Update(void)
 {

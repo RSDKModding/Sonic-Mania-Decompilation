@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SwitchDoor.h"
+#include "FBZSetup.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectSwitchDoor *SwitchDoor;
+ObjectSwitchDoor *SwitchDoor = NULL;
 
 void SwitchDoor_Update(void)
 {

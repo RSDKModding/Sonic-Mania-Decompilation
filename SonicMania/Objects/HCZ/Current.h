@@ -1,7 +1,8 @@
 #ifndef OBJ_CURRENT_H
 #define OBJ_CURRENT_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Common/Button.h"
 
 typedef enum {
     CURRENT_C_LEFT,
@@ -21,16 +22,16 @@ typedef enum {
 } CurrentChildTypes;
 
 // Object Class
-struct ObjectCurrent {
+typedef struct {
     RSDK_OBJECT
     uint8 activePlayers;
     Animator animator;
     uint16 aniFrames;
     uint16 sfxRush;
-};
+} ObjectCurrent;
 
 // Entity Class
-struct EntityCurrent {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     CurrentTypes type;
@@ -46,7 +47,7 @@ struct EntityCurrent {
     bool32 waterOnly;
     bool32 fbzAchievement;
     Animator animator;
-};
+} EntityCurrent;
 
 // Object Struct
 extern ObjectCurrent *Current;

@@ -1,16 +1,16 @@
 #ifndef OBJ_DASHLIFT_H
 #define OBJ_DASHLIFT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectDashLift {
+typedef struct {
     RSDK_OBJECT
     uint16 sfxPulley;
-};
+} ObjectDashLift;
 
 // Entity Class
-struct EntityDashLift {
+typedef struct {
     RSDK_ENTITY
     // Platform Base
     StateMachine(state);
@@ -37,7 +37,7 @@ struct EntityDashLift {
     // Dash Lift
     int32 startOff;
     uint8 activePlayers;
-};
+} EntityDashLift;
 
 // Object Struct
 extern ObjectDashLift *DashLift;

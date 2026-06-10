@@ -1,18 +1,18 @@
 #ifndef OBJ_BUZZBOMBER_H
 #define OBJ_BUZZBOMBER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectBuzzBomber {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxProjectile;
     uint16 aniFrames;
-};
+} ObjectBuzzBomber;
 
 // Entity Class
-struct EntityBuzzBomber {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 shotRange;
@@ -25,7 +25,7 @@ struct EntityBuzzBomber {
     Animator wingAnimator;
     Animator thrustAnimator;
     Hitbox hitboxRange;
-};
+} EntityBuzzBomber;
 
 // Object Struct
 extern ObjectBuzzBomber *BuzzBomber;

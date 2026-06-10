@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ERZShinobi.h"
+#include "ERZKing.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectERZShinobi *ERZShinobi;
+ObjectERZShinobi *ERZShinobi = NULL;
 
 void ERZShinobi_Update(void)
 {

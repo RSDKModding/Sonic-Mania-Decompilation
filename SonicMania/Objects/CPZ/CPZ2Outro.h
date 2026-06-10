@@ -1,19 +1,21 @@
 #ifndef OBJ_CPZ2OUTRO_H
 #define OBJ_CPZ2OUTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Cutscene/CutsceneSeq.h"
+#include "Global/EggPrison.h"
 
 // Object Class
-struct ObjectCPZ2Outro {
+typedef struct {
     RSDK_OBJECT
     int32 unused;
     EntityEggPrison *eggPrison;
-};
+} ObjectCPZ2Outro;
 
 // Entity Class
-struct EntityCPZ2Outro {
+typedef struct {
     MANIA_CUTSCENE_BASE
-};
+} EntityCPZ2Outro;
 
 // Object Struct
 extern ObjectCPZ2Outro *CPZ2Outro;

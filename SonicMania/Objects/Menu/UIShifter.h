@@ -1,17 +1,27 @@
 #ifndef OBJ_UISHIFTER_H
 #define OBJ_UISHIFTER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
+#include "UIControl.h"
+
 // Object Class
-struct ObjectUIShifter {
+typedef struct {
     RSDK_OBJECT
     Animator animator;
     uint16 aniFrames;
-};
+} ObjectUIShifter;
 
 // Entity Class
+#ifndef ENTITYDEF_UI
+#define ENTITYDEF_UI
+typedef struct EntityUIControl EntityUIControl;
+typedef struct EntityUIShifter EntityUIShifter;
+#if MANIA_USE_PLUS
+typedef struct EntityUICarousel EntityUICarousel;
+#endif
+#endif
 struct EntityUIShifter {
     RSDK_ENTITY
     Vector2 shift;

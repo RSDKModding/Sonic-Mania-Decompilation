@@ -1,7 +1,7 @@
 #ifndef OBJ_UFO_SPHERE_H
 #define OBJ_UFO_SPHERE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     UFO_SPHERE_BLUE,
@@ -17,17 +17,17 @@ typedef enum {
 } UFO_SphereBehaviours;
 
 // Object Class
-struct ObjectUFO_Sphere {
+typedef struct {
     RSDK_OBJECT
     int32 unused;
     TABLE(int32 defaultHeights[4], { 12, 12, 16, 16 });
     uint16 aniFrames;
     uint16 sfxMachSpeed;
     uint16 sfxLedgeBreak;
-};
+} ObjectUFO_Sphere;
 
 // Entity Class
-struct EntityUFO_Sphere {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 type;
@@ -45,7 +45,7 @@ struct EntityUFO_Sphere {
     Matrix matrix;
     Matrix matrix2;
     Animator animator;
-};
+} EntityUFO_Sphere;
 
 // Object Struct
 extern ObjectUFO_Sphere *UFO_Sphere;

@@ -5,9 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PuyoLabel.h"
 
-ObjectPuyoLabel *PuyoLabel;
+ObjectPuyoLabel *PuyoLabel = NULL;
 
 void PuyoLabel_Update(void) {}
 

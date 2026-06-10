@@ -1,26 +1,26 @@
 #ifndef OBJ_UFO_PLASMA_H
 #define OBJ_UFO_PLASMA_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectUFO_Plasma {
+typedef struct {
     RSDK_OBJECT
     bool32 forceEnabled; // unused, this was prolly copied from OOZ/Smog lol
     ScanlineInfo *scanlines;
     ScanlineInfo scanlineList[0x100];
     uint16 aniFrames;
     int32 starPostID; // unused, this was prolly copied from OOZ/Smog lol
-};
+} ObjectUFO_Plasma;
 
 // Entity Class
-struct EntityUFO_Plasma {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state); // unused
     Animator animator;   // unused
     int32 unused1;       // unused
     int32 unused2;       // unused
-};
+} EntityUFO_Plasma;
 
 // Object Struct
 extern ObjectUFO_Plasma *UFO_Plasma;

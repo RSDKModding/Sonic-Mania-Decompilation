@@ -1,16 +1,16 @@
 #ifndef OBJ_POPCORNKERNEL_H
 #define OBJ_POPCORNKERNEL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectPopcornKernel {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectPopcornKernel;
 
 // Entity Class
-struct EntityPopcornKernel {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 unused1;
@@ -19,7 +19,7 @@ struct EntityPopcornKernel {
     int32 maxY;
     Vector2 bounds;
     Animator animator;
-};
+} EntityPopcornKernel;
 
 // Object Struct
 extern ObjectPopcornKernel *PopcornKernel;

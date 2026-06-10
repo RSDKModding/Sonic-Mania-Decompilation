@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SpikeFlail.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectSpikeFlail *SpikeFlail;
+ObjectSpikeFlail *SpikeFlail = NULL;
 
 void SpikeFlail_Update(void)
 {

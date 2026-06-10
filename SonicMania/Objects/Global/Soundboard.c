@@ -5,9 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Soundboard.h"
 
-ObjectSoundboard *Soundboard;
+ObjectSoundboard *Soundboard = NULL;
 
 void Soundboard_Update(void) {}
 

@@ -1,10 +1,10 @@
 #ifndef OBJ_SHURIKEN_H
 #define OBJ_SHURIKEN_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectShuriken {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxShooter;
     Hitbox hitboxRange;
@@ -14,10 +14,10 @@ struct ObjectShuriken {
     uint16 aniFrames;
     uint16 sfxArrowLaunch;
     uint16 sfxArrowHit;
-};
+} ObjectShuriken;
 
 // Entity Class
-struct EntityShuriken {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint16 timer;
@@ -29,7 +29,7 @@ struct EntityShuriken {
     uint16 interval;
     uint16 intervalOffset;
     uint8 timerGroup;
-};
+} EntityShuriken;
 
 // Object Struct
 extern ObjectShuriken *Shuriken;

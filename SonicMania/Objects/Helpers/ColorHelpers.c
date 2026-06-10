@@ -5,7 +5,7 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ColorHelpers.h"
 
 ObjectColorHelpers *ColorHelpers = NULL;
 

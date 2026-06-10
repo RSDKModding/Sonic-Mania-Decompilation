@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "DirectorChair.h"
+#include "Common/Platform.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectDirectorChair *DirectorChair;
+ObjectDirectorChair *DirectorChair = NULL;
 
 void DirectorChair_Update(void) { Platform_Update(); }
 

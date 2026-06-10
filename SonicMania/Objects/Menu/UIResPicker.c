@@ -5,10 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIResPicker.h"
 
 #if GAME_VERSION != VER_100
-ObjectUIResPicker *UIResPicker;
+#include "UIControl.h"
+#include "UIWidgets.h"
+#include "Global/APICallback.h"
+#include "Global/Localization.h"
+
+ObjectUIResPicker *UIResPicker = NULL;
 
 void UIResPicker_Update(void)
 {

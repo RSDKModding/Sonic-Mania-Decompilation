@@ -1,17 +1,17 @@
 #ifndef OBJ_UITRANSITION_H
 #define OBJ_UITRANSITION_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectUITransition {
+typedef struct {
     RSDK_OBJECT
     Entity *activeTransition;
     char *newTag;
-};
+} ObjectUITransition;
 
 // Entity Class
-struct EntityUITransition {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(callback);
@@ -20,7 +20,7 @@ struct EntityUITransition {
     int32 delay;
     bool32 isTransitioning;
     Vector2 drawPos[3];
-};
+} EntityUITransition;
 
 // Object Struct
 extern ObjectUITransition *UITransition;

@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UISlider.h"
+#include "UIControl.h"
+#include "UIWidgets.h"
 
-ObjectUISlider *UISlider;
+ObjectUISlider *UISlider = NULL;
 
 void UISlider_Update(void)
 {

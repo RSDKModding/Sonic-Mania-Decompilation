@@ -1,25 +1,30 @@
 #ifndef OBJ_GHZ2OUTRO_H
 #define OBJ_GHZ2OUTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "DERobot.h"
+#include "Common/Eggman.h"
+#include "Cutscene/CutsceneSeq.h"
+#include "Cutscene/FXRuby.h"
+#include "ERZ/PhantomRuby.h"
 
 // Object Class
-struct ObjectGHZ2Outro {
+typedef struct {
     RSDK_OBJECT
     int32 unused;
     uint16 sfxRocketJet;
     uint16 sfxShinobiJump;
     uint16 sfxHeliWoosh;
-};
+} ObjectGHZ2Outro;
 
 // Entity Class
-struct EntityGHZ2Outro {
+typedef struct {
     MANIA_CUTSCENE_BASE
     EntityEggman *eggman;
     EntityDERobot *DERobot;
     EntityPhantomRuby *phantomRuby;
     EntityFXRuby *fxRuby;
-};
+} EntityGHZ2Outro;
 
 // Object Struct
 extern ObjectGHZ2Outro *GHZ2Outro;

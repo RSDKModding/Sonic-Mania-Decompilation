@@ -5,10 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PBL_Ring.h"
 
 #if MANIA_USE_PLUS
-ObjectPBL_Ring *PBL_Ring;
+#include "PBL_Camera.h"
+#include "PBL_Player.h"
+#include "PBL_Setup.h"
+
+ObjectPBL_Ring *PBL_Ring = NULL;
 
 void PBL_Ring_Update(void)
 {

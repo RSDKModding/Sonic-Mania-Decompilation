@@ -5,9 +5,22 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "LRZ2Setup.h"
+#include "DashLift.h"
+#include "LRZ1Outro.h"
+#include "TurretSwitch.h"
+#include "Common/GenericTrigger.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Global/Animals.h"
+#include "Global/Dust.h"
+#include "Global/Music.h"
+#include "Global/Player.h"
+#include "Global/Shield.h"
+#include "Global/SaveGame.h"
+#include "Global/StarPost.h"
+#include "Global/Zone.h"
 
-ObjectLRZ2Setup *LRZ2Setup;
+ObjectLRZ2Setup *LRZ2Setup = NULL;
 
 void LRZ2Setup_Update(void) {}
 

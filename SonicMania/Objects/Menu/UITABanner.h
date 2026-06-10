@@ -1,17 +1,18 @@
 #ifndef OBJ_UITABANNER_H
 #define OBJ_UITABANNER_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "UIControl.h"
 
 #if MANIA_USE_PLUS
 // Object Class
-struct ObjectUITABanner {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectUITABanner;
 
 // Entity Class
-struct EntityUITABanner {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -30,7 +31,7 @@ struct EntityUITABanner {
     Animator unusedAnimator2;
     Animator zoneNameAnimator;
     Animator labelAnimator;
-};
+} EntityUITABanner;
 
 // Object Struct
 extern ObjectUITABanner *UITABanner;

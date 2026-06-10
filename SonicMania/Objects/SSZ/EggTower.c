@@ -5,9 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "EggTower.h"
 
-ObjectEggTower *EggTower;
+ObjectEggTower *EggTower = NULL;
 
 void EggTower_Update(void) {}
 

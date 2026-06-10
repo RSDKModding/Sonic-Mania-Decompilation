@@ -1,7 +1,7 @@
 #ifndef OBJ_TITLE3DSPRITE_H
 #define OBJ_TITLE3DSPRITE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     TITLE3DSPRITE_MOUNTAIN_L,
@@ -12,21 +12,21 @@ typedef enum {
 } Title3DSpriteFrames;
 
 // Object Class
-struct ObjectTitle3DSprite {
+typedef struct {
     RSDK_OBJECT
     int32 islandSize;
     int32 height;
     int32 baseDepth;
     uint16 aniFrames;
-};
+} ObjectTitle3DSprite;
 
 // Entity Class
-struct EntityTitle3DSprite {
+typedef struct {
     RSDK_ENTITY
     int32 frame;
     Vector2 relativePos;
     Animator animator;
-};
+} EntityTitle3DSprite;
 
 // Object Struct
 extern ObjectTitle3DSprite *Title3DSprite;

@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Mine.h"
+#include "FBZMissile.h"
+#include "Global/Explosion.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectMine *Mine;
+ObjectMine *Mine = NULL;
 
 void Mine_Update(void)
 {

@@ -1,7 +1,7 @@
 #ifndef OBJ_STAIRCASE_H
 #define OBJ_STAIRCASE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define STAIRCASE_STAIR_COUNT (4)
 
@@ -11,16 +11,16 @@ typedef enum {
 } StaircaseTypes;
 
 // Object Class
-struct ObjectStaircase {
+typedef struct {
     RSDK_OBJECT
     Hitbox blockHitbox;
     uint16 aniFrames;
     uint16 unused;
     uint16 sfxBlockStop;
-};
+} ObjectStaircase;
 
 // Entity Class
-struct EntityStaircase {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -29,7 +29,7 @@ struct EntityStaircase {
     Animator animator;
     uint8 type;
     bool32 bumpable;
-};
+} EntityStaircase;
 
 // Object Struct
 extern ObjectStaircase *Staircase;

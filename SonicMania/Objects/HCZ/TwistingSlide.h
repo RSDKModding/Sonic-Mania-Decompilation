@@ -1,7 +1,7 @@
 #ifndef OBJ_TWISTINGSLIDE_H
 #define OBJ_TWISTINGSLIDE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     TWISTINGSLIDE_START,
@@ -11,14 +11,14 @@ typedef enum {
 } TwistingSlideTypes;
 
 // Object Class
-struct ObjectTwistingSlide {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
-};
+} ObjectTwistingSlide;
 
 // Entity Class
-struct EntityTwistingSlide {
+typedef struct {
     RSDK_ENTITY
     uint8 type;
     int32 endLen;
@@ -30,7 +30,7 @@ struct EntityTwistingSlide {
     Hitbox hitboxSlideEnd;
     Hitbox hitboxSlide;
     Animator animator;
-};
+} EntityTwistingSlide;
 
 // Object Struct
 extern ObjectTwistingSlide *TwistingSlide;

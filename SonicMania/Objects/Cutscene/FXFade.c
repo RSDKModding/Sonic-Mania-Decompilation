@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "FXFade.h"
+#include "Global/Zone.h"
 
-ObjectFXFade *FXFade;
+ObjectFXFade *FXFade = NULL;
 
 void FXFade_Update(void)
 {

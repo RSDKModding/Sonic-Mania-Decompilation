@@ -1,10 +1,10 @@
 #ifndef OBJ_ROCKDRILL_H
 #define OBJ_ROCKDRILL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectRockDrill {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBody;
     Hitbox hitboxPistonL;
@@ -16,10 +16,10 @@ struct ObjectRockDrill {
     uint16 sfxHit;
     uint16 sfxExplosion;
     uint16 sfxDrill;
-};
+} ObjectRockDrill;
 
 // Entity Class
-struct EntityRockDrill {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Animator animator;
@@ -36,7 +36,7 @@ struct EntityRockDrill {
     int32 pistonMoveDir[2];
     int32 drillMoveDir[2];
     uint8 invincibilityTimer;
-};
+} EntityRockDrill;
 
 // Object Struct
 extern ObjectRockDrill *RockDrill;

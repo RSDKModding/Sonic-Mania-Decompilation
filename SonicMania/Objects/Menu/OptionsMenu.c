@@ -5,10 +5,33 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "OptionsMenu.h"
 
 #if MANIA_USE_PLUS
-ObjectOptionsMenu *OptionsMenu;
+#include "ManiaModeMenu.h"
+#include "MenuParam.h"
+#include "MenuSetup.h"
+#include "UIButton.h"
+#include "UIDialog.h"
+#include "UIKeyBinder.h"
+#include "UIResPicker.h"
+#include "UISlider.h"
+#include "UISubHeading.h"
+#include "UITransition.h"
+#include "UIWaitSpinner.h"
+#include "UIWidgets.h"
+#include "UIWinSize.h"
+#include "Global/APICallback.h"
+#include "Global/DialogRunner.h"
+#include "Global/Localization.h"
+#include "Global/SaveGame.h"
+#include "Helpers/LogHelpers.h"
+#include "Helpers/GameProgress.h"
+#include "Helpers/Options.h"
+#include "Helpers/ReplayDB.h"
+#include "Helpers/TimeAttackData.h"
+
+ObjectOptionsMenu *OptionsMenu = NULL;
 
 void OptionsMenu_Update(void) {}
 

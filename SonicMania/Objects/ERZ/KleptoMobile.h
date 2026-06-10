@@ -1,7 +1,7 @@
 #ifndef OBJ_KLEPTOMOBILE_H
 #define OBJ_KLEPTOMOBILE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     KLEPTOMOBILE_EGGMAN,
@@ -11,7 +11,7 @@ typedef enum {
 } KleptoMobileTypes;
 
 // Object Class
-struct ObjectKleptoMobile {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 debrisInfo[29], { 4,        0, 0, -0x20000, -0x28000, 1, 0, -0x20000, -0x28000, 2, 0, 0x20000, -0x20000, 3, 0, 0x28000,
                                   -0x20000, 4, 0, -0x10000, -0x10000, 5, 0, 0x10000,  -0x10000, 6, 0, -0x8000, -0x10000 });
@@ -28,9 +28,10 @@ struct ObjectKleptoMobile {
     uint16 sfxRocketJet;
     uint16 aniFrames;
     bool32 defeated;
-};
+} ObjectKleptoMobile;
 
 // Entity Class
+typedef struct EntityKleptoMobile EntityKleptoMobile;
 struct EntityKleptoMobile {
     RSDK_ENTITY
     StateMachine(state);

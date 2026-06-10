@@ -1,10 +1,10 @@
 #ifndef OBJ_MECHABU_H
 #define OBJ_MECHABU_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectMechaBu {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 sawOffsets[10], { -0x150000, -0xF0000, -0x170000, -0xE0000, -0x190000, -0xA0000, -0x1A0000, -0x50000, -0x1A0000, -0x40000 });
     Hitbox hitboxSaw;
@@ -12,10 +12,10 @@ struct ObjectMechaBu {
     uint16 aniFrames;
     uint16 sfxSawUp;
     uint16 sfxSawDown;
-};
+} ObjectMechaBu;
 
 // Entity Class
-struct EntityMechaBu {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     ManiaPlaneFilterTypes planeFilter;
@@ -27,7 +27,7 @@ struct EntityMechaBu {
     Animator badnikAnimator;
     Animator hornAnimator;
     Animator sawAnimator;
-};
+} EntityMechaBu;
 
 // Object Struct
 extern ObjectMechaBu *MechaBu;

@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "CutsceneSeq.h"
+#include "Global/Music.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#include "Helpers/DrawHelpers.h"
+#include "Helpers/LogHelpers.h"
 
-ObjectCutsceneSeq *CutsceneSeq;
+ObjectCutsceneSeq *CutsceneSeq = NULL;
 
 void CutsceneSeq_Update(void)
 {
@@ -112,6 +117,7 @@ void CutsceneSeq_NewState(int32 nextState, EntityCutsceneSeq *seq)
         seq->points[p].y = 0;
     }
 }
+
 #if MANIA_USE_PLUS
 void CutsceneSeq_SetSkipType(uint8 type)
 {

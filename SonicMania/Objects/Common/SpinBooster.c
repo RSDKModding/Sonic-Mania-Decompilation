@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SpinBooster.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectSpinBooster *SpinBooster;
+ObjectSpinBooster *SpinBooster = NULL;
 
 void SpinBooster_Update(void)
 {

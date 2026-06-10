@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ScoreBonus.h"
+#include "Zone.h"
 
-ObjectScoreBonus *ScoreBonus;
+ObjectScoreBonus *ScoreBonus = NULL;
 
 void ScoreBonus_Update(void)
 {

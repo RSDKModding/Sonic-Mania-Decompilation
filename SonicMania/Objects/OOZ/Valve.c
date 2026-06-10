@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Valve.h"
+#include "OOZSetup.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectValve *Valve;
+ObjectValve *Valve = NULL;
 
 void Valve_Update(void)
 {

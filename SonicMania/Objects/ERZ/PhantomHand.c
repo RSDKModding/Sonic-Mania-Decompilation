@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PhantomHand.h"
+#include "PhantomEgg.h"
+#include "Global/Debris.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectPhantomHand *PhantomHand;
+ObjectPhantomHand *PhantomHand = NULL;
 
 void PhantomHand_Update(void)
 {

@@ -1,19 +1,20 @@
 #ifndef OBJ_UFO_RING_H
 #define OBJ_UFO_RING_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "UFO_Player.h"
 
 // Object Class
-struct ObjectUFO_Ring {
+typedef struct {
     RSDK_OBJECT
     int32 unused1;
     int32 unused2;
     uint16 aniFrames;
     uint16 sfxRing;
-};
+} ObjectUFO_Ring;
 
 // Entity Class
-struct EntityUFO_Ring {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 unused1;
@@ -22,7 +23,7 @@ struct EntityUFO_Ring {
     int32 worldX;
     int32 worldY;
     Animator animator;
-};
+} EntityUFO_Ring;
 
 // Object Struct
 extern ObjectUFO_Ring *UFO_Ring;

@@ -1,7 +1,8 @@
 #ifndef OBJ_FAN_H
 #define OBJ_FAN_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Common/Button.h"
 
 typedef enum {
     FAN_V,
@@ -21,7 +22,7 @@ typedef enum {
 } FanDeactivationTypes;
 
 // Object Class
-struct ObjectFan {
+typedef struct {
     RSDK_OBJECT
     int32 activePlayers;
     uint8 unused;
@@ -33,10 +34,10 @@ struct ObjectFan {
     uint16 aniFrames;
     uint16 sfxFan;
     bool32 playingFanSfx;
-};
+} ObjectFan;
 
 // Entity Class
-struct EntityFan {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateActivate);
@@ -52,7 +53,7 @@ struct EntityFan {
     int32 buttonTag;
     EntityButton *taggedButton;
     Animator animator;
-};
+} EntityFan;
 
 // Object Struct
 extern ObjectFan *Fan;

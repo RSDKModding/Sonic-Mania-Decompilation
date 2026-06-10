@@ -1,19 +1,20 @@
 #ifndef OBJ_HANGGLIDER_H
 #define OBJ_HANGGLIDER_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 #if MANIA_USE_PLUS
 
 // Object Class
-struct ObjectHangGlider {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxUnused;
     uint16 aniFrames;
-};
+} ObjectHangGlider;
 
 // Entity Class
-struct EntityHangGlider {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 unused1;
@@ -25,7 +26,7 @@ struct EntityHangGlider {
     Animator handleBackAnimator;
     Animator handleFrontAnimator;
     Animator playerAnimator;
-};
+} EntityHangGlider;
 
 // Object Struct
 extern ObjectHangGlider *HangGlider;

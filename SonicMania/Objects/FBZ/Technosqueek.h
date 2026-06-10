@@ -1,7 +1,7 @@
 #ifndef OBJ_TECHNOSQUEEK_H
 #define OBJ_TECHNOSQUEEK_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     TECHNOSQUEEK_H,
@@ -9,14 +9,14 @@ typedef enum {
 } TechnosqueekTypes;
 
 // Object Class
-struct ObjectTechnosqueek {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     uint16 aniFrames;
-};
+} ObjectTechnosqueek;
 
 // Entity Class
-struct EntityTechnosqueek {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -31,7 +31,7 @@ struct EntityTechnosqueek {
     uint8 startDir;
     Animator animator;
     Animator tailAnimator;
-};
+} EntityTechnosqueek;
 
 // Object Struct
 extern ObjectTechnosqueek *Technosqueek;

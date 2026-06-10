@@ -5,9 +5,18 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PlatformControl.h"
+#include "Button.h"
+#include "Platform.h"
+#include "PlatformNode.h"
+#if GAME_INCLUDE_EDITOR
+#include "Global/HUD.h"
+#include "Helpers/DrawHelpers.h"
+#endif
+#include "HCZ/PullChain.h"
+#include "SSZ/SDashWheel.h"
 
-ObjectPlatformControl *PlatformControl;
+ObjectPlatformControl *PlatformControl = NULL;
 
 void PlatformControl_Update(void)
 {

@@ -1,11 +1,16 @@
 #ifndef OBJ_OPTIONSMENU_H
 #define OBJ_OPTIONSMENU_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
+#include "UIButtonPrompt.h"
+#include "UIControl.h"
+#include "UIDiorama.h"
+#include "UIInfoLabel.h"
+
 // Object Class
-struct ObjectOptionsMenu {
+typedef struct {
     RSDK_OBJECT
     EntityUIControl *optionsControl;
     EntityUIButtonPrompt *helpPrompt;
@@ -25,12 +30,12 @@ struct ObjectOptionsMenu {
     EntityUIControl *languageControl_Legacy;
     EntityUIDiorama *diorama;
     EntityUIInfoLabel *selectDataToEraseLabel;
-};
+} ObjectOptionsMenu;
 
 // Entity Class
-struct EntityOptionsMenu {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityOptionsMenu;
 
 // Object Struct
 extern ObjectOptionsMenu *OptionsMenu;

@@ -1,12 +1,12 @@
 #ifndef OBJ_WOODROW_H
 #define OBJ_WOODROW_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { WOODROW_BADNIK, WOODROW_BOMB } WoodrowTypes;
 
 // Object Class
-struct ObjectWoodrow {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxFullRange;
@@ -15,9 +15,10 @@ struct ObjectWoodrow {
     uint16 aniFrames;
     uint16 sfxExplosion;
     uint16 sfxPeck;
-};
+} ObjectWoodrow;
 
 // Entity Class
+typedef struct EntityWoodrow EntityWoodrow;
 struct EntityWoodrow {
     RSDK_ENTITY
     StateMachine(state);

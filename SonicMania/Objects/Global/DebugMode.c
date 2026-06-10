@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "DebugMode.h"
+#include "APICallback.h"
+#include "Player.h"
+#include "Zone.h"
 
-ObjectDebugMode *DebugMode;
+ObjectDebugMode *DebugMode = NULL;
 
 void DebugMode_Update(void)
 {

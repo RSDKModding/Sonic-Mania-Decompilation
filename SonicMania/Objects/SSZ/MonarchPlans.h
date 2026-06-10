@@ -1,21 +1,21 @@
 #ifndef OBJ_MONARCHPLANS_H
 #define OBJ_MONARCHPLANS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 // Object Class
-struct ObjectMonarchPlans {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
     uint16 unused;
     uint16 meshIndex;
     uint16 sceneIndex;
-};
+} ObjectMonarchPlans;
 
 // Entity Class
-struct EntityMonarchPlans {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state); // unused
     void *unused1;
@@ -31,7 +31,7 @@ struct EntityMonarchPlans {
     Matrix matWorldTemp;
     Matrix matWorld;
     Matrix matNormal;
-};
+} EntityMonarchPlans;
 
 // Object Struct
 extern ObjectMonarchPlans *MonarchPlans;

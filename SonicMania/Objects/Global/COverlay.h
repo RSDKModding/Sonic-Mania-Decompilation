@@ -1,18 +1,18 @@
 #ifndef OBJ_COVERLAY_H
 #define OBJ_COVERLAY_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectCOverlay {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectCOverlay;
 
 // Entity Class
-struct EntityCOverlay {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityCOverlay;
 
 // Object Struct
 extern ObjectCOverlay *COverlay;

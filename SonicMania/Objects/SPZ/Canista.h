@@ -1,7 +1,8 @@
 #ifndef OBJ_CANISTA_H
 #define OBJ_CANISTA_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 typedef enum {
     CANISTA_TRIGGER_STATIC,
@@ -9,7 +10,7 @@ typedef enum {
 } CanistaTriggerModes;
 
 // Object Class
-struct ObjectCanista {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxRange;
@@ -17,10 +18,10 @@ struct ObjectCanista {
     Hitbox hitboxProjectile;
     uint16 aniFrames;
     uint16 sfxPon;
-};
+} ObjectCanista;
 
 // Entity Class
-struct EntityCanista {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 triggerMode;
@@ -41,7 +42,7 @@ struct EntityCanista {
     Animator mainAnimator;
     Animator tapeAnimator;
     Animator cannonAnimator;
-};
+} EntityCanista;
 
 // Object Struct
 extern ObjectCanista *Canista;

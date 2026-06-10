@@ -5,9 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIBackground.h"
 
-ObjectUIBackground *UIBackground;
+ObjectUIBackground *UIBackground = NULL;
 
 void UIBackground_Update(void)
 {

@@ -1,7 +1,8 @@
 #ifndef OBJ_LAUNCHSPRING_H
 #define OBJ_LAUNCHSPRING_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 typedef enum {
     LAUNCHSPRING_SPINNING,
@@ -13,7 +14,7 @@ typedef enum {
 } LaunchSpringTypes;
 
 // Object Class
-struct ObjectLaunchSpring {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     bool32 isTMZ;
@@ -21,10 +22,10 @@ struct ObjectLaunchSpring {
     uint16 sfxGrab;
     uint16 sfxClack;
     uint16 sfxSpeedBooster;
-};
+} ObjectLaunchSpring;
 
 // Entity Class
-struct EntityLaunchSpring {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Animator mainAnimator;
@@ -41,7 +42,7 @@ struct EntityLaunchSpring {
     int16 minAngle;
     int16 maxAngle;
     EntityPlayer *playerPtr;
-};
+} EntityLaunchSpring;
 
 // Object Struct
 extern ObjectLaunchSpring *LaunchSpring;

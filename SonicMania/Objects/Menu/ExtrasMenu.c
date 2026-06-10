@@ -5,10 +5,19 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ExtrasMenu.h"
 
 #if MANIA_USE_PLUS
-ObjectExtrasMenu *ExtrasMenu;
+#include "MenuParam.h"
+#include "MenuSetup.h"
+#include "UIButton.h"
+#include "UIChoice.h"
+#include "UIWidgets.h"
+#include "Helpers/GameProgress.h"
+#include "Helpers/LogHelpers.h"
+#include "Helpers/TimeAttackData.h"
+
+ObjectExtrasMenu *ExtrasMenu = NULL;
 
 void ExtrasMenu_Update(void) {}
 

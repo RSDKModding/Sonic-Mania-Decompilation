@@ -1,18 +1,19 @@
 #ifndef OBJ_SPIKECORRIDOR_H
 #define OBJ_SPIKECORRIDOR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectSpikeCorridor {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxDrop;
     uint16 sfxImpact;
     uint16 sfxIndicator;
-};
+} ObjectSpikeCorridor;
 
 // Entity Class
+typedef struct EntitySpikeCorridor EntitySpikeCorridor;
 struct EntitySpikeCorridor {
     RSDK_ENTITY
     StateMachine(state);

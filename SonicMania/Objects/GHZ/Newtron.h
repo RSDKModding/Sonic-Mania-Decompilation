@@ -1,7 +1,7 @@
 #ifndef OBJ_NEWTRON_H
 #define OBJ_NEWTRON_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     NEWTRON_SHOOT,
@@ -10,17 +10,17 @@ typedef enum {
 } NewtronTypes;
 
 // Object Class
-struct ObjectNewtron {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxShoot;
     Hitbox hitboxFly; // not sure why isn't this used in this object... GHZ/CheckerBall uses it though
     Hitbox hitboxProjectile;
     Hitbox hitboxRange;
     uint16 aniFrames;
-};
+} ObjectNewtron;
 
 // Entity Class
-struct EntityNewtron {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -28,7 +28,7 @@ struct EntityNewtron {
     Vector2 startPos;
     Animator animator;
     Animator flameAnimator;
-};
+} EntityNewtron;
 
 // Object Struct
 extern ObjectNewtron *Newtron;

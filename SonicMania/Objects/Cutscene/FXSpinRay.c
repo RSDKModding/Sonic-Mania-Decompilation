@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "FXSpinRay.h"
+#include "Global/Zone.h"
 
-ObjectFXSpinRay *FXSpinRay;
+ObjectFXSpinRay *FXSpinRay = NULL;
 
 void FXSpinRay_Update(void)
 {

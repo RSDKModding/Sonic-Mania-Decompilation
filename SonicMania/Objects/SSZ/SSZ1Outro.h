@@ -1,20 +1,24 @@
 #ifndef OBJ_SSZ1OUTRO_H
 #define OBJ_SSZ1OUTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "HotaruMKII.h"
+#include "RTeleporter.h"
+#include "Cutscene/CutsceneSeq.h"
+#include "Cutscene/FXFade.h"
 
 // Object Class
-struct ObjectSSZ1Outro {
+typedef struct {
     RSDK_OBJECT
     int32 unused;
     EntityFXFade *fxFade;
     EntityRTeleporter *teleporter;
-};
+} ObjectSSZ1Outro;
 
 // Entity Class
-struct EntitySSZ1Outro {
+typedef struct {
     MANIA_CUTSCENE_BASE
-};
+} EntitySSZ1Outro;
 
 // Object Struct
 extern ObjectSSZ1Outro *SSZ1Outro;

@@ -1,14 +1,16 @@
 #ifndef OBJ_WARPDOOR_H
 #define OBJ_WARPDOOR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { WARPDOOR_EFFECT_NONE } WarpDoorEffects;
 
 typedef enum { WARPDOOR_PLRSTATE_NONE, WARPDOOR_PLRSTATE_HURT } WarpDoorPlayerStates;
 
+typedef struct EntityWarpDoor EntityWarpDoor;
+
 // Object Class
-struct ObjectWarpDoor {
+typedef struct {
     RSDK_OBJECT
     EntityWarpDoor *tags[256];
     Hitbox boundaries[256];
@@ -21,7 +23,7 @@ struct ObjectWarpDoor {
     uint16 sfxRubyAttackL[6];
     uint16 sfxRubyAttackR[6];
     uint16 sfxWarpDoor;
-};
+} ObjectWarpDoor;
 
 // Entity Class
 struct EntityWarpDoor {

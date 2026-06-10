@@ -1,7 +1,7 @@
 #ifndef OBJ_TMZ1SETUP_H
 #define OBJ_TMZ1SETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     TMZ1_STAGESTATE_NONE = -1,
@@ -16,7 +16,7 @@ typedef enum {
 } BGSwitchIDsTMZ1;
 
 // Object Class
-struct ObjectTMZ1Setup {
+typedef struct {
     RSDK_OBJECT
     bool32 paletteInit;
     int32 aniTileDuration;
@@ -29,14 +29,14 @@ struct ObjectTMZ1Setup {
     bool32 hasAchievement;
     uint16 aniTiles;
     TileLayer *background1;
-};
+} ObjectTMZ1Setup;
 
 // Entity Class
-struct EntityTMZ1Setup {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-};
+} EntityTMZ1Setup;
 
 // Object Struct
 extern ObjectTMZ1Setup *TMZ1Setup;

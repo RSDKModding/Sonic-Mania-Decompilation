@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "AIZKingClaw.h"
+#include "Common/Platform.h"
+#include "Global/Zone.h"
 
-ObjectAIZKingClaw *AIZKingClaw;
+ObjectAIZKingClaw *AIZKingClaw = NULL;
 
 void AIZKingClaw_Update(void)
 {

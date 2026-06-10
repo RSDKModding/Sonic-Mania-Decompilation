@@ -5,9 +5,16 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PopOut.h"
+#include "Common/Button.h"
+#include "Global/Spikes.h"
+#include "Global/Spring.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectPopOut *PopOut;
+ObjectPopOut *PopOut = NULL;
 
 void PopOut_Update(void)
 {

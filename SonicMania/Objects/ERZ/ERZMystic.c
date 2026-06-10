@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ERZMystic.h"
+#include "ERZKing.h"
+#include "PhantomMystic.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#include "Helpers/BadnikHelpers.h"
 
-ObjectERZMystic *ERZMystic;
+ObjectERZMystic *ERZMystic = NULL;
 
 void ERZMystic_Update(void)
 {

@@ -1,7 +1,7 @@
 #ifndef OBJ_GHZSETUP_H
 #define OBJ_GHZSETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     GHZ_BG_OUTSIDE,
@@ -11,7 +11,7 @@ typedef enum {
 typedef enum { GHZ_DECORATION_BRIDGEPOST } DecorationTypesGHZ;
 
 // Object Class
-struct ObjectGHZSetup {
+typedef struct {
     RSDK_OBJECT
     int32 paletteTimer;
     STATIC(int32 sunFlowerTimer, 30);
@@ -21,12 +21,12 @@ struct ObjectGHZSetup {
     int32 extendFlowerFrame;
     TABLE(int32 extendFlowerDurationTable[16], { 120, 2, 2, 2, 8, 2, 2, 2, 120, 2, 2, 2, 8, 2, 2, 2 });
     uint16 aniTiles;
-};
+} ObjectGHZSetup;
 
 // Entity Class
-struct EntityGHZSetup {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityGHZSetup;
 
 // Object Struct
 extern ObjectGHZSetup *GHZSetup;

@@ -1,16 +1,16 @@
 #ifndef OBJ_BRIDGE_H
 #define OBJ_BRIDGE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectBridge {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectBridge;
 
 // Entity Class
-struct EntityBridge {
+typedef struct {
     RSDK_ENTITY
     uint8 length;
     bool32 burnable;
@@ -25,7 +25,7 @@ struct EntityBridge {
     int32 endPos;
     Animator animator;
     int32 unused1;
-};
+} EntityBridge;
 
 // Object Struct
 extern ObjectBridge *Bridge;

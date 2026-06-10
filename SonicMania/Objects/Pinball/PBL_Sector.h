@@ -1,24 +1,24 @@
 #ifndef OBJ_PBL_SECTOR_H
 #define OBJ_PBL_SECTOR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 // Object Class
-struct ObjectPBL_Sector {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectPBL_Sector;
 
 // Entity Class
-struct EntityPBL_Sector {
+typedef struct {
     RSDK_ENTITY
     Vector2 size;
     uint8 craneID;
     int32 timer;
     bool32 playerEntered;
     Animator animator;
-};
+} EntityPBL_Sector;
 
 // Object Struct
 extern ObjectPBL_Sector *PBL_Sector;

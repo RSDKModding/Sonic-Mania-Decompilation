@@ -1,15 +1,15 @@
 #ifndef OBJ_FXSPINRAY_H
 #define OBJ_FXSPINRAY_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectFXSpinRay {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectFXSpinRay;
 
 // Entity Class
-struct EntityFXSpinRay {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -23,7 +23,7 @@ struct EntityFXSpinRay {
     Vector2 vertexPos[4];
     Vector2 vertices[20];
     Vector2 vertexOffset;
-};
+} EntityFXSpinRay;
 
 // Object Struct
 extern ObjectFXSpinRay *FXSpinRay;

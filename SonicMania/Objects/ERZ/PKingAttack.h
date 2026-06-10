@@ -1,7 +1,7 @@
 #ifndef OBJ_PKINGATTACK_H
 #define OBJ_PKINGATTACK_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     PKINGATTACK_LASER, // Leftover from LRZ/KingAttack, not used here
@@ -14,16 +14,16 @@ typedef enum {
 } PKingAttackTypes;
 
 // Object Class
-struct ObjectPKingAttack {
+typedef struct {
     RSDK_OBJECT
     // Not Used because he doesn't fire lasers... this object was prolly built off LRZ/KingAttack tbh
     TABLE(int32 laserColors[8], { 0x000020, 0x000020, 0xE850D8, 0xE850D8, 0xE850D8, 0xE850D8, 0x000020, 0x000020 });
     uint16 sfxPulse;
     uint16 aniFrames;
-};
+} ObjectPKingAttack;
 
 // Entity Class
-struct EntityPKingAttack {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 type;
@@ -35,7 +35,7 @@ struct EntityPKingAttack {
     int32 *laserColors;           // Leftover from LRZ/KingAttack, not used here
     Hitbox hitbox;
     Animator animator;
-};
+} EntityPKingAttack;
 
 // Object Struct
 extern ObjectPKingAttack *PKingAttack;

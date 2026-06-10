@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIDialog.h"
+#include "UIWidgets.h"
+#include "Helpers/LogHelpers.h"
+#include "Helpers/MathHelpers.h"
 
-ObjectUIDialog *UIDialog;
+ObjectUIDialog *UIDialog = NULL;
 
 void UIDialog_Update(void)
 {

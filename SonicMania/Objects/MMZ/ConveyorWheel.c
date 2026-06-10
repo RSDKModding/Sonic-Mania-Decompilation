@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ConveyorWheel.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectConveyorWheel *ConveyorWheel;
+ObjectConveyorWheel *ConveyorWheel = NULL;
 
 void ConveyorWheel_Update(void)
 {

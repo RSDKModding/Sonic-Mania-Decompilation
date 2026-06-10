@@ -1,7 +1,7 @@
 #ifndef OBJ_HUD_H
 #define OBJ_HUD_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     HUDOFF_SCORE,
@@ -19,7 +19,7 @@ typedef enum {
 } KeyIDs;
 
 // Object Class
-struct ObjectHUD {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
 #if GAME_VERSION != VER_100
@@ -34,10 +34,10 @@ struct ObjectHUD {
     int32 swapCooldown;
     int32 stockFlashTimers[PLAYER_COUNT];
 #endif
-};
+} ObjectHUD;
 
 // Entity Class
-struct EntityHUD {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 scorePos;
@@ -82,7 +82,7 @@ struct EntityHUD {
     Animator replayClapAnimator;
     Animator saveReplayButtonAnimator;
 #endif
-};
+} EntityHUD;
 
 // Object Struct
 extern ObjectHUD *HUD;

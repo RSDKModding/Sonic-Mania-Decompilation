@@ -5,9 +5,18 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Current.h"
+#include "PullChain.h"
+#include "Common/Water.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
+#include "Helpers/GameProgress.h"
+#include "Helpers/MathHelpers.h"
+#include "Global/APICallback.h"
 
-ObjectCurrent *Current;
+ObjectCurrent *Current = NULL;
 
 void Current_Update(void)
 {

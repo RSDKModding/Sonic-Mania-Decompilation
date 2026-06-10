@@ -1,18 +1,18 @@
 #ifndef OBJ_AIZENCORETUTORIAL_H
 #define OBJ_AIZENCORETUTORIAL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 // Object Class
-struct ObjectAIZEncoreTutorial {
+typedef struct {
     RSDK_OBJECT
     uint16 cutsceneFrames;
     uint16 dustFrames;
-};
+} ObjectAIZEncoreTutorial;
 
 // Entity Class
-struct EntityAIZEncoreTutorial {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -22,7 +22,7 @@ struct EntityAIZEncoreTutorial {
     Animator buddyAnimator;
     Animator buttonPressAnimator;
     Animator buttonAnimator;
-};
+} EntityAIZEncoreTutorial;
 
 // Object Struct
 extern ObjectAIZEncoreTutorial *AIZEncoreTutorial;

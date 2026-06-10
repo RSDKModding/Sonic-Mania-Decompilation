@@ -1,7 +1,7 @@
 #ifndef OBJ_ERZKING_H
 #define OBJ_ERZKING_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     ERZKING_KING,
@@ -14,8 +14,10 @@ typedef enum {
     ERZKING_HEAVY_MYSTIC,
 } ERZKingHeavyTypes;
 
+typedef struct EntityERZKing EntityERZKing;
+
 // Object Class
-struct ObjectERZKing {
+typedef struct {
     RSDK_OBJECT
     int32 boundsL;
     int32 boundsR;
@@ -25,7 +27,7 @@ struct ObjectERZKing {
     uint16 sfxHit;
     uint16 sfxExplosion2;
     uint16 aniFrames;
-};
+} ObjectERZKing;
 
 // Entity Class
 struct EntityERZKing {

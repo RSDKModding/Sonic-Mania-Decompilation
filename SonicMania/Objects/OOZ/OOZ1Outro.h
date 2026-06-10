@@ -1,23 +1,24 @@
 #ifndef OBJ_OOZ1OUTRO_H
 #define OBJ_OOZ1OUTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Cutscene/CutsceneSeq.h"
 
 // Object Class
-struct ObjectOOZ1Outro {
+typedef struct {
     RSDK_OBJECT
     int32 unused;
     uint16 sfxDrop;
-};
+} ObjectOOZ1Outro;
 
 // Entity Class
-struct EntityOOZ1Outro {
+typedef struct {
     MANIA_CUTSCENE_BASE
     int32 boundsL;
     int32 boundsR;
     int32 boundsT;
     int32 boundsB;
-};
+} EntityOOZ1Outro;
 
 // Object Struct
 extern ObjectOOZ1Outro *OOZ1Outro;

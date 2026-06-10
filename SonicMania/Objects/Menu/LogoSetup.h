@@ -1,22 +1,22 @@
 #ifndef OBJ_LOGOSETUP_H
 #define OBJ_LOGOSETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectLogoSetup {
+typedef struct {
     RSDK_OBJECT
     int32 timer;
     uint16 sfxSega;
-};
+} ObjectLogoSetup;
 
 // Entity Class
-struct EntityLogoSetup {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
     int32 timer;
-};
+} EntityLogoSetup;
 
 // Object Struct
 extern ObjectLogoSetup *LogoSetup;

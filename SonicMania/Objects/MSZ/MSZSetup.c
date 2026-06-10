@@ -5,9 +5,20 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "MSZSetup.h"
+#include "MSZCutsceneST.h"
+#include "Common/Decoration.h"
+#include "Common/GenericTrigger.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Cutscene/FXFade.h"
+#include "Global/ActClear.h"
+#include "Global/Animals.h"
+#include "Global/APICallback.h"
+#include "Global/StarPost.h"
+#include "Global/Zone.h"
+#include "Helpers/GameProgress.h"
 
-ObjectMSZSetup *MSZSetup;
+ObjectMSZSetup *MSZSetup = NULL;
 
 void MSZSetup_Update(void)
 {

@@ -5,10 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UITABanner.h"
 
 #if MANIA_USE_PLUS
-ObjectUITABanner *UITABanner;
+#include "UIWidgets.h"
+#include "Global/Localization.h"
+
+ObjectUITABanner *UITABanner = NULL;
 
 void UITABanner_Update(void)
 {

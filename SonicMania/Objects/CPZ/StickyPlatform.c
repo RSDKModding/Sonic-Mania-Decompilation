@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "StickyPlatform.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectStickyPlatform *StickyPlatform;
+ObjectStickyPlatform *StickyPlatform = NULL;
 
 void StickyPlatform_Update(void)
 {

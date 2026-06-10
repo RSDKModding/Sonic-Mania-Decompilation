@@ -1,24 +1,24 @@
 #ifndef OBJ_MSFACTORY_H
 #define OBJ_MSFACTORY_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectMSFactory {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxMachineActivate;
     uint16 sfxHullClose;
-};
+} ObjectMSFactory;
 
 // Entity Class
-struct EntityMSFactory {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
     Vector2 drawPos;
     Animator animator;
-};
+} EntityMSFactory;
 
 // Object Struct
 extern ObjectMSFactory *MSFactory;

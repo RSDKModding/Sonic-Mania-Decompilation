@@ -5,9 +5,17 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "KleptoMobile.h"
+#include "ERZStart.h"
+#include "ERZOutro.h"
+#include "PKingAttack.h"
+#include "Global/Debris.h"
+#include "Global/Explosion.h"
+#include "Global/Zone.h"
+#include "Helpers/BadnikHelpers.h"
+#include "Helpers/MathHelpers.h"
 
-ObjectKleptoMobile *KleptoMobile;
+ObjectKleptoMobile *KleptoMobile = NULL;
 
 void KleptoMobile_Update(void)
 {

@@ -5,9 +5,16 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "DashLift.h"
+#include "Common/Platform.h"
+#include "Global/Dust.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
-ObjectDashLift *DashLift;
+ObjectDashLift *DashLift = NULL;
 
 void DashLift_Update(void) { Platform_Update(); }
 

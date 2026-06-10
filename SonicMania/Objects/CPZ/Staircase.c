@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Staircase.h"
+#include "Global/Player.h"
+#include "Global/Soundboard.h"
+#include "Global/Zone.h"
 
-ObjectStaircase *Staircase;
+ObjectStaircase *Staircase = NULL;
 
 void Staircase_Update(void)
 {

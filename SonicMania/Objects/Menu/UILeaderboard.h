@@ -1,16 +1,16 @@
 #ifndef OBJ_UILEADERBOARD_H
 #define OBJ_UILEADERBOARD_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectUILeaderboard {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectUILeaderboard;
 
 // Entity Class
-struct EntityUILeaderboard {
+typedef struct {
     MANIA_UI_ITEM_BASE
     int32 unused;
     LeaderboardEntry *leaderboardEntry;
@@ -48,7 +48,7 @@ struct EntityUILeaderboard {
     Animator taAnimator;
     Animator timeAnimator;
     uint16 textFrames;
-};
+} EntityUILeaderboard;
 
 // Object Struct
 extern ObjectUILeaderboard *UILeaderboard;

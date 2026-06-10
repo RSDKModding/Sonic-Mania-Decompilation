@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Explosion.h"
+#include "Zone.h"
 
-ObjectExplosion *Explosion;
+ObjectExplosion *Explosion = NULL;
 
 void Explosion_Update(void)
 {

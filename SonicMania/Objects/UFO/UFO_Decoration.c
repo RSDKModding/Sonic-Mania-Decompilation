@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UFO_Decoration.h"
+#include "UFO_Camera.h"
 
-ObjectUFO_Decoration *UFO_Decoration;
+ObjectUFO_Decoration *UFO_Decoration = NULL;
 
 void UFO_Decoration_Update(void)
 {

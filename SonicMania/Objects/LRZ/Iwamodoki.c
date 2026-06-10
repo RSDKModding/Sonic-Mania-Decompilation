@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Iwamodoki.h"
+#include "LRZConvItem.h"
+#include "Global/DebugMode.h"
+#include "Global/Explosion.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectIwamodoki *Iwamodoki;
+ObjectIwamodoki *Iwamodoki = NULL;
 
 void Iwamodoki_Update(void)
 {

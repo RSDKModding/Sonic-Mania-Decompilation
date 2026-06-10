@@ -1,7 +1,8 @@
 #ifndef OBJ_METALSONIC_H
 #define OBJ_METALSONIC_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "MSPanel.h"
 
 typedef enum {
     MS_ANI_IDLE,
@@ -27,7 +28,7 @@ typedef enum {
 } MetalSonicAttackIDs;
 
 // Object Class
-struct ObjectMetalSonic {
+typedef struct {
     RSDK_OBJECT
     int32 unused;
     int32 invincibilityTimerPanel;
@@ -53,10 +54,10 @@ struct ObjectMetalSonic {
     Hitbox hitboxHover;
     Hitbox hitboxDash;
     uint16 aniFrames;
-};
+} ObjectMetalSonic;
 
 // Entity Class
-struct EntityMetalSonic {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 targetPos;
@@ -79,7 +80,7 @@ struct EntityMetalSonic {
     Hitbox *innerBox;
     Animator metalSonicAnimator;
     Animator boosterAnimator;
-};
+} EntityMetalSonic;
 
 // Object Struct
 extern ObjectMetalSonic *MetalSonic;

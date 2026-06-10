@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PuyoScore.h"
+#include "Global/Zone.h"
 
-ObjectPuyoScore *PuyoScore;
+ObjectPuyoScore *PuyoScore = NULL;
 
 void PuyoScore_Update(void)
 {

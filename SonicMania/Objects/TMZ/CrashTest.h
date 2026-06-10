@@ -1,10 +1,10 @@
 #ifndef OBJ_CRASHTEST_H
 #define OBJ_CRASHTEST_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectCrashTest {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxExplosion;
@@ -12,10 +12,10 @@ struct ObjectCrashTest {
     uint16 sfxTrafficLight;
     uint16 sfxCarRev;
     uint16 sfxSpeedBooster;
-};
+} ObjectCrashTest;
 
 // Entity Class
-struct EntityCrashTest {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 length;
@@ -39,7 +39,7 @@ struct EntityCrashTest {
     Animator driverAnimator;
     Animator lightAnimator;
     Animator stopperAnimator;
-};
+} EntityCrashTest;
 
 // Object Struct
 extern ObjectCrashTest *CrashTest;

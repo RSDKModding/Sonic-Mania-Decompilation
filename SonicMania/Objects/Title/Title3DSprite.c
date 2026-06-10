@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Title3DSprite.h"
+#include "TitleBG.h"
 
-ObjectTitle3DSprite *Title3DSprite;
+ObjectTitle3DSprite *Title3DSprite = NULL;
 
 void Title3DSprite_Update(void)
 {
