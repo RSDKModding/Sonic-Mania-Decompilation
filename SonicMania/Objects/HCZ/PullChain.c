@@ -10,6 +10,10 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 #include "Helpers/MathHelpers.h"
+#if GAME_VERSION == VER_100
+#include "HandLauncher.h"
+#include "Global/Ring.h"
+#endif
 
 ObjectPullChain *PullChain;
 
