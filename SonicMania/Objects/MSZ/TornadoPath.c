@@ -5,7 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TornadoPath.h"
+#include "MSZCutsceneST.h"
+#include "MSZSetup.h"
+#include "Tornado.h"
+#include "UberCaterkiller.h"
+#include "Global/Player.h"
+#include "Global/StarPost.h"
+#include "Global/Zone.h"
+#include "Cutscene/CutsceneRules.h"
 
 ObjectTornadoPath *TornadoPath;
 

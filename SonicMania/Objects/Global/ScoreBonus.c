@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ScoreBonus.h"
+#include "Zone.h"
 
 ObjectScoreBonus *ScoreBonus;
 

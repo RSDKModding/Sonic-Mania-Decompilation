@@ -5,7 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIVsScoreboard.h"
+#include "UIWidgets.h"
+#include "Helpers/DrawHelpers.h"
 
 ObjectUIVsScoreboard *UIVsScoreboard;
 

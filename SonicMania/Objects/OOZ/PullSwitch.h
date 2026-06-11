@@ -1,20 +1,20 @@
 #ifndef OBJ_PULLSWITCH_H
 #define OBJ_PULLSWITCH_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectPullSwitch {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     int32 unused;
     uint16 aniFrames;
     uint16 sfxButton;
     uint16 sfxSmogClear;
-};
+} ObjectPullSwitch;
 
 // Entity Class
-struct EntityPullSwitch {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 pullPos;
@@ -27,7 +27,7 @@ struct EntityPullSwitch {
     Animator handleAnimator;
     Animator dispenserAnimator;
     Animator chainAnimator;
-};
+} EntityPullSwitch;
 
 // Object Struct
 extern ObjectPullSwitch *PullSwitch;

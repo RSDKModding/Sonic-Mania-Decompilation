@@ -1,25 +1,25 @@
 #ifndef OBJ_ONEWAYDOOR_H
 #define OBJ_ONEWAYDOOR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectOneWayDoor {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxTop;
     Hitbox hitboxBottom;
     Hitbox hitboxRange;
-};
+} ObjectOneWayDoor;
 
 // Entity Class
-struct EntityOneWayDoor {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
     int32 offsetY;
     Animator animator;
-};
+} EntityOneWayDoor;
 
 // Object Struct
 extern ObjectOneWayDoor *OneWayDoor;

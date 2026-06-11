@@ -1,7 +1,8 @@
 #ifndef OBJ_TWISTINGDOOR_H
 #define OBJ_TWISTINGDOOR_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Common/Button.h"
 
 typedef enum {
     TWISTINGDOOR_V_SHORT,
@@ -11,14 +12,14 @@ typedef enum {
 } TwistingDoorTypes;
 
 // Object Class
-struct ObjectTwistingDoor {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxOpen;
-};
+} ObjectTwistingDoor;
 
 // Entity Class
-struct EntityTwistingDoor {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateCollide);
@@ -44,7 +45,7 @@ struct EntityTwistingDoor {
 
     bool32 close;
     EntityButton *taggedButton;
-};
+} EntityTwistingDoor;
 
 // Object Struct
 extern ObjectTwistingDoor *TwistingDoor;

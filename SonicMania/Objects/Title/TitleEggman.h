@@ -1,17 +1,17 @@
 #ifndef OBJ_TITLEEGGMAN_H
 #define OBJ_TITLEEGGMAN_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 // Object Class
-struct ObjectTitleEggman {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectTitleEggman;
 
 // Entity Class
-struct EntityTitleEggman {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -20,7 +20,7 @@ struct EntityTitleEggman {
     Animator eggmanAnimator;
     Animator chainAnimator;
     Animator capsuleAnimator;
-};
+} EntityTitleEggman;
 
 // Object Struct
 extern ObjectTitleEggman *TitleEggman;

@@ -5,7 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Syringe.h"
+#include "ChemicalPool.h"
+#include "Reagent.h"
+#include "Global/Camera.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
 ObjectSyringe *Syringe;
 

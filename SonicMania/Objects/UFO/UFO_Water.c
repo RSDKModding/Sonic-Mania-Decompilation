@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UFO_Water.h"
+#include "UFO_Setup.h"
 
 ObjectUFO_Water *UFO_Water;
 

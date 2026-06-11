@@ -1,10 +1,10 @@
 #ifndef OBJ_FXRUBY_H
 #define OBJ_FXRUBY_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectFXRuby {
+typedef struct {
     RSDK_OBJECT
     int32 deformation[0x200];
 #if MANIA_USE_PLUS
@@ -12,10 +12,10 @@ struct ObjectFXRuby {
 #endif
     TileLayer *fgLow;
     TileLayer *fgHigh;
-};
+} ObjectFXRuby;
 
 // Entity Class
-struct EntityFXRuby {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 unused1;
@@ -32,7 +32,7 @@ struct EntityFXRuby {
     int32 unused3;
     int32 unused4;
     bool32 fullyExpanded;
-};
+} EntityFXRuby;
 
 // Object Struct
 extern ObjectFXRuby *FXRuby;

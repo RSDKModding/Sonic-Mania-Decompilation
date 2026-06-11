@@ -1,17 +1,17 @@
 #ifndef OBJ_CLAPPERBOARD_H
 #define OBJ_CLAPPERBOARD_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectClapperboard {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxWhack;
-};
+} ObjectClapperboard;
 
 // Entity Class
-struct EntityClapperboard {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateCollide);
@@ -25,7 +25,7 @@ struct EntityClapperboard {
     Animator clapperBottomAnimator;
     Animator boardAnimator;
     Animator numbersAnimator;
-};
+} EntityClapperboard;
 
 // Object Struct
 extern ObjectClapperboard *Clapperboard;

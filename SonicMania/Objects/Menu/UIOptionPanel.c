@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIOptionPanel.h"
+#include "UIWidgets.h"
 
 ObjectUIOptionPanel *UIOptionPanel;
 

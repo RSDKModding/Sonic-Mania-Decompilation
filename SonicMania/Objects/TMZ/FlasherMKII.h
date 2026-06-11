@@ -1,7 +1,7 @@
 #ifndef OBJ_FLASHERMKII_H
 #define OBJ_FLASHERMKII_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     FLASHERMKII_ORIENTATION_UP,
@@ -11,15 +11,15 @@ typedef enum {
 } FlasherMKIIOrientations;
 
 // Object Class
-struct ObjectFlasherMKII {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxFlop;
     uint16 sfxZap;
-};
+} ObjectFlasherMKII;
 
 // Entity Class
-struct EntityFlasherMKII {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 orientation;
@@ -27,7 +27,7 @@ struct EntityFlasherMKII {
     int32 timer;
     Vector2 startPos;
     Animator animator;
-};
+} EntityFlasherMKII;
 
 // Object Struct
 extern ObjectFlasherMKII *FlasherMKII;

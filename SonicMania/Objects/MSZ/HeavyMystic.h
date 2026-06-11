@@ -1,7 +1,7 @@
 #ifndef OBJ_HEAVYMYSTIC_H
 #define OBJ_HEAVYMYSTIC_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     MYSTIC_MISCHIEF,
@@ -13,7 +13,7 @@ typedef enum {
 } HeavyMysticTypes;
 
 // Object Class
-struct ObjectHeavyMystic {
+typedef struct {
     RSDK_OBJECT
     int32 boundsL;
     int32 boundsR;
@@ -40,10 +40,10 @@ struct ObjectHeavyMystic {
     uint16 sfxAppear1;
     uint16 aniFrames;
     uint16 roguesFrames;
-};
+} ObjectHeavyMystic;
 
 // Entity Class
-struct EntityHeavyMystic {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -59,7 +59,7 @@ struct EntityHeavyMystic {
     Vector2 targetPos;
     Animator animator;
     Hitbox hitbox;
-};
+} EntityHeavyMystic;
 
 // Object Struct
 extern ObjectHeavyMystic *HeavyMystic;

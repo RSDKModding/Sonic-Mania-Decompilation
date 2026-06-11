@@ -5,7 +5,23 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "OOZSetup.h"
+#include "OOZ1Outro.h"
+#include "OOZ2Outro.h"
+#include "Sol.h"
+#include "Common/GenericTrigger.h"
+#include "Cutscene/CutsceneRules.h"
+#include "FBZ/WarpDoor.h"
+#include "Global/Animals.h"
+#include "Global/APICallback.h"
+#include "Global/Explosion.h"
+#include "Global/Player.h"
+#include "Global/Ring.h"
+#include "Global/Soundboard.h"
+#include "Global/SaveGame.h"
+#include "Global/StarPost.h"
+#include "Global/Zone.h"
+#include "Helpers/GameProgress.h"
 
 ObjectOOZSetup *OOZSetup;
 

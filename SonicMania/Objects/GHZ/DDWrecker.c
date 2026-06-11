@@ -5,7 +5,16 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "DDWrecker.h"
+#include "Global/Explosion.h"
+#include "Global/Music.h"
+#include "Global/Player.h"
+#include "Global/SignPost.h"
+#include "Global/Zone.h"
+#include "Helpers/BadnikHelpers.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
 ObjectDDWrecker *DDWrecker;
 

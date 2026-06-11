@@ -1,19 +1,19 @@
 #ifndef OBJ_UIMEDALLIONPANEL_H
 #define OBJ_UIMEDALLIONPANEL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectUIMedallionPanel {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectUIMedallionPanel;
 
 // Entity Class
-struct EntityUIMedallionPanel {
+typedef struct {
     RSDK_ENTITY
     Animator animator;
-};
+} EntityUIMedallionPanel;
 
 // Object Struct
 extern ObjectUIMedallionPanel *UIMedallionPanel;

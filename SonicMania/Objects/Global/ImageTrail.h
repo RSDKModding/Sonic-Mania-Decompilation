@@ -1,18 +1,19 @@
 #ifndef OBJ_IMAGETRAIL_H
 #define OBJ_IMAGETRAIL_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Player.h"
 
 // Constants
 #define IMAGETRAIL_TRACK_COUNT (7)
 
 // Object Class
-struct ObjectImageTrail {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectImageTrail;
 
 // Entity Class
-struct EntityImageTrail {
+typedef struct {
     RSDK_ENTITY
     EntityPlayer *player;
     int32 playerClassID;
@@ -30,7 +31,7 @@ struct EntityImageTrail {
     Animator stateAnimator[IMAGETRAIL_TRACK_COUNT];
     int32 baseAlpha;
     int32 fadeoutTimer;
-};
+} EntityImageTrail;
 
 // Object Struct
 extern ObjectImageTrail *ImageTrail;

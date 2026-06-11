@@ -5,7 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TwistingDoor.h"
+#include "Common/Platform.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
 ObjectTwistingDoor *TwistingDoor;
 

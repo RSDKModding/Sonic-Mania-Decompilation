@@ -1,7 +1,7 @@
 #ifndef OBJ_MATRYOSHKABOM_H
 #define OBJ_MATRYOSHKABOM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     MATRYOSHKA_SIZE_BIG,
@@ -11,7 +11,7 @@ typedef enum {
 } MatryoshkaSizes;
 
 // Object Class
-struct ObjectMatryoshkaBom {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxHurt;
     Hitbox hitboxExplode;
@@ -20,10 +20,10 @@ struct ObjectMatryoshkaBom {
     uint16 sfxExplosion;
     uint16 sfxButton;
     uint16 sfxPon;
-};
+} ObjectMatryoshkaBom;
 
 // Entity Class
-struct EntityMatryoshkaBom {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     ManiaPlaneFilterTypes planeFilter;
@@ -39,7 +39,7 @@ struct EntityMatryoshkaBom {
     Animator bodyAnimator;
     Animator fuseAnimator;
     Animator legsAnimator;
-};
+} EntityMatryoshkaBom;
 
 // Object Struct
 extern ObjectMatryoshkaBom *MatryoshkaBom;

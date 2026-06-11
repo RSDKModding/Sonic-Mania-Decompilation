@@ -5,7 +5,25 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PauseMenu.h"
+#include "ActClear.h"
+#include "APICallback.h"
+#include "Camera.h"
+#include "Localization.h"
+#include "Music.h"
+#include "Player.h"
+#include "ReplayRecorder.h"
+#include "SaveGame.h"
+#include "StarPost.h"
+#include "TitleCard.h"
+#include "Zone.h"
+#include "Helpers/ColorHelpers.h"
+#include "Helpers/CompetitionSession.h"
+#include "Helpers/LogHelpers.h"
+#include "Helpers/MathHelpers.h"
+#include "Menu/MenuParam.h"
+#include "Menu/UIDialog.h"
+#include "Menu/UIWidgets.h"
 
 ObjectPauseMenu *PauseMenu;
 

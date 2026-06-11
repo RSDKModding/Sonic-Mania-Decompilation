@@ -1,17 +1,17 @@
 #ifndef OBJ_ERZSHINOBI_H
 #define OBJ_ERZSHINOBI_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectERZShinobi {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
-};
+} ObjectERZShinobi;
 
 // Entity Class
-struct EntityERZShinobi {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -27,7 +27,7 @@ struct EntityERZShinobi {
     Animator bodyAnimator;
     Animator armAnimator;
     Animator finAnimator;
-};
+} EntityERZShinobi;
 
 // Object Struct
 extern ObjectERZShinobi *ERZShinobi;

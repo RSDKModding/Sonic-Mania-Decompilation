@@ -1,19 +1,19 @@
 #ifndef OBJ_INKWIPE_H
 #define OBJ_INKWIPE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectInkWipe {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectInkWipe;
 
 // Entity Class
-struct EntityInkWipe {
+typedef struct {
     RSDK_ENTITY
     Animator animator;
-};
+} EntityInkWipe;
 
 // Object Struct
 extern ObjectInkWipe *InkWipe;

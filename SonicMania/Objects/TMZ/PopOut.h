@@ -1,7 +1,7 @@
 #ifndef OBJ_POPOUT_H
 #define OBJ_POPOUT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     POPOUT_CHILD_SPRING_YELLOW,
@@ -10,14 +10,14 @@ typedef enum {
 } PopOutChildTypes;
 
 // Object Class
-struct ObjectPopOut {
+typedef struct {
     RSDK_OBJECT
     bool32 hasButton;
     uint16 aniFrames;
-};
+} ObjectPopOut;
 
 // Entity Class
-struct EntityPopOut {
+typedef struct {
     RSDK_ENTITY
     uint8 orientation;
     uint8 tag;
@@ -34,7 +34,7 @@ struct EntityPopOut {
     Hitbox hitboxRange;
     Animator mountAnimator;
     Animator childAnimator;
-};
+} EntityPopOut;
 
 // Object Struct
 extern ObjectPopOut *PopOut;

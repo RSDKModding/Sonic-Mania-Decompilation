@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "OOZFlames.h"
+#include "Global/Zone.h"
 
 ObjectOOZFlames *OOZFlames;
 

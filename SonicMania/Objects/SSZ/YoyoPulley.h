@@ -1,17 +1,17 @@
 #ifndef OBJ_YOYOPULLEY_H
 #define OBJ_YOYOPULLEY_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectYoyoPulley {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxHandle;
-};
+} ObjectYoyoPulley;
 
 // Entity Class
-struct EntityYoyoPulley {
+typedef struct {
     RSDK_ENTITY
     uint8 activePlayers;
     Animator mainAnimator;
@@ -25,7 +25,7 @@ struct EntityYoyoPulley {
     int32 pulleyLength;
     int32 playerTimers[PLAYER_COUNT];
     Vector2 handlePos;
-};
+} EntityYoyoPulley;
 
 // Object Struct
 extern ObjectYoyoPulley *YoyoPulley;

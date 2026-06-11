@@ -5,7 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "EscapeCar.h"
+#include "Common/Eggman.h"
+#include "Global/Debris.h"
+#include "Global/Player.h"
+#include "Global/SaveGame.h"
+#include "Global/Zone.h"
 
 ObjectEscapeCar *EscapeCar;
 

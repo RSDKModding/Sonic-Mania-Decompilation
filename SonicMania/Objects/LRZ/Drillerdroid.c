@@ -5,7 +5,21 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Drillerdroid.h"
+#include "BuckwildBall.h"
+#include "LavaGeyser.h"
+#include "LRZ1Setup.h"
+#include "LRZRockPile.h"
+#include "Stalactite.h"
+#include "Common/CollapsingPlatform.h"
+#include "Global/Debris.h"
+#include "Global/Explosion.h"
+#include "Global/Music.h"
+#include "Global/SignPost.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
 ObjectDrillerdroid *Drillerdroid;
 

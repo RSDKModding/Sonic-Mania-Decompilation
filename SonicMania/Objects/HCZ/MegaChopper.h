@@ -1,18 +1,19 @@
 #ifndef OBJ_MEGACHOPPER_H
 #define OBJ_MEGACHOPPER_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 // Object Class
-struct ObjectMegaChopper {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxChop;
     uint16 aniFrames;
-};
+} ObjectMegaChopper;
 
 // Entity Class
-struct EntityMegaChopper {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -24,7 +25,7 @@ struct EntityMegaChopper {
     uint16 lastShakeFlags;
     uint8 nibbleTimer;
     Animator animator;
-};
+} EntityMegaChopper;
 
 // Object Struct
 extern ObjectMegaChopper *MegaChopper;

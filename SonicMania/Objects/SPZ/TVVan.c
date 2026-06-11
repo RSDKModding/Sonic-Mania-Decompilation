@@ -5,7 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TVVan.h"
+#include "ShopWindow.h"
+#include "Global/Debris.h"
+#include "Global/Explosion.h"
+#include "Global/ItemBox.h"
+#include "Global/Zone.h"
 
 ObjectTVVan *TVVan;
 

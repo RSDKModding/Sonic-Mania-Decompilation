@@ -5,7 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SSZ3Cutscene.h"
+#include "EggTower.h"
+#include "Global/HUD.h"
+#include "Global/Music.h"
+#include "Global/Zone.h"
+#if MANIA_USE_PLUS
+#include "MonarchPlans.h"
+#include "SSZEggman.h"
+#endif
 
 ObjectSSZ3Cutscene *SSZ3Cutscene;
 

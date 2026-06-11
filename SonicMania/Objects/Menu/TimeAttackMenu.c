@@ -5,9 +5,31 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TimeAttackMenu.h"
 
 #if MANIA_USE_PLUS
+#include "MenuParam.h"
+#include "MenuSetup.h"
+#include "UIButton.h"
+#include "UICharButton.h"
+#include "UIChoice.h"
+#include "UIDialog.h"
+#include "UIPopover.h"
+#include "UIRankButton.h"
+#include "UITAZoneModule.h"
+#include "UITransition.h"
+#include "UIWaitSpinner.h"
+#include "UIWidgets.h"
+#include "Global/APICallback.h"
+#include "Global/Localization.h"
+#include "Global/Music.h"
+#include "Global/ReplayRecorder.h"
+#include "Global/SaveGame.h"
+#include "Helpers/GameProgress.h"
+#include "Helpers/LogHelpers.h"
+#include "Helpers/ReplayDB.h"
+#include "Helpers/TimeAttackData.h"
+
 ObjectTimeAttackMenu *TimeAttackMenu;
 
 void TimeAttackMenu_Update(void)

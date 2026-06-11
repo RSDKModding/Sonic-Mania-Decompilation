@@ -1,17 +1,17 @@
 #ifndef OBJ_FIREFLIES_H
 #define OBJ_FIREFLIES_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectFireflies {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     int32 activeFireflyCount;
-};
+} ObjectFireflies;
 
 // Entity Class
-struct EntityFireflies {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 unused1;
@@ -23,7 +23,7 @@ struct EntityFireflies {
     int32 screenCount;
     int32 screenID;
     Vector2 points[4];
-};
+} EntityFireflies;
 
 // Object Struct
 extern ObjectFireflies *Fireflies;

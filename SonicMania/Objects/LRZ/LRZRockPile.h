@@ -1,7 +1,7 @@
 #ifndef OBJ_LRZROCKPILE_H
 #define OBJ_LRZROCKPILE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     LRZROCKPILE_WALL,
@@ -10,7 +10,7 @@ typedef enum {
 } LRZRockPileTypes;
 
 // Object Class
-struct ObjectLRZRockPile {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxWall;
     Hitbox hitboxFloorTopSolid;
@@ -18,10 +18,10 @@ struct ObjectLRZRockPile {
     uint16 sfxLedgeBreak;
     uint16 aniFrames;
     uint16 particleFrames;
-};
+} ObjectLRZRockPile;
 
 // Entity Class
-struct EntityLRZRockPile {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -41,7 +41,7 @@ struct EntityLRZRockPile {
     Animator animator;
     bool32 canCollapse;
     Hitbox hitbox;
-};
+} EntityLRZRockPile;
 
 // Object Struct
 extern ObjectLRZRockPile *LRZRockPile;

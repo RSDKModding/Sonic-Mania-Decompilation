@@ -5,7 +5,21 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "CrimsonEye.h"
+#include "TMZ1Setup.h"
+#include "Global/Debris.h"
+#include "Global/Explosion.h"
+#include "Global/InvisibleBlock.h"
+#include "Global/ItemBox.h"
+#include "Global/Music.h"
+#include "Global/Player.h"
+#include "Global/Ring.h"
+#include "Global/SignPost.h"
+#include "Global/Zone.h"
+#include "Helpers/BadnikHelpers.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
 ObjectCrimsonEye *CrimsonEye;
 

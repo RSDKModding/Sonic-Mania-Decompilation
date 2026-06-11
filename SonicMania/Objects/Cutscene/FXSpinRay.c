@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "FXSpinRay.h"
+#include "Global/Zone.h"
 
 ObjectFXSpinRay *FXSpinRay;
 

@@ -1,16 +1,16 @@
 #ifndef OBJ_ERZRIDER_H
 #define OBJ_ERZRIDER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectERZRider {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectERZRider;
 
 // Entity Class
-struct EntityERZRider {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -24,7 +24,7 @@ struct EntityERZRider {
     Animator thrustAnimator;
     Animator unusedAnimator1;
     Animator unusedAnimator2;
-};
+} EntityERZRider;
 
 // Object Struct
 extern ObjectERZRider *ERZRider;

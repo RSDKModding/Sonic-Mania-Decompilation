@@ -1,7 +1,7 @@
 #ifndef OBJ_DOORTRIGGER_H
 #define OBJ_DOORTRIGGER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     DOORTRIGGER_ORIENATION_L,
@@ -11,21 +11,21 @@ typedef enum {
 } DoorTriggerOrientations;
 
 // Object Class
-struct ObjectDoorTrigger {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBulb[2];
     uint16 aniFrames;
     uint16 sfxShatter;
-};
+} ObjectDoorTrigger;
 
 // Entity Class
-struct EntityDoorTrigger {
+typedef struct {
     RSDK_ENTITY
     uint8 orientation;
     uint8 id;
     Animator baseAnimator;
     Animator bulbAnimator;
-};
+} EntityDoorTrigger;
 
 // Object Struct
 extern ObjectDoorTrigger *DoorTrigger;

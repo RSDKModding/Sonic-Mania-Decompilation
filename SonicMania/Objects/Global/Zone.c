@@ -5,7 +5,24 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Zone.h"
+#include "ActClear.h"
+#include "APICallback.h"
+#include "Competition.h"
+#include "HUD.h"
+#include "ImageTrail.h"
+#include "ItemBox.h"
+#include "Localization.h"
+#include "Music.h"
+#include "Player.h"
+#include "SaveGame.h"
+#include "Shield.h"
+#include "SignPost.h"
+#include "StarPost.h"
+#include "TitleCard.h"
+#include "AIZ/EncoreIntro.h"
+#include "Helpers/CompetitionSession.h"
+#include "Helpers/LogHelpers.h"
 #include <time.h>
 
 ObjectZone *Zone;

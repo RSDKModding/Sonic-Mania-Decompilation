@@ -1,25 +1,25 @@
 #ifndef OBJ_SPIKELOG_H
 #define OBJ_SPIKELOG_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectSpikeLog {
+typedef struct {
     RSDK_OBJECT
     bool32 hasAchievement;
     uint8 timer;
     uint16 aniFrames;
     Hitbox hitboxSpikeLog;
     Hitbox hitboxBurnLog;
-};
+} ObjectSpikeLog;
 
 // Entity Class
-struct EntitySpikeLog {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 frame;
     Animator animator;
-};
+} EntitySpikeLog;
 
 // Object Struct
 extern ObjectSpikeLog *SpikeLog;

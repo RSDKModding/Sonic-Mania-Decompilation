@@ -1,7 +1,7 @@
 #ifndef OBJ_HCZONEWAYDOOR_H
 #define OBJ_HCZONEWAYDOOR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     HCZONEWAYDOOR_UP,
@@ -11,14 +11,14 @@ typedef enum {
 } HCZOneWayDoorOrientations;
 
 // Object Class
-struct ObjectHCZOneWayDoor {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxClack;
-};
+} ObjectHCZOneWayDoor;
 
 // Entity Class
-struct EntityHCZOneWayDoor {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -32,7 +32,7 @@ struct EntityHCZOneWayDoor {
     Hitbox hitboxSolid;
     Hitbox hitboxTrigger;
     Animator animator;
-};
+} EntityHCZOneWayDoor;
 
 // Object Struct
 extern ObjectHCZOneWayDoor *HCZOneWayDoor;

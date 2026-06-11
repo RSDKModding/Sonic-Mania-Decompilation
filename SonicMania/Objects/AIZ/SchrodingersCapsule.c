@@ -5,9 +5,19 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SchrodingersCapsule.h"
 
 #if MANIA_USE_PLUS
+#include "EncoreIntro.h"
+#include "ERZ/PhantomRuby.h"
+#include "Cutscene/FXFade.h"
+#include "Global/ActClear.h"
+#include "Global/Camera.h"
+#include "Global/Explosion.h"
+#include "Global/Music.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+
 ObjectSchrodingersCapsule *SchrodingersCapsule;
 
 void SchrodingersCapsule_Update(void)

@@ -5,7 +5,29 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "CheckerBall.h"
+#include "Batbrain.h"
+#include "Bridge.h"
+#include "BuzzBomber.h"
+#include "Chopper.h"
+#include "Crabmeat.h"
+#include "Motobug.h"
+#include "Newtron.h"
+#include "Splats.h"
+#include "Common/BreakableWall.h"
+#include "Common/CollapsingPlatform.h"
+#include "Common/Platform.h"
+#include "Global/Debris.h"
+#include "Global/DebugMode.h"
+#include "Global/Explosion.h"
+#include "Global/ItemBox.h"
+#include "Global/PlaneSwitch.h"
+#include "Global/Player.h"
+#include "Global/ScoreBonus.h"
+#include "Global/Spikes.h"
+#include "Global/Spring.h"
+#include "Global/Zone.h"
+#include "Helpers/BadnikHelpers.h"
 
 ObjectCheckerBall *CheckerBall;
 

@@ -5,7 +5,22 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "HeavyKing.h"
+#include "KingAttack.h"
+#include "ThoughtBubble.h"
+#include "Cutscene/CutsceneSeq.h"
+#include "Cutscene/FXExpandRing.h"
+#include "Cutscene/FXSpinRay.h"
+#include "Global/Debris.h"
+#include "Global/Explosion.h"
+#include "Global/Music.h"
+#include "Global/Player.h"
+#include "Global/Shield.h"
+#include "Global/Zone.h"
+#include "Helpers/BadnikHelpers.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
 ObjectHeavyKing *HeavyKing;
 

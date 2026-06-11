@@ -5,9 +5,16 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Summary.h"
 
 #if MANIA_USE_PLUS
+#include "Global/APICallback.h"
+#include "Global/HUD.h"
+#include "Global/Localization.h"
+#include "Global/Music.h"
+#include "Global/SaveGame.h"
+#include "Menu/UIWidgets.h"
+
 ObjectSummary *Summary;
 
 void Summary_Update(void)

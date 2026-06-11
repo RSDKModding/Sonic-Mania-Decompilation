@@ -5,7 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SeltzerBottle.h"
+#include "SeltzerWater.h"
+#include "Common/PlatformNode.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
 ObjectSeltzerBottle *SeltzerBottle;
 

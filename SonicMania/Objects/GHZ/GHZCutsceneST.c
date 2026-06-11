@@ -5,7 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "GHZCutsceneST.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Global/Camera.h"
+#include "Global/Music.h"
+#include "Global/Zone.h"
 
 ObjectGHZCutsceneST *GHZCutsceneST;
 

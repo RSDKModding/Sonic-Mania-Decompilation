@@ -1,7 +1,7 @@
 #ifndef OBJ_INK_H
 #define OBJ_INK_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     INK_C,
@@ -10,24 +10,24 @@ typedef enum {
 } InkTypes;
 
 // Object Class
-struct ObjectInk {
+typedef struct {
     RSDK_OBJECT
     uint8 playerColors[PLAYER_COUNT];
     uint16 aniFrames;
     Hitbox hitboxBottleL;
     Hitbox hitboxBottleR;
     Hitbox hitboxBottleBottom;
-};
+} ObjectInk;
 
 // Entity Class
-struct EntityInk {
+typedef struct {
     RSDK_ENTITY
     uint8 type;
     uint8 inkedPlayers;
     Animator bottleAnimator;
     Animator contentAnimator;
     Animator splashAnimator;
-};
+} EntityInk;
 
 // Object Struct
 extern ObjectInk *Ink;

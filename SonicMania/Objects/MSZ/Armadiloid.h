@@ -1,18 +1,19 @@
 #ifndef OBJ_ARMADILOID_H
 #define OBJ_ARMADILOID_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { ARMADILOID_SHOOTER, ARMADILOID_RIDER } ArmadiloidTypes;
 
 // Object Class
-struct ObjectArmadiloid {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxShot;
-};
+} ObjectArmadiloid;
 
 // Entity Class
+typedef struct EntityArmadiloid EntityArmadiloid;
 struct EntityArmadiloid {
     RSDK_ENTITY
     StateMachine(state);

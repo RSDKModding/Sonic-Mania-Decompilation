@@ -1,12 +1,12 @@
 #ifndef OBJ_TMZ2SETUP_H
 #define OBJ_TMZ2SETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { TMZ2_WARPDOOR_EFFECT_MIST = 1 } TMZ2WarpDoorEffects;
 
 // Object Class
-struct ObjectTMZ2Setup {
+typedef struct {
     RSDK_OBJECT
     bool32 paletteInit;
     int32 palDuration;
@@ -15,12 +15,12 @@ struct ObjectTMZ2Setup {
     int32 unused2;
     uint16 aniTiles;
     uint16 dynTiles;
-};
+} ObjectTMZ2Setup;
 
 // Entity Class
-struct EntityTMZ2Setup {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityTMZ2Setup;
 
 // Object Struct
 extern ObjectTMZ2Setup *TMZ2Setup;

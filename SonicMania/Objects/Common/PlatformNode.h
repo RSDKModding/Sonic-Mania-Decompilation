@@ -1,20 +1,20 @@
 #ifndef OBJ_PLATFORMNODE_H
 #define OBJ_PLATFORMNODE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectPlatformNode {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames; // used only in-editor
-};
+} ObjectPlatformNode;
 
 // Entity Class
-struct EntityPlatformNode {
+typedef struct {
     RSDK_ENTITY
     int32 nodeFlag;
     Animator animator;
-};
+} EntityPlatformNode;
 
 // Object Struct
 extern ObjectPlatformNode *PlatformNode;

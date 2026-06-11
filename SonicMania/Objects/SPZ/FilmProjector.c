@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "FilmProjector.h"
+#include "Global/Zone.h"
 
 ObjectFilmProjector *FilmProjector;
 

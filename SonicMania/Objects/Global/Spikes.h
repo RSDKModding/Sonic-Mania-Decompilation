@@ -1,7 +1,8 @@
 #ifndef OBJ_SPIKES_H
 #define OBJ_SPIKES_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Player.h"
 
 typedef enum {
     SPIKES_UP,
@@ -21,7 +22,7 @@ typedef enum {
 } SpikeMoveTypes;
 
 // Object Class
-struct ObjectSpikes {
+typedef struct {
     RSDK_OBJECT
     StateMachine(stateDraw);
     Animator verticalAnimator;
@@ -31,10 +32,10 @@ struct ObjectSpikes {
     int32 unused2; // both set on StageLoad but then never used
     uint16 sfxMove;
     uint16 sfxSpike;
-};
+} ObjectSpikes;
 
 // Entity Class
-struct EntitySpikes {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 type;
@@ -50,7 +51,7 @@ struct EntitySpikes {
     uint8 shatterTimer;
     Hitbox hitbox;
     Animator animator;
-};
+} EntitySpikes;
 
 // Object Struct
 extern ObjectSpikes *Spikes;

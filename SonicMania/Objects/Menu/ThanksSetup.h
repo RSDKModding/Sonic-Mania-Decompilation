@@ -1,23 +1,24 @@
 #ifndef OBJ_THANKSSETUP_H
 #define OBJ_THANKSSETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "UIPicture.h"
 
 // Object Class
-struct ObjectThanksSetup {
+typedef struct {
     RSDK_OBJECT
     uint16 sfxSega;
-};
+} ObjectThanksSetup;
 
 // Entity Class
-struct EntityThanksSetup {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
     EntityUIPicture *thanksLogo;
     int32 timer;
     int32 radius;
-};
+} EntityThanksSetup;
 
 // Object Struct
 extern ObjectThanksSetup *ThanksSetup;

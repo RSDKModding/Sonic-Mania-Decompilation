@@ -1,7 +1,7 @@
 #ifndef OBJ_TIMEATTACKDATA_H
 #define OBJ_TIMEATTACKDATA_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     CHAR_SONIC_AND_TAILS,
@@ -34,7 +34,7 @@ typedef struct {
 } TimeAttackRAM;
 
 // Object Class
-struct ObjectTimeAttackData {
+typedef struct {
 #if !MANIA_USE_PLUS
     RSDK_OBJECT
 #endif
@@ -52,16 +52,16 @@ struct ObjectTimeAttackData {
     void (*loadCallback)(bool32 success);
     Entity *saveEntityPtr;
     void (*saveCallback)(bool32 success);
-};
+} ObjectTimeAttackData;
 
 #if !MANIA_USE_PLUS
 // Entity Class
-struct EntityTimeAttackData {
+typedef struct {
     RSDK_ENTITY
     // padding to match whatever it would be normally
     // not required, but its for safety :)
     uint8 padding[sizeof(TimeAttackRAM) - sizeof(Entity)];
-};
+} EntityTimeAttackData;
 #endif
 
 // Object Entity

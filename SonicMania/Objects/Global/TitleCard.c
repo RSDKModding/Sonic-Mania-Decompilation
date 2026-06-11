@@ -5,7 +5,16 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TitleCard.h"
+#include "ActClear.h"
+#include "Announcer.h"
+#include "Competition.h"
+#include "InvincibleStars.h"
+#include "ImageTrail.h"
+#include "Player.h"
+#include "Zone.h"
+#include "Helpers/CompetitionSession.h"
+#include "Helpers/TimeAttackData.h"
 
 ObjectTitleCard *TitleCard;
 

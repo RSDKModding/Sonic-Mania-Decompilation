@@ -5,7 +5,18 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "BigSqueeze.h"
+#include "FBZTrash.h"
+#include "LightBarrier.h"
+#include "FBZSinkTrash.h"
+#include "Common/CollapsingPlatform.h"
+#include "Global/Debris.h"
+#include "Global/Explosion.h"
+#include "Global/Music.h"
+#include "Global/Player.h"
+#include "Global/SignPost.h"
+#include "Global/Soundboard.h"
+#include "Global/Zone.h"
 
 ObjectBigSqueeze *BigSqueeze;
 

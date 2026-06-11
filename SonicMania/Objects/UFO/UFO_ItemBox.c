@@ -5,7 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UFO_ItemBox.h"
+#include "UFO_Camera.h"
+#include "UFO_HUD.h"
+#include "UFO_Player.h"
+#include "UFO_Ring.h"
+#include "UFO_Setup.h"
 
 ObjectUFO_ItemBox *UFO_ItemBox;
 

@@ -1,7 +1,7 @@
 #ifndef OBJ_STICKYPLATFORM_H
 #define OBJ_STICKYPLATFORM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     STICKYPLATFORM_UP,
@@ -11,14 +11,14 @@ typedef enum {
 } StickyPlatformTypes;
 
 // Object Class
-struct ObjectStickyPlatform {
+typedef struct {
     RSDK_OBJECT
     uint16 sfxLand;
     uint16 aniFrames;
-};
+} ObjectStickyPlatform;
 
 // Entity Class
-struct EntityStickyPlatform {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StickyPlatformTypes type;
@@ -31,7 +31,7 @@ struct EntityStickyPlatform {
     Vector2 centerPos;
     Hitbox hitbox;
     Animator animator;
-};
+} EntityStickyPlatform;
 
 // Object Struct
 extern ObjectStickyPlatform *StickyPlatform;

@@ -1,10 +1,10 @@
 #ifndef OBJ_SP500_H
 #define OBJ_SP500_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectSP500 {
+typedef struct {
     RSDK_OBJECT
     uint16 printLayerID;
     Hitbox hitboxSideL;
@@ -14,10 +14,10 @@ struct ObjectSP500 {
     uint16 sfxBeep4;
     uint16 sfxFail;
     uint16 sfxButton2;
-};
+} ObjectSP500;
 
 // Entity Class
-struct EntitySP500 {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 len;
@@ -42,7 +42,7 @@ struct EntitySP500 {
     Vector2 targetPos;
     Entity *storedEntity;
     Animator animator;
-};
+} EntitySP500;
 
 // Object Struct
 extern ObjectSP500 *SP500;

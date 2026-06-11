@@ -5,7 +5,18 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "EggPrison.h"
+#include "ActClear.h"
+#include "Animals.h"
+#include "Debris.h"
+#include "Explosion.h"
+#include "Music.h"
+#include "Player.h"
+#include "Ring.h"
+#include "Zone.h"
+#include "Helpers/BadnikHelpers.h"
+#include "FBZ/Blaster.h"
+#include "FBZ/Technosqueek.h"
 
 ObjectEggPrison *EggPrison;
 

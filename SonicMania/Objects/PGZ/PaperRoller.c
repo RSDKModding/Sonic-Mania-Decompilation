@@ -5,7 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PaperRoller.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#include "Helpers/MathHelpers.h"
 
 ObjectPaperRoller *PaperRoller;
 

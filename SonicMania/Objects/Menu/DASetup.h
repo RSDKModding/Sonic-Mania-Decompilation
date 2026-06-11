@@ -1,10 +1,14 @@
 #ifndef OBJ_DASETUP_H
 #define OBJ_DASETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "UIControl.h"
+#include "UIInfoLabel.h"
+#include "Cutscene/FXFade.h"
+#include "Global/Music.h"
 
 // Object Class
-struct ObjectDASetup {
+typedef struct {
     RSDK_OBJECT
     bool32 initialized;
     int32 returnToMenu;
@@ -20,12 +24,12 @@ struct ObjectDASetup {
     uint16 sfxMedal;
     uint16 sfxSSExit;
     uint16 sfxScoreTotal;
-};
+} ObjectDASetup;
 
 // Entity Class
-struct EntityDASetup {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityDASetup;
 
 // Object Struct
 extern ObjectDASetup *DASetup;

@@ -5,7 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PhantomRuby.h"
+#include "Global/Zone.h"
+#include "Helpers/BadnikHelpers.h"
 
 ObjectPhantomRuby *PhantomRuby;
 

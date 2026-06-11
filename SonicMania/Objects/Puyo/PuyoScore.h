@@ -1,16 +1,16 @@
 #ifndef OBJ_PUYOSCORE_H
 #define OBJ_PUYOSCORE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectPuyoScore {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectPuyoScore;
 
 // Entity Class
-struct EntityPuyoScore {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 playerID;
@@ -18,7 +18,7 @@ struct EntityPuyoScore {
     bool32 flashing;
     int32 score;
     Animator animator;
-};
+} EntityPuyoScore;
 
 // Object Struct
 extern ObjectPuyoScore *PuyoScore;

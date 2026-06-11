@@ -5,7 +5,28 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIControl.h"
+#include "UICharButton.h"
+#include "UIChoice.h"
+#include "UIKeyBinder.h"
+#include "UILeaderboard.h"
+#include "UIModeButton.h"
+#include "UIRankButton.h"
+#include "UIReplayCarousel.h"
+#include "UISaveSlot.h"
+#include "UISlider.h"
+#include "UITAZoneModule.h"
+#include "UITransition.h"
+#include "UIVsCharSelector.h"
+#include "UIVsResults.h"
+#include "UIVsZoneButton.h"
+#include "UIWidgets.h"
+#include "Global/APICallback.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
+#include "Helpers/LogHelpers.h"
+#include "Helpers/MathHelpers.h"
 
 ObjectUIControl *UIControl;
 

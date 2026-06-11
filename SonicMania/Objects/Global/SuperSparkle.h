@@ -1,21 +1,22 @@
 #ifndef OBJ_SUPERSPARKLE_H
 #define OBJ_SUPERSPARKLE_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Player.h"
 
 // Object Class
-struct ObjectSuperSparkle {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectSuperSparkle;
 
 // Entity Class
-struct EntitySuperSparkle {
+typedef struct {
     RSDK_ENTITY
     EntityPlayer *player;
     int32 timer;
     bool32 canSpawnSparkle;
-};
+} EntitySuperSparkle;
 
 // Object Struct
 extern ObjectSuperSparkle *SuperSparkle;

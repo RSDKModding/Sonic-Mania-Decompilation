@@ -5,7 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PhantomRider.h"
+#include "PhantomEgg.h"
+#include "Common/Button.h"
+#include "Common/PlatformNode.h"
+#include "Global/Camera.h"
+#include "Global/Player.h"
+#include "Global/Spikes.h"
+#include "Global/Zone.h"
+#include "TMZ/PopOut.h"
 
 ObjectPhantomRider *PhantomRider;
 

@@ -1,22 +1,22 @@
 #ifndef OBJ_UNCURLPLANT_H
 #define OBJ_UNCURLPLANT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define UNCURLPLANT_NODE_COUNT (8)
 
 // Object Class
-struct ObjectUncurlPlant {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxNode;
     TABLE(int32 startingNodeAngles[8], { 0x00, 0x10, 0x40, 0x60, 0x70, 0x90, 0xA0, 0xC0 });
     TABLE(int32 targetNodeAnglesReleased[8], { 0x00, -0x08, 0x20, 0x40, 0x40, 0x40, 0x40, 0x40 });
     TABLE(int32 targetNodeAnglesStood[8], { 0x00, -0x18, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08 });
     uint16 aniFrames;
-};
+} ObjectUncurlPlant;
 
 // Entity Class
-struct EntityUncurlPlant {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state); // unused
     int32 unused;
@@ -30,7 +30,7 @@ struct EntityUncurlPlant {
     int32 uncurlMode;
     Animator nodeAnimator;
     Animator decorAnimators[UNCURLPLANT_NODE_COUNT];
-};
+} EntityUncurlPlant;
 
 // Object Struct
 extern ObjectUncurlPlant *UncurlPlant;

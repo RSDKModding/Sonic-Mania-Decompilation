@@ -1,10 +1,16 @@
 #ifndef OBJ_MSZCUTSCENEST_H
 #define OBJ_MSZCUTSCENEST_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Armadiloid.h"
+#include "Tornado.h"
+#include "TornadoPath.h"
+#include "Cutscene/CutsceneHBH.h"
+#include "Cutscene/CutsceneSeq.h"
+#include "Global/SignPost.h"
 
 // Object Class
-struct ObjectMSZCutsceneST {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 signPostOffsets[6], { -0x10000, -0x10000, 0, 0, 0, -0x10000 });
     uint16 unused1;
@@ -24,10 +30,10 @@ struct ObjectMSZCutsceneST {
     uint16 sfxMayday;
     uint16 sfxLedgeBreak;
     bool32 playingMaydaySfx;
-};
+} ObjectMSZCutsceneST;
 
 // Entity Class
-struct EntityMSZCutsceneST {
+typedef struct {
     RSDK_ENTITY
     Vector2 size;
     bool32 activated;
@@ -39,7 +45,7 @@ struct EntityMSZCutsceneST {
     int32 unused5;
     int32 unused6;
     Hitbox hitbox;
-};
+} EntityMSZCutsceneST;
 
 // Object Struct
 extern ObjectMSZCutsceneST *MSZCutsceneST;

@@ -1,7 +1,7 @@
 #ifndef OBJ_TEETERTOTTER_H
 #define OBJ_TEETERTOTTER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define TEETERTOTTER_SEGMENT_COUNT (32)
 
@@ -11,13 +11,13 @@ typedef enum {
 } TeeterTotterColors;
 
 // Object Class
-struct ObjectTeeterTotter {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectTeeterTotter;
 
 // Entity Class
-struct EntityTeeterTotter {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 color;
@@ -33,7 +33,7 @@ struct EntityTeeterTotter {
     int32 segmentVelocity[TEETERTOTTER_SEGMENT_COUNT];
     Hitbox hitbox;
     Animator animator;
-};
+} EntityTeeterTotter;
 
 // Object Struct
 extern ObjectTeeterTotter *TeeterTotter;

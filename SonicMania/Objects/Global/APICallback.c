@@ -5,9 +5,20 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "APICallback.h"
 
 #if !MANIA_USE_PLUS
+#include "Localization.h"
+#include "Music.h"
+#include "PauseMenu.h"
+#include "Zone.h"
+#include "Helpers/LogHelpers.h"
+#include "Helpers/GameProgress.h"
+#include "Menu/MenuSetup.h"
+#include "Menu/UIDialog.h"
+#include "Menu/UIControl.h"
+#include "Menu/UIWaitSpinner.h"
+
 ObjectAPICallback *APICallback;
 
 void APICallback_Update(void)

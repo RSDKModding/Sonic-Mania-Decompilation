@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SonicMania.h" />
     <ClInclude Include="..\dependencies\RSDKv5-GameAPI\C\GameAPI\GameLink.h" />
     <ClInclude Include="..\dependencies\RSDKv5-GameAPI\C\GameAPI\GameObjects.h" />
     <ClInclude Include="..\dependencies\RSDKv5-GameAPI\C\GameAPI\GameVariables.h" />

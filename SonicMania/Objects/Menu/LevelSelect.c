@@ -5,7 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "LevelSelect.h"
+#include "Global/APICallback.h"
+#include "Global/HUD.h"
+#include "Global/Music.h"
+#include "Global/SaveGame.h"
+#include "Global/Zone.h"
+#include "Helpers/GameProgress.h"
 
 ObjectLevelSelect *LevelSelect;
 

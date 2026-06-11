@@ -1,7 +1,8 @@
 #ifndef OBJ_HATCH_H
 #define OBJ_HATCH_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 typedef enum {
     HATCH_GO_SUBENTRYHATCH,
@@ -12,7 +13,7 @@ typedef enum {
 } HatchGoTypes;
 
 // Object Class
-struct ObjectHatch {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxSubExit;
     Hitbox hitboxRange;
@@ -25,10 +26,10 @@ struct ObjectHatch {
     uint16 sfxDescend;
     uint16 sfxSurface;
     uint16 sfxGasPop;
-};
+} ObjectHatch;
 
 // Entity Class
-struct EntityHatch {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 go;
@@ -49,7 +50,7 @@ struct EntityHatch {
     Animator hatchAnimator;
     Hitbox hitbox;
     Hitbox hitboxWarpDoor;
-};
+} EntityHatch;
 
 // Object Struct
 extern ObjectHatch *Hatch;

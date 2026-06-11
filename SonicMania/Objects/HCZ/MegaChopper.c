@@ -5,7 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "MegaChopper.h"
+#include "Common/Water.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/Ring.h"
+#include "Global/Zone.h"
 
 ObjectMegaChopper *MegaChopper;
 

@@ -1,7 +1,7 @@
 #ifndef OBJ_OPTIONS_H
 #define OBJ_OPTIONS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Using a seperate OptionsRAM struct
 // Normally (and officially) the EntityOptions struct was used here
@@ -27,7 +27,7 @@ typedef struct {
 } OptionsRAM;
 
 // Object Class
-struct ObjectOptions {
+typedef struct {
 #if !MANIA_USE_PLUS
     RSDK_OBJECT
     Entity *loadEntityPtr;
@@ -41,15 +41,15 @@ struct ObjectOptions {
     void (*saveCallback)(bool32 success);
 #endif
     bool32 changed;
-};
+} ObjectOptions;
 
 // Entity Class
-struct EntityOptions {
+typedef struct {
     RSDK_ENTITY
     // padding to match whatever it would be normally
     // not required, but its for safety :)
     uint8 padding[sizeof(OptionsRAM) - sizeof(Entity)];
-};
+} EntityOptions;
 
 // Object Struct
 extern ObjectOptions *Options;

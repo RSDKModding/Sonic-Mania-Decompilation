@@ -5,7 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SSZ1Outro.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Global/Zone.h"
+#include "Helpers/BadnikHelpers.h"
+#include "Helpers/MathHelpers.h"
 
 ObjectSSZ1Outro *SSZ1Outro;
 

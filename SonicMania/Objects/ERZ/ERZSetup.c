@@ -5,7 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ERZSetup.h"
+#include "Global/Animals.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
 ObjectERZSetup *ERZSetup;
 

@@ -5,7 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "FBZStorm.h"
+#include "Global/PauseMenu.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#include "HCZ/Current.h"
 
 ObjectFBZStorm *FBZStorm;
 

@@ -1,11 +1,11 @@
 #ifndef OBJ_PBL_FLIPPER_H
 #define OBJ_PBL_FLIPPER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 // Object Class
-struct ObjectPBL_Flipper {
+typedef struct {
     RSDK_OBJECT
     Animator unusedAnimator1;
     Hitbox hitbox;
@@ -16,10 +16,10 @@ struct ObjectPBL_Flipper {
     uint16 sceneIndex;
     uint16 sfxFlipper;
     uint16 sfxFlipperStage;
-};
+} ObjectPBL_Flipper;
 
 // Entity Class
-struct EntityPBL_Flipper {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 minCraneID;
@@ -33,7 +33,7 @@ struct EntityPBL_Flipper {
     bool32 buttonDown;
     bool32 flipperActive;
     Animator animator;
-};
+} EntityPBL_Flipper;
 
 // Object Struct
 extern ObjectPBL_Flipper *PBL_Flipper;

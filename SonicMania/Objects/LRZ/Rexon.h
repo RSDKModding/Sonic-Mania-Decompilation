@@ -1,7 +1,7 @@
 #ifndef OBJ_REXON_H
 #define OBJ_REXON_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define REXON_SEGMENT_COUNT (5)
 
@@ -12,7 +12,7 @@ typedef enum {
 } RexonTypes;
 
 // Object Class
-struct ObjectRexon {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxShell;
@@ -21,10 +21,10 @@ struct ObjectRexon {
     uint16 aniFrames;
     uint16 sfxShot;
     uint16 sfxExplosion;
-};
+} ObjectRexon;
 
 // Entity Class
-struct EntityRexon {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     bool32 noMove;
@@ -41,7 +41,7 @@ struct EntityRexon {
     Animator bodyAnimator;
     Animator neckAnimator;
     Animator headAnimator;
-};
+} EntityRexon;
 
 // Object Struct
 extern ObjectRexon *Rexon;

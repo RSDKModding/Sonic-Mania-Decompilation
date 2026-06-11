@@ -1,20 +1,20 @@
 #ifndef OBJ_UFO_SPEEDLINES_H
 #define OBJ_UFO_SPEEDLINES_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define UFO_SPEEDLINES_LINE_COUNT (32)
 
 // Object Class
-struct ObjectUFO_SpeedLines {
+typedef struct {
     RSDK_OBJECT
     int32 unused1;
     int32 unused2;
     int32 unused3;
-};
+} ObjectUFO_SpeedLines;
 
 // Entity Class
-struct EntityUFO_SpeedLines {
+typedef struct {
     RSDK_ENTITY
     int32 lineX[UFO_SPEEDLINES_LINE_COUNT];
     int32 lineY[UFO_SPEEDLINES_LINE_COUNT];
@@ -22,7 +22,7 @@ struct EntityUFO_SpeedLines {
     int32 lineAlpha[UFO_SPEEDLINES_LINE_COUNT];
     int32 unused1;
     int32 unused2;
-};
+} EntityUFO_SpeedLines;
 
 // Object Struct
 extern ObjectUFO_SpeedLines *UFO_SpeedLines;

@@ -1,19 +1,19 @@
 #ifndef OBJ_CONTINUESETUP_H
 #define OBJ_CONTINUESETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectContinueSetup {
+typedef struct {
     RSDK_OBJECT
     Animator animator;
     uint16 sfxAccept;
     uint16 countIndex[10];
     uint16 sceneIndex;
-};
+} ObjectContinueSetup;
 
 // Entity Class
-struct EntityContinueSetup {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -28,7 +28,7 @@ struct EntityContinueSetup {
     Matrix matRotateX;
     Matrix matRotateY;
     Matrix matFinal;
-};
+} EntityContinueSetup;
 
 // Object Struct
 extern ObjectContinueSetup *ContinueSetup;

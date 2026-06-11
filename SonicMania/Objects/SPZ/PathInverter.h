@@ -1,7 +1,8 @@
 #ifndef OBJ_PATHINVERTER_H
 #define OBJ_PATHINVERTER_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 typedef enum {
     PATHINVERTER_H,
@@ -9,13 +10,13 @@ typedef enum {
 } PathInverterTypes;
 
 // Object Class
-struct ObjectPathInverter {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectPathInverter;
 
 // Entity Class
-struct EntityPathInverter {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -25,7 +26,7 @@ struct EntityPathInverter {
     int32 groundVelStore[PLAYER_COUNT];
     int32 playerFlipFlags[PLAYER_COUNT];
     Animator animator;
-};
+} EntityPathInverter;
 
 // Object Struct
 extern ObjectPathInverter *PathInverter;

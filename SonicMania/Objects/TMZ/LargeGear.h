@@ -1,18 +1,18 @@
 #ifndef OBJ_LARGEGEAR_H
 #define OBJ_LARGEGEAR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectLargeGear {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxTooth;
     Hitbox hitboxBase;
-};
+} ObjectLargeGear;
 
 // Entity Class
-struct EntityLargeGear {
+typedef struct {
     RSDK_ENTITY
     int32 rotSpeed;
     int32 rotOffset;
@@ -26,7 +26,7 @@ struct EntityLargeGear {
     Animator axleAnimator;
     Animator centerAnimator;
     Animator rivetAnimator;
-};
+} EntityLargeGear;
 
 // Object Struct
 extern ObjectLargeGear *LargeGear;

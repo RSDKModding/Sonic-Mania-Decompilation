@@ -5,7 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "MagPlatform.h"
+#include "Common/Platform.h"
+#include "Global/Zone.h"
 
 ObjectMagPlatform *MagPlatform;
 

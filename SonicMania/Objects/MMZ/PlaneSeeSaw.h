@@ -1,18 +1,18 @@
 #ifndef OBJ_PLANESEESAW_H
 #define OBJ_PLANESEESAW_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectPlaneSeeSaw {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxSpring;
     uint16 sfxFlipper;
-};
+} ObjectPlaneSeeSaw;
 
 // Entity Class
-struct EntityPlaneSeeSaw {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 unused;
@@ -20,7 +20,7 @@ struct EntityPlaneSeeSaw {
     Animator platformAnimator;
     Animator swingAnimator;
     Animator weightAnimator;
-};
+} EntityPlaneSeeSaw;
 
 // Object Struct
 extern ObjectPlaneSeeSaw *PlaneSeeSaw;

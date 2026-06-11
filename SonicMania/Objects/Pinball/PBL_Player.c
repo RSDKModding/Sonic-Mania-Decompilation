@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PBL_Player.h"
 
 #if MANIA_USE_PLUS
+#include "PBL_Camera.h"
+#include "PBL_Setup.h"
+#include "Global/PauseMenu.h"
+
 ObjectPBL_Player *PBL_Player;
 
 void PBL_Player_Update(void)

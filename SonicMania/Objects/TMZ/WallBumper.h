@@ -1,7 +1,7 @@
 #ifndef OBJ_WALLBUMPER_H
 #define OBJ_WALLBUMPER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     WALLBUMPER_H,
@@ -9,14 +9,14 @@ typedef enum {
 } WallBumperTypes;
 
 // Object Class
-struct ObjectWallBumper {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxBouncer;
-};
+} ObjectWallBumper;
 
 // Entity Class
-struct EntityWallBumper {
+typedef struct {
     RSDK_ENTITY
     int32 type;
     int32 size;
@@ -24,7 +24,7 @@ struct EntityWallBumper {
     bool32 destructible;
     Animator animator;
     Hitbox hitbox;
-};
+} EntityWallBumper;
 
 // Object Struct
 extern ObjectWallBumper *WallBumper;

@@ -5,7 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Pinata.h"
+#include "Global/Debris.h"
+#include "Global/DebugMode.h"
+#include "Global/Explosion.h"
+#include "Global/Player.h"
+#include "Global/ScoreBonus.h"
+#include "Global/Zone.h"
 
 ObjectPinata *Pinata;
 

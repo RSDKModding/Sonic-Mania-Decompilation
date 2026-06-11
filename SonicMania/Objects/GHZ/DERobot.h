@@ -1,7 +1,8 @@
 #ifndef OBJ_DEROBOT_H
 #define OBJ_DEROBOT_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Common/Eggman.h"
 
 typedef enum {
     DEROBOT_BODY,
@@ -18,7 +19,7 @@ typedef enum {
 } DERobotAniLists;
 
 // Object Class
-struct ObjectDERobot {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxHand;
@@ -36,9 +37,10 @@ struct ObjectDERobot {
     uint16 sfxDrop;
     uint16 sfxButton2;
     uint16 sfxHullClose;
-};
+} ObjectDERobot;
 
 // Entity Class
+typedef struct EntityDERobot EntityDERobot;
 struct EntityDERobot {
     RSDK_ENTITY
     StateMachine(state);

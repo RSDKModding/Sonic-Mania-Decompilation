@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PuyoIndicator.h"
+#include "Global/Zone.h"
 
 ObjectPuyoIndicator *PuyoIndicator;
 

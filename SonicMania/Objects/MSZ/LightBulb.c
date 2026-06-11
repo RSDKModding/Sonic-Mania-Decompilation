@@ -5,7 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "LightBulb.h"
+#include "Global/Debris.h"
+#include "Global/DebugMode.h"
+#include "Global/Explosion.h"
+#include "Global/ItemBox.h"
+#include "Global/Player.h"
+#include "Global/ScoreBonus.h"
+#include "Global/Zone.h"
 
 ObjectLightBulb *LightBulb;
 

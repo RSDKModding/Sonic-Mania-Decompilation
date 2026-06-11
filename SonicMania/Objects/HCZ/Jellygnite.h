@@ -1,7 +1,8 @@
 #ifndef OBJ_JELLYGNITE_H
 #define OBJ_JELLYGNITE_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 typedef enum {
     JELLYGNITE_ANI_FLOATING,
@@ -10,17 +11,17 @@ typedef enum {
 } JellygniteAnimIDs;
 
 // Object Class
-struct ObjectJellygnite {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     Hitbox hitboxUnused;
     uint16 aniFrames;
     uint16 sfxGrab;
     uint16 sfxElectrify;
-};
+} ObjectJellygnite;
 
 // Entity Class
-struct EntityJellygnite {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -37,7 +38,7 @@ struct EntityJellygnite {
     Animator bodyAnimator;
     Animator frontTentacleAnimator;
     Animator backTentacleAnimator;
-};
+} EntityJellygnite;
 
 // Object Struct
 extern ObjectJellygnite *Jellygnite;

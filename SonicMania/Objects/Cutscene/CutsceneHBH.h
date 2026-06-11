@@ -1,7 +1,7 @@
 #ifndef OBJ_CUTSCENEHBH_H
 #define OBJ_CUTSCENEHBH_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     HBH_GUNNER,
@@ -18,14 +18,14 @@ typedef enum {
 } HBHTypes;
 
 // Object Class
-struct ObjectCutsceneHBH {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     color paletteColors[128];
-};
+} ObjectCutsceneHBH;
 
 // Entity Class
-struct EntityCutsceneHBH {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 characterID;
@@ -44,7 +44,7 @@ struct EntityCutsceneHBH {
     uint16 aniFrames;
     Animator mainAnimator;
     Animator fxAnimator;
-};
+} EntityCutsceneHBH;
 
 // Object Struct
 extern ObjectCutsceneHBH *CutsceneHBH;

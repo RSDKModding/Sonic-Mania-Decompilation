@@ -1,24 +1,24 @@
 #ifndef OBJ_MSORB_H
 #define OBJ_MSORB_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectMSOrb {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxOrb;
-};
+} ObjectMSOrb;
 
 // Entity Class
-struct EntityMSOrb {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
     Animator animator;
     int32 unused1;
     int32 unused2;
-};
+} EntityMSOrb;
 
 // Object Struct
 extern ObjectMSOrb *MSOrb;

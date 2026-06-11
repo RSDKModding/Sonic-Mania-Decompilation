@@ -5,7 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "WaterGush.h"
+#include "Common/Water.h"
+#include "Global/Debris.h"
+#include "Global/Music.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
 ObjectWaterGush *WaterGush;
 

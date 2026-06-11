@@ -1,7 +1,7 @@
 #ifndef OBJ_BUZZSAW_H
 #define OBJ_BUZZSAW_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     BUZZSAW_ATTACHED,
@@ -9,16 +9,16 @@ typedef enum {
 } BuzzsawTypes;
 
 // Object Class
-struct ObjectBuzzSaw {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
     Vector2 unused1;
     int32 unused2;
-};
+} ObjectBuzzSaw;
 
 // Entity Class
-struct EntityBuzzSaw {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 type;
@@ -27,7 +27,7 @@ struct EntityBuzzSaw {
     Vector2 startPos;
     Vector2 drawPos;
     Animator animator;
-};
+} EntityBuzzSaw;
 
 // Object Struct
 extern ObjectBuzzSaw *BuzzSaw;

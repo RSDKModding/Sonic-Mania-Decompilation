@@ -5,7 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Fireflies.h"
+#include "Global/Zone.h"
+#include "Helpers/MathHelpers.h"
 
 ObjectFireflies *Fireflies;
 

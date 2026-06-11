@@ -5,7 +5,34 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PhantomEgg.h"
+#include "PhantomGunner.h"
+#include "PhantomHand.h"
+#include "PhantomMissile.h"
+#include "PhantomMystic.h"
+#include "PhantomRider.h"
+#include "PhantomRuby.h"
+#include "PhantomShield.h"
+#include "PhantomShinobi.h"
+#include "Common/Eggman.h"
+#include "Common/PlatformNode.h"
+#include "Cutscene/FXFade.h"
+#include "Cutscene/FXRuby.h"
+#include "Global/Camera.h"
+#include "Global/Explosion.h"
+#include "Global/Music.h"
+#include "Global/Player.h"
+#include "Global/SaveGame.h"
+#include "Global/Zone.h"
+#include "Helpers/BadnikHelpers.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
+#include "Helpers/GameProgress.h"
+#include "Menu/UIWaitSpinner.h"
+#include "TMZ/TMZ2Outro.h"
+#include "TMZ/TMZAlert.h"
+#include "TMZ/TMZCable.h"
 
 ObjectPhantomEgg *PhantomEgg;
 

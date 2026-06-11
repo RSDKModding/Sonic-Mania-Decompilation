@@ -1,10 +1,11 @@
 #ifndef OBJ_CREDITSSETUP_H
 #define OBJ_CREDITSSETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Cutscene/FXFade.h"
 
 // Object Class
-struct ObjectCreditsSetup {
+typedef struct {
     RSDK_OBJECT
     int32 unused1;
     int32 creditsTrack;
@@ -14,12 +15,12 @@ struct ObjectCreditsSetup {
     int32 scrollPos;
     int32 creditsPos;
     int32 creditsSize;
-};
+} ObjectCreditsSetup;
 
 // Entity Class
-struct EntityCreditsSetup {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityCreditsSetup;
 
 // Object Struct
 extern ObjectCreditsSetup *CreditsSetup;

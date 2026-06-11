@@ -1,7 +1,8 @@
 #ifndef OBJ_LRZCONVEYOR_H
 #define OBJ_LRZCONVEYOR_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Common/Button.h"
 
 typedef enum {
     LRZCONVEYOR_BEHAVIOR_CHANGEACTIVE,
@@ -11,14 +12,14 @@ typedef enum {
 } LRZConveyorButtonBehaviours;
 
 // Object Class
-struct ObjectLRZConveyor {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     color lineColors[64];
-};
+} ObjectLRZConveyor;
 
 // Entity Class
-struct EntityLRZConveyor {
+typedef struct {
     RSDK_ENTITY
     int32 slope;
     int32 length;
@@ -35,7 +36,7 @@ struct EntityLRZConveyor {
     Hitbox hitbox;
     Animator wheelAnimator;
     Animator smallWheelAnimator;
-};
+} EntityLRZConveyor;
 
 // Object Struct
 extern ObjectLRZConveyor *LRZConveyor;

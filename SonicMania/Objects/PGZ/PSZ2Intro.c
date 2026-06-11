@@ -5,7 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PSZ2Intro.h"
+#include "PSZ2Outro.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Global/ActClear.h"
+#include "Global/Music.h"
+#include "Global/TitleCard.h"
+#include "Global/Zone.h"
 
 ObjectPSZ2Intro *PSZ2Intro;
 

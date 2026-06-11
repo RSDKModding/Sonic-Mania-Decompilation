@@ -1,10 +1,11 @@
 #ifndef OBJ_PUYOAI_H
 #define OBJ_PUYOAI_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "PuyoBean.h"
 
 // Object Class
-struct ObjectPuyoAI {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 controlIntervals[5], { 16, 12, 8, 4, 0 });
     TABLE(int32 controlChances[5], { 40, 30, 20, 10, 0 });
@@ -14,12 +15,12 @@ struct ObjectPuyoAI {
     int32 desiredRotation[2];
     int32 controlInterval[2];
     int32 controlChance[2];
-};
+} ObjectPuyoAI;
 
 // Entity Class
-struct EntityPuyoAI {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityPuyoAI;
 
 // Object Struct
 extern ObjectPuyoAI *PuyoAI;

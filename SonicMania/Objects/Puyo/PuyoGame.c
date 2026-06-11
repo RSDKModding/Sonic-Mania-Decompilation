@@ -5,7 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PuyoGame.h"
+#include "PuyoAI.h"
+#include "PuyoBean.h"
+#include "Global/Localization.h"
+#include "Global/PauseMenu.h"
+#include "Global/Zone.h"
+#include "Helpers/CompetitionSession.h"
+#include "Global/APICallback.h"
+#include "Menu/MenuParam.h"
 #include <time.h>
 
 ObjectPuyoGame *PuyoGame;

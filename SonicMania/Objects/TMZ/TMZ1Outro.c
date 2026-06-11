@@ -5,7 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TMZ1Outro.h"
+#include "CrimsonEye.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Global/ItemBox.h"
+#include "Global/Music.h"
+#include "Global/SignPost.h"
+#include "Global/TitleCard.h"
+#include "Global/Zone.h"
 
 ObjectTMZ1Outro *TMZ1Outro;
 

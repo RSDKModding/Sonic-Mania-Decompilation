@@ -1,7 +1,7 @@
 #ifndef OBJ_SEESAW_H
 #define OBJ_SEESAW_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     SEESAW_TILT_L,
@@ -10,7 +10,7 @@ typedef enum {
 } SeeSawTilts;
 
 // Object Class
-struct ObjectSeeSaw {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 tiltHeightTable[48],
           { -36, -36, -38, -40, -42, -44, -42, -40, -38, -36, -35, -34, -33, -32, -31, -30, -29, -28, -27, -26, -25, -24, -23, -22,
@@ -21,10 +21,10 @@ struct ObjectSeeSaw {
     Hitbox hitboxCactinaut;
     uint16 aniFrames;
     uint16 sfxSpring;
-};
+} ObjectSeeSaw;
 
 // Entity Class
-struct EntitySeeSaw {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 side;
@@ -42,7 +42,7 @@ struct EntitySeeSaw {
     Animator pivotAnimator;
     Animator plankAnimator;
     Animator orbAnimator;
-};
+} EntitySeeSaw;
 
 // Object Struct
 extern ObjectSeeSaw *SeeSaw;

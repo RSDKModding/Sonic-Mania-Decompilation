@@ -1,17 +1,17 @@
 #ifndef OBJ_DRAWHELPERS_H
 #define OBJ_DRAWHELPERS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectDrawHelpers {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectDrawHelpers;
 
 // Entity Class
-struct EntityDrawHelpers {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityDrawHelpers;
 
 // Object Entity
 extern ObjectDrawHelpers *DrawHelpers;

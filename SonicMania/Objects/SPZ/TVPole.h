@@ -1,16 +1,16 @@
 #ifndef OBJ_TVPOLE_H
 #define OBJ_TVPOLE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectTVPole {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectTVPole;
 
 // Entity Class
-struct EntityTVPole {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint16 length;
@@ -18,7 +18,7 @@ struct EntityTVPole {
     int32 playerTimers[PLAYER_COUNT];
     Hitbox hitbox;
     Animator animator;
-};
+} EntityTVPole;
 
 // Object Struct
 extern ObjectTVPole *TVPole;

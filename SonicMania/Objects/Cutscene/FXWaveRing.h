@@ -1,16 +1,16 @@
 #ifndef OBJ_FXWAVERING_H
 #define OBJ_FXWAVERING_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 // Object Class
-struct ObjectFXWaveRing {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectFXWaveRing;
 
 // Entity Class
-struct EntityFXWaveRing {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -27,7 +27,7 @@ struct EntityFXWaveRing {
     Vector2 offsetPos;
     int32 pointCount;
     int32 radius;
-};
+} EntityFXWaveRing;
 
 // Object Struct
 extern ObjectFXWaveRing *FXWaveRing;

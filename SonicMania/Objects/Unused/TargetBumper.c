@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TargetBumper.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/ScoreBonus.h"
+#include "Global/Zone.h"
 
-ObjectTargetBumper *TargetBumper = NULL;
+ObjectTargetBumper *TargetBumper;
 
 void TargetBumper_Update(void)
 {

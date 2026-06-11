@@ -1,7 +1,7 @@
 #ifndef OBJ_UFO_SETUP_H
 #define OBJ_UFO_SETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     UFO_TFLAGS_NORMAL,
@@ -10,7 +10,7 @@ typedef enum {
 } TileFlagsUFO;
 
 // Object Class
-struct ObjectUFO_Setup {
+typedef struct {
     RSDK_OBJECT
     StateMachine(deformCB);
     int32 timedOut;
@@ -33,15 +33,15 @@ struct ObjectUFO_Setup {
     uint16 sfxEmerald;
     uint16 sfxEvent;
     bool32 resetToTitle;
-};
+} ObjectUFO_Setup;
 
 // Entity Class
-struct EntityUFO_Setup {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
     color fadeColor;
-};
+} EntityUFO_Setup;
 
 // Object Struct
 extern ObjectUFO_Setup *UFO_Setup;

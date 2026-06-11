@@ -5,7 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Funnel.h"
+#include "Global/Player.h"
+#include "Global/ScoreBonus.h"
+#include "Global/Zone.h"
 
 ObjectFunnel *Funnel;
 

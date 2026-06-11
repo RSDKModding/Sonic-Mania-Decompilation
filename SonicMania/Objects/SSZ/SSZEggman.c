@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SSZEggman.h"
 
 #if MANIA_USE_PLUS
+#include "MetalSonic.h"
+#include "ERZ/PhantomRuby.h"
+#include "Global/Zone.h"
+#include "Helpers/BadnikHelpers.h"
+
 ObjectSSZEggman *SSZEggman;
 
 void SSZEggman_Update(void)

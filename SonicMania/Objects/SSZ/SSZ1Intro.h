@@ -1,20 +1,22 @@
 #ifndef OBJ_SSZ1INTRO_H
 #define OBJ_SSZ1INTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Cutscene/CutsceneSeq.h"
+#include "Cutscene/FXRuby.h"
 
 // Object Class
-struct ObjectSSZ1Intro {
+typedef struct {
     RSDK_OBJECT
     int32 unused1;
     int32 unused2;
     EntityFXRuby *fxRuby;
-};
+} ObjectSSZ1Intro;
 
 // Entity Class
-struct EntitySSZ1Intro {
+typedef struct {
     MANIA_CUTSCENE_BASE
-};
+} EntitySSZ1Intro;
 
 // Object Struct
 extern ObjectSSZ1Intro *SSZ1Intro;

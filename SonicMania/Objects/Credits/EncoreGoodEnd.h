@@ -1,9 +1,11 @@
 #ifndef OBJ_ENCOREGOODEND_H
 #define OBJ_ENCOREGOODEND_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
+#include "Common/Decoration.h"
+#include "Cutscene/CutsceneSeq.h"
 
 typedef enum {
     E_END_DECOR_STOOL,
@@ -57,20 +59,20 @@ typedef enum {
 } EncoreGoodEndDecorIDs;
 
 // Object Class
-struct ObjectEncoreGoodEnd {
+typedef struct {
     RSDK_OBJECT
     int32 unused1;
     uint16 unused2;
     uint16 sfxSnap;
     int32 unused3;
     EntityDecoration *decorations[16];
-};
+} ObjectEncoreGoodEnd;
 
 // Entity Class
-struct EntityEncoreGoodEnd {
+typedef struct {
     MANIA_CUTSCENE_BASE
     int32 unused1;
-};
+} EntityEncoreGoodEnd;
 
 // Object Struct
 extern ObjectEncoreGoodEnd *EncoreGoodEnd;

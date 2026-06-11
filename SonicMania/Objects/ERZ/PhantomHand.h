@@ -1,10 +1,10 @@
 #ifndef OBJ_PHANTOMHAND_H
 #define OBJ_PHANTOMHAND_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectPhantomHand {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 debrisInfo[41], { 10,       0, 0, -0x20000, -0x10000, 1, 0, -0x10000, -0x10000, 2, 0, 0x10000, -0x10000, 3, 0, 0x20000,
                                   -0x10000, 4, 0, -0x20000, -0x8000,  5, 0, -0x10000, -0x8000,  6, 0, 0x10000, -0x8000,  7, 0, 0x20000,
@@ -12,10 +12,10 @@ struct ObjectPhantomHand {
     bool32 grabbedPlayers[PLAYER_COUNT];
     Hitbox hitbox;
     uint16 aniFrames;
-};
+} ObjectPhantomHand;
 
 // Entity Class
-struct EntityPhantomHand {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 grabTimer;
@@ -28,7 +28,7 @@ struct EntityPhantomHand {
     Animator handAnimator;
     Animator crystalAnimator;
     Animator shineAnimator;
-};
+} EntityPhantomHand;
 
 // Object Struct
 extern ObjectPhantomHand *PhantomHand;

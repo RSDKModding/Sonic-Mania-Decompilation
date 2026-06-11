@@ -1,19 +1,19 @@
 #ifndef OBJ_MICDROP_H
 #define OBJ_MICDROP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectMicDrop {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxRange;
     uint16 aniFrames;
     uint16 sfxElectrify;
-};
+} ObjectMicDrop;
 
 // Entity Class
-struct EntityMicDrop {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Animator bodyAnimator;
@@ -25,7 +25,7 @@ struct EntityMicDrop {
     int32 swingVel;
     int32 radius;
     int32 swingPos;
-};
+} EntityMicDrop;
 
 // Object Struct
 extern ObjectMicDrop *MicDrop;

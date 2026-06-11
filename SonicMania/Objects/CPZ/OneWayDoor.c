@@ -5,7 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "OneWayDoor.h"
+#if MANIA_USE_PLUS
+#include "Global/NoSwap.h"
+#endif
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
 ObjectOneWayDoor *OneWayDoor;
 

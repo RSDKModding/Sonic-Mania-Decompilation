@@ -1,7 +1,7 @@
 #ifndef OBJ_GAMEPROGRESS_H
 #define OBJ_GAMEPROGRESS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define GAMEPROGRESS_MEDAL_COUNT   (32)
 #define GAMEPROGRESS_ZONE_COUNT    (12)
@@ -81,17 +81,17 @@ typedef struct {
 } ProgressRAM;
 
 // Object Class
-struct ObjectGameProgress {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectGameProgress;
 
 // Entity Class
-struct EntityGameProgress {
+typedef struct {
     RSDK_ENTITY
     // padding to match whatever it would be normally
     // not required, but its for safety :)
     uint8 padding[sizeof(ProgressRAM) - sizeof(Entity)];
-};
+} EntityGameProgress;
 
 // Object Struct
 extern ObjectGameProgress *GameProgress;

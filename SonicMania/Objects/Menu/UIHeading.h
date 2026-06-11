@@ -1,7 +1,7 @@
 #ifndef OBJ_UIHEADING_H
 #define OBJ_UIHEADING_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     UIHEADING_MAINMENU,
@@ -20,13 +20,13 @@ typedef enum {
 } UIHeadingIDs;
 
 // Object Class
-struct ObjectUIHeading {
+typedef struct {
     RSDK_OBJECT
     uint16 textFrames;
-};
+} ObjectUIHeading;
 
 // Entity Class
-struct EntityUIHeading {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 unused;
@@ -35,7 +35,7 @@ struct EntityUIHeading {
     Animator headingAnimator;
     Animator textAnimator;
     uint16 textFrames;
-};
+} EntityUIHeading;
 
 // Object Struct
 extern ObjectUIHeading *UIHeading;

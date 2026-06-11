@@ -1,7 +1,7 @@
 #ifndef OBJ_UFO_DECORATION_H
 #define OBJ_UFO_DECORATION_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     UFO_DECOR_TREE,
@@ -15,17 +15,17 @@ typedef enum {
 } UFO_DecorationTypes;
 
 // Object Class
-struct ObjectUFO_Decoration {
+typedef struct {
     RSDK_OBJECT
     Animator unusedAnimator1;
     int32 drawType;
     uint16 aniFrames; // unused
     uint16 modelIndices[8];
     uint16 sceneIndex;
-};
+} ObjectUFO_Decoration;
 
 // Entity Class
-struct EntityUFO_Decoration {
+typedef struct {
     RSDK_ENTITY
     int32 unused1;
     int32 type;
@@ -36,7 +36,7 @@ struct EntityUFO_Decoration {
     Matrix matWorld;
     Matrix matNormal;
     Animator animator;
-};
+} EntityUFO_Decoration;
 
 // Object Struct
 extern ObjectUFO_Decoration *UFO_Decoration;

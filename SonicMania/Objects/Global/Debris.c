@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Debris.h"
+#include "Zone.h"
 
 ObjectDebris *Debris;
 

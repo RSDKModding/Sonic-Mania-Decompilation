@@ -5,7 +5,26 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "AIZSetup.h"
+#include "AIZEggRobo.h"
+#include "AIZKingClaw.h"
+#include "AIZTornado.h"
+#include "AIZTornadoPath.h"
+#include "Common/BGSwitch.h"
+#include "Common/Decoration.h"
+#include "Common/Platform.h"
+#include "Common/Water.h"
+#include "Cutscene/CutsceneHBH.h"
+#include "Cutscene/CutsceneSeq.h"
+#include "Cutscene/FXRuby.h"
+#include "ERZ/PhantomRuby.h"
+#include "Global/Animals.h"
+#include "Global/Camera.h"
+#include "Global/Music.h"
+#include "Global/PauseMenu.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#include "Helpers/MathHelpers.h"
 
 ObjectAIZSetup *AIZSetup;
 

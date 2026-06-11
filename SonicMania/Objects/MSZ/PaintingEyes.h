@@ -1,16 +1,16 @@
 #ifndef OBJ_PAINTINGEYES_H
 #define OBJ_PAINTINGEYES_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectPaintingEyes {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectPaintingEyes;
 
 // Entity Class
-struct EntityPaintingEyes {
+typedef struct {
     RSDK_ENTITY
     int32 timer;
     int32 coverPos;
@@ -18,7 +18,7 @@ struct EntityPaintingEyes {
     Animator coverAnimator;
     Animator irisAnimator;
     Animator pupilAnimator;
-};
+} EntityPaintingEyes;
 
 // Object Struct
 extern ObjectPaintingEyes *PaintingEyes;

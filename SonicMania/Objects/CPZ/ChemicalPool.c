@@ -5,7 +5,16 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ChemicalPool.h"
+#include "ChemBubble.h"
+#include "Reagent.h"
+#include "Global/Debris.h"
+#include "Global/Player.h"
+#include "Global/Shield.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
 ObjectChemicalPool *ChemicalPool;
 

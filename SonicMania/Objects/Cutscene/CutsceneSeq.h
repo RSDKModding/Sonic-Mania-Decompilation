@@ -1,7 +1,8 @@
 #ifndef OBJ_CUTSCENESEQ_H
 #define OBJ_CUTSCENESEQ_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 #define CUTSCENESEQ_POINT_COUNT (8)
 
@@ -15,11 +16,12 @@ typedef enum {
 #endif
 
 // Object Class
-struct ObjectCutsceneSeq {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectCutsceneSeq;
 
 // Entity Class
+typedef struct EntityCutsceneSeq EntityCutsceneSeq;
 struct EntityCutsceneSeq {
     RSDK_ENTITY
     bool32 (*currentState)(EntityCutsceneSeq *host);

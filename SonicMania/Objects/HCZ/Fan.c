@@ -5,7 +5,17 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Fan.h"
+#include "HangConveyor.h"
+#include "PullChain.h"
+#include "Common/Platform.h"
+#include "Common/Water.h"
+#include "Global/PauseMenu.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
+#include "Helpers/MathHelpers.h"
 
 ObjectFan *Fan;
 

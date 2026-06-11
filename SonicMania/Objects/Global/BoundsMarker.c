@@ -5,7 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "BoundsMarker.h"
+#include "Camera.h"
+#include "DebugMode.h"
+#include "Zone.h"
 
 ObjectBoundsMarker *BoundsMarker;
 

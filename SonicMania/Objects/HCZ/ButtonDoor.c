@@ -5,7 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ButtonDoor.h"
+#include "PullChain.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
+#include "LRZ/TurretSwitch.h"
+#include "LRZ/LRZ2Setup.h"
 
 ObjectButtonDoor *ButtonDoor;
 

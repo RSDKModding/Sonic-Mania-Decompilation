@@ -1,7 +1,7 @@
 #ifndef OBJ_SPRING_H
 #define OBJ_SPRING_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     SPRING_VERT_YELLOW,
@@ -14,14 +14,14 @@ typedef enum {
 } SpringTypes;
 
 // Object Class
-struct ObjectSpring {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxSpring;
-};
+} ObjectSpring;
 
 // Entity Class
-struct EntitySpring {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     SpringTypes type;
@@ -30,7 +30,7 @@ struct EntitySpring {
     int32 sfxTimer;
     Animator animator;
     Hitbox hitbox;
-};
+} EntitySpring;
 
 // Object Struct
 extern ObjectSpring *Spring;

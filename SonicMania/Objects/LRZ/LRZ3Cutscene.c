@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "LRZ3Cutscene.h"
+#include "Global/TitleCard.h"
 
 ObjectLRZ3Cutscene *LRZ3Cutscene;
 

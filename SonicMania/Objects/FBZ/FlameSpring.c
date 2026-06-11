@@ -5,7 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "FlameSpring.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
 ObjectFlameSpring *FlameSpring;
 

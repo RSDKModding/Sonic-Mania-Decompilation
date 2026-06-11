@@ -5,7 +5,17 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "LRZ1Setup.h"
+#if MANIA_USE_PLUS
+#include "LRZ1Intro.h"
+#endif
+#include "LRZ1Outro.h"
+#include "LRZ2Setup.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Global/Animals.h"
+#include "Global/Player.h"
+#include "Global/Shield.h"
+#include "Global/Zone.h"
 
 ObjectLRZ1Setup *LRZ1Setup;
 

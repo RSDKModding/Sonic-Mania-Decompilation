@@ -1,9 +1,10 @@
 #ifndef OBJ_UIDIORAMA_H
 #define OBJ_UIDIORAMA_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
+#include "UIControl.h"
 
 typedef enum {
     UIDIORAMA_MANIAMODE,
@@ -180,7 +181,7 @@ typedef struct {
 //=======================
 
 // Object Class
-struct ObjectUIDiorama {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 capsuleFrames;
@@ -195,10 +196,10 @@ struct ObjectUIDiorama {
     uint16 bssSonicFrames;
     uint16 bssFrames;
     uint8 dioramaAlt;
-};
+} ObjectUIDiorama;
 
 // Entity Class
-struct EntityUIDiorama {
+typedef struct {
     RSDK_ENTITY
     int32 dioramaID;
     int32 lastDioramaID;
@@ -217,7 +218,7 @@ struct EntityUIDiorama {
     Vector2 vectors[16];
     Animator animators[16];
     String texts[16];
-};
+} EntityUIDiorama;
 
 // Object Struct
 extern ObjectUIDiorama *UIDiorama;

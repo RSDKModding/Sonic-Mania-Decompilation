@@ -1,7 +1,7 @@
 #ifndef OBJ_CONSTELLATION_H
 #define OBJ_CONSTELLATION_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     CONSTELLATION_SONIC,
@@ -12,21 +12,21 @@ typedef enum {
 } ConstellationShapes;
 
 // Object Class
-struct ObjectConstellation {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     TileLayer *background1;
-};
+} ObjectConstellation;
 
 // Entity Class
-struct EntityConstellation {
+typedef struct {
     RSDK_ENTITY
     uint8 shape;
     Vector2 originPos;
     int32 unused;
     ScrollInfo *scrollInfo;
     Animator animator;
-};
+} EntityConstellation;
 
 // Object Struct
 extern ObjectConstellation *Constellation;

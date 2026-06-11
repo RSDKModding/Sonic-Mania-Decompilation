@@ -1,7 +1,8 @@
 #ifndef OBJ_DRILLERDROID_H
 #define OBJ_DRILLERDROID_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 typedef enum {
     DRILLERDROID_MAIN,
@@ -9,8 +10,10 @@ typedef enum {
     DRILLERDROID_UNUSED,
 } DrillerdroidTypes;
 
+typedef struct EntityDrillerdroid EntityDrillerdroid;
+
 // Object Class
-struct ObjectDrillerdroid {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxCore;
     Hitbox hitboxPistonL;
@@ -45,7 +48,7 @@ struct ObjectDrillerdroid {
     uint16 sfxDrop;
     uint16 sfxFail;
     uint16 sfxClang;
-};
+} ObjectDrillerdroid;
 
 // Entity Class
 struct EntityDrillerdroid {

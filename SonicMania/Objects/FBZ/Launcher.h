@@ -1,20 +1,20 @@
 #ifndef OBJ_LAUNCHER_H
 #define OBJ_LAUNCHER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectLauncher {
+typedef struct {
     RSDK_OBJECT
     uint16 sfxLaunch;
-};
+} ObjectLauncher;
 
 // Entity Class
-struct EntityLauncher {
+typedef struct {
     MANIA_PLATFORM_BASE
     int32 releaseDelay;
     int32 accelTimer;
-};
+} EntityLauncher;
 
 // Object Struct
 extern ObjectLauncher *Launcher;

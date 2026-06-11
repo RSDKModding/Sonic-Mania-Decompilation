@@ -1,18 +1,18 @@
 #ifndef OBJ_LRZCONVDROPPER_H
 #define OBJ_LRZCONVDROPPER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { LRZCONVDROP_TRIGGER_BUTTON, LRZCONVDROP_TRIGGER_PLAYER } LRZConvDropperTriggerModes;
 
 // Object Class
-struct ObjectLRZConvDropper {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectLRZConvDropper;
 
 // Entity Class
-struct EntityLRZConvDropper {
+typedef struct {
     RSDK_ENTITY
     uint8 triggerMode;
     int32 interval;
@@ -27,7 +27,7 @@ struct EntityLRZConvDropper {
     int32 unused;
     Hitbox hitbox;
     Animator animator;
-};
+} EntityLRZConvDropper;
 
 // Object Struct
 extern ObjectLRZConvDropper *LRZConvDropper;

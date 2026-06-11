@@ -1,10 +1,10 @@
 #ifndef OBJ_STARPOST_H
 #define OBJ_STARPOST_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectStarPost {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     bool32 hasAchievement;
@@ -18,10 +18,10 @@ struct ObjectStarPost {
     uint16 aniFrames;
     uint16 sfxStarPost;
     uint16 sfxWarp;
-};
+} ObjectStarPost;
 
 // Entity Class
-struct EntityStarPost {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 id;
@@ -39,7 +39,7 @@ struct EntityStarPost {
     Animator starAnimator;
     Hitbox hitboxStars;
     uint8 interactedPlayers;
-};
+} EntityStarPost;
 
 // Object Struct
 extern ObjectStarPost *StarPost;

@@ -5,7 +5,19 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "HUD.h"
+#include "ActClear.h"
+#include "APICallback.h"
+#include "Competition.h"
+#include "DebugMode.h"
+#include "GameOver.h"
+#include "Player.h"
+#include "SaveGame.h"
+#include "Zone.h"
+#include "Helpers/CompetitionSession.h"
+#if GAME_VERSION != VER_100
+#include "Menu/UIButtonPrompt.h"
+#endif
 
 ObjectHUD *HUD;
 

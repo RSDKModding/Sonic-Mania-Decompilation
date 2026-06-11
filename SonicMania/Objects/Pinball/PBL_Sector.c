@@ -5,9 +5,18 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PBL_Sector.h"
 
 #if MANIA_USE_PLUS
+#include "PBL_Camera.h"
+#include "PBL_Crane.h"
+#include "PBL_HUD.h"
+#include "PBL_Player.h"
+#include "PBL_Setup.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
+
 ObjectPBL_Sector *PBL_Sector;
 
 void PBL_Sector_Update(void)

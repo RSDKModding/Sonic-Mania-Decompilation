@@ -1,7 +1,8 @@
 #ifndef OBJ_LOVETESTER_H
 #define OBJ_LOVETESTER_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 typedef enum {
     LOVETESTER_LIST_NONE,
@@ -15,7 +16,7 @@ typedef enum {
 } LoveTesterDisplays;
 
 // Object Class
-struct ObjectLoveTester {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxEntry;
     Hitbox hitboxL;
@@ -25,10 +26,10 @@ struct ObjectLoveTester {
     Vector2 tvOffsetTop;
     Vector2 tvOffsetBottom;
     Vector2 lightOffset[10];
-};
+} ObjectLoveTester;
 
 // Entity Class
-struct EntityLoveTester {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateLights);
@@ -47,7 +48,7 @@ struct EntityLoveTester {
     int32 lightsID;
     Animator mainAnimator;
     Animator lightAnimator[10];
-};
+} EntityLoveTester;
 
 // Object Struct
 extern ObjectLoveTester *LoveTester;

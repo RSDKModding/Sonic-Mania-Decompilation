@@ -5,7 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "CPZ2Outro.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Cutscene/CutsceneSeq.h"
+#include "Global/Camera.h"
+#include "Global/EggPrison.h"
+#include "Global/HUD.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
 ObjectCPZ2Outro *CPZ2Outro;
 

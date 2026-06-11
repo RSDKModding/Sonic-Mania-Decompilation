@@ -1,7 +1,8 @@
 #ifndef OBJ_BUTTONDOOR_H
 #define OBJ_BUTTONDOOR_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Common/Button.h"
 
 typedef enum {
     BUTTONDOOR_UP,
@@ -11,14 +12,14 @@ typedef enum {
 } ButtonDoorOrientations;
 
 // Object Class
-struct ObjectButtonDoor {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxOpen;
-};
+} ObjectButtonDoor;
 
 // Entity Class
-struct EntityButtonDoor {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -32,7 +33,7 @@ struct EntityButtonDoor {
     uint8 orientation;
     Hitbox hitbox;
     Animator animator;
-};
+} EntityButtonDoor;
 
 // Object Struct
 extern ObjectButtonDoor *ButtonDoor;

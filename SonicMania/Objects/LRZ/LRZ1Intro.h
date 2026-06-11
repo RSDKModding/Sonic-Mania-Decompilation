@@ -1,20 +1,20 @@
 #ifndef OBJ_LRZ1INTRO_H
 #define OBJ_LRZ1INTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 // Object Class
-struct ObjectLRZ1Intro {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxSubLand;
     uint16 sfxWalkerLegs2;
     uint16 sfxLava;
-};
+} ObjectLRZ1Intro;
 
 // Entity Class
-struct EntityLRZ1Intro {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -22,7 +22,7 @@ struct EntityLRZ1Intro {
     int32 spawnPosY;
     Vector2 playerOffset[PLAYER_COUNT];
     Animator animator;
-};
+} EntityLRZ1Intro;
 
 // Object Struct
 extern ObjectLRZ1Intro *LRZ1Intro;

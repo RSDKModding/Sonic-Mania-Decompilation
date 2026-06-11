@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "WallCrawl.h"
+#include "Global/DebugMode.h"
+#include "Global/Zone.h"
 
-ObjectWallCrawl *WallCrawl = NULL;
+ObjectWallCrawl *WallCrawl;
 
 void WallCrawl_Update(void)
 {

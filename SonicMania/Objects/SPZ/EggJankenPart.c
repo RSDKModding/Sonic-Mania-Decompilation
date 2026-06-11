@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "EggJankenPart.h"
+#include "Global/Zone.h"
 
-ObjectEggJankenPart *EggJankenPart = NULL;
+ObjectEggJankenPart *EggJankenPart;
 
 void EggJankenPart_Update(void)
 {

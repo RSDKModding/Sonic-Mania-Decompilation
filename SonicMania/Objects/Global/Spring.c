@@ -5,7 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Spring.h"
+#include "Player.h"
+#include "Zone.h"
+#include "PGZ/Ice.h"
 
 ObjectSpring *Spring;
 

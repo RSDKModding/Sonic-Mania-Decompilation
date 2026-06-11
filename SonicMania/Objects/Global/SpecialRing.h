@@ -1,10 +1,10 @@
 #ifndef OBJ_SPECIALRING_H
 #define OBJ_SPECIALRING_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectSpecialRing {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
@@ -12,10 +12,10 @@ struct ObjectSpecialRing {
     uint16 sfxSpecialWarp;
     uint16 modelIndex;
     uint16 sceneIndex;
-};
+} ObjectSpecialRing;
 
 // Entity Class
-struct EntitySpecialRing {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 id;
@@ -30,7 +30,7 @@ struct EntitySpecialRing {
     Matrix matTransform;
     Matrix matWorld;
     Matrix matNormal;
-};
+} EntitySpecialRing;
 
 // Object Struct
 extern ObjectSpecialRing *SpecialRing;

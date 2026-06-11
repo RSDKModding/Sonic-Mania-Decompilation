@@ -5,7 +5,25 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SignPost.h"
+#include "ActClear.h"
+#include "Announcer.h"
+#include "Competition.h"
+#include "DebugMode.h"
+#include "GameOver.h"
+#include "ItemBox.h"
+#include "Music.h"
+#include "Player.h"
+#include "Ring.h"
+#include "ScoreBonus.h"
+#include "Zone.h"
+#include "Helpers/CompetitionSession.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
+#include "Helpers/GameProgress.h"
+#include "Helpers/MathHelpers.h"
+#include "Global/APICallback.h"
 
 ObjectSignPost *SignPost;
 

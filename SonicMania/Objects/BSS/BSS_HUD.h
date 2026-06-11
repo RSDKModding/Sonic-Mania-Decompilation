@@ -1,21 +1,21 @@
 #ifndef OBJ_BSS_HUD_H
 #define OBJ_BSS_HUD_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectBSS_HUD {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectBSS_HUD;
 
 // Entity Class
-struct EntityBSS_HUD {
+typedef struct {
     RSDK_ENTITY
     Animator sphereAnimator;
     Animator ringAnimator;
     Animator numbersAnimator;
-};
+} EntityBSS_HUD;
 
 // Object Struct
 extern ObjectBSS_HUD *BSS_HUD;

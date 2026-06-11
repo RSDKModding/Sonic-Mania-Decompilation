@@ -1,17 +1,17 @@
 #ifndef OBJ_UIVIDEO_H
 #define OBJ_UIVIDEO_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectUIVideo {
+typedef struct {
     RSDK_OBJECT
     bool32 playing;
     uint16 aniFrames; // prolly used in-editor
-};
+} ObjectUIVideo;
 
 // Entity Class
-struct EntityUIVideo {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     String videoFile1;
@@ -22,7 +22,7 @@ struct EntityUIVideo {
     String stageListName;
     int32 timer;
     Animator unusedAnimator;
-};
+} EntityUIVideo;
 
 // Object Struct
 extern ObjectUIVideo *UIVideo;

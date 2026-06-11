@@ -1,17 +1,18 @@
 #ifndef OBJ_PHANTOMMISSILE_H
 #define OBJ_PHANTOMMISSILE_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "PhantomEgg.h"
 
 // Object Class
-struct ObjectPhantomMissile {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
-};
+} ObjectPhantomMissile;
 
 // Entity Class
-struct EntityPhantomMissile {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -25,7 +26,7 @@ struct EntityPhantomMissile {
     Animator targetOutsideAnimator;
     Animator targetInsideAnimator;
     Animator targetNumbersAnimator;
-};
+} EntityPhantomMissile;
 
 // Object Struct
 extern ObjectPhantomMissile *PhantomMissile;

@@ -1,10 +1,14 @@
 #ifndef OBJ_CPZ1INTRO_H
 #define OBJ_CPZ1INTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Cutscene/CutsceneSeq.h"
+#include "Cutscene/FXRuby.h"
+#include "Global/Debris.h"
+#include "Global/Player.h"
 
 // Object Class
-struct ObjectCPZ1Intro {
+typedef struct {
     RSDK_OBJECT
     uint16 playerFrames;
     uint16 particleFrames;
@@ -14,12 +18,12 @@ struct ObjectCPZ1Intro {
     int32 playerAnimID;
     EntityFXRuby *fxRuby;
     EntityDebris *debris;
-};
+} ObjectCPZ1Intro;
 
 // Entity Class
-struct EntityCPZ1Intro {
+typedef struct {
     MANIA_CUTSCENE_BASE
-};
+} EntityCPZ1Intro;
 
 // Object Struct
 extern ObjectCPZ1Intro *CPZ1Intro;

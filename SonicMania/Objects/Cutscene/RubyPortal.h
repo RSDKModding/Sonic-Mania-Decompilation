@@ -1,26 +1,26 @@
 #ifndef OBJ_RUBYPORTAL_H
 #define OBJ_RUBYPORTAL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectRubyPortal {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
 #if MANIA_USE_PLUS
     bool32 openPortal;
 #endif
-};
+} ObjectRubyPortal;
 
 // Entity Class
-struct EntityRubyPortal {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
     Animator animator;
     Hitbox hitbox;
-};
+} EntityRubyPortal;
 
 // Object Struct
 extern ObjectRubyPortal *RubyPortal;

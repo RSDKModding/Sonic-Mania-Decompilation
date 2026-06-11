@@ -1,10 +1,10 @@
 #ifndef OBJ_WALKERLEGS_H
 #define OBJ_WALKERLEGS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectWalkerLegs {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
@@ -14,10 +14,10 @@ struct ObjectWalkerLegs {
     Animator legAnimator;
     Animator linkAnimator;
     bool32 hasAchievement;
-};
+} ObjectWalkerLegs;
 
 // Entity Class
-struct EntityWalkerLegs {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint16 steps;
@@ -34,7 +34,7 @@ struct EntityWalkerLegs {
     uint16 stepCount;
     int32 smokeSpawnTimer[2];
     int32 timer;
-};
+} EntityWalkerLegs;
 
 // Object Struct
 extern ObjectWalkerLegs *WalkerLegs;

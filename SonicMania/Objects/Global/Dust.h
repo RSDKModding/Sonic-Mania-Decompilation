@@ -1,22 +1,22 @@
 #ifndef OBJ_DUST_H
 #define OBJ_DUST_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectDust {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectDust;
 
 // Entity Class
-struct EntityDust {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
     Entity *parent;
     Animator animator;
-};
+} EntityDust;
 
 // Object Struct
 extern ObjectDust *Dust;

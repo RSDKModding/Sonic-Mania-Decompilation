@@ -1,20 +1,21 @@
 #ifndef OBJ_TVFLYINGBATTERY_H
 #define OBJ_TVFLYINGBATTERY_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "WeatherTV.h"
 
 // Object Class
-struct ObjectTVFlyingBattery {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxFlyover;
     bool32 isPlayingFlyover;
     int32 flyoverChannel;
     EntityWeatherTV *weatherTV;
-};
+} ObjectTVFlyingBattery;
 
 // Entity Class
-struct EntityTVFlyingBattery {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -25,7 +26,7 @@ struct EntityTVFlyingBattery {
     Animator shipAnimator;
     Animator bladeLAnimator;
     Animator bladeRAnimator;
-};
+} EntityTVFlyingBattery;
 
 // Object Struct
 extern ObjectTVFlyingBattery *TVFlyingBattery;

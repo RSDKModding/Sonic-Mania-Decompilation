@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Wisp.h"
+#include "Global/DebugMode.h"
+#include "Global/Zone.h"
 
-ObjectWisp *Wisp = NULL;
+ObjectWisp *Wisp;
 
 void Wisp_Update(void)
 {

@@ -5,7 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UFO_Springboard.h"
+#include "UFO_Camera.h"
+#include "UFO_Player.h"
+#include "Global/Zone.h"
 
 ObjectUFO_Springboard *UFO_Springboard;
 

@@ -1,7 +1,7 @@
 #ifndef OBJ_SPEAR_H
 #define OBJ_SPEAR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     SPEAR_UP,
@@ -11,14 +11,14 @@ typedef enum {
 } SpearOrientations;
 
 // Object Class
-struct ObjectSpear {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxSpear;
-};
+} ObjectSpear;
 
 // Entity Class
-struct EntitySpear {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state); // unused
     uint8 orientation;
@@ -32,7 +32,7 @@ struct EntitySpear {
     Hitbox hitbox;
     Animator baseAnimator;
     Animator spearAnimator;
-};
+} EntitySpear;
 
 // Object Struct
 extern ObjectSpear *Spear;

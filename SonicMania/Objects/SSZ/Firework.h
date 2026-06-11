@@ -1,10 +1,11 @@
 #ifndef OBJ_FIREWORK_H
 #define OBJ_FIREWORK_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 // Object Class
-struct ObjectFirework {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxRocketJet;
@@ -14,10 +15,10 @@ struct ObjectFirework {
     bool32 playingFlameSfx;
     Hitbox hitboxFireworkGrab;
     Hitbox hitboxTileCheck;
-};
+} ObjectFirework;
 
 // Entity Class
-struct EntityFirework {
+typedef struct {
     RSDK_ENTITY
     int32 distance;
     int32 innerRadius;
@@ -35,7 +36,7 @@ struct EntityFirework {
     bool32 rideActive;
     Animator mainAnimator;
     Animator sparkAnimator;
-};
+} EntityFirework;
 
 // Object Struct
 extern ObjectFirework *Firework;

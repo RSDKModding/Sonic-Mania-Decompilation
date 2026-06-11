@@ -1,27 +1,27 @@
 #ifndef OBJ_WATERFALLSOUND_H
 #define OBJ_WATERFALLSOUND_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 // Object Class
-struct ObjectWaterfallSound {
+typedef struct {
     RSDK_OBJECT
     int32 activeCount;
     int32 unused1;
     int32 unused2;
     int32 unused3;
     uint16 aniFrames;
-};
+} ObjectWaterfallSound;
 
 // Entity Class
-struct EntityWaterfallSound {
+typedef struct {
     RSDK_ENTITY
     Vector2 size;
     Vector2 sfxPos;
     bool32 sfxActive;
     Animator animator;
-};
+} EntityWaterfallSound;
 
 // Object Struct
 extern ObjectWaterfallSound *WaterfallSound;

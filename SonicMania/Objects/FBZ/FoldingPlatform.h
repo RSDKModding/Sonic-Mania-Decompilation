@@ -1,21 +1,21 @@
 #ifndef OBJ_FOLDINGPLATFORM_H
 #define OBJ_FOLDINGPLATFORM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectFoldingPlatform {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectFoldingPlatform;
 
 // Entity Class
-struct EntityFoldingPlatform {
+typedef struct {
     MANIA_PLATFORM_BASE
 
     uint16 interval;
     uint16 intervalOffset;
     int16 duration;
-};
+} EntityFoldingPlatform;
 
 // Object Struct
 extern ObjectFoldingPlatform *FoldingPlatform;

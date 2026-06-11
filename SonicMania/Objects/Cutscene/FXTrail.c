@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "FXTrail.h"
+#include "Global/ImageTrail.h"
 
 ObjectFXTrail *FXTrail;
 

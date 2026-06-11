@@ -1,20 +1,20 @@
 #ifndef OBJ_GREENSCREEN_H
 #define OBJ_GREENSCREEN_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectGreenScreen {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     int32 parallaxFactor[5];
     int32 bgSize[5];
     uint16 aniFrames;
     bool32 greenScreenActive;
-};
+} ObjectGreenScreen;
 
 // Entity Class
-struct EntityGreenScreen {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 paraOffset;
@@ -26,7 +26,7 @@ struct EntityGreenScreen {
     Vector2 startPos;
     int32 unused3;
     Animator animator;
-};
+} EntityGreenScreen;
 
 // Object Struct
 extern ObjectGreenScreen *GreenScreen;

@@ -5,7 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIModeButton.h"
+#include "UIButton.h"
+#include "UIControl.h"
+#include "UITransition.h"
+#include "UIWidgets.h"
+#include "Global/APICallback.h"
+#include "Global/Music.h"
 
 ObjectUIModeButton *UIModeButton;
 

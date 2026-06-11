@@ -5,7 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Gondola.h"
+#include "Common/Water.h"
+#include "Global/Zone.h"
+#include "Helpers/GameProgress.h"
+#include "Global/APICallback.h"
 
 ObjectGondola *Gondola;
 

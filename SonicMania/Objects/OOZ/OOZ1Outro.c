@@ -5,7 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "OOZ1Outro.h"
+#include "Smog.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Global/ActClear.h"
+#include "Global/Music.h"
+#include "Global/SignPost.h"
+#include "Global/TitleCard.h"
+#include "Global/Zone.h"
 
 ObjectOOZ1Outro *OOZ1Outro;
 

@@ -1,7 +1,7 @@
 #ifndef OBJ_PUYOBEAN_H
 #define OBJ_PUYOBEAN_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define PUYO_PLAYFIELD_W (6)
 #define PUYO_PLAYFIELD_H (14)
@@ -24,8 +24,10 @@ typedef enum {
     PUYOBEAN_ANI_DEBRIS,
 } PuyoBeanAniIDs;
 
+typedef struct EntityPuyoBean EntityPuyoBean;
+
 // Object Class
-struct ObjectPuyoBean {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 fallDelays[5], { 16, 12, 8, 4, 2 });
     Hitbox hitboxBean;
@@ -43,7 +45,7 @@ struct ObjectPuyoBean {
     uint16 chainFrames[6];
     uint16 sfxJunk;
     uint16 sfxFall;
-};
+} ObjectPuyoBean;
 
 // Entity Class
 struct EntityPuyoBean {

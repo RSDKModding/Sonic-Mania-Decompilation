@@ -1,18 +1,18 @@
 #ifndef OBJ_PAPERROLLER_H
 #define OBJ_PAPERROLLER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectPaperRoller {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxPaper;
     uint32 colors[64];
-};
+} ObjectPaperRoller;
 
 // Entity Class
-struct EntityPaperRoller {
+typedef struct {
     RSDK_ENTITY
     int32 length;
     Vector2 startPos;
@@ -25,7 +25,7 @@ struct EntityPaperRoller {
     Hitbox hitbox;
     Animator rollerAnimator;
     Animator divotAnimator;
-};
+} EntityPaperRoller;
 
 // Object Struct
 extern ObjectPaperRoller *PaperRoller;

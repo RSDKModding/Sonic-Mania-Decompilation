@@ -5,7 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "LocoSmoke.h"
+#include "Global/Debris.h"
+#include "Global/Zone.h"
 
 ObjectLocoSmoke *LocoSmoke;
 

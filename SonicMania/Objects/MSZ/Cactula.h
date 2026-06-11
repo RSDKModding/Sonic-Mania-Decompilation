@@ -1,18 +1,18 @@
 #ifndef OBJ_CACTULA_H
 #define OBJ_CACTULA_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectCactula {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     uint16 aniFrames;
     uint16 sfxCactDrop;
-};
+} ObjectCactula;
 
 // Entity Class
-struct EntityCactula {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 unused;
@@ -21,7 +21,7 @@ struct EntityCactula {
     Animator bodyTopAnimator;
     Animator bodyBottomAnimator;
     Animator propellerAnimator;
-};
+} EntityCactula;
 
 // Object Struct
 extern ObjectCactula *Cactula;

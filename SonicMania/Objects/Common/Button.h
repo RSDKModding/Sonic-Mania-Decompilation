@@ -1,12 +1,12 @@
 #ifndef OBJ_BUTTON_H
 #define OBJ_BUTTON_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { BUTTON_FLOOR, BUTTON_ROOF, BUTTON_RWALL, BUTTON_LWALL } ButtonTypes;
 
 // Object Class
-struct ObjectButton {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     bool32 hasEggman;
@@ -18,16 +18,16 @@ struct ObjectButton {
     int32 hitboxOffset;
     int32 unused1; // set in stageload, but never used. no way to tell what it is
     uint16 sfxButton;
-};
+} ObjectButton;
 
 // Entity Class
-struct EntityButton {
+typedef struct {
     MANIA_BUTTON_BASE
 
     Hitbox hitboxButton;
     Animator buttonAnimator;
     Animator baseAnimator;
-};
+} EntityButton;
 
 // Object Struct
 extern ObjectButton *Button;

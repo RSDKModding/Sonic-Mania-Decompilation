@@ -1,7 +1,7 @@
 #ifndef OBJ_BSS_MESSAGE_H
 #define OBJ_BSS_MESSAGE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     BSS_MESSAGE_GETSPHERES,
@@ -10,13 +10,13 @@ typedef enum {
 } BSS_MessageTypes;
 
 // Object Class
-struct ObjectBSS_Message {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectBSS_Message;
 
 // Entity Class
-struct EntityBSS_Message {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -26,7 +26,7 @@ struct EntityBSS_Message {
     bool32 saveInProgress;
     Animator leftAnimator;
     Animator rightAnimator;
-};
+} EntityBSS_Message;
 
 // Object Struct
 extern ObjectBSS_Message *BSS_Message;

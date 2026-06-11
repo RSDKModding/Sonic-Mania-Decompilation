@@ -1,21 +1,21 @@
 #ifndef OBJ_BARSTOOL_H
 #define OBJ_BARSTOOL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { BARSTOOL_HEIGHT_SHORT, BARSTOOL_HEIGHT_TALL } BarStoolHeights;
 
 // Object Class
-struct ObjectBarStool {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxStool;
     uint16 sfxSpin;
     uint16 sfxHop;
     uint16 aniFrames;
-};
+} ObjectBarStool;
 
 // Entity Class
-struct EntityBarStool {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 height;
@@ -26,7 +26,7 @@ struct EntityBarStool {
     int32 playerPos[PLAYER_COUNT];
     Animator stoolAnimator;
     Animator poleAnimator;
-};
+} EntityBarStool;
 
 // Object Struct
 extern ObjectBarStool *BarStool;

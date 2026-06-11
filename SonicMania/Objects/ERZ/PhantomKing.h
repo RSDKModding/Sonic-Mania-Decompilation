@@ -1,7 +1,7 @@
 #ifndef OBJ_PHANTOMKING_H
 #define OBJ_PHANTOMKING_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     PHANTOMKING_KING,
@@ -10,7 +10,7 @@ typedef enum {
 } PhantomKingTypes;
 
 // Object Class
-struct ObjectPhantomKing {
+typedef struct {
     RSDK_OBJECT
     int32 boundsL;
     int32 boundsR;
@@ -21,9 +21,10 @@ struct ObjectPhantomKing {
     uint16 sfxExplosion;
     uint16 aniFrames;
     bool32 defeated;
-};
+} ObjectPhantomKing;
 
 // Entity Class
+typedef struct EntityPhantomKing EntityPhantomKing;
 struct EntityPhantomKing {
     RSDK_ENTITY
     StateMachine(state);

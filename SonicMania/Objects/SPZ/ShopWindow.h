@@ -1,17 +1,17 @@
 #ifndef OBJ_SHOPWINDOW_H
 #define OBJ_SHOPWINDOW_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectShopWindow {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxShatter;
-};
+} ObjectShopWindow;
 
 // Entity Class
-struct EntityShopWindow {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -24,7 +24,7 @@ struct EntityShopWindow {
     Vector2 scaleSpeed;
     Vector2 shardScale;
     Animator animator;
-};
+} EntityShopWindow;
 
 // Object Struct
 extern ObjectShopWindow *ShopWindow;

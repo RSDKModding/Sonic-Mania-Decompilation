@@ -1,7 +1,7 @@
 #ifndef OBJ_PIMPOM_H
 #define OBJ_PIMPOM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     PIMPOM_SINGLE,
@@ -21,15 +21,15 @@ typedef enum {
 typedef enum { PIMPOM_CLR_CYAN, PIMPOM_CLR_PURPLE, PIMPOM_CLR_GREEN } PimPomColors;
 
 // Object Class
-struct ObjectPimPom {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxPimPom;
     uint16 sfxBumper2;
-};
+} ObjectPimPom;
 
 // Entity Class
-struct EntityPimPom {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateMove);
@@ -51,7 +51,7 @@ struct EntityPimPom {
     Vector2 offset;
     Vector2 moveAmount;
     Animator animator;
-};
+} EntityPimPom;
 
 // Object Struct
 extern ObjectPimPom *PimPom;

@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Music.h"
+#include "APICallback.h"
 
 ObjectMusic *Music;
 

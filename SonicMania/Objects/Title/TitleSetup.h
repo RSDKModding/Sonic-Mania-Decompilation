@@ -1,10 +1,10 @@
 #ifndef OBJ_TITLESETUP_H
 #define OBJ_TITLESETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectTitleSetup {
+typedef struct {
     RSDK_OBJECT
     bool32 useAltIntroMusic;
     uint16 aniFrames;
@@ -14,10 +14,10 @@ struct ObjectTitleSetup {
 #if MANIA_USE_PLUS
     uint8 cheatCode[8];
 #endif
-};
+} ObjectTitleSetup;
 
 // Entity Class
-struct EntityTitleSetup {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -25,7 +25,7 @@ struct EntityTitleSetup {
     Vector2 drawPos;
     int32 touched;
     Animator animator;
-};
+} EntityTitleSetup;
 
 // Object Struct
 extern ObjectTitleSetup *TitleSetup;

@@ -5,7 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "FarPlane.h"
+#include "Global/Camera.h"
+#include "Global/InvincibleStars.h"
+#include "Global/ImageTrail.h"
+#include "Global/Zone.h"
+#include "Helpers/DrawHelpers.h"
 
 ObjectFarPlane *FarPlane;
 

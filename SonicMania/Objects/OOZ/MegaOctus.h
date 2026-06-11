@@ -1,7 +1,7 @@
 #ifndef OBJ_MEGAOCTUS_H
 #define OBJ_MEGAOCTUS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     MEGAOCTUS_BODY,
@@ -16,8 +16,10 @@ typedef enum {
     MEGAOCTUS_LASERFIRE,
 } MegaOctusTypes;
 
+typedef struct EntityMegaOctus EntityMegaOctus;
+
 // Object Class
-struct ObjectMegaOctus {
+typedef struct {
     RSDK_OBJECT
     EntityMegaOctus *bossEntity;
     Animator noseAnimator;
@@ -44,7 +46,7 @@ struct ObjectMegaOctus {
     uint16 sfxHarpoon;
     uint16 sfxSurface;
     uint16 sfxLaserSplash;
-};
+} ObjectMegaOctus;
 
 // Entity Class
 struct EntityMegaOctus {

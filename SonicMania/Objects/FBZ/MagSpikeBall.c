@@ -5,7 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "MagSpikeBall.h"
+#include "MagPlatform.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
 ObjectMagSpikeBall *MagSpikeBall;
 

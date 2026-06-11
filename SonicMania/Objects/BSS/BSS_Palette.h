@@ -1,19 +1,19 @@
 #ifndef OBJ_BSS_PALETTE_H
 #define OBJ_BSS_PALETTE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectBSS_Palette {
+typedef struct {
     RSDK_OBJECT
     int32 startColorID;
     int32 skyAlpha;
     int32 globeAlpha;
     uint16 aniFrames;
-};
+} ObjectBSS_Palette;
 
 // Entity Class
-struct EntityBSS_Palette {
+typedef struct {
     RSDK_ENTITY
     bool32 useStageConfig;
     int32 paletteID;
@@ -25,7 +25,7 @@ struct EntityBSS_Palette {
     color bgColor2;
     color bgColor3;
     Animator animator;
-};
+} EntityBSS_Palette;
 
 // Object Struct
 extern ObjectBSS_Palette *BSS_Palette;

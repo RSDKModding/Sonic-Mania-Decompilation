@@ -1,17 +1,18 @@
 #ifndef OBJ_HCZ1INTRO_H
 #define OBJ_HCZ1INTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Cutscene/CutsceneSeq.h"
 
 // Object Class
-struct ObjectHCZ1Intro {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectHCZ1Intro;
 
 // Entity Class
-struct EntityHCZ1Intro {
+typedef struct {
     MANIA_CUTSCENE_BASE
-};
+} EntityHCZ1Intro;
 
 // Object Struct
 extern ObjectHCZ1Intro *HCZ1Intro;

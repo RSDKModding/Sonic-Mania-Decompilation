@@ -1,16 +1,16 @@
 #ifndef OBJ_PUYOLABEL_H
 #define OBJ_PUYOLABEL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectPuyoLabel {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectPuyoLabel;
 
 // Entity Class
-struct EntityPuyoLabel {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 listID;
@@ -19,7 +19,7 @@ struct EntityPuyoLabel {
     int32 unused2;
     int32 unused3;
     Animator animator;
-};
+} EntityPuyoLabel;
 
 // Object Struct
 extern ObjectPuyoLabel *PuyoLabel;

@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "MonarchPlans.h"
+#include "Global/Zone.h"
 
 #if MANIA_USE_PLUS
 ObjectMonarchPlans *MonarchPlans;

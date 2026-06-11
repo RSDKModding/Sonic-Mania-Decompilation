@@ -1,7 +1,7 @@
 #ifndef OBJ_UIVSZONEBUTTON_H
 #define OBJ_UIVSZONEBUTTON_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     UIVSZONEBUTTON_GHZ,
@@ -20,15 +20,15 @@ typedef enum {
 } UIVsZoneButtonZoneIDs;
 
 // Object Class
-struct ObjectUIVsZoneButton {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 textFrames;
     uint16 sfxFail;
-};
+} ObjectUIVsZoneButton;
 
 // Entity Class
-struct EntityUIVsZoneButton {
+typedef struct {
     MANIA_UI_ITEM_BASE
     int32 zoneID;
     int32 act;
@@ -49,7 +49,7 @@ struct EntityUIVsZoneButton {
     Animator zoneAnimator;
     Animator redCrossAnimator;
     Animator blackCrossAnimator;
-};
+} EntityUIVsZoneButton;
 
 // Object Struct
 extern ObjectUIVsZoneButton *UIVsZoneButton;

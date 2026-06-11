@@ -5,7 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Turntable.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
 ObjectTurntable *Turntable;
 

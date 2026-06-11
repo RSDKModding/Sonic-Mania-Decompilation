@@ -1,7 +1,7 @@
 #ifndef OBJ_FLAMETHROWER_H
 #define OBJ_FLAMETHROWER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     FLAMETHROWER_ORIENTATION_RIGHT,
@@ -15,8 +15,10 @@ typedef enum {
     FLAMETHROWER_MODE_SPRINKLER,
 } FlamethrowerModes;
 
+typedef struct EntityFlamethrower EntityFlamethrower;
+
 // Object Class
-struct ObjectFlamethrower {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxFlame;
@@ -26,7 +28,7 @@ struct ObjectFlamethrower {
     Hitbox hitboxSmallFireball;
     Hitbox hitboxMediumFireball;
     Hitbox hitboxLargeFireball;
-};
+} ObjectFlamethrower;
 
 // Entity Class
 struct EntityFlamethrower {

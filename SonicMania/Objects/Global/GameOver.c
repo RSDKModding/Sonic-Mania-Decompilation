@@ -5,7 +5,17 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "GameOver.h"
+#include "Competition.h"
+#include "HUD.h"
+#include "Music.h"
+#include "PauseMenu.h"
+#include "Player.h"
+#include "SaveGame.h"
+#include "StarPost.h"
+#include "Zone.h"
+#include "Helpers/CompetitionSession.h"
+#include "Menu/UIWaitSpinner.h"
 
 ObjectGameOver *GameOver;
 

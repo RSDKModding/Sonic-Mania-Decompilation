@@ -1,24 +1,24 @@
 #ifndef OBJ_BGSWITCH_H
 #define OBJ_BGSWITCH_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectBGSwitch {
+typedef struct {
     RSDK_OBJECT
     int32 screenID;
     int32 layerIDs[8];
     StateMachine(switchCallback[8]);
     uint16 aniFrames;
-};
+} ObjectBGSwitch;
 
 // Entity Class
-struct EntityBGSwitch {
+typedef struct {
     RSDK_ENTITY
     Vector2 size;
     uint8 bgID;
     Animator animator;
-};
+} EntityBGSwitch;
 
 // Object Struct
 extern ObjectBGSwitch *BGSwitch;

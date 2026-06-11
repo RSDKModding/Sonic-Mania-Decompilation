@@ -1,21 +1,23 @@
 #ifndef OBJ_E3MENUSETUP_H
 #define OBJ_E3MENUSETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if !MANIA_USE_PLUS
+#include "UIControl.h"
+
 // Object Class
-struct ObjectE3MenuSetup {
+typedef struct {
     RSDK_OBJECT
     int32 unused1;
     bool32 initialized;
     int32 unused2;
     EntityUIControl *charSelControl;
     EntityUIControl *zoneControl;
-};
+} ObjectE3MenuSetup;
 
 // Entity Class
-struct EntityE3MenuSetup {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(callback);
@@ -25,7 +27,7 @@ struct EntityE3MenuSetup {
     int32 fadeTimer;
     int32 fadeColor;
     int32 unused;
-};
+} EntityE3MenuSetup;
 
 // Object Entity
 extern ObjectE3MenuSetup *E3MenuSetup;

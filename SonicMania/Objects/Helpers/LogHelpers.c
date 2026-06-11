@@ -5,9 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "LogHelpers.h"
 
-ObjectLogHelpers *LogHelpers = NULL;
+ObjectLogHelpers *LogHelpers;
 
 void LogHelpers_Update(void) {}
 

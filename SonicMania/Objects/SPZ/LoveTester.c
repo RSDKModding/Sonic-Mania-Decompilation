@@ -5,7 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "LoveTester.h"
+#include "Global/ScoreBonus.h"
+#include "Global/Zone.h"
 
 ObjectLoveTester *LoveTester;
 

@@ -5,7 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "IceSpring.h"
+#include "Ice.h"
+#include "Global/Player.h"
+#include "Global/Shield.h"
+#include "Global/Spring.h"
+#include "Global/Zone.h"
 
 ObjectIceSpring *IceSpring;
 

@@ -1,17 +1,18 @@
 #ifndef OBJ_WISP_H
 #define OBJ_WISP_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 // Object Class
-struct ObjectWisp {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     uint16 aniFrames;
-};
+} ObjectWisp;
 
 // Entity Class
-struct EntityWisp {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -20,7 +21,7 @@ struct EntityWisp {
     Vector2 startPos;
     Animator bodyAnimator;
     Animator wingAnimator;
-};
+} EntityWisp;
 
 // Object Entity
 extern ObjectWisp *Wisp;

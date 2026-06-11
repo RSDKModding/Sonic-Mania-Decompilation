@@ -5,7 +5,21 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIButton.h"
+#include "UIControl.h"
+#include "UIChoice.h"
+#include "UITransition.h"
+#include "UIVsRoundPicker.h"
+#include "UIWidgets.h"
+#if GAME_VERSION != VER_100
+#include "UIResPicker.h"
+#include "UIWinSize.h"
+#endif
+#include "Global/APICallback.h"
+#include "Global/Music.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
 ObjectUIButton *UIButton;
 

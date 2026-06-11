@@ -1,7 +1,9 @@
 #ifndef OBJ_WATER_H
 #define OBJ_WATER_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Button.h"
+#include "Global/Player.h"
 
 typedef enum {
     WATER_WATERLEVEL,
@@ -23,7 +25,7 @@ typedef enum {
 } WaterPriorities;
 
 // Object Class
-struct ObjectWater {
+typedef struct {
     RSDK_OBJECT
     int32 waterLevel;
     int32 newWaterLevel;
@@ -61,10 +63,10 @@ struct ObjectWater {
     Animator wakeAnimator;
     int32 unused3;
     bool32 playingSkimSfx;
-};
+} ObjectWater;
 
 // Entity Class
-struct EntityWater {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -97,7 +99,7 @@ struct EntityWater {
     Vector2 bubbleVelocity;
     EntityButton *taggedButton;
     Animator animator;
-};
+} EntityWater;
 
 // Object Struct
 extern ObjectWater *Water;

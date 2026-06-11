@@ -1,7 +1,8 @@
 #ifndef OBJ_CABLEWARP_H
 #define OBJ_CABLEWARP_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 typedef enum {
     CABLEWARP_ENTRY,
@@ -11,7 +12,7 @@ typedef enum {
 } CableWarpTypes;
 
 // Object Class
-struct ObjectCableWarp {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxPlug;
     Hitbox hitboxTransport;
@@ -19,10 +20,10 @@ struct ObjectCableWarp {
     uint16 sfxCharge;
     uint16 sfxPulse;
     uint16 sfxLedgeBreak;
-};
+} ObjectCableWarp;
 
 // Entity Class
-struct EntityCableWarp {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 type;
@@ -31,7 +32,7 @@ struct EntityCableWarp {
     uint16 slotID;
     uint16 nextSlot;
     Animator animator;
-};
+} EntityCableWarp;
 
 // Object Struct
 extern ObjectCableWarp *CableWarp;

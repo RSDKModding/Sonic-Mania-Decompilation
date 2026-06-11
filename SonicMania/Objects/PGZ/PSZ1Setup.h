@@ -1,7 +1,7 @@
 #ifndef OBJ_PSZ1SETUP_H
 #define OBJ_PSZ1SETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { GENERICTRIGGER_PSZ1_PETALSINACTIVE, GENERICTRIGGER_PSZ1_PETALSACTIVE, GENERICTRIGGER_PSZ1_ACHIEVEMENT } GenericTriggerTypesPSZ1;
 
@@ -16,7 +16,7 @@ typedef enum {
 } PSZ1WrapTypes;
 
 // Object Class
-struct ObjectPSZ1Setup {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 buttonSideAniDurationTable[7], { 64, 2, 1, 2, 2, 6, 2 });
     TABLE(int32 buttonSideBackAniDurationTable[14], { 37, 2, 1, 2, 2, 6, 2, 12, 2, 1, 2, 2, 6, 2 });
@@ -43,12 +43,12 @@ struct ObjectPSZ1Setup {
     uint16 aniTiles1;
     uint16 aniTiles2;
     uint16 aniTiles3;
-};
+} ObjectPSZ1Setup;
 
 // Entity Class
-struct EntityPSZ1Setup {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityPSZ1Setup;
 
 // Object Struct
 extern ObjectPSZ1Setup *PSZ1Setup;

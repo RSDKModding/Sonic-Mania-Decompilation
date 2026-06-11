@@ -1,18 +1,19 @@
 #ifndef OBJ_RPLANESHIFTER_H
 #define OBJ_RPLANESHIFTER_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 // Object Class
-struct ObjectRPlaneShifter {
+typedef struct {
     RSDK_OBJECT
     Animator barAnimator;
     uint16 aniFrames;
     uint16 sfxTicTock;
-};
+} ObjectRPlaneShifter;
 
 // Entity Class
-struct EntityRPlaneShifter {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint32 height;
@@ -27,7 +28,7 @@ struct EntityRPlaneShifter {
     int32 spinAngle;
     Animator baseAnimator;
     Hitbox hitbox;
-};
+} EntityRPlaneShifter;
 
 // Object Struct
 extern ObjectRPlaneShifter *RPlaneShifter;

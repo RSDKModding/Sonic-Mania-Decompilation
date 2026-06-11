@@ -1,10 +1,11 @@
 #ifndef OBJ_TWISTEDTUBES_H
 #define OBJ_TWISTEDTUBES_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 // Object Class
-struct ObjectTwistedTubes {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxSolid;
     Hitbox hitboxEntryL;
@@ -12,10 +13,10 @@ struct ObjectTwistedTubes {
     bool32 playerActive[PLAYER_COUNT];
     uint16 aniFrames;
     uint16 sfxTravel;
-};
+} ObjectTwistedTubes;
 
 // Entity Class
-struct EntityTwistedTubes {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 height;
@@ -26,7 +27,7 @@ struct EntityTwistedTubes {
     Animator topGlassAnimator;
     Animator sideAnimator;
     Animator bottomGlassAnimator;
-};
+} EntityTwistedTubes;
 
 // Object Struct
 extern ObjectTwistedTubes *TwistedTubes;

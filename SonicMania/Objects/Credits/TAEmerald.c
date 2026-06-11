@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TAEmerald.h"
+#include "Global/SaveGame.h"
 
 ObjectTAEmerald *TAEmerald;
 

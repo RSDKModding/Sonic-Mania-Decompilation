@@ -1,19 +1,19 @@
 #ifndef OBJ_BUBBLER_H
 #define OBJ_BUBBLER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectBubbler {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxRange;
     Hitbox hitboxProjectile;
     uint16 aniFrames;
-};
+} ObjectBubbler;
 
 // Entity Class
-struct EntityBubbler {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int16 timer;
@@ -22,7 +22,7 @@ struct EntityBubbler {
     uint8 startDir;
     Animator bodyHitbox;
     Animator flameAnimator;
-};
+} EntityBubbler;
 
 // Object Entity
 extern ObjectBubbler *Bubbler;

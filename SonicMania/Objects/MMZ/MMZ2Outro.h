@@ -1,23 +1,25 @@
 #ifndef OBJ_MMZ2OUTRO_H
 #define OBJ_MMZ2OUTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
+#include "Cutscene/CutsceneSeq.h"
+
 // Object Class
-struct ObjectMMZ2Outro {
+typedef struct {
     RSDK_OBJECT
     uint16 sfxThunda;
     uint16 sfxLightsOut;
     uint16 sfxTMZEyes;
-};
+} ObjectMMZ2Outro;
 
 // Entity Class
-struct EntityMMZ2Outro {
+typedef struct {
     RSDK_ENTITY
     int32 timer;
     int32 flashTimer;
-};
+} EntityMMZ2Outro;
 
 // Object Struct
 extern ObjectMMZ2Outro *MMZ2Outro;

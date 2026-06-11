@@ -5,7 +5,21 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "BuckwildBall.h"
+#include "Drillerdroid.h"
+#include "Fireworm.h"
+#include "Iwamodoki.h"
+#include "Toxomister.h"
+#include "Common/CollapsingPlatform.h"
+#include "Global/Debris.h"
+#include "Global/Player.h"
+#include "Global/Spikes.h"
+#include "Global/Zone.h"
+#include "Helpers/BadnikHelpers.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
+#include "Helpers/LogHelpers.h"
 
 ObjectBuckwildBall *BuckwildBall;
 

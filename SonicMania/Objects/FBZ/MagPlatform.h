@@ -1,20 +1,20 @@
 #ifndef OBJ_MAGPLATFORM_H
 #define OBJ_MAGPLATFORM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectMagPlatform {
+typedef struct {
     RSDK_OBJECT
     uint16 sfxChain;
-};
+} ObjectMagPlatform;
 
 // Entity Class
-struct EntityMagPlatform {
+typedef struct {
     MANIA_PLATFORM_BASE
 
     int32 length;
-};
+} EntityMagPlatform;
 
 // Object Struct
 extern ObjectMagPlatform *MagPlatform;

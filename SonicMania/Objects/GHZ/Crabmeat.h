@@ -1,18 +1,18 @@
 #ifndef OBJ_CRABMEAT_H
 #define OBJ_CRABMEAT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectCrabmeat {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxProjectile;
     uint16 aniFrames;
-};
+} ObjectCrabmeat;
 
 // Entity Class
-struct EntityCrabmeat {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -20,7 +20,7 @@ struct EntityCrabmeat {
     Vector2 startPos;
     int32 startDir;
     Animator animator;
-};
+} EntityCrabmeat;
 
 // Object Struct
 extern ObjectCrabmeat *Crabmeat;

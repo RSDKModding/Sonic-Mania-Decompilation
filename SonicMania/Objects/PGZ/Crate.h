@@ -1,7 +1,7 @@
 #ifndef OBJ_CRATE_H
 #define OBJ_CRATE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     CRATE_FRAME_BLUE,
@@ -11,18 +11,18 @@ typedef enum {
 } CrateFrameIDs;
 
 // Object Class
-struct ObjectCrate {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxExplosion2;
-};
+} ObjectCrate;
 
 // Entity Class
-struct EntityCrate {
+typedef struct {
     MANIA_PLATFORM_BASE
 
     bool32 ignoreItemBox;
-};
+} EntityCrate;
 
 // Object Struct
 extern ObjectCrate *Crate;

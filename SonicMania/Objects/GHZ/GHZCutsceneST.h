@@ -1,10 +1,16 @@
 #ifndef OBJ_GHZCUTSCENEST_H
 #define OBJ_GHZCUTSCENEST_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "AIZ/AIZKingClaw.h"
+#include "Common/Platform.h"
+#include "Cutscene/CutsceneHBH.h"
+#include "Cutscene/CutsceneSeq.h"
+#include "Cutscene/FXRuby.h"
+#include "ERZ/PhantomRuby.h"
 
 // Object Class
-struct ObjectGHZCutsceneST {
+typedef struct {
     RSDK_OBJECT
     int32 unused1;
     EntityFXRuby *fxRuby;
@@ -12,10 +18,10 @@ struct ObjectGHZCutsceneST {
     EntityPlatform *platform;
     EntityPhantomRuby *phantomRuby;
     EntityCutsceneHBH *cutsceneHBH[5];
-};
+} ObjectGHZCutsceneST;
 
 // Entity Class
-struct EntityGHZCutsceneST {
+typedef struct {
     RSDK_ENTITY
     // Cutscene Base (I think)
     Vector2 size;
@@ -30,7 +36,7 @@ struct EntityGHZCutsceneST {
 
     // Unique Variables
     Hitbox hitbox;
-};
+} EntityGHZCutsceneST;
 
 // Object Struct
 extern ObjectGHZCutsceneST *GHZCutsceneST;

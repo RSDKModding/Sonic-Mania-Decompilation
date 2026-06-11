@@ -1,7 +1,8 @@
 #ifndef OBJ_CPZSETUP_H
 #define OBJ_CPZSETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "CPZ2Outro.h"
 
 typedef enum {
     CPZ_BG_CPZ2,
@@ -17,7 +18,7 @@ typedef enum {
 } ParallaxSpriteAniIDsCPZ;
 
 // Object Class
-struct ObjectCPZSetup {
+typedef struct {
     RSDK_OBJECT
     uint16 aniTiles;
     TileLayer *background;
@@ -30,12 +31,12 @@ struct ObjectCPZSetup {
     int32 chemLiquidPalIndex3;
     uint16 aniTileFrame;
     EntityCPZ2Outro *outro;
-};
+} ObjectCPZSetup;
 
 // Entity Class
-struct EntityCPZSetup {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityCPZSetup;
 
 // Object Struct
 extern ObjectCPZSetup *CPZSetup;

@@ -1,7 +1,7 @@
 #ifndef OBJ_EGGJANKENPART_H
 #define OBJ_EGGJANKENPART_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     EGGJANKENPART_FACEPLATE,
@@ -19,16 +19,16 @@ typedef enum {
 } EggJankenPart_Parts;
 
 // Object Class
-struct ObjectEggJankenPart {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectEggJankenPart;
 
 // Entity Class
-struct EntityEggJankenPart {
+typedef struct {
     RSDK_ENTITY
     Animator animator;
-};
+} EntityEggJankenPart;
 
 // Object Entity
 extern ObjectEggJankenPart *EggJankenPart;

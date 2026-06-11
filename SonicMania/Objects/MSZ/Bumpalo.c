@@ -5,7 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Bumpalo.h"
+#include "Common/BreakableWall.h"
+#include "Global/DebugMode.h"
+#include "Global/Spikes.h"
+#include "Global/Zone.h"
 
 ObjectBumpalo *Bumpalo;
 

@@ -5,7 +5,20 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "CPZBoss.h"
+#include "CPZShutter.h"
+#include "TippingPlatform.h"
+#include "TransportTube.h"
+#include "Global/Camera.h"
+#include "Global/Explosion.h"
+#include "Global/HUD.h"
+#include "Global/Music.h"
+#include "Global/PauseMenu.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#include "Puyo/PuyoAI.h"
+#include "Puyo/PuyoBean.h"
+#include "Puyo/PuyoMatch.h"
 #include <time.h>
 
 ObjectCPZBoss *CPZBoss;

@@ -1,22 +1,22 @@
 #ifndef OBJ_TMZ3SETUP_H
 #define OBJ_TMZ3SETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectTMZ3Setup {
+typedef struct {
     RSDK_OBJECT
     int32 palDuration;
     int32 palTimer;
     int32 unused;
     int32 bannerAniFrame;
     uint16 aniTiles;
-};
+} ObjectTMZ3Setup;
 
 // Entity Class
-struct EntityTMZ3Setup {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityTMZ3Setup;
 
 // Object Struct
 extern ObjectTMZ3Setup *TMZ3Setup;

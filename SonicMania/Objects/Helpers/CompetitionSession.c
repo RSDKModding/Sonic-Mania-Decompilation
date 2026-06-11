@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "CompetitionSession.h"
+#if !MANIA_USE_PLUS
+#include "LogHelpers.h"
+#endif
 
-ObjectCompetitionSession *CompetitionSession = NULL;
+ObjectCompetitionSession *CompetitionSession;
 
 void CompetitionSession_Update(void) {}
 

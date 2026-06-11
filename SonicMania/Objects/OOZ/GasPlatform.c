@@ -5,7 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "GasPlatform.h"
+#include "Common/Platform.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
 ObjectGasPlatform *GasPlatform;
 

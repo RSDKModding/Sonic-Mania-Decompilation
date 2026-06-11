@@ -1,7 +1,7 @@
 #ifndef OBJ_HEAVYGUNNER_H
 #define OBJ_HEAVYGUNNER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     HEAVYGUNNER_HBH,
@@ -15,7 +15,7 @@ typedef enum {
 } HeavyGunnerTypes;
 
 // Object Class
-struct ObjectHeavyGunner {
+typedef struct {
     RSDK_OBJECT
     int32 boundsL;
     int32 boundsR;
@@ -42,9 +42,10 @@ struct ObjectHeavyGunner {
     int32 unused2;
     int32 unused3;
     int32 unused4;
-};
+} ObjectHeavyGunner;
 
 // Entity Class
+typedef struct EntityHeavyGunner EntityHeavyGunner;
 struct EntityHeavyGunner {
     RSDK_ENTITY
     StateMachine(state);

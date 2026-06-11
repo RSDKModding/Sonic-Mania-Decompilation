@@ -1,20 +1,21 @@
 #ifndef OBJ_SHUTTERBUG_H
 #define OBJ_SHUTTERBUG_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 // Object Class
-struct ObjectShutterbug {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxAchievement;
     uint32 pictureCount;
     uint16 aniFrames;
     uint16 snapSfx;
-};
+} ObjectShutterbug;
 
 // Entity Class
-struct EntityShutterbug {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 snaps;
@@ -31,7 +32,7 @@ struct EntityShutterbug {
     Hitbox hitboxRange;
     Animator animator;
     Animator overlayAnimator;
-};
+} EntityShutterbug;
 
 // Object Struct
 extern ObjectShutterbug *Shutterbug;

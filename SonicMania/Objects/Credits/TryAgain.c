@@ -5,7 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TryAgain.h"
+#include "Cutscene/FXFade.h"
+#if MANIA_USE_PLUS
+#include "ERZ/PhantomRuby.h"
+#include "Global/Music.h"
+#endif
 
 ObjectTryAgain *TryAgain;
 

@@ -1,7 +1,8 @@
 #ifndef OBJ_CRANE_H
 #define OBJ_CRANE_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 typedef enum {
     CRANE_START_UP,
@@ -15,17 +16,17 @@ typedef enum {
 } CranePlayerTypes;
 
 // Object Class
-struct ObjectCrane {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxUnused;
     Hitbox hitboxGrab;
     Hitbox hitboxRange;
     uint16 aniFrames;
     uint16 sfxGrab;
-};
+} ObjectCrane;
 
 // Entity Class
-struct EntityCrane {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Animator frontAnimator;
@@ -39,7 +40,7 @@ struct EntityCrane {
     uint8 startDir;
     int32 delay;
     int32 timer;
-};
+} EntityCrane;
 
 // Object Struct
 extern ObjectCrane *Crane;

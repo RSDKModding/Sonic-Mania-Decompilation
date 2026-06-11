@@ -5,7 +5,25 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ItemBox.h"
+#include "Debris.h"
+#include "DebugMode.h"
+#include "Dust.h"
+#include "Explosion.h"
+#include "HUD.h"
+#include "ImageTrail.h"
+#include "InvincibleStars.h"
+#include "Music.h"
+#include "Shield.h"
+#include "Spikes.h"
+#include "Zone.h"
+#include "Common/Platform.h"
+#include "Common/TilePlatform.h"
+#include "Helpers/CompetitionSession.h"
+#include "Helpers/LogHelpers.h"
+#include "PGZ/Crate.h"
+#include "PGZ/Ice.h"
+#include "LRZ/LRZConvItem.h"
 
 ObjectItemBox *ItemBox;
 

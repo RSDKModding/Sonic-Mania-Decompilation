@@ -5,7 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PushSpring.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
 ObjectPushSpring *PushSpring;
 

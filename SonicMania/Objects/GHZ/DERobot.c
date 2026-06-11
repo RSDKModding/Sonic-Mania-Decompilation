@@ -5,7 +5,19 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "DERobot.h"
+#include "Common/BreakableWall.h"
+#include "Common/CollapsingPlatform.h"
+#include "ERZ/PhantomRuby.h"
+#include "Global/BoundsMarker.h"
+#include "Global/Camera.h"
+#include "Global/EggPrison.h"
+#include "Global/Explosion.h"
+#include "Global/Music.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
 ObjectDERobot *DERobot;
 

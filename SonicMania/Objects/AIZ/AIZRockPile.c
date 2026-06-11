@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "AIZRockPile.h"
 
 #if MANIA_USE_PLUS
+#include "Global/Debris.h"
+#include "Global/Player.h"
+#include "Global/Shield.h"
+#include "Global/Zone.h"
+
 ObjectAIZRockPile *AIZRockPile;
 
 void AIZRockPile_Update(void)

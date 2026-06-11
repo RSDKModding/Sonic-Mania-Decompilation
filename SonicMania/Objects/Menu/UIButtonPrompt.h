@@ -1,7 +1,7 @@
 #ifndef OBJ_UIBUTTONPROMPT_H
 #define OBJ_UIBUTTONPROMPT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     UIBUTTONPROMPT_NONE,
@@ -37,15 +37,15 @@ typedef enum {
 } UIButtonPromptButtons;
 
 // Object Class
-struct ObjectUIButtonPrompt {
+typedef struct {
     RSDK_OBJECT
     int32 type;
     int32 inputSlot;
     uint16 aniFrames;
-};
+} ObjectUIButtonPrompt;
 
 // Entity Class
-struct EntityUIButtonPrompt {
+typedef struct {
     RSDK_ENTITY
     Entity *parent;
     StateMachine(state);
@@ -69,7 +69,7 @@ struct EntityUIButtonPrompt {
     Animator buttonAnimator;
     Animator promptAnimator;
     uint16 textSprite;
-};
+} EntityUIButtonPrompt;
 
 // Object Struct
 extern ObjectUIButtonPrompt *UIButtonPrompt;

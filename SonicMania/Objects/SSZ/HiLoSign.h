@@ -1,7 +1,7 @@
 #ifndef OBJ_HILOSIGN_H
 #define OBJ_HILOSIGN_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     HILOSIGN_H,
@@ -9,15 +9,15 @@ typedef enum {
 } HiLoSignTypes;
 
 // Object Class
-struct ObjectHiLoSign {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox spinHitbox[2];
     uint16 sfxSignPost;
-};
+} ObjectHiLoSign;
 
 // Entity Class
-struct EntityHiLoSign {
+typedef struct {
     RSDK_ENTITY
     StateMachine(stateDraw);
     StateMachine(state);
@@ -25,7 +25,7 @@ struct EntityHiLoSign {
     int32 spinSpeed;
     Animator faceAnimator;
     Animator sidesAnimator;
-};
+} EntityHiLoSign;
 
 // Object Struct
 extern ObjectHiLoSign *HiLoSign;

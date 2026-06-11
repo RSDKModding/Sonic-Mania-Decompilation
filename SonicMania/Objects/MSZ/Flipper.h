@@ -1,24 +1,24 @@
 #ifndef OBJ_FLIPPER_H
 #define OBJ_FLIPPER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectFlipper {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
     uint16 sfxFlipper;
-};
+} ObjectFlipper;
 
 // Entity Class
-struct EntityFlipper {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 activePlayers;
     Hitbox hitbox;
     Animator animator;
-};
+} EntityFlipper;
 
 // Object Struct
 extern ObjectFlipper *Flipper;

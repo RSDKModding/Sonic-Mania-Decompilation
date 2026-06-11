@@ -1,7 +1,9 @@
 #ifndef OBJ_RING_H
 #define OBJ_RING_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Player.h"
+#include "Common/Platform.h"
 
 typedef enum {
     RING_TYPE_NORMAL,
@@ -20,16 +22,16 @@ typedef enum {
 } RingMoveTypes;
 
 // Object Class
-struct ObjectRing {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     int32 pan;
     uint16 aniFrames;
     uint16 sfxRing;
-};
+} ObjectRing;
 
 // Entity Class
-struct EntityRing {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -45,7 +47,7 @@ struct EntityRing {
     int32 speed;
     Vector2 drawPos;
     Animator animator;
-};
+} EntityRing;
 
 // Object Struct
 extern ObjectRing *Ring;

@@ -1,22 +1,22 @@
 #ifndef OBJ_BUCKWILDBALL_H
 #define OBJ_BUCKWILDBALL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { BUCKWILDBALL_PATROLLING, BUCKWILDBALL_ROLLING } BuckwildBallModes;
 
 // Object Class
-struct ObjectBuckwildBall {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
     uint16 particleFrames;
     uint16 sfxImpact;
     uint16 sfxSharp;
-};
+} ObjectBuckwildBall;
 
 // Entity Class
-struct EntityBuckwildBall {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 amplitude;
@@ -33,7 +33,7 @@ struct EntityBuckwildBall {
     Hitbox detectHitbox;
     Animator animator;
     int32 bossBallSlot;
-};
+} EntityBuckwildBall;
 
 // Object Struct
 extern ObjectBuckwildBall *BuckwildBall;

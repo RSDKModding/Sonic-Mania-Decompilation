@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "BadnikHelpers.h"
+#include "Global/Animals.h"
+#include "Global/Explosion.h"
+#include "Global/Zone.h"
 
-ObjectBadnikHelpers *BadnikHelpers = NULL;
+ObjectBadnikHelpers *BadnikHelpers;
 
 void BadnikHelpers_Update(void) {}
 

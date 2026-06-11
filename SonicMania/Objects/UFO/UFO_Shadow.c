@@ -5,7 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UFO_Shadow.h"
+#include "UFO_Camera.h"
+#include "UFO_Circuit.h"
+#include "UFO_Player.h"
+#include "UFO_Ring.h"
+#include "UFO_Setup.h"
+#include "UFO_Sphere.h"
+#include "Helpers/LogHelpers.h"
 
 ObjectUFO_Shadow *UFO_Shadow;
 

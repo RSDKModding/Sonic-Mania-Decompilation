@@ -1,16 +1,16 @@
 #ifndef OBJ_UIOPTIONPANEL_H
 #define OBJ_UIOPTIONPANEL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectUIOptionPanel {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectUIOptionPanel;
 
 // Entity Class
-struct EntityUIOptionPanel {
+typedef struct {
     RSDK_ENTITY
     int32 panelSize;
     int32 topListID;
@@ -27,7 +27,7 @@ struct EntityUIOptionPanel {
     Animator topAnimator;
     Animator botAnimator;
     uint16 textFrames;
-};
+} EntityUIOptionPanel;
 
 // Object Struct
 extern ObjectUIOptionPanel *UIOptionPanel;

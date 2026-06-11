@@ -5,7 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Tubinaut.h"
+#include "Global/DebugMode.h"
+#include "Global/Dust.h"
+#include "Global/Zone.h"
 
 ObjectTubinaut *Tubinaut;
 

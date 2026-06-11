@@ -1,11 +1,11 @@
 #ifndef OBJ_REPLAYDB_H
 #define OBJ_REPLAYDB_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 // Object Class
-struct ObjectReplayDB {
+typedef struct {
     RSDK_OBJECT
     Entity *loadEntity;
     void (*loadCallback)(bool32 success);
@@ -13,12 +13,12 @@ struct ObjectReplayDB {
     void (*saveCallback)(bool32 success);
     Entity *deleteEntity;
     void (*deleteCallback)(bool32 success);
-};
+} ObjectReplayDB;
 
 // Entity Class
-struct EntityReplayDB {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityReplayDB;
 
 // Object Struct
 extern ObjectReplayDB *ReplayDB;

@@ -1,18 +1,20 @@
 #ifndef OBJ_UIREPLAYCAROUSEL_H
 #define OBJ_UIREPLAYCAROUSEL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
+#include "UIButtonPrompt.h"
+
 // Object Class
-struct ObjectUIReplayCarousel {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     EntityUIButtonPrompt *prompt;
-};
+} ObjectUIReplayCarousel;
 
 // Entity Class
-struct EntityUIReplayCarousel {
+typedef struct {
     MANIA_UI_ITEM_BASE
     String zoneNameText[4];
     String createdAtText[4];
@@ -44,7 +46,7 @@ struct EntityUIReplayCarousel {
     Animator unusedAnimator6;
     Animator createTimeAnimator;
     int32 language;
-};
+} EntityUIReplayCarousel;
 
 // Object Struct
 extern ObjectUIReplayCarousel *UIReplayCarousel;

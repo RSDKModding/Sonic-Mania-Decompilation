@@ -102,6 +102,9 @@
     <Filter Include="Sources\Objects\Title">
       <UniqueIdentifier>{8a833ffe-4dbd-4c40-9b83-8e3acafaf9b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\GameAPI">
+      <UniqueIdentifier>{7170a646-b18e-4195-b9b4-a0924545f27a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\Global\ActClear.h">
@@ -1932,16 +1935,16 @@
       <Filter>Sources\Objects\HCZ</Filter>
     </ClInclude>
     <ClInclude Include="..\dependencies\RSDKv5-GameAPI\C\GameAPI\Game.h">
-      <Filter>Sources</Filter>
+      <Filter>Sources\GameAPI</Filter>
     </ClInclude>
     <ClInclude Include="..\dependencies\RSDKv5-GameAPI\C\GameAPI\GameLink.h">
-      <Filter>Sources</Filter>
+      <Filter>Sources\GameAPI</Filter>
     </ClInclude>
     <ClInclude Include="..\dependencies\RSDKv5-GameAPI\C\GameAPI\GameObjects.h">
-      <Filter>Sources</Filter>
+      <Filter>Sources\GameAPI</Filter>
     </ClInclude>
     <ClInclude Include="..\dependencies\RSDKv5-GameAPI\C\GameAPI\GameVariables.h">
-      <Filter>Sources</Filter>
+      <Filter>Sources\GameAPI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -3776,7 +3779,7 @@
       <Filter>Sources\Objects\HCZ</Filter>
     </ClCompile>
     <ClCompile Include="..\dependencies\RSDKv5-GameAPI\C\GameAPI\Game.c">
-      <Filter>Sources</Filter>
+      <Filter>Sources\GameAPI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

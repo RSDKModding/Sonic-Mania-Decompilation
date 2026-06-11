@@ -1,16 +1,16 @@
 #ifndef OBJ_ERZMYSTIC_H
 #define OBJ_ERZMYSTIC_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectERZMystic {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectERZMystic;
 
 // Entity Class
-struct EntityERZMystic {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -38,7 +38,7 @@ struct EntityERZMystic {
     Animator cupSpikeAnimator; // Not actually ever drawn...
     Animator cupBlastAnimator;
     Hitbox hitbox;
-};
+} EntityERZMystic;
 
 // Object Struct
 extern ObjectERZMystic *ERZMystic;

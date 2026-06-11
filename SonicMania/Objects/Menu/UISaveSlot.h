@@ -1,7 +1,10 @@
 #ifndef OBJ_UISAVESLOT_H
 #define OBJ_UISAVESLOT_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#if MANIA_USE_PLUS
+#include "Cutscene/FXRuby.h"
+#endif
 
 typedef enum {
     UISAVESLOT_REGULAR,
@@ -9,13 +12,13 @@ typedef enum {
 } UISaveSlotTypes;
 
 // Object Class
-struct ObjectUISaveSlot {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectUISaveSlot;
 
 // Entity Class
-struct EntityUISaveSlot {
+typedef struct {
     MANIA_UI_ITEM_BASE
     bool32 isNewSave;
 #if MANIA_USE_PLUS
@@ -70,7 +73,7 @@ struct EntityUISaveSlot {
     Animator saveStatusAnimator;
     Animator numbersAnimator;
     uint16 textFrames;
-};
+} EntityUISaveSlot;
 
 // Object Struct
 extern ObjectUISaveSlot *UISaveSlot;

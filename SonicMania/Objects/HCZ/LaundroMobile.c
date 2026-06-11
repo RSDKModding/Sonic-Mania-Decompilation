@@ -5,7 +5,22 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "LaundroMobile.h"
+#include "BreakBar.h"
+#include "Current.h"
+#include "HCZSetup.h"
+#include "WaterGush.h"
+#include "Common/Water.h"
+#include "Global/ActClear.h"
+#include "Global/Debris.h"
+#include "Global/EggPrison.h"
+#include "Global/Explosion.h"
+#include "Global/ImageTrail.h"
+#include "Global/Music.h"
+#include "Global/Player.h"
+#include "Global/Ring.h"
+#include "Global/Zone.h"
+#include "Helpers/BadnikHelpers.h"
 
 ObjectLaundroMobile *LaundroMobile;
 

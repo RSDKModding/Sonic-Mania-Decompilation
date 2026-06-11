@@ -1,7 +1,7 @@
 #ifndef OBJ_SPIDERMOBILE_H
 #define OBJ_SPIDERMOBILE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     SPIDERMOBILE_BOSS,
@@ -11,7 +11,7 @@ typedef enum {
 } SpiderMobileTypes;
 
 // Object Class
-struct ObjectSpiderMobile {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBumper;
     Hitbox hitboxSpikes;
@@ -36,9 +36,10 @@ struct ObjectSpiderMobile {
     uint16 sfxHullClose;
     uint16 aniFrames;
     int32 unused3;
-};
+} ObjectSpiderMobile;
 
 // Entity Class
+typedef struct EntitySpiderMobile EntitySpiderMobile;
 struct EntitySpiderMobile {
     RSDK_ENTITY
     StateMachine(state);

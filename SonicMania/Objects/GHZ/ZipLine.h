@@ -1,17 +1,18 @@
 #ifndef OBJ_ZIPLINE_H
 #define OBJ_ZIPLINE_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 // Object Class
-struct ObjectZipLine {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxHandle;
-};
+} ObjectZipLine;
 
 // Entity Class
-struct EntityZipLine {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 activePlayers;
@@ -23,7 +24,7 @@ struct EntityZipLine {
     uint8 grabDelay[PLAYER_COUNT];
     Vector2 joinPos;
     int32 unused1;
-};
+} EntityZipLine;
 
 // Object Struct
 extern ObjectZipLine *ZipLine;

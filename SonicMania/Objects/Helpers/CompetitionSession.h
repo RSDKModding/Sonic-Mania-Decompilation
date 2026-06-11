@@ -1,7 +1,7 @@
 #ifndef OBJ_COMPETITIONSESSION_H
 #define OBJ_COMPETITIONSESSION_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if !MANIA_USE_PLUS
 // preplus was always 2P
@@ -39,12 +39,12 @@ typedef struct {
 } vsTime;
 
 // Object Class
-struct ObjectCompetitionSession {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectCompetitionSession;
 
 // Entity Class
-struct EntityCompetitionSession {
+typedef struct {
     RSDK_ENTITY
     bool32 inMatch;
     int32 playerCount;
@@ -74,7 +74,7 @@ struct EntityCompetitionSession {
     int32 inputSlots[PLAYER_COUNT];
     int32 prevMatchID;
 #endif
-};
+} EntityCompetitionSession;
 
 // Object Entity
 extern ObjectCompetitionSession *CompetitionSession;

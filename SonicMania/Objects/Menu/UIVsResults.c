@@ -5,7 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIVsResults.h"
+#include "UICharButton.h"
+#include "UIControl.h"
+#include "UIWidgets.h"
+#include "Helpers/CompetitionSession.h"
 
 ObjectUIVsResults *UIVsResults;
 

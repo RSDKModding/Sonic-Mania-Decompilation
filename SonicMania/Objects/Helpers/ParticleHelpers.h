@@ -1,17 +1,18 @@
 #ifndef OBJ_PARTICLEHELPERS_H
 #define OBJ_PARTICLEHELPERS_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Debris.h"
 
 // Object Class
-struct ObjectParticleHelpers {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectParticleHelpers;
 
 // Entity Class
-struct EntityParticleHelpers {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityParticleHelpers;
 
 // Object Entity
 extern ObjectParticleHelpers *ParticleHelpers;

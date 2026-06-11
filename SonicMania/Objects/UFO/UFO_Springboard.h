@@ -1,19 +1,19 @@
 #ifndef OBJ_UFO_SPRINGBOARD_H
 #define OBJ_UFO_SPRINGBOARD_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectUFO_Springboard {
+typedef struct {
     RSDK_OBJECT
     Animator unusedAnimator1;
     uint16 aniFrames; // unused
     uint16 modelIndex;
     uint16 sceneIndex;
-};
+} ObjectUFO_Springboard;
 
 // Entity Class
-struct EntityUFO_Springboard {
+typedef struct {
     RSDK_ENTITY
     int32 unused1;
     int32 height;
@@ -23,7 +23,7 @@ struct EntityUFO_Springboard {
     Matrix matWorld;
     Matrix matNormal;
     Animator animator;
-};
+} EntityUFO_Springboard;
 
 // Object Struct
 extern ObjectUFO_Springboard *UFO_Springboard;

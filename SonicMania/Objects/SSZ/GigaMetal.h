@@ -1,7 +1,9 @@
 #ifndef OBJ_GIGAMETAL_H
 #define OBJ_GIGAMETAL_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "MetalSonic.h"
+#include "ERZ/PhantomRuby.h"
 
 #if MANIA_USE_PLUS
 
@@ -20,7 +22,7 @@ typedef enum {
 } GigaMetalAniIDs;
 
 // Object Class
-struct ObjectGigaMetal {
+typedef struct {
     RSDK_OBJECT
     int32 invincibleTimer;
     int32 explodeTimer;
@@ -34,9 +36,10 @@ struct ObjectGigaMetal {
     Hitbox hitboxHand;
     Hitbox hitboxCore;
     Hitbox hitboxHead;
-};
+} ObjectGigaMetal;
 
 // Entity Class
+typedef struct EntityGigaMetal EntityGigaMetal;
 struct EntityGigaMetal {
     RSDK_ENTITY
     StateMachine(state);

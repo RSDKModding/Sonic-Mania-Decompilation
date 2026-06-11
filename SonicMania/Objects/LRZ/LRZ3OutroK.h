@@ -1,23 +1,27 @@
 #ifndef OBJ_LRZ3OUTROK_H
 #define OBJ_LRZ3OUTROK_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "SkyTeleporter.h"
+#include "Cutscene/CutsceneSeq.h"
+#include "Cutscene/FXRuby.h"
+#include "Global/EggPrison.h"
 
 // Object Class
-struct ObjectLRZ3OutroK {
+typedef struct {
     RSDK_OBJECT
     int32 unused; // possibly aniFrames in the RSDK editor??? who knows...
     uint16 sfxWarp;
     EntityEggPrison *prison;
     EntitySkyTeleporter *teleporter;
     EntityFXRuby *fxRuby;
-};
+} ObjectLRZ3OutroK;
 
 // Entity Class
-struct EntityLRZ3OutroK {
+typedef struct {
     MANIA_CUTSCENE_BASE
     Vector2 playerPos[2];
-};
+} EntityLRZ3OutroK;
 
 // Object Struct
 extern ObjectLRZ3OutroK *LRZ3OutroK;

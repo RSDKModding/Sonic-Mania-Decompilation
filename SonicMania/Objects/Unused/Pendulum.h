@@ -1,17 +1,17 @@
 #ifndef OBJ_PENDULUM_H
 #define OBJ_PENDULUM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectPendulum {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectPendulum;
 
 // Entity Class
-struct EntityPendulum {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityPendulum;
 
 // Object Entity
 extern ObjectPendulum *Pendulum;

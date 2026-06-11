@@ -5,7 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SpiralPlatform.h"
+#include "Common/Platform.h"
+#include "Common/TilePlatform.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
 ObjectSpiralPlatform *SpiralPlatform;
 

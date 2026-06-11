@@ -1,10 +1,10 @@
 #ifndef OBJ_BALLHOG_H
 #define OBJ_BALLHOG_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectBallHog {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxBomb;
@@ -13,10 +13,10 @@ struct ObjectBallHog {
     uint16 sfxArrowHit;
     uint16 sfxDrop;
     uint16 sfxJump;
-};
+} ObjectBallHog;
 
 // Entity Class
-struct EntityBallHog {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 numJumps;
@@ -26,7 +26,7 @@ struct EntityBallHog {
     Vector2 startPos;
     uint8 startDir;
     Animator animator;
-};
+} EntityBallHog;
 
 // Object Struct
 extern ObjectBallHog *BallHog;

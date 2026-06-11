@@ -1,18 +1,18 @@
 #ifndef OBJ_NOSWAP_H
 #define OBJ_NOSWAP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 // Object Class
-struct ObjectNoSwap {
+typedef struct {
     RSDK_OBJECT
     int32 counter;
     uint16 aniFrames; // unused in-game (likely used in-editor)
-};
+} ObjectNoSwap;
 
 // Entity Class
-struct EntityNoSwap {
+typedef struct {
     RSDK_ENTITY
     Vector2 size;
     bool32 always;
@@ -21,7 +21,7 @@ struct EntityNoSwap {
     Vector2 playerPos;
     Animator unusedAnimator1; // unused in-game (likely used in-editor)
     Animator unusedAnimator2; // unused in-game (likely used in-editor)
-};
+} EntityNoSwap;
 
 // Object Struct
 extern ObjectNoSwap *NoSwap;

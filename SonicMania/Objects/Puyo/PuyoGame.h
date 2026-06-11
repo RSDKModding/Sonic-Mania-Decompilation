@@ -1,7 +1,13 @@
 #ifndef OBJ_PUYOGAME_H
 #define OBJ_PUYOGAME_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "PuyoIndicator.h"
+#include "PuyoLevelSelect.h"
+#include "PuyoMatch.h"
+#include "PuyoScore.h"
+#include "Common/CollapsingPlatform.h"
+#include "Cutscene/FXFade.h"
 
 typedef enum {
     PUYOGAME_PLAYER1,
@@ -9,7 +15,7 @@ typedef enum {
 } PuyoGamePlayerIDs;
 
 // Object Class
-struct ObjectPuyoGame {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     EntityPuyoMatch *managers[2];
@@ -19,10 +25,10 @@ struct ObjectPuyoGame {
     EntityPuyoScore *score2[2];
     EntityPuyoLevelSelect *levelSel[2];
     EntityFXFade *fxFade;
-};
+} ObjectPuyoGame;
 
 // Entity Class
-struct EntityPuyoGame {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 unused1;
@@ -37,7 +43,7 @@ struct EntityPuyoGame {
     bool32 determinedLoser;
     uint8 roundWinner;
     uint8 matchWinner;
-};
+} EntityPuyoGame;
 
 // Object Struct
 extern ObjectPuyoGame *PuyoGame;

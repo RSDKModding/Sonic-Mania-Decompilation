@@ -5,7 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Announcer.h"
+#include "Helpers/CompetitionSession.h"
+#include "Helpers/LogHelpers.h"
+#include "Helpers/MathHelpers.h"
 
 ObjectAnnouncer *Announcer;
 

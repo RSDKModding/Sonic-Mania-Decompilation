@@ -5,7 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TimeAttackData.h"
+#include "LogHelpers.h"
+#include "Global/APICallback.h"
+#include "Global/Zone.h"
+#include "Menu/MenuParam.h"
 
 ObjectTimeAttackData *TimeAttackData;
 

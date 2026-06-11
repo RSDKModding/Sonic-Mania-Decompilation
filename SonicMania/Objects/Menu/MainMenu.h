@@ -1,21 +1,25 @@
 #ifndef OBJ_MAINMENU_H
 #define OBJ_MAINMENU_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
+#include "UIButtonPrompt.h"
+#include "UIControl.h"
+#include "UIDiorama.h"
+
 // Object Class
-struct ObjectMainMenu {
+typedef struct {
     RSDK_OBJECT
     EntityUIControl *menuControl;
     EntityUIButtonPrompt *confirmPrompt;
     EntityUIDiorama *diorama;
-};
+} ObjectMainMenu;
 
 // Entity Class
-struct EntityMainMenu {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityMainMenu;
 
 // Object Struct
 extern ObjectMainMenu *MainMenu;

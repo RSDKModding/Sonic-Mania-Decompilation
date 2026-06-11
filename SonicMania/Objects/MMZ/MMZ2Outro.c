@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "MMZ2Outro.h"
 
 #if MANIA_USE_PLUS
+#include "MMZLightning.h"
+#include "Global/HUD.h"
+#include "Global/Zone.h"
+
 ObjectMMZ2Outro *MMZ2Outro;
 
 void MMZ2Outro_Update(void)

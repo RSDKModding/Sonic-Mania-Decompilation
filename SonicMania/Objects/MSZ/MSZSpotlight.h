@@ -1,7 +1,7 @@
 #ifndef OBJ_MSZSPOTLIGHT_H
 #define OBJ_MSZSPOTLIGHT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     MSZSPOTLIGHT_RED,
@@ -10,13 +10,13 @@ typedef enum {
 } MSZSpotlightColors;
 
 // Object Class
-struct ObjectMSZSpotlight {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectMSZSpotlight;
 
 // Entity Class
-struct EntityMSZSpotlight {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 color;
@@ -24,7 +24,7 @@ struct EntityMSZSpotlight {
     int32 angleOffset;
     Vector2 startPos;
     Animator animatorSpotlight;
-};
+} EntityMSZSpotlight;
 
 // Object Struct
 extern ObjectMSZSpotlight *MSZSpotlight;

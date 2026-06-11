@@ -1,12 +1,12 @@
 #ifndef OBJ_UIBACKGROUND_H
 #define OBJ_UIBACKGROUND_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { UIBACKGROUND_UNUSED } UIBackgroundTypes;
 
 // Object Class
-struct ObjectUIBackground {
+typedef struct {
     RSDK_OBJECT
 #if MANIA_USE_PLUS
     TABLE(color bgColors[21], { 0xF0C800, 0xF08C18, 0x80A0B0, 0x50D8A0, 0xF09018, 0x38B0C8, 0x38B0C8, 0xF07028, 0x50D8A0, 0xC83868, 0x50D8A0,
@@ -17,16 +17,16 @@ struct ObjectUIBackground {
 #endif
     color *activeColors;
     uint16 aniFrames;
-};
+} ObjectUIBackground;
 
 // Entity Class
-struct EntityUIBackground {
+typedef struct {
     RSDK_ENTITY
     StateMachine(stateDraw);
     UIBackgroundTypes type;
     int32 timer;
     Animator animator; // probably editor-only
-};
+} EntityUIBackground;
 
 // Object Struct
 extern ObjectUIBackground *UIBackground;

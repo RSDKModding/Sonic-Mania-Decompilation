@@ -1,7 +1,8 @@
 #ifndef OBJ_BREAKABLEWALL_H
 #define OBJ_BREAKABLEWALL_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 typedef enum {
     BREAKWALL_TYPE_WALL,
@@ -23,7 +24,7 @@ typedef enum {
 } BreakableWallTileTypes;
 
 // Object Class
-struct ObjectBreakableWall {
+typedef struct {
     RSDK_OBJECT
     Animator animator;
     uint16 aniFrames;
@@ -38,10 +39,10 @@ struct ObjectBreakableWall {
     TABLE(int32 breakVelocitiesR[8], { -0x20000, -0x20000, 0x20000, -0x20000, -0x10000, -0x10000, 0x10000, -0x10000 });
     uint16 sfxBreak;
     uint16 farPlaneLayer;
-};
+} ObjectBreakableWall;
 
 // Entity Class
-struct EntityBreakableWall {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -57,7 +58,7 @@ struct EntityBreakableWall {
     int32 tileRotation;
     int32 gravityStrength;
     Hitbox hitbox;
-};
+} EntityBreakableWall;
 
 // Object Struct
 extern ObjectBreakableWall *BreakableWall;

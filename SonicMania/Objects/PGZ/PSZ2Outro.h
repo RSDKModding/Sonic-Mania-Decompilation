@@ -1,21 +1,25 @@
 #ifndef OBJ_PSZ2OUTRO_H
 #define OBJ_PSZ2OUTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "PSZEggman.h"
+#include "Cutscene/CutsceneSeq.h"
+#include "Cutscene/FXRuby.h"
+#include "ERZ/PhantomRuby.h"
 
 // Object Class
-struct ObjectPSZ2Outro {
+typedef struct {
     RSDK_OBJECT
     int32 unused;
-};
+} ObjectPSZ2Outro;
 
 // Entity Class
-struct EntityPSZ2Outro {
+typedef struct {
     MANIA_CUTSCENE_BASE
     EntityPSZEggman *eggman;
     EntityPhantomRuby *ruby;
     EntityFXRuby *fxRuby;
-};
+} EntityPSZ2Outro;
 
 // Object Struct
 extern ObjectPSZ2Outro *PSZ2Outro;

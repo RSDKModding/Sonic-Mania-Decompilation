@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "CPZShutter.h"
+#include "Global/Zone.h"
 
 ObjectCPZShutter *CPZShutter;
 

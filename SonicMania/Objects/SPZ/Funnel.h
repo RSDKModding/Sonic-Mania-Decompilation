@@ -1,20 +1,20 @@
 #ifndef OBJ_FUNNEL_H
 #define OBJ_FUNNEL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectFunnel {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxFunnel;
     uint16 unused;
     uint16 sfxFunnel;
     uint16 sfxPimPom;
     uint16 aniFrames;
-};
+} ObjectFunnel;
 
 // Entity Class
-struct EntityFunnel {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 activePlayers;
@@ -24,7 +24,7 @@ struct EntityFunnel {
     int32 playerYVel[PLAYER_COUNT];
     int32 playerTimers[PLAYER_COUNT];
     Animator animator;
-};
+} EntityFunnel;
 
 // Object Struct
 extern ObjectFunnel *Funnel;

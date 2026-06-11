@@ -1,16 +1,16 @@
 #ifndef OBJ_SELTZERWATER_H
 #define OBJ_SELTZERWATER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectSeltzerWater {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectSeltzerWater;
 
 // Entity Class
-struct EntitySeltzerWater {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 offsetAngle;
@@ -18,7 +18,7 @@ struct EntitySeltzerWater {
     int32 oscillateRadius;
     uint16 nodeSlot;
     Animator animator;
-};
+} EntitySeltzerWater;
 
 // Object Struct
 extern ObjectSeltzerWater *SeltzerWater;

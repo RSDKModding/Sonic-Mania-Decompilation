@@ -5,7 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Reagent.h"
+#include "ChemicalPool.h"
+#include "Global/Zone.h"
 
 ObjectReagent *Reagent;
 

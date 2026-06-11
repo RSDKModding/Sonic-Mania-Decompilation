@@ -5,9 +5,25 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "GigaMetal.h"
 
 #if MANIA_USE_PLUS
+#include "Dango.h"
+#include "MetalSonic.h"
+#include "MSBomb.h"
+#include "Common/BreakableWall.h"
+#include "Cutscene/FXFade.h"
+#include "ERZ/PhantomRuby.h"
+#include "Global/BoundsMarker.h"
+#include "Global/Explosion.h"
+#include "Global/Music.h"
+#include "Global/Player.h"
+#include "Global/StarPost.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
+
 ObjectGigaMetal *GigaMetal;
 
 void GigaMetal_Update(void)

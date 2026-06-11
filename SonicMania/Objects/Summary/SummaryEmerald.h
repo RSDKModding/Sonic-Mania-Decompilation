@@ -1,21 +1,21 @@
 #ifndef OBJ_SUMMARYEMERALD_H
 #define OBJ_SUMMARYEMERALD_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 // Object Class
-struct ObjectSummaryEmerald {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectSummaryEmerald;
 
 // Entity Class
-struct EntitySummaryEmerald {
+typedef struct {
     RSDK_ENTITY
     int32 emeraldID;
     Animator animator;
-};
+} EntitySummaryEmerald;
 
 // Object Struct
 extern ObjectSummaryEmerald *SummaryEmerald;

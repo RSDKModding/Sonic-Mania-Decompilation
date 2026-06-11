@@ -1,7 +1,8 @@
 #ifndef OBJ_POPCORNMACHINE_H
 #define OBJ_POPCORNMACHINE_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 typedef enum {
     POPCORNMACHINE_LEFT,
@@ -10,7 +11,7 @@ typedef enum {
 } PopcornMachineTypes;
 
 // Object Class
-struct ObjectPopcornMachine {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxEntryL;
@@ -20,9 +21,10 @@ struct ObjectPopcornMachine {
     uint16 sfxFanStart;
     uint16 sfxShoot;
     uint16 sfxPopcornLaunch;
-};
+} ObjectPopcornMachine;
 
 // Entity Class
+typedef struct EntityPopcornMachine EntityPopcornMachine;
 struct EntityPopcornMachine {
     RSDK_ENTITY
     StateMachine(state);

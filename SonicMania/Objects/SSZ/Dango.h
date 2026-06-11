@@ -1,19 +1,19 @@
 #ifndef OBJ_DANGO_H
 #define OBJ_DANGO_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectDango {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxCurlRange;
     uint16 aniFrames;
     uint16 sfxBumper;
-};
+} ObjectDango;
 
 // Entity Class
-struct EntityDango {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -22,7 +22,7 @@ struct EntityDango {
     Vector2 startPos;
     uint8 startDir;
     Animator animator;
-};
+} EntityDango;
 
 // Object Struct
 extern ObjectDango *Dango;

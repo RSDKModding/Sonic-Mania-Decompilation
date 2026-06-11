@@ -5,7 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "CollapsingSand.h"
+#include "Global/Debris.h"
+#include "Global/DebugMode.h"
+#include "Global/ItemBox.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
 ObjectCollapsingSand *CollapsingSand;
 

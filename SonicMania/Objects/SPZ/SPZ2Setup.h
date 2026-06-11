@@ -1,13 +1,14 @@
 #ifndef OBJ_SPZ2SETUP_H
 #define OBJ_SPZ2SETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "SPZ2Outro.h"
 
 // (Old) Object Class
 // NOTE: this struct is not used anywhere in the game, it was recreated from the data inside the "static object" file
 // and is here only for preservation purposes, this struct is a remnant from a time when SPZ1 & SPZ2 likely shared a setup object much earlier in dev
 // the proper SPZ2Setup (the final version) can be found below as "SPZ2Setup"
-struct ObjectSPZSetup {
+typedef struct {
     RSDK_OBJECT
     int32 palTimer;
     int32 pulsePercent;
@@ -18,10 +19,10 @@ struct ObjectSPZSetup {
     int32 stageLightsFrame;
     uint16 aniTiles;
     uint16 aniTiles2;
-};
+} ObjectSPZSetup;
 
 // Object Class
-struct ObjectSPZ2Setup {
+typedef struct {
     RSDK_OBJECT
     int32 palTimer;
     int32 pulsePercent;
@@ -43,14 +44,14 @@ struct ObjectSPZ2Setup {
     uint16 aniTiles1;
     uint16 aniTiles2;
     EntitySPZ2Outro *outro;
-};
+} ObjectSPZ2Setup;
 
 // Entity Class
-struct EntitySPZ2Setup {
+typedef struct {
     RSDK_ENTITY
     int32 palBlendPercent;
     int32 fadeTimer;
-};
+} EntitySPZ2Setup;
 
 // Object Struct
 extern ObjectSPZ2Setup *SPZ2Setup;

@@ -5,7 +5,18 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "RockDrill.h"
+#include "Drillerdroid.h"
+#include "LRZ2Setup.h"
+#include "LRZRockPile.h"
+#include "Common/CollapsingPlatform.h"
+#include "Global/Debris.h"
+#include "Global/Explosion.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
 ObjectRockDrill *RockDrill;
 

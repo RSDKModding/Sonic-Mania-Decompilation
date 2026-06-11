@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "LRZ1Intro.h"
 
 #if MANIA_USE_PLUS
+#include "LavaGeyser.h"
+#include "Global/Explosion.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+
 ObjectLRZ1Intro *LRZ1Intro;
 
 void LRZ1Intro_Update(void)

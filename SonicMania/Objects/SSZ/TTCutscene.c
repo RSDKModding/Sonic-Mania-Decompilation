@@ -5,7 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TTCutscene.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Global/Zone.h"
+#include "Helpers/MathHelpers.h"
 
 ObjectTTCutscene *TTCutscene;
 

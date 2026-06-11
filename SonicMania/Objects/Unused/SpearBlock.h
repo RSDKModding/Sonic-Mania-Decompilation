@@ -1,26 +1,26 @@
 #ifndef OBJ_SPEARBLOCK_H
 #define OBJ_SPEARBLOCK_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectSpearBlock {
+typedef struct {
     RSDK_OBJECT
     Hitbox blockHitbox;
     Hitbox spearHitboxes[4];
     uint16 aniFrames;
     Animator animator;
-};
+} ObjectSpearBlock;
 
 // Entity Class
-struct EntitySpearBlock {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 spearDir;
     Vector2 spearPos;
     int32 timer;
     Animator animator;
-};
+} EntitySpearBlock;
 
 // Object Entity
 extern ObjectSpearBlock *SpearBlock;

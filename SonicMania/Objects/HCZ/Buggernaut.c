@@ -9,7 +9,11 @@
 // This object was prolly based on Unused/Wisp
 // it looks like it has the same structure, and even has "buzzCount", even though its set to -1
 
-#include "SonicMania.h"
+#include "Buggernaut.h"
+#include "Common/Water.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
 ObjectBuggernaut *Buggernaut;
 

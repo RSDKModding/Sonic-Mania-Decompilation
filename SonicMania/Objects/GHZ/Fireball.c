@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Fireball.h"
+#include "Global/Player.h"
+#include "Global/Shield.h"
+#include "Global/Zone.h"
 
-ObjectFireball *Fireball = NULL;
+ObjectFireball *Fireball;
 
 void Fireball_Update(void)
 {

@@ -5,7 +5,17 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TitleSetup.h"
+#include "TitleBG.h"
+#if MANIA_USE_PLUS
+#include "TitleEggman.h"
+#endif
+#include "TitleLogo.h"
+#include "TitleSonic.h"
+#include "Global/APICallback.h"
+#include "Global/Localization.h"
+#include "Global/Music.h"
+#include "Helpers/TimeAttackData.h"
 
 ObjectTitleSetup *TitleSetup;
 

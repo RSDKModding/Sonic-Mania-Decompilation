@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PBL_HUD.h"
 
 #if MANIA_USE_PLUS
+#include "PBL_Crane.h"
+#include "PBL_Player.h"
+#include "PBL_Setup.h"
+
 ObjectPBL_HUD *PBL_HUD;
 
 void PBL_HUD_Update(void)

@@ -1,20 +1,20 @@
 #ifndef OBJ_LAVAFALL_H
 #define OBJ_LAVAFALL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectLavaFall {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
     uint8 lavaSfxTimer;
     bool32 playingLavaSfx;
     uint16 sfxLava;
-};
+} ObjectLavaFall;
 
 // Entity Class
-struct EntityLavaFall {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Animator animator;
@@ -22,7 +22,7 @@ struct EntityLavaFall {
     uint16 intervalOffset;
     uint16 duration;
     int32 timer;
-};
+} EntityLavaFall;
 
 // Object Struct
 extern ObjectLavaFall *LavaFall;

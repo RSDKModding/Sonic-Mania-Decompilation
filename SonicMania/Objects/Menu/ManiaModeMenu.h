@@ -1,12 +1,14 @@
 #ifndef OBJ_MANIAMODEMENU_H
 #define OBJ_MANIAMODEMENU_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
+#include "UIButtonPrompt.h"
+#include "UIControl.h"
 
 // Object Class
-struct ObjectManiaModeMenu {
+typedef struct {
     RSDK_OBJECT
     int32 unused;
     EntityUIControl *saveSelectMenu;
@@ -18,12 +20,12 @@ struct ObjectManiaModeMenu {
     EntityUIControl *noSaveMenuEncore;
     bool32 inSecretsMenu;
     int32 saveSelLastButtonID;
-};
+} ObjectManiaModeMenu;
 
 // Entity Class
-struct EntityManiaModeMenu {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityManiaModeMenu;
 
 // Object Struct
 extern ObjectManiaModeMenu *ManiaModeMenu;

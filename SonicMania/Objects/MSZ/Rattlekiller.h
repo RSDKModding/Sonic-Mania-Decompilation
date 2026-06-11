@@ -1,7 +1,7 @@
 #ifndef OBJ_RATTLEKILLER_H
 #define OBJ_RATTLEKILLER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define RATTLEKILLER_SEGMENT_COUNT (10)
 
@@ -17,15 +17,15 @@ typedef enum {
 } RattlekillerBodyStates;
 
 // Object Class
-struct ObjectRattlekiller {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxSegment;
     uint16 sfxRocketJet;
     uint16 aniFrames;
-};
+} ObjectRattlekiller;
 
 // Entity Class
-struct EntityRattlekiller {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);     // Unused
     StateMachine(stateDraw); // Unused
@@ -46,7 +46,7 @@ struct EntityRattlekiller {
     Animator headAnimator;
     Animator bodyAnimator;
     Animator tailAnimator;
-};
+} EntityRattlekiller;
 
 // Object Struct
 extern ObjectRattlekiller *Rattlekiller;

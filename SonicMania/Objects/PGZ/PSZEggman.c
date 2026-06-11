@@ -5,7 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PSZEggman.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
 ObjectPSZEggman *PSZEggman;
 

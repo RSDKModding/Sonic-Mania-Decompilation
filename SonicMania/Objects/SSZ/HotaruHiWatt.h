@@ -1,7 +1,7 @@
 #ifndef OBJ_HOTARUHIWATT_H
 #define OBJ_HOTARUHIWATT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     HHW_BOSS,
@@ -16,7 +16,7 @@ typedef enum {
 } HHWTypes;
 
 // Object Class
-struct ObjectHotaruHiWatt {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 debrisInfo[33],
           { 8, 0, 0,        -0x20000, -0x28000, 1, 0,       0x20000,  -0x28000, 2, 0,        -0x28000, -0x20000, 3, 0,       0x28000, -0x20000,
@@ -39,9 +39,10 @@ struct ObjectHotaruHiWatt {
     uint16 sfxCharge;
     uint16 aniFrames;
     uint16 hotaruFrames;
-};
+} ObjectHotaruHiWatt;
 
 // Entity Class
+typedef struct EntityHotaruHiWatt EntityHotaruHiWatt;
 struct EntityHotaruHiWatt {
     RSDK_ENTITY
     StateMachine(state);

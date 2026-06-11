@@ -1,17 +1,18 @@
 #ifndef OBJ_BUNGEE_H
 #define OBJ_BUNGEE_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 // Object Class
-struct ObjectBungee {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Animator animator;
-};
+} ObjectBungee;
 
 // Entity Class
-struct EntityBungee {
+typedef struct {
     RSDK_ENTITY
     Vector2 startPos;
     Vector2 bungeePos;
@@ -21,7 +22,7 @@ struct EntityBungee {
     int32 stretchForce;
     int32 deathBoundary[PLAYER_COUNT];
     uint8 timer;
-};
+} EntityBungee;
 
 // Object Struct
 extern ObjectBungee *Bungee;

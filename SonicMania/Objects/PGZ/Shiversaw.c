@@ -5,7 +5,20 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Shiversaw.h"
+#include "Crate.h"
+#include "Ice.h"
+#include "Global/Dust.h"
+#include "Global/Explosion.h"
+#include "Global/InvisibleBlock.h"
+#include "Global/Music.h"
+#include "Global/SignPost.h"
+#include "Global/Spikes.h"
+#include "Global/Zone.h"
+#include "Helpers/BadnikHelpers.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
 ObjectShiversaw *Shiversaw;
 

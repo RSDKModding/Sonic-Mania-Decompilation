@@ -1,20 +1,22 @@
 #ifndef OBJ_EXTRASMENU_H
 #define OBJ_EXTRASMENU_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
+#include "UIControl.h"
+
 // Object Class
-struct ObjectExtrasMenu {
+typedef struct {
     RSDK_OBJECT
     EntityUIControl *extrasControl;
     int32 cheatCode[8];
-};
+} ObjectExtrasMenu;
 
 // Entity Class
-struct EntityExtrasMenu {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityExtrasMenu;
 
 // Object Struct
 extern ObjectExtrasMenu *ExtrasMenu;

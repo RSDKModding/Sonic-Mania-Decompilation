@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "AnimalHBH.h"
+#include "Cutscene/FXFade.h"
 
 ObjectAnimalHBH *AnimalHBH;
 

@@ -1,19 +1,19 @@
 #ifndef OBJ_UFO_WATER_H
 #define OBJ_UFO_WATER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectUFO_Water {
+typedef struct {
     RSDK_OBJECT
     int32 timer;
     uint16 aniFrames;
-};
+} ObjectUFO_Water;
 
 // Entity Class
-struct EntityUFO_Water {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityUFO_Water;
 
 // Object Struct
 extern ObjectUFO_Water *UFO_Water;

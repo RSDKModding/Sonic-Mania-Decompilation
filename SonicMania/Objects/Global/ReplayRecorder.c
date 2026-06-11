@@ -5,9 +5,37 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ReplayRecorder.h"
 
 #if MANIA_USE_PLUS
+#include "ActClear.h"
+#include "DialogRunner.h"
+#include "HUD.h"
+#include "Localization.h"
+#include "PauseMenu.h"
+#include "Player.h"
+#include "TitleCard.h"
+#include "TimeAttackGate.h"
+#include "Zone.h"
+#include "FBZ/Cylinder.h"
+#include "FBZ/WarpDoor.h"
+#include "HCZ/Current.h"
+#include "Helpers/DrawHelpers.h"
+#include "Helpers/LogHelpers.h"
+#include "Helpers/MathHelpers.h"
+#include "Helpers/ReplayDB.h"
+#include "Helpers/TimeAttackData.h"
+#include "Global/APICallback.h"
+#include "OOZ/OOZSetup.h"
+#include "PGZ/Ice.h"
+#include "Menu/MenuParam.h"
+#include "Menu/UIDialog.h"
+#include "Menu/UIWaitSpinner.h"
+#include "MMZ/FarPlane.h"
+#include "MMZ/PlaneSeeSaw.h"
+#include "MMZ/SizeLaser.h"
+#include "TMZ/GymBar.h"
+
 ObjectReplayRecorder *ReplayRecorder;
 
 void ReplayRecorder_Update(void)

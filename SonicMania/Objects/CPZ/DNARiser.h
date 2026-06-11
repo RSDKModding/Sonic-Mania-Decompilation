@@ -1,10 +1,10 @@
 #ifndef OBJ_DNARISER_H
 #define OBJ_DNARISER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectDNARiser {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxGrab;
@@ -12,9 +12,10 @@ struct ObjectDNARiser {
     uint16 sfxBurst;
     uint16 sfxTiny[6];
     Hitbox hitbox;
-};
+} ObjectDNARiser;
 
 // Entity Class
+typedef struct EntityDNARiser EntityDNARiser;
 struct EntityDNARiser {
     RSDK_ENTITY
     StateMachine(state);

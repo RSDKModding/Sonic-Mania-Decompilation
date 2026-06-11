@@ -1,23 +1,23 @@
 #ifndef OBJ_STALACTITE_H
 #define OBJ_STALACTITE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectStalactite {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxStalactite;
     Hitbox hitboxRange;
     uint16 aniFrames;
     uint16 sfxShoot;
-};
+} ObjectStalactite;
 
 // Entity Class
-struct EntityStalactite {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Animator animator;
-};
+} EntityStalactite;
 
 // Object Struct
 extern ObjectStalactite *Stalactite;

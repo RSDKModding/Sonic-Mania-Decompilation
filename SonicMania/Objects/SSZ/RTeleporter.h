@@ -1,10 +1,10 @@
 #ifndef OBJ_RTELEPORTER_H
 #define OBJ_RTELEPORTER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectRTeleporter {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxTeleporter;
@@ -13,10 +13,10 @@ struct ObjectRTeleporter {
     uint16 unused3;
     uint16 sfxExplosion;
     uint16 sfxGoodFuture;
-};
+} ObjectRTeleporter;
 
 // Entity Class
-struct EntityRTeleporter {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -24,7 +24,7 @@ struct EntityRTeleporter {
     int32 timer;
     Animator mainAnimator;
     Animator electricAnimator;
-};
+} EntityRTeleporter;
 
 // Object Struct
 extern ObjectRTeleporter *RTeleporter;

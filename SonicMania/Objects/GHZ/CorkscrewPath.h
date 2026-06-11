@@ -1,24 +1,24 @@
 #ifndef OBJ_CORKSCREWPATH_H
 #define OBJ_CORKSCREWPATH_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectCorkscrewPath {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 frameTable[24], { 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13 });
     uint16 aniFrames; // probably editor-only
-};
+} ObjectCorkscrewPath;
 
 // Entity Class
-struct EntityCorkscrewPath {
+typedef struct {
     RSDK_ENTITY
     int32 period;
     int32 xSize; // length to the (left/right) edges from the center
     int32 amplitude;
     int32 activePlayers;
     Animator animator; // also probably editor-only
-};
+} EntityCorkscrewPath;
 
 // Object Struct
 extern ObjectCorkscrewPath *CorkscrewPath;

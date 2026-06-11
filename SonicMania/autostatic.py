@@ -185,6 +185,39 @@ for path in Path(sys.argv[1]).rglob("*.h"):
             mode = 5
             continue #ok do care
 
+        if mode < 5 and l.strip().startswith("typedef struct"):
+            structpos = lastpos #store the current last pos for later
+            structname = ""
+
+            #jump ahead and check if this is the object struct
+            while True:
+                endcheck = readuntil("}")
+                if len(endcheck) > 0 and endcheck[-1] == '\n': #if this is the end of the struct
+                    readuntil(" ")
+                    structname = readuntil(";")
+                    if debugMode:
+                        print(f"Found Struct: '{structname}'")
+                    break
+                if not currentfile.readable():
+                    print(f"COULD NOT FIND OBJECT STRUCT FOR ({os.path.basename(path)})")
+                    structname = ""
+                    break
+
+            if structname.startswith("Object"):
+                objName = structname
+            else:
+                continue
+                
+
+            lastpos = structpos #now that we know this is the struct we want, go back to the start
+            backward()
+            readuntil("{")
+            if debugMode:
+                print(f"Found Object: '{objName}'")
+
+            mode = 1
+            continue
+
         if mode < 5 and l.strip().startswith("struct Object"):
             backward()
             readuntil(" ")

@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Snowflakes.h"
+#include "Global/Zone.h"
 
 ObjectSnowflakes *Snowflakes;
 

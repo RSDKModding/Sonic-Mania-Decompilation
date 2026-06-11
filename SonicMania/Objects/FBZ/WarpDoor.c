@@ -5,7 +5,20 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "WarpDoor.h"
+#include "ERZ/PhantomRuby.h"
+#include "Global/BoundsMarker.h"
+#include "Global/Camera.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
+#include "Helpers/LogHelpers.h"
+#include "OOZ/OOZSetup.h"
+#include "TMZ/TMZBarrier.h"
+#include "TMZ/TMZ2Setup.h"
 
 ObjectWarpDoor *WarpDoor;
 

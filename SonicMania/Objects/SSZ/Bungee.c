@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Bungee.h"
+#include "Global/Zone.h"
 
 ObjectBungee *Bungee;
 

@@ -5,9 +5,30 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "CompetitionMenu.h"
 
 #if MANIA_USE_PLUS
+#include "MenuParam.h"
+#include "UIButton.h"
+#include "UIChoice.h"
+#include "UITransition.h"
+#include "UIVsCharSelector.h"
+#include "UIVsResults.h"
+#include "UIVsRoundPicker.h"
+#include "UIVsZoneButton.h"
+#include "UIWidgets.h"
+#include "Global/Announcer.h"
+#include "Global/APICallback.h"
+#include "Global/Competition.h"
+#include "Global/Localization.h"
+#include "Global/SaveGame.h"
+#include "Helpers/CompetitionSession.h"
+#include "Helpers/GameProgress.h"
+#include "Helpers/LogHelpers.h"
+#include "Helpers/TimeAttackData.h"
+#include "Menu/MenuSetup.h"
+#include "Menu/UIDialog.h"
+
 ObjectCompetitionMenu *CompetitionMenu;
 
 void CompetitionMenu_Update(void) {}

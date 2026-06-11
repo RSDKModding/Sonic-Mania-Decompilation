@@ -1,7 +1,7 @@
 #ifndef OBJ_FBZSINKTRASH_H
 #define OBJ_FBZSINKTRASH_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     FBZSINKTRASH_SINK,
@@ -10,13 +10,13 @@ typedef enum {
 } FBZSinkTrashTypes;
 
 // Object Class
-struct ObjectFBZSinkTrash {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectFBZSinkTrash;
 
 // Entity Class
-struct EntityFBZSinkTrash {
+typedef struct {
     RSDK_ENTITY
     int32 type;
     Vector2 size;
@@ -28,7 +28,7 @@ struct EntityFBZSinkTrash {
     Animator trashAnimator;
     Animator topAnimator;
     Animator mainAnimator;
-};
+} EntityFBZSinkTrash;
 
 // Object Struct
 extern ObjectFBZSinkTrash *FBZSinkTrash;

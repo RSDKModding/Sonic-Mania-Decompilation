@@ -1,10 +1,10 @@
 #ifndef OBJ_FBZFAN_H
 #define OBJ_FBZFAN_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectFBZFan {
+typedef struct {
     RSDK_OBJECT
     int32 activePlayers;
     Hitbox hitboxFan;
@@ -15,14 +15,14 @@ struct ObjectFBZFan {
     Animator fanAnimator;
     Animator fan2Animator;
     uint16 sfxFan;
-};
+} ObjectFBZFan;
 
 // Entity Class
-struct EntityFBZFan {
+typedef struct {
     RSDK_ENTITY
     Hitbox hitboxTrigger;
     uint8 activePlayers;
-};
+} EntityFBZFan;
 
 // Object Struct
 extern ObjectFBZFan *FBZFan;

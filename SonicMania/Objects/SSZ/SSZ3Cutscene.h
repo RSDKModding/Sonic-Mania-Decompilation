@@ -1,15 +1,20 @@
 #ifndef OBJ_SSZ3CUTSCENE_H
 #define OBJ_SSZ3CUTSCENE_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Cutscene/CutsceneSeq.h"
+#if MANIA_USE_PLUS
+#include "Cutscene/FXRuby.h"
+#include "ERZ/PhantomRuby.h"
+#endif
 
 // Object Class
-struct ObjectSSZ3Cutscene {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectSSZ3Cutscene;
 
 // Entity Class
-struct EntitySSZ3Cutscene {
+typedef struct {
     RSDK_ENTITY
     int32 unused;
 #if MANIA_USE_PLUS
@@ -17,7 +22,7 @@ struct EntitySSZ3Cutscene {
     EntityPhantomRuby *ruby;
     EntityFXRuby *fxRuby;
 #endif
-};
+} EntitySSZ3Cutscene;
 
 // Object Struct
 extern ObjectSSZ3Cutscene *SSZ3Cutscene;

@@ -5,7 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "BreakBar.h"
+#include "Global/Debris.h"
+#include "Global/Zone.h"
 
 ObjectBreakBar *BreakBar;
 

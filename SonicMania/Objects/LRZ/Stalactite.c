@@ -5,7 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Stalactite.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
 ObjectStalactite *Stalactite;
 

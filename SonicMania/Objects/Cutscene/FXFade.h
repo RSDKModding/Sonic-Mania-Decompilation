@@ -1,15 +1,15 @@
 #ifndef OBJ_FXFADE_H
 #define OBJ_FXFADE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectFXFade {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectFXFade;
 
 // Entity Class
-struct EntityFXFade {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -24,7 +24,7 @@ struct EntityFXFade {
 #if MANIA_USE_PLUS
     bool32 transitionScene;
 #endif
-};
+} EntityFXFade;
 
 // Object Struct
 extern ObjectFXFade *FXFade;

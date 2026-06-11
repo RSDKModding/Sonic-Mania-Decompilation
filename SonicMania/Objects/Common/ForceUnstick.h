@@ -1,23 +1,23 @@
 #ifndef OBJ_FORCEUNSTICK_H
 #define OBJ_FORCEUNSTICK_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectForceUnstick {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Animator animator;
-};
+} ObjectForceUnstick;
 
 // Entity Class
-struct EntityForceUnstick {
+typedef struct {
     RSDK_ENTITY
     uint8 width;
     uint8 height;
     bool32 breakClimb;
     Hitbox hitbox;
-};
+} EntityForceUnstick;
 
 // Object Struct
 extern ObjectForceUnstick *ForceUnstick;

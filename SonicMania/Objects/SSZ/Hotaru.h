@@ -1,7 +1,8 @@
 #ifndef OBJ_HOTARU_H
 #define OBJ_HOTARU_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 typedef enum {
     HOTARU_GOOD,
@@ -15,7 +16,7 @@ typedef enum {
 } HotaruAttackStates;
 
 // Object Class
-struct ObjectHotaru {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxTrigger;
@@ -23,10 +24,10 @@ struct ObjectHotaru {
     int32 unused2;
     Hitbox hitboxElectricity;
     uint16 aniFrames;
-};
+} ObjectHotaru;
 
 // Entity Class
-struct EntityHotaru {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 quality;
@@ -51,7 +52,7 @@ struct EntityHotaru {
     Animator mainAnimator;
     Animator bulbAnimator;
     Animator electricityAnimator;
-};
+} EntityHotaru;
 
 // Object Struct
 extern ObjectHotaru *Hotaru;

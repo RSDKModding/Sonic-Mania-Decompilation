@@ -5,7 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PuyoAttack.h"
+#include "PuyoMatch.h"
+#include "Global/Zone.h"
 
 ObjectPuyoAttack *PuyoAttack;
 

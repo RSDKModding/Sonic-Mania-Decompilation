@@ -1,12 +1,12 @@
 #ifndef OBJ_FARPLANE_H
 #define OBJ_FARPLANE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define FARPLANE_ENTITY_COUNT (256)
 
 // Object Class
-struct ObjectFarPlane {
+typedef struct {
     RSDK_OBJECT
     uint32 aniFrames;
     Vector2 screenPos;
@@ -20,17 +20,17 @@ struct ObjectFarPlane {
     int32 unused4;
     int32 unused5;
     uint16 layerID;
-};
+} ObjectFarPlane;
 
 // Entity Class
-struct EntityFarPlane {
+typedef struct {
     RSDK_ENTITY
     Vector2 size;
     Vector2 origin;
     uint16 entitySlots[FARPLANE_ENTITY_COUNT];
     int32 entityCount;
     Animator animator;
-};
+} EntityFarPlane;
 
 // Object Struct
 extern ObjectFarPlane *FarPlane;

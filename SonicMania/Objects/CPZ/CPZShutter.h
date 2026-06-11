@@ -1,23 +1,23 @@
 #ifndef OBJ_CPZSHUTTER_H
 #define OBJ_CPZSHUTTER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectCPZShutter {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectCPZShutter;
 
 // Entity Class
-struct EntityCPZShutter {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
     int32 unused1;
     int32 unused2;
     Animator animator;
-};
+} EntityCPZShutter;
 
 // Object Struct
 extern ObjectCPZShutter *CPZShutter;

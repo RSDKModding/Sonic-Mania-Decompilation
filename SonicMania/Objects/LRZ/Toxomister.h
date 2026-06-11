@@ -1,17 +1,19 @@
 #ifndef OBJ_TOXOMISTER_H
 #define OBJ_TOXOMISTER_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 // Object Class
-struct ObjectToxomister {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxCloud;
     uint16 aniFrames;
-};
+} ObjectToxomister;
 
 // Entity Class
+typedef struct EntityToxomister EntityToxomister;
 struct EntityToxomister {
     RSDK_ENTITY
     StateMachine(state);

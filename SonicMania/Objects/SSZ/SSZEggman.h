@@ -1,17 +1,18 @@
 #ifndef OBJ_SSZEGGMAN_H
 #define OBJ_SSZEGGMAN_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "ERZ/PhantomRuby.h"
 
 #if MANIA_USE_PLUS
 // Object Class
-struct ObjectSSZEggman {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectSSZEggman;
 
 // Entity Class
-struct EntitySSZEggman {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -23,7 +24,7 @@ struct EntitySSZEggman {
     Animator seatAnimator;
     Animator mobileAnimator;
     Animator panelAnimator;
-};
+} EntitySSZEggman;
 
 // Object Struct
 extern ObjectSSZEggman *SSZEggman;

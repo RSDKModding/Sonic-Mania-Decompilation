@@ -1,17 +1,17 @@
 #ifndef OBJ_UIRESPICKER_H
 #define OBJ_UIRESPICKER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if GAME_VERSION != VER_100
 // Object Class
-struct ObjectUIResPicker {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectUIResPicker;
 
 // Entity Class
-struct EntityUIResPicker {
+typedef struct {
     MANIA_UI_ITEM_BASE
     Vector2 size;
     int32 align;
@@ -33,7 +33,7 @@ struct EntityUIResPicker {
     Animator textAnimator;
     Animator arrowAnimatorL;
     Animator arrowAnimatorR;
-};
+} EntityUIResPicker;
 
 // Object Struct
 extern ObjectUIResPicker *UIResPicker;

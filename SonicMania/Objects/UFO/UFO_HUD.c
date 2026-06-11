@@ -5,7 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UFO_HUD.h"
+#include "UFO_Player.h"
+#include "UFO_Setup.h"
+#include "UFO_Sphere.h"
 
 ObjectUFO_HUD *UFO_HUD;
 

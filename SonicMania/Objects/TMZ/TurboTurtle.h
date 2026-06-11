@@ -1,7 +1,7 @@
 #ifndef OBJ_TURBOTURTLE_H
 #define OBJ_TURBOTURTLE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     TURBOTURTLE_FANDIR_TOP,
@@ -10,16 +10,16 @@ typedef enum {
 } TurboTurtleFanDirs;
 
 // Object Class
-struct ObjectTurboTurtle {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     uint16 aniFrames;
     uint16 sfxWalk;
     uint16 sfxWalk2;
-};
+} ObjectTurboTurtle;
 
 // Entity Class
-struct EntityTurboTurtle {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -45,7 +45,7 @@ struct EntityTurboTurtle {
     int32 rightFanDuration;
     int32 rightFanStrength;
     int32 rightFanLength;
-};
+} EntityTurboTurtle;
 
 // Object Struct
 extern ObjectTurboTurtle *TurboTurtle;

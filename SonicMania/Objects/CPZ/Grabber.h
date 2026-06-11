@@ -1,10 +1,11 @@
 #ifndef OBJ_GRABBER_H
 #define OBJ_GRABBER_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 // Object Class
-struct ObjectGrabber {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxGrab;
@@ -12,10 +13,10 @@ struct ObjectGrabber {
     uint16 aniFrames;
     uint16 sfxGrab;
     uint16 sfxDestroy;
-};
+} ObjectGrabber;
 
 // Entity Class
-struct EntityGrabber {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Animator bodyAnimator;
@@ -30,7 +31,7 @@ struct EntityGrabber {
     uint8 startDir;
     int32 turnTimer;
     int32 timer;
-};
+} EntityGrabber;
 
 // Object Struct
 extern ObjectGrabber *Grabber;

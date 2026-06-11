@@ -1,7 +1,7 @@
 #ifndef OBJ_CIRCLEBUMPER_H
 #define OBJ_CIRCLEBUMPER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     CIRCLEBUMPER_FIXED,
@@ -12,15 +12,15 @@ typedef enum {
 } CircleBumperTypes;
 
 // Object Class
-struct ObjectCircleBumper {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBumper;
     uint16 aniFrames;
     uint16 sfxBumper;
-};
+} ObjectCircleBumper;
 
 // Entity Class
-struct EntityCircleBumper {
+typedef struct {
     RSDK_ENTITY
     StateMachine(stateCollide);
     StateMachine(stateMove);
@@ -31,7 +31,7 @@ struct EntityCircleBumper {
     Vector2 drawPos;
     Animator animator;
     int32 unused;
-};
+} EntityCircleBumper;
 
 // Object Struct
 extern ObjectCircleBumper *CircleBumper;

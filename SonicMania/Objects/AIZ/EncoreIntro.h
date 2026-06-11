@@ -1,12 +1,16 @@
 #ifndef OBJ_ENCOREINTRO_H
 #define OBJ_ENCOREINTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
+#include "Cutscene/CutsceneSeq.h"
+#include "Cutscene/FXRuby.h"
+#include "Cutscene/RubyPortal.h"
+#include "ERZ/PhantomRuby.h"
 
 // Object Class
-struct ObjectEncoreIntro {
+typedef struct {
     RSDK_OBJECT
     int32 unused1;
     uint16 aniFrames;
@@ -22,10 +26,10 @@ struct ObjectEncoreIntro {
     EntityRubyPortal *rubyPortal;
     int32 unused3;
     bool32 awaitingSaveFinish;
-};
+} ObjectEncoreIntro;
 
 // Entity Class
-struct EntityEncoreIntro {
+typedef struct {
     RSDK_ENTITY
     Vector2 size;
     bool32 activated;
@@ -38,7 +42,7 @@ struct EntityEncoreIntro {
     Hitbox hitbox;
 
     bool32 seenActClear;
-};
+} EntityEncoreIntro;
 
 // Object Struct
 extern ObjectEncoreIntro *EncoreIntro;

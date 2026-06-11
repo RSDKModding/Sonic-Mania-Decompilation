@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIInfoLabel.h"
+#include "UIWidgets.h"
 
 ObjectUIInfoLabel *UIInfoLabel;
 

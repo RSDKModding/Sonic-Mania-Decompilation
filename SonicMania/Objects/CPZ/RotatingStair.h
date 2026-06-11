@@ -1,7 +1,7 @@
 #ifndef OBJ_ROTATINGSTAIR_H
 #define OBJ_ROTATINGSTAIR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     ROTATINGSTAIR_LEFT,
@@ -15,13 +15,13 @@ typedef enum {
 } RotatingStairModes;
 
 // Object Class
-struct ObjectRotatingStair {
+typedef struct {
     RSDK_OBJECT
     uint8 unused; // its set to 0, but its not actually used
-};
+} ObjectRotatingStair;
 
 // Entity Class
-struct EntityRotatingStair {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateCollide);
@@ -48,7 +48,7 @@ struct EntityRotatingStair {
     uint16 oscOff;
     int32 duration;
     int32 interval;
-};
+} EntityRotatingStair;
 
 // Object Struct
 extern ObjectRotatingStair *RotatingStair;

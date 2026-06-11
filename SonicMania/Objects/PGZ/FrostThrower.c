@@ -5,7 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "FrostThrower.h"
+#include "Ice.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
 ObjectFrostThrower *FrostThrower;
 

@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Orbinaut.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectOrbinaut *Orbinaut = NULL;
+ObjectOrbinaut *Orbinaut;
 
 void Orbinaut_Update(void)
 {

@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SpearBlock.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectSpearBlock *SpearBlock = NULL;
+ObjectSpearBlock *SpearBlock;
 
 void SpearBlock_Update(void)
 {

@@ -1,20 +1,20 @@
 #ifndef OBJ_DECORATION_H
 #define OBJ_DECORATION_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     DECORATION_NONE,
 } DecorationTypes;
 
 // Object Class
-struct ObjectDecoration {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectDecoration;
 
 // Entity Class
-struct EntityDecoration {
+typedef struct {
     RSDK_ENTITY
     Animator animator;
     uint8 type;
@@ -22,7 +22,7 @@ struct EntityDecoration {
     Vector2 repeatTimes;
     Vector2 repeatSpacing;
     bool32 additive;
-};
+} EntityDecoration;
 
 // Object Struct
 extern ObjectDecoration *Decoration;

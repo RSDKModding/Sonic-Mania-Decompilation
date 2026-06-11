@@ -5,9 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TryAgainE.h"
 
 #if MANIA_USE_PLUS
+#include "TAEmerald.h"
+#include "Cutscene/FXFade.h"
+#include "ERZ/PhantomRuby.h"
+#include "Global/HUD.h"
+#include "Global/SaveGame.h"
+
 ObjectTryAgainE *TryAgainE;
 
 void TryAgainE_Update(void)

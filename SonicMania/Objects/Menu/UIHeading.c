@@ -5,7 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIHeading.h"
+#include "UIWidgets.h"
+#include "Global/Localization.h"
 
 ObjectUIHeading *UIHeading;
 

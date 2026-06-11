@@ -1,18 +1,18 @@
 #ifndef OBJ_GHZCUTSCENEK_H
 #define OBJ_GHZCUTSCENEK_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectGHZCutsceneK {
+typedef struct {
     RSDK_OBJECT
     int32 unused1;
-};
+} ObjectGHZCutsceneK;
 
 // Entity Class
-struct EntityGHZCutsceneK {
+typedef struct {
     MANIA_CUTSCENE_BASE
-};
+} EntityGHZCutsceneK;
 
 // Object Struct
 extern ObjectGHZCutsceneK *GHZCutsceneK;

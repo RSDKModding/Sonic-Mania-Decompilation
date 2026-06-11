@@ -5,7 +5,20 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UISubHeading.h"
+#include "UIButton.h"
+#include "UIWidgets.h"
+#if MANIA_USE_PLUS
+#include "ManiaModeMenu.h"
+#include "MenuParam.h"
+#include "UIControl.h"
+#include "UISaveSlot.h"
+#include "UITransition.h"
+#include "UIWaitSpinner.h"
+#include "Global/SaveGame.h"
+#include "Helpers/GameProgress.h"
+#include "Helpers/TimeAttackData.h"
+#endif
 
 ObjectUISubHeading *UISubHeading;
 

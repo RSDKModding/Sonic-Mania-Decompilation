@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Bloominator.h"
 
 #if MANIA_USE_PLUS
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+
 ObjectBloominator *Bloominator;
 
 void Bloominator_Update(void)

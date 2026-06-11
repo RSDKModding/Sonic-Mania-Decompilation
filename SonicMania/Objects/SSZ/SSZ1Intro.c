@@ -5,7 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SSZ1Intro.h"
+#include "Cutscene/CutsceneRules.h"
+#include "ERZ/PhantomRuby.h"
+#include "Global/Music.h"
+#include "Global/TitleCard.h"
 
 ObjectSSZ1Intro *SSZ1Intro;
 

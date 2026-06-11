@@ -1,7 +1,7 @@
 #ifndef OBJ_AIZROCKPILE_H
 #define OBJ_AIZROCKPILE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 
@@ -12,7 +12,7 @@ typedef enum {
 } AIZRockPileTypes;
 
 // Object Class
-struct ObjectAIZRockPile {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 rockPositions_small[8], { -0x40000, -0x40000, 0xC0000, -0x40000, -0xC0000, 0x40000, 0xC0000, 0x40000 });
     TABLE(int32 rockSpeedsT_small[8], { -0x10000, -0x20000, 0x10000, -0x1E000, -0x1B000, -0x1C000, 0x1C000, -0x1C000 });
@@ -34,10 +34,10 @@ struct ObjectAIZRockPile {
                                          -0x18000, 0x20000, -0x10000, 0x24000, -0x10000 });
     uint16 aniFrames;
     uint16 sfxBreak;
-};
+} ObjectAIZRockPile;
 
 // Entity Class
-struct EntityAIZRockPile {
+typedef struct {
     RSDK_ENTITY
     int32 size;
     bool32 smashTop;
@@ -49,7 +49,7 @@ struct EntityAIZRockPile {
     int32 *rockSpeedsL;
     int32 *rockSpeedsR;
     Animator animator;
-};
+} EntityAIZRockPile;
 
 // Object Struct
 extern ObjectAIZRockPile *AIZRockPile;

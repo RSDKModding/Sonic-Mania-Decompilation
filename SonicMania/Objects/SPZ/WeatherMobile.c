@@ -5,7 +5,21 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "WeatherMobile.h"
+#include "SPZ2Setup.h"
+#include "TVPole.h"
+#include "Cutscene/FXFade.h"
+#include "Global/Debris.h"
+#include "Global/Dust.h"
+#include "Global/Explosion.h"
+#include "Global/Music.h"
+#include "Global/PauseMenu.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#include "Helpers/BadnikHelpers.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
 ObjectWeatherMobile *WeatherMobile;
 

@@ -1,7 +1,7 @@
 #ifndef OBJ_HPZEMERALD_H
 #define OBJ_HPZEMERALD_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     HPZEMERALD_MASTER,
@@ -10,13 +10,13 @@ typedef enum {
 } HPZEmeraldTypes;
 
 // Object Class
-struct ObjectHPZEmerald {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectHPZEmerald;
 
 // Entity Class
-struct EntityHPZEmerald {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state); // unused
     uint8 type;
@@ -25,7 +25,7 @@ struct EntityHPZEmerald {
     Hitbox *hitbox;
     Animator emeraldAnimator;
     Animator overlayAnimator;
-};
+} EntityHPZEmerald;
 
 // Object Struct
 extern ObjectHPZEmerald *HPZEmerald;

@@ -5,7 +5,16 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UFO_Setup.h"
+#include "SpecialClear.h"
+#include "UFO_Camera.h"
+#include "UFO_Message.h"
+#include "UFO_Player.h"
+#include "Global/Music.h"
+#include "Global/PauseMenu.h"
+#include "Global/SaveGame.h"
+#include "Helpers/GameProgress.h"
+#include "Menu/UIBackground.h"
 
 ObjectUFO_Setup *UFO_Setup;
 

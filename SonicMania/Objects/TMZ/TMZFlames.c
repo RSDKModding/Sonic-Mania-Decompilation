@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TMZFlames.h"
+#include "Global/Zone.h"
 
 ObjectTMZFlames *TMZFlames;
 

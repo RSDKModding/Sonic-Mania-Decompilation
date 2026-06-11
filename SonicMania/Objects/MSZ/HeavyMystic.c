@@ -5,7 +5,23 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "HeavyMystic.h"
+#include "Hatterkiller.h"
+#include "MSZSetup.h"
+#include "MSZSpotlight.h"
+#include "TornadoPath.h"
+#include "UberCaterkiller.h"
+#include "Vultron.h"
+#include "Global/Debris.h"
+#include "Global/Explosion.h"
+#include "Global/Music.h"
+#include "Global/Player.h"
+#include "Global/StarPost.h"
+#include "Global/Zone.h"
+#include "Helpers/BadnikHelpers.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
 ObjectHeavyMystic *HeavyMystic;
 

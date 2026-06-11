@@ -5,7 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TMZ3Setup.h"
+#include "Global/Animals.h"
+#include "Global/SaveGame.h"
+#include "Global/Zone.h"
 
 ObjectTMZ3Setup *TMZ3Setup;
 

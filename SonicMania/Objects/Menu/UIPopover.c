@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIPopover.h"
 
 #if MANIA_USE_PLUS
+#include "UIWidgets.h"
+#include "Helpers/LogHelpers.h"
+
 ObjectUIPopover *UIPopover;
 
 void UIPopover_Update(void)

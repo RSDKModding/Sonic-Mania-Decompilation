@@ -1,19 +1,20 @@
 #ifndef OBJ_TIMETRAVELSETUP_H
 #define OBJ_TIMETRAVELSETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Debris.h"
 
 // Object Class
-struct ObjectTimeTravelSetup {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     int32 timer;
-};
+} ObjectTimeTravelSetup;
 
 // Entity Class
-struct EntityTimeTravelSetup {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityTimeTravelSetup;
 
 // Object Struct
 extern ObjectTimeTravelSetup *TimeTravelSetup;

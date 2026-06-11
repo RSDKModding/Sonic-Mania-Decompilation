@@ -1,10 +1,11 @@
 #ifndef OBJ_PUYOMATCH_H
 #define OBJ_PUYOMATCH_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "PuyoBean.h"
 
 // Object Class
-struct ObjectPuyoMatch {
+typedef struct {
     RSDK_OBJECT
     int32 comboPower;
     TABLE(int32 comboBonus[24], { 4, 20, 24, 32, 48, 96, 160, 240, 320, 480, 600, 700, 800, 900, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999 });
@@ -13,10 +14,10 @@ struct ObjectPuyoMatch {
     TABLE(int32 concurrentBonusTable[6], { 0, 0, 3, 6, 12, 24 });
     TABLE(int32 beanDropColumnIDs[24], { 0, 2, 5, 1, 3, 4, 5, 3, 4, 0, 1, 2, 3, 1, 0, 4, 2, 5, 0, 2, 1, 3, 5, 4 });
     uint16 aniFrames;
-};
+} ObjectPuyoMatch;
 
 // Entity Class
-struct EntityPuyoMatch {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateInput);
@@ -42,7 +43,7 @@ struct EntityPuyoMatch {
     Animator lightAnimator;
     Animator junkPreviewAnimator;
     Animator unusedAnimator;
-};
+} EntityPuyoMatch;
 
 // Object Struct
 extern ObjectPuyoMatch *PuyoMatch;

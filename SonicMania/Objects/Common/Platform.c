@@ -5,7 +5,19 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Platform.h"
+#include "PlatformControl.h"
+#include "PlatformNode.h"
+#include "Global/ItemBox.h"
+#include "Global/Player.h"
+#include "Global/Spikes.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
+#include "FBZ/HangPoint.h"
+#include "PGZ/Ice.h"
+#include "TMZ/TurboTurtle.h"
 
 ObjectPlatform *Platform;
 

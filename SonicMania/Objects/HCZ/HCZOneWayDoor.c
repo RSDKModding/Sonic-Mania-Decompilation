@@ -5,7 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "HCZOneWayDoor.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
 ObjectHCZOneWayDoor *HCZOneWayDoor;
 

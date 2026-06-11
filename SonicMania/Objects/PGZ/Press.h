@@ -1,10 +1,10 @@
 #ifndef OBJ_PRESS_H
 #define OBJ_PRESS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectPress {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
@@ -13,10 +13,10 @@ struct ObjectPress {
 #if MANIA_USE_PLUS
     bool32 canSuper;
 #endif
-};
+} ObjectPress;
 
 // Entity Class
-struct EntityPress {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint16 size;
@@ -35,7 +35,7 @@ struct EntityPress {
     Animator crusherAnimator;
     Animator threadAnimator;
     Animator bumperAnimator;
-};
+} EntityPress;
 
 // Object Struct
 extern ObjectPress *Press;

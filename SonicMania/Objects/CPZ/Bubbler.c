@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Bubbler.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
-ObjectBubbler *Bubbler = NULL;
+ObjectBubbler *Bubbler;
 
 // NOTE: this object is basically a port of the Bubbler & Bubbler's mother debug objects in S2 '13, though it's unused
 // It's not in any stage lists, and the sprites for it aren't aligned correctly, though they are at different positions from S2 '13s

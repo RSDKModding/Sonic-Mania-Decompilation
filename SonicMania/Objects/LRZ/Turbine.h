@@ -1,22 +1,22 @@
 #ifndef OBJ_TURBINE_H
 #define OBJ_TURBINE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { TURBINE_HANDLES, TURBINE_SPIKES, TURBINE_WALLDECOR } TurbineTypes;
 
 // Object Class
-struct ObjectTurbine {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxTurbine;
     Hitbox hitboxHandle;
     Hitbox hitboxSpikes;
     bool32 playingTurbineSfx;
-};
+} ObjectTurbine;
 
 // Entity Class
-struct EntityTurbine {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -24,7 +24,7 @@ struct EntityTurbine {
     int32 playerAngles[PLAYER_COUNT];
     int32 playerTimers[PLAYER_COUNT];
     Animator animator;
-};
+} EntityTurbine;
 
 // Object Struct
 extern ObjectTurbine *Turbine;

@@ -5,7 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TMZBarrier.h"
+#include "FBZ/WarpDoor.h"
+#include "Global/StarPost.h"
+#include "Global/Zone.h"
+#include "Helpers/DrawHelpers.h"
 
 ObjectTMZBarrier *TMZBarrier;
 

@@ -5,9 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "MSBomb.h"
 
 #if MANIA_USE_PLUS
+#include "MetalSonic.h"
+#include "SilverSonic.h"
+#include "Global/Explosion.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+
 ObjectMSBomb *MSBomb;
 
 void MSBomb_Update(void)

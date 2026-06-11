@@ -5,7 +5,7 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIWaitSpinner.h"
 
 ObjectUIWaitSpinner *UIWaitSpinner;
 

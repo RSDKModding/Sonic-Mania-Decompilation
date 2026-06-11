@@ -4390,7 +4390,7 @@
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(OutDir)Game.dll" "$(SolutionDir)build\Game.dll"
-"$(ProjectDir)buildstatic.bat"</Command>
+"$(ProjectDir)buildstaticv1.bat"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Building Static Object Files...</Message>
@@ -4417,7 +4417,7 @@
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(OutDir)Game.dll" "$(SolutionDir)build\Game.dll"
-"$(ProjectDir)buildstatic.bat"</Command>
+"$(ProjectDir)buildstaticv1.bat"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Building Static Object Files...</Message>
@@ -4441,7 +4441,7 @@
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(OutDir)Game.dll" "$(SolutionDir)build\Game.dll"
-"$(ProjectDir)buildstatic.bat"</Command>
+"$(ProjectDir)buildstaticv1.bat"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Building Static Object Files...</Message>
@@ -4468,7 +4468,7 @@
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(OutDir)Game.dll" "$(SolutionDir)build\Game.dll"
-"$(ProjectDir)buildstatic.bat"</Command>
+"$(ProjectDir)buildstaticv1.bat"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Building Static Object Files...</Message>

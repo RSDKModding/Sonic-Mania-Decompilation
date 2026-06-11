@@ -5,7 +5,18 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UISaveSlot.h"
+#include "UIButtonPrompt.h"
+#include "UIControl.h"
+#include "UIDialog.h"
+#include "UIWaitSpinner.h"
+#include "UIWidgets.h"
+#include "ERZ/PhantomRuby.h"
+#include "Global/APICallback.h"
+#include "Global/Localization.h"
+#include "Global/Music.h"
+#include "Global/SaveGame.h"
+#include "Global/Zone.h"
 
 ObjectUISaveSlot *UISaveSlot;
 

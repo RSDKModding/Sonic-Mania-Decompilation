@@ -5,7 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SPZ2Outro.h"
+#include "Global/HUD.h"
+#include "Global/Shield.h"
+#include "Global/Zone.h"
+#include "Cutscene/CutsceneRules.h"
 
 ObjectSPZ2Outro *SPZ2Outro;
 

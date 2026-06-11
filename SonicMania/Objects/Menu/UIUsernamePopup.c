@@ -5,7 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIUsernamePopup.h"
+#include "UIWidgets.h"
+#include "Helpers/MathHelpers.h"
+#if MANIA_USE_PLUS
+#include "Helpers/LogHelpers.h"
+#endif
+#include "Global/APICallback.h"
 
 ObjectUIUsernamePopup *UIUsernamePopup;
 

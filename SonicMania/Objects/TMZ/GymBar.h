@@ -1,19 +1,19 @@
 #ifndef OBJ_GYMBAR_H
 #define OBJ_GYMBAR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { GYMBAR_HORIZONTAL, GYMBAR_VERTICAL } GymBarTypes;
 
 // Object Class
-struct ObjectGymBar {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxBumper;
-};
+} ObjectGymBar;
 
 // Entity Class
-struct EntityGymBar {
+typedef struct {
     RSDK_ENTITY
     int32 type;
     int32 size;
@@ -23,7 +23,7 @@ struct EntityGymBar {
     int32 minX;
     Animator animator;
     Hitbox hitbox;
-};
+} EntityGymBar;
 
 // Object Struct
 extern ObjectGymBar *GymBar;

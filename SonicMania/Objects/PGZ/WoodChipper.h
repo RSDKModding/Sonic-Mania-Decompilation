@@ -1,10 +1,10 @@
 #ifndef OBJ_WOODCHIPPER_H
 #define OBJ_WOODCHIPPER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectWoodChipper {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxStump;
@@ -14,10 +14,10 @@ struct ObjectWoodChipper {
     bool32 playingChipSfx;
     uint16 sfxChipperWood;
     bool32 playingWoodSfx;
-};
+} ObjectWoodChipper;
 
 // Entity Class
-struct EntityWoodChipper {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint16 size;
@@ -28,7 +28,7 @@ struct EntityWoodChipper {
     uint8 activePlayers;
     Animator animator;
     Animator sawAnimator;
-};
+} EntityWoodChipper;
 
 // Object Struct
 extern ObjectWoodChipper *WoodChipper;

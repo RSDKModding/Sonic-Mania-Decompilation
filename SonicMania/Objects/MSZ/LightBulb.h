@@ -1,7 +1,7 @@
 #ifndef OBJ_LIGHTBULB_H
 #define OBJ_LIGHTBULB_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     LIGHTBULB_PRIO_HIGH,
@@ -9,21 +9,21 @@ typedef enum {
 } LightBulbPriorities;
 
 // Object Class
-struct ObjectLightBulb {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxLightBulb;
     uint16 aniFrames;
     uint16 sfxBulbPop;
-};
+} ObjectLightBulb;
 
 // Entity Class
-struct EntityLightBulb {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     bool32 respawn;
     int32 priority;
     Animator animator;
-};
+} EntityLightBulb;
 
 // Object Struct
 extern ObjectLightBulb *LightBulb;

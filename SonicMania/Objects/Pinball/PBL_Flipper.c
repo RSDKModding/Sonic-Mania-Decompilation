@@ -5,9 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PBL_Flipper.h"
 
 #if MANIA_USE_PLUS
+#include "PBL_Camera.h"
+#include "PBL_Player.h"
+#include "PBL_Setup.h"
+#include "PBL_TargetBumper.h"
+#include "Global/Zone.h"
+
 ObjectPBL_Flipper *PBL_Flipper;
 
 void PBL_Flipper_Update(void)

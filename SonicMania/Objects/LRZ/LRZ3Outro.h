@@ -1,18 +1,21 @@
 #ifndef OBJ_LRZ3OUTRO_H
 #define OBJ_LRZ3OUTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
+#include "Common/ParallaxSprite.h"
+#include "Cutscene/CutsceneSeq.h"
+
 // Object Class
-struct ObjectLRZ3Outro {
+typedef struct {
     RSDK_OBJECT
     uint16 sfxBlastoff;
     uint16 sfxLittlePlanet;
-};
+} ObjectLRZ3Outro;
 
 // Entity Class
-struct EntityLRZ3Outro {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -21,7 +24,7 @@ struct EntityLRZ3Outro {
     EntityParallaxSprite *littlePlanet;
     int32 blastoffChannel;
     float blastoffVolume;
-};
+} EntityLRZ3Outro;
 
 // Object Struct
 extern ObjectLRZ3Outro *LRZ3Outro;

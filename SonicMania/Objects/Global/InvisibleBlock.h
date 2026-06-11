@@ -1,17 +1,17 @@
 #ifndef OBJ_INVISIBLEBLOCK_H
 #define OBJ_INVISIBLEBLOCK_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectInvisibleBlock {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Animator animator;
-};
+} ObjectInvisibleBlock;
 
 // Entity Class
-struct EntityInvisibleBlock {
+typedef struct {
     RSDK_ENTITY
     uint8 width;
     uint8 height;
@@ -21,7 +21,7 @@ struct EntityInvisibleBlock {
     bool32 timeAttackOnly;
     bool32 noChibi;
     Hitbox hitbox;
-};
+} EntityInvisibleBlock;
 
 // Object Struct
 extern ObjectInvisibleBlock *InvisibleBlock;

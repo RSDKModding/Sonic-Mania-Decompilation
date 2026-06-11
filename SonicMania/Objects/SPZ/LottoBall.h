@@ -1,7 +1,8 @@
 #ifndef OBJ_LOTTOBALL_H
 #define OBJ_LOTTOBALL_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "LottoMachine.h"
 
 typedef enum {
     LOTTOBALL_BLUE,
@@ -13,15 +14,15 @@ typedef enum {
 } LottoBallTypes;
 
 // Object Class
-struct ObjectLottoBall {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxLottoBounce;
     uint16 sfxSpew;
-};
+} ObjectLottoBall;
 
 // Entity Class
-struct EntityLottoBall {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -38,7 +39,7 @@ struct EntityLottoBall {
     Animator ballAnimator;
     Animator leftNumAnimator;
     Animator rightNumAnimator;
-};
+} EntityLottoBall;
 
 // Object Struct
 extern ObjectLottoBall *LottoBall;

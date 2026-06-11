@@ -5,9 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIRankButton.h"
 
 #if MANIA_USE_PLUS
+#include "UIControl.h"
+#include "UIWidgets.h"
+
 ObjectUIRankButton *UIRankButton;
 
 void UIRankButton_Update(void)

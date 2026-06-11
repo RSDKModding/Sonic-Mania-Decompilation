@@ -1,20 +1,20 @@
 #ifndef OBJ_FILMREEL_H
 #define OBJ_FILMREEL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectFilmReel {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxWheel;
     Vector2 offsetPos;
     uint16 aniFrames;
     uint16 sfxUnravel;
     uint16 sfxLanding;
-};
+} ObjectFilmReel;
 
 // Entity Class
-struct EntityFilmReel {
+typedef struct {
     RSDK_ENTITY
     Vector2 pathSize;
     uint8 spinDirection;
@@ -33,7 +33,7 @@ struct EntityFilmReel {
     Animator celluoidAnimator;
     Animator edgeAnimator;
     Animator pinAnimator;
-};
+} EntityFilmReel;
 
 // Object Struct
 extern ObjectFilmReel *FilmReel;

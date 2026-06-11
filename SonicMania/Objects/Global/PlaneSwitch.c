@@ -5,7 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PlaneSwitch.h"
+#include "DebugMode.h"
+#include "Player.h"
+#include "Zone.h"
 
 ObjectPlaneSwitch *PlaneSwitch;
 

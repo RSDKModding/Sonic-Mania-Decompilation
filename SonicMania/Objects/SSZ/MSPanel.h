@@ -1,21 +1,21 @@
 #ifndef OBJ_MSPANEL_H
 #define OBJ_MSPANEL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectMSPanel {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectMSPanel;
 
 // Entity Class
-struct EntityMSPanel {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Animator panelAnimator;
     Animator cablesAnimator;
-};
+} EntityMSPanel;
 
 // Object Struct
 extern ObjectMSPanel *MSPanel;

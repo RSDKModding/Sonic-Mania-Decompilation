@@ -5,7 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "FBZSetup.h"
+#include "FBZ2Outro.h"
+#include "Common/BGSwitch.h"
+#include "Common/Decoration.h"
+#include "Common/GenericTrigger.h"
+#include "Common/ParallaxSprite.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Global/Animals.h"
+#include "Global/Zone.h"
 
 ObjectFBZSetup *FBZSetup;
 

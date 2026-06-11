@@ -1,16 +1,16 @@
 #ifndef OBJ_UICHOICE_H
 #define OBJ_UICHOICE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectUIChoice {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectUIChoice;
 
 // Entity Class
-struct EntityUIChoice {
+typedef struct {
     MANIA_UI_ITEM_BASE
     Vector2 size;
     int32 listID;
@@ -35,7 +35,7 @@ struct EntityUIChoice {
     Animator leftArrowAnimator;
     Animator rightArrowAnimator;
     uint16 aniFrames;
-};
+} EntityUIChoice;
 
 // Object Struct
 extern ObjectUIChoice *UIChoice;

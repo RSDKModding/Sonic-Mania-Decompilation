@@ -1,19 +1,21 @@
 #ifndef OBJ_OOZ2OUTRO_H
 #define OBJ_OOZ2OUTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
+#include "Global/EggPrison.h"
+
 // Object Class
-struct ObjectOOZ2Outro {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxGlug;
     uint16 sfxSubLaunch;
-};
+} ObjectOOZ2Outro;
 
 // Entity Class
-struct EntityOOZ2Outro {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 size;
@@ -24,7 +26,7 @@ struct EntityOOZ2Outro {
     TileLayer *moveLayer;
     EntityEggPrison *prisonPtr;
     Vector2 prisonPos;
-};
+} EntityOOZ2Outro;
 
 // Object Struct
 extern ObjectOOZ2Outro *OOZ2Outro;

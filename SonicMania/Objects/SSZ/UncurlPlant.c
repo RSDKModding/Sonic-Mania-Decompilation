@@ -5,7 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UncurlPlant.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
 ObjectUncurlPlant *UncurlPlant;
 

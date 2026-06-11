@@ -1,7 +1,7 @@
 #ifndef OBJ_ESCAPECAR_H
 #define OBJ_ESCAPECAR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     ESCAPECAR_DRIVER_SONIC = 0,
@@ -9,16 +9,16 @@ typedef enum {
 } EscapeCarDrivers;
 
 // Object Class
-struct ObjectEscapeCar {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
     uint16 sfxBumper;
     uint16 sfxDrop;
-};
+} ObjectEscapeCar;
 
 // Entity Class
-struct EntityEscapeCar {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -28,7 +28,7 @@ struct EntityEscapeCar {
     Animator carAnimator;
     Animator driverAnimator;
     Animator thrustAnimator;
-};
+} EntityEscapeCar;
 
 // Object Struct
 extern ObjectEscapeCar *EscapeCar;

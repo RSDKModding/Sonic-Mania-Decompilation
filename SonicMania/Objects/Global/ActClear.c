@@ -5,7 +5,24 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ActClear.h"
+#include "Animals.h"
+#include "Announcer.h"
+#if !MANIA_USE_PLUS
+#include "APICallback.h"
+#endif
+#include "HUD.h"
+#include "Music.h"
+#include "ReplayRecorder.h"
+#include "SaveGame.h"
+#include "StarPost.h"
+#include "Zone.h"
+#include "Helpers/GameProgress.h"
+#include "Helpers/TimeAttackData.h"
+#include "Menu/MenuParam.h"
+#include "Menu/UIDialog.h"
+#include "Menu/UIWaitSpinner.h"
+#include "Menu/UIWidgets.h"
 
 ObjectActClear *ActClear;
 

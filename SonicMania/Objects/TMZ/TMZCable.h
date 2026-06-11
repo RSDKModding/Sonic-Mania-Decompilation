@@ -1,18 +1,18 @@
 #ifndef OBJ_TMZCABLE_H
 #define OBJ_TMZCABLE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define TMZCABLE_JOINT_COUNT (8)
 
 // Object Class
-struct ObjectTMZCable {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
-};
+} ObjectTMZCable;
 
 // Entity Class
-struct EntityTMZCable {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -22,7 +22,7 @@ struct EntityTMZCable {
     bool32 jointVisible[TMZCABLE_JOINT_COUNT];
     Vector2 *parentPos;
     Animator animator;
-};
+} EntityTMZCable;
 
 // Object Struct
 extern ObjectTMZCable *TMZCable;

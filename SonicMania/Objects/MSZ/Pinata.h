@@ -1,26 +1,26 @@
 #ifndef OBJ_PINATA_H
 #define OBJ_PINATA_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { PINATA_PRIO_HIGH, PINATA_PRIO_LOW } PinataPriorities;
 
 // Object Class
-struct ObjectPinata {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxPinata;
     uint16 aniFrames;
     uint16 sfxPinata;
-};
+} ObjectPinata;
 
 // Entity Class
-struct EntityPinata {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     bool32 respawn;
     int32 priority;
     Animator animator;
-};
+} EntityPinata;
 
 // Object Struct
 extern ObjectPinata *Pinata;

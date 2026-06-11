@@ -5,9 +5,20 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PBL_Crane.h"
 
 #if MANIA_USE_PLUS
+#include "PBL_Camera.h"
+#include "PBL_Bumper.h"
+#include "PBL_HUD.h"
+#include "PBL_Ring.h"
+#include "PBL_Sector.h"
+#include "PBL_Setup.h"
+#include "PBL_TargetBumper.h"
+#include "Global/Player.h"
+#include "Global/SaveGame.h"
+#include "Helpers/LogHelpers.h"
+
 ObjectPBL_Crane *PBL_Crane;
 
 void PBL_Crane_Update(void)

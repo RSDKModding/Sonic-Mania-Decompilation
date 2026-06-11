@@ -5,7 +5,21 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UITAZoneModule.h"
+#include "UIControl.h"
+#include "UITransition.h"
+#include "UIWidgets.h"
+#if MANIA_USE_PLUS
+#include "TimeAttackMenu.h"
+#else
+#include "MenuParam.h"
+#include "MenuSetup.h"
+#include "Helpers/TimeAttackData.h"
+#include "Global/Announcer.h"
+#include "Global/APICallback.h"
+#include "Global/Localization.h"
+#include "Global/Music.h"
+#endif
 
 ObjectUITAZoneModule *UITAZoneModule;
 

@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SummaryEmerald.h"
 
 #if MANIA_USE_PLUS
+#include "Global/SaveGame.h"
+
 ObjectSummaryEmerald *SummaryEmerald;
 
 void SummaryEmerald_Update(void) {}

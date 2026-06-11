@@ -1,21 +1,21 @@
 #ifndef OBJ_LRZ3SETUP_H
 #define OBJ_LRZ3SETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectLRZ3Setup {
+typedef struct {
     RSDK_OBJECT
     int32 unused1;
     int32 unused2;
     int32 unused3;
     Entity *cutsceneOutroK;
-};
+} ObjectLRZ3Setup;
 
 // Entity Class
-struct EntityLRZ3Setup {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityLRZ3Setup;
 
 // Object Struct
 extern ObjectLRZ3Setup *LRZ3Setup;

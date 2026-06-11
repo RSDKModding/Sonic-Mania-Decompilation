@@ -1,7 +1,7 @@
 #ifndef OBJ_PETALPILE_H
 #define OBJ_PETALPILE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     PETALPILE_FGHIGH,
@@ -17,7 +17,7 @@ typedef enum {
 } PetalPilePatterns;
 
 // Object Class
-struct ObjectPetalPile {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 patternSize[5], { 7, 6, 6, 10, 3 });
     TABLE(int32 pattern1[14],
@@ -29,10 +29,10 @@ struct ObjectPetalPile {
     TABLE(int32 pattern5[6], { 0, -0x10000, -0x10000, 0x10000, 0x10000, 0x10000 });
     uint16 aniFrames;
     uint16 sfxPetals;
-};
+} ObjectPetalPile;
 
 // Entity Class
-struct EntityPetalPile {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -53,7 +53,7 @@ struct EntityPetalPile {
     bool32 noRemoveTiles;
     Hitbox hitbox;
     Animator animator;
-};
+} EntityPetalPile;
 
 // Object Struct
 extern ObjectPetalPile *PetalPile;

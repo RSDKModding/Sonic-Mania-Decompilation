@@ -5,7 +5,18 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "WalkerLegs.h"
+#include "BuckwildBall.h"
+#include "LRZ2Setup.h"
+#include "Rexon.h"
+#include "Global/APICallback.h"
+#include "Global/Debris.h"
+#include "Global/Explosion.h"
+#include "Global/Player.h"
+#include "Global/Spikes.h"
+#include "Global/Zone.h"
+#include "Helpers/GameProgress.h"
+#include "Helpers/MathHelpers.h"
 
 ObjectWalkerLegs *WalkerLegs;
 

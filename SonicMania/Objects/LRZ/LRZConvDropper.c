@@ -5,7 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "LRZConvDropper.h"
+#include "Iwamodoki.h"
+#include "LRZConvItem.h"
+#include "Global/DebugMode.h"
+#include "Global/ItemBox.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#include "Helpers/DrawHelpers.h"
 
 ObjectLRZConvDropper *LRZConvDropper;
 

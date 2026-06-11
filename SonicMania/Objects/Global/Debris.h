@@ -1,7 +1,7 @@
 #ifndef OBJ_DEBRIS_H
 #define OBJ_DEBRIS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Structs
 typedef struct {
@@ -18,12 +18,12 @@ typedef struct {
 } DebrisOffsetEntry;
 
 // Object Class
-struct ObjectDebris {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectDebris;
 
 // Entity Class
-struct EntityDebris {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -32,7 +32,7 @@ struct EntityDebris {
     Vector2 scaleSpeed;
     int32 delay;
     Animator animator;
-};
+} EntityDebris;
 
 // Object Struct
 extern ObjectDebris *Debris;

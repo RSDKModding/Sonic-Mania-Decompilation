@@ -5,7 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PuyoLevelSelect.h"
+#include "Global/APICallback.h"
+#include "Global/Zone.h"
 
 ObjectPuyoLevelSelect *PuyoLevelSelect;
 

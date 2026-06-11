@@ -1,18 +1,19 @@
 #ifndef OBJ_HANGPOINT_H
 #define OBJ_HANGPOINT_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 // Object Class
-struct ObjectHangPoint {
+typedef struct {
     RSDK_OBJECT
     Animator animator;
     uint16 aniFrames;
     Hitbox hitboxGrab;
-};
+} ObjectHangPoint;
 
 // Entity Class
-struct EntityHangPoint {
+typedef struct {
     RSDK_ENTITY
     uint8 activePlayers;
     int32 moveDistance[PLAYER_COUNT];
@@ -21,7 +22,7 @@ struct EntityHangPoint {
     int32 maxVel;
     int32 length;
     uint8 speed;
-};
+} EntityHangPoint;
 
 // Object Struct
 extern ObjectHangPoint *HangPoint;

@@ -5,7 +5,21 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SpiderMobile.h"
+#include "FBZSetup.h"
+#include "LightBarrier.h"
+#include "Common/BGSwitch.h"
+#include "Global/Debris.h"
+#include "Global/Explosion.h"
+#include "Global/Music.h"
+#include "Global/Player.h"
+#include "Global/Ring.h"
+#include "Global/Soundboard.h"
+#include "Global/Spikes.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
 ObjectSpiderMobile *SpiderMobile;
 

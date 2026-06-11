@@ -1,7 +1,8 @@
 #ifndef OBJ_WEATHERMOBILE_H
 #define OBJ_WEATHERMOBILE_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "WeatherTV.h"
 
 typedef enum {
     WEATHERMOBILE_EGGMAN,
@@ -14,7 +15,7 @@ typedef enum {
 } WeatherMobileTypes;
 
 // Object Class
-struct ObjectWeatherMobile {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 debrisInfo[29], { 4,        0, 0, -0x20000, -0x28000, 1, 0, -0x20000, -0x28000, 2, 0, 0x20000, -0x20000, 3, 0, 0x28000,
                                   -0x20000, 4, 0, -0x10000, -0x10000, 5, 0, 0x10000,  -0x10000, 6, 0, -0x8000, -0x10000 });
@@ -37,9 +38,14 @@ struct ObjectWeatherMobile {
     bool32 playingRainSfx;
     uint16 aniFrames;
     uint16 eggmanFrames;
-};
+} ObjectWeatherMobile;
 
 // Entity Class
+#ifndef ENTITYDEF_WEATHER
+#define ENTITYDEF_WEATHER
+typedef struct EntityWeatherMobile EntityWeatherMobile;
+typedef struct EntityWeatherTV EntityWeatherTV;
+#endif
 struct EntityWeatherMobile {
     RSDK_ENTITY
     StateMachine(state);

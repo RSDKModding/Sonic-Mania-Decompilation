@@ -1,10 +1,12 @@
 #ifndef OBJ_UFO_PLAYER_H
 #define OBJ_UFO_PLAYER_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "UFO_Camera.h"
+#include "UFO_Circuit.h"
 
 // Object Class
-struct ObjectUFO_Player {
+typedef struct {
     RSDK_OBJECT
     int32 maxSpeed;
     uint16 aniFrames; // unused
@@ -23,10 +25,10 @@ struct ObjectUFO_Player {
     uint16 ballModel;
     uint16 tumbleModel;
     uint16 sceneIndex;
-};
+} ObjectUFO_Player;
 
 // Entity Class
-struct EntityUFO_Player {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 machQuota1;
@@ -58,7 +60,7 @@ struct EntityUFO_Player {
     bool32 jumpPress;
     bool32 jumpHold;
     Animator animator;
-};
+} EntityUFO_Player;
 
 // Object Struct
 extern ObjectUFO_Player *UFO_Player;

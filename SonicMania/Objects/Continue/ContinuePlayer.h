@@ -1,7 +1,7 @@
 #ifndef OBJ_CONTINUEPLAYER_H
 #define OBJ_CONTINUEPLAYER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     CONTPLR_ANI_IDLE_SONIC,
@@ -21,7 +21,7 @@ typedef enum {
 } ContinuePlayerAniIDs;
 
 // Object Class
-struct ObjectContinuePlayer {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 playerAniFrames;
@@ -29,10 +29,10 @@ struct ObjectContinuePlayer {
     uint16 sfxRoll;
     uint16 sfxCharge;
     uint16 sfxRelease;
-};
+} ObjectContinuePlayer;
 
 // Entity Class
-struct EntityContinuePlayer {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     bool32 isPlayer2;
@@ -41,7 +41,7 @@ struct EntityContinuePlayer {
     int32 unused2;
     Animator animator;
     uint16 aniFrames;
-};
+} EntityContinuePlayer;
 
 // Object Struct
 extern ObjectContinuePlayer *ContinuePlayer;

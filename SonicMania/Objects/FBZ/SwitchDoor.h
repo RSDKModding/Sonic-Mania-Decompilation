@@ -1,7 +1,7 @@
 #ifndef OBJ_SWITCHDOOR_H
 #define OBJ_SWITCHDOOR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     SWITCHDOOR_GO_INSIDE1,
@@ -10,20 +10,20 @@ typedef enum {
 } SwitchDoorGoModes;
 
 // Object Class
-struct ObjectSwitchDoor {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
-};
+} ObjectSwitchDoor;
 
 // Entity Class
-struct EntitySwitchDoor {
+typedef struct {
     RSDK_ENTITY
     int32 go;
     bool32 reversible;
     bool32 activated;
     Animator animator;
-};
+} EntitySwitchDoor;
 
 // Object Struct
 extern ObjectSwitchDoor *SwitchDoor;

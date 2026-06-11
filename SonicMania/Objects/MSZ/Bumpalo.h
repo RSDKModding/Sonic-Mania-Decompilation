@@ -1,10 +1,12 @@
 #ifndef OBJ_BUMPALO_H
 #define OBJ_BUMPALO_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Common/Platform.h"
+#include "Global/Player.h"
 
 // Object Class
-struct ObjectBumpalo {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxBumper;
@@ -16,10 +18,10 @@ struct ObjectBumpalo {
     uint16 sfxHuff;
     uint16 sfxClack;
     uint16 sfxImpact;
-};
+} ObjectBumpalo;
 
 // Entity Class
-struct EntityBumpalo {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -30,7 +32,7 @@ struct EntityBumpalo {
     Animator badnikAnimator;
     Animator huffAnimator;
     Animator dustAnimator;
-};
+} EntityBumpalo;
 
 // Object Struct
 extern ObjectBumpalo *Bumpalo;

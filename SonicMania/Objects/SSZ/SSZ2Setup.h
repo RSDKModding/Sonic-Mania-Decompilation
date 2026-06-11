@@ -1,26 +1,26 @@
 #ifndef OBJ_SSZ2SETUP_H
 #define OBJ_SSZ2SETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { GENERICTRIGGER_SSZ2_DESTROYHOTARUMKII, GENERICTRIGGER_SSZ2_ACHIEVEMENT, GENERICTRIGGER_SSZ2_ACTTRANSITION } GenericTriggerTypesSSZ2;
 
 typedef enum { SSZ2_TFLAGS_NORMAL, SSZ2_TFLAGS_SPARKS } TileFlagsSSZ2;
 
 // Object Class
-struct ObjectSSZ2Setup {
+typedef struct {
     RSDK_OBJECT
     uint8 towerID;
     uint16 sparkTimer;
     bool32 hasAchievement;
     uint16 sfxSpark;
     TileLayer *towerLayer;
-};
+} ObjectSSZ2Setup;
 
 // Entity Class
-struct EntitySSZ2Setup {
+typedef struct {
     RSDK_ENTITY
-};
+} EntitySSZ2Setup;
 
 // Object Struct
 extern ObjectSSZ2Setup *SSZ2Setup;

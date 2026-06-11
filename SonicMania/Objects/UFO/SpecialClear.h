@@ -1,7 +1,7 @@
 #ifndef OBJ_SPECIALCLEAR_H
 #define OBJ_SPECIALCLEAR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     SC_MSG_SPECIALCLEAR,
@@ -27,7 +27,7 @@ typedef enum {
 } SpecialClearAniIDs;
 
 // Object Class
-struct ObjectSpecialClear {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
 #if !MANIA_USE_PLUS
@@ -39,10 +39,10 @@ struct ObjectSpecialClear {
     uint16 sfxSpecialWarp;
     uint16 sfxContinue;
     uint16 sfxEmerald;
-};
+} ObjectSpecialClear;
 
 // Entity Class
-struct EntitySpecialClear {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     bool32 isBSS;
@@ -81,7 +81,7 @@ struct EntitySpecialClear {
     Animator numbersAnimator;
     Animator emeraldsAnimator;
     Animator continueAnimator;
-};
+} EntitySpecialClear;
 
 // Object Struct
 extern ObjectSpecialClear *SpecialClear;

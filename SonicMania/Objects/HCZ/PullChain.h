@@ -1,7 +1,10 @@
 #ifndef OBJ_PULLCHAIN_H
 #define OBJ_PULLCHAIN_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#if GAME_VERSION == VER_100
+#include "Global/Player.h"
+#endif
 
 typedef enum {
     PULLCHAIN_NORMAL,
@@ -16,16 +19,16 @@ typedef enum {
 } PullChainInputMasks;
 
 // Object Class
-struct ObjectPullChain {
+typedef struct {
     RSDK_OBJECT
     // left, left, left, right, right, right, up, up, up!
     TABLE(int32 dunkeyCode[18], { 0, 1, 0, 1, 0, 1, 0, 2, 0, 2, 0, 2, 0, 3, 0, 3, 0, 3 });
     uint16 aniFrames;
     uint16 sfxPullChain;
-};
+} ObjectPullChain;
 
 // Entity Class
-struct EntityPullChain {
+typedef struct {
     MANIA_BUTTON_BASE
 
     Animator hookAnimator;
@@ -41,7 +44,7 @@ struct EntityPullChain {
     int32 cheatCodeInputs[18];
     Hitbox hitbox;
     Animator chainAnimator;
-};
+} EntityPullChain;
 
 // Object Struct
 extern ObjectPullChain *PullChain;

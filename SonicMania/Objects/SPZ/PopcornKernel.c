@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PopcornKernel.h"
+#include "Global/Zone.h"
 
 ObjectPopcornKernel *PopcornKernel;
 

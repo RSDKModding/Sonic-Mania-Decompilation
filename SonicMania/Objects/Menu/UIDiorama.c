@@ -5,9 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIDiorama.h"
 
 #if MANIA_USE_PLUS
+#include "UIWidgets.h"
+#include "Global/Localization.h"
+#include "Global/Player.h"
+
 ObjectUIDiorama *UIDiorama;
 
 void UIDiorama_Update(void)

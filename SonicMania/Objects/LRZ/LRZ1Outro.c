@@ -5,7 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "LRZ1Outro.h"
+#include "LRZ2Setup.h"
+#include "Global/Music.h"
+#include "Global/TitleCard.h"
+#include "Global/Zone.h"
 
 ObjectLRZ1Outro *LRZ1Outro;
 

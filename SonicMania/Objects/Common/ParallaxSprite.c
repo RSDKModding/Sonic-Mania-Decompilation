@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ParallaxSprite.h"
+#include "Global/Zone.h"
 
 ObjectParallaxSprite *ParallaxSprite;
 

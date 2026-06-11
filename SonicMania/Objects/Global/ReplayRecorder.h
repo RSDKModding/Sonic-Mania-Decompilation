@@ -1,7 +1,8 @@
 #ifndef OBJ_REPLAYRECORDER_H
 #define OBJ_REPLAYRECORDER_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Player.h"
 
 #if MANIA_USE_PLUS
 
@@ -67,8 +68,10 @@ typedef enum {
     REPLAY_CHANGED_FRAME   = 1 << 7,
 } ReplayFrameChangeTypes;
 
+typedef struct EntityReplayRecorder EntityReplayRecorder;
+
 // Object Class
-struct ObjectReplayRecorder {
+typedef struct {
     RSDK_OBJECT
     StateMachine(actions[64]);
     int32 frameCounter;
@@ -95,7 +98,7 @@ struct ObjectReplayRecorder {
     void (*saveCallback)(bool32 success);
     int32 replayID;
     int32 replayRowID;
-};
+} ObjectReplayRecorder;
 
 // Entity Class
 struct EntityReplayRecorder {

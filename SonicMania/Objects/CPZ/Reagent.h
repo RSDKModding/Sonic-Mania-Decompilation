@@ -1,18 +1,18 @@
 #ifndef OBJ_REAGENT_H
 #define OBJ_REAGENT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectReagent {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
     uint16 sfxLand;
-};
+} ObjectReagent;
 
 // Entity Class
-struct EntityReagent {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 type;
@@ -22,7 +22,7 @@ struct EntityReagent {
     int32 g;
     int32 b;
     Animator animator;
-};
+} EntityReagent;
 
 // Object Struct
 extern ObjectReagent *Reagent;

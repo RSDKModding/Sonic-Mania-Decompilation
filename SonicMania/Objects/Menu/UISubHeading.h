@@ -1,16 +1,16 @@
 #ifndef OBJ_UISUBHEADING_H
 #define OBJ_UISUBHEADING_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectUISubHeading {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectUISubHeading;
 
 // Entity Class
-struct EntityUISubHeading {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 unused1;
@@ -27,7 +27,7 @@ struct EntityUISubHeading {
     int32 storedFrameID;
     Animator animator;
     uint16 textFrames;
-};
+} EntityUISubHeading;
 
 // Object Struct
 extern ObjectUISubHeading *UISubHeading;

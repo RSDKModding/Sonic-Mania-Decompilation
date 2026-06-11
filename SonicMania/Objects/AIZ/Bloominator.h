@@ -1,25 +1,25 @@
 #ifndef OBJ_BLOOMINATOR_H
 #define OBJ_BLOOMINATOR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 // Object Class
-struct ObjectBloominator {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxProjectile;
     uint16 aniFrames;
     uint16 sfxShot;
-};
+} ObjectBloominator;
 
 // Entity Class
-struct EntityBloominator {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
     Animator animator;
-};
+} EntityBloominator;
 
 // Object Struct
 extern ObjectBloominator *Bloominator;

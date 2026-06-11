@@ -1,20 +1,20 @@
 #ifndef OBJ_BOUNCEPLANT_H
 #define OBJ_BOUNCEPLANT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define BOUNCEPLANT_NODE_COUNT (8)
 
 // Object Class
-struct ObjectBouncePlant {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
     uint16 sfxBouncePlant;
-};
+} ObjectBouncePlant;
 
 // Entity Class
-struct EntityBouncePlant {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 recoilDuration;
@@ -28,7 +28,7 @@ struct EntityBouncePlant {
     int32 centerX;
     Animator nodeAnimator;
     Animator decorAnimators[BOUNCEPLANT_NODE_COUNT];
-};
+} EntityBouncePlant;
 
 // Object Struct
 extern ObjectBouncePlant *BouncePlant;

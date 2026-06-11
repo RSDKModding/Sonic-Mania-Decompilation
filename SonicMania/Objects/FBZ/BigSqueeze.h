@@ -1,7 +1,8 @@
 #ifndef OBJ_BIGSQUEEZE_H
 #define OBJ_BIGSQUEEZE_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Common/Eggman.h"
 
 typedef enum {
     BIGSQUEEZE_MANAGER,
@@ -11,7 +12,7 @@ typedef enum {
 } BigSqueezeTypes;
 
 // Object Class
-struct ObjectBigSqueeze {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 prongDebrisInfo[10], { 3, 12, -0x20000, -0x10000, 13, 0, -0x10000, 14, 0x20000, -0x10000 });
     TABLE(int32 domeDebrisInfo[13], { 4, 8, -0x20000, -0x10000, 9, -0x10000, -0x10000, 10, 0x10000, -0x10000, 11, 0x20000, -0x10000 });
@@ -26,10 +27,10 @@ struct ObjectBigSqueeze {
     uint16 sfxMagnet;
     uint16 sfxOrbinaut;
     uint16 aniFrames;
-};
+} ObjectBigSqueeze;
 
 // Entity Class
-struct EntityBigSqueeze {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -45,7 +46,7 @@ struct EntityBigSqueeze {
     Animator wheelAnimator;
     Animator electricAnimator;
     Hitbox hitbox;
-};
+} EntityBigSqueeze;
 
 // Object Struct
 extern ObjectBigSqueeze *BigSqueeze;

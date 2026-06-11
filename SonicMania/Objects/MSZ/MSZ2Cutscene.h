@@ -1,21 +1,25 @@
 #ifndef OBJ_MSZ2CUTSCENE_H
 #define OBJ_MSZ2CUTSCENE_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "GiantPistol.h"
+#include "Common/ParallaxSprite.h"
+#include "Cutscene/CutsceneSeq.h"
+#include "Global/EggPrison.h"
 
 // Object Class
-struct ObjectMSZ2Cutscene {
+typedef struct {
     RSDK_OBJECT
     int32 unused;
     EntityGiantPistol *pistol;
     EntityParallaxSprite *oozPeek;
     EntityEggPrison *prison;
-};
+} ObjectMSZ2Cutscene;
 
 // Entity Class
-struct EntityMSZ2Cutscene {
+typedef struct {
     MANIA_CUTSCENE_BASE
-};
+} EntityMSZ2Cutscene;
 
 // Object Struct
 extern ObjectMSZ2Cutscene *MSZ2Cutscene;

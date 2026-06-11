@@ -5,7 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ContinueSetup.h"
+#include "ContinuePlayer.h"
+#include "Cutscene/FXFade.h"
+#include "Global/Music.h"
+#include "Global/SaveGame.h"
 
 ObjectContinueSetup *ContinueSetup;
 

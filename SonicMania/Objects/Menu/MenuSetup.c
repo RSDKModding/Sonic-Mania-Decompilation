@@ -5,7 +5,44 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "MenuSetup.h"
+#include "MenuParam.h"
+#include "UIControl.h"
+#include "Global/APICallback.h"
+#include "Global/Localization.h"
+#include "Global/Music.h"
+#include "Helpers/LogHelpers.h"
+#if MANIA_USE_PLUS
+#include "ManiaModeMenu.h"
+#include "Global/DialogRunner.h"
+#else
+#include "UIBackground.h"
+#include "UIButton.h"
+#include "UICharButton.h"
+#include "UIChoice.h"
+#include "UIKeyBinder.h"
+#include "UIModeButton.h"
+#include "UIResPicker.h"
+#include "UISaveSlot.h"
+#include "UISlider.h"
+#include "UISubHeading.h"
+#include "UITAZoneModule.h"
+#include "UITransition.h"
+#include "UIUsernamePopup.h"
+#include "UIVsCharSelector.h"
+#include "UIVsResults.h"
+#include "UIVsRoundPicker.h"
+#include "UIVsZoneButton.h"
+#include "UIWaitSpinner.h"
+#include "UIWidgets.h"
+#include "UIWinSize.h"
+#include "Global/Announcer.h"
+#include "Global/SaveGame.h"
+#include "Helpers/CompetitionSession.h"
+#include "Helpers/GameProgress.h"
+#include "Helpers/Options.h"
+#include "Helpers/TimeAttackData.h"
+#endif
 
 ObjectMenuSetup *MenuSetup;
 

@@ -1,16 +1,17 @@
 #ifndef OBJ_CHEMBUBBLE_H
 #define OBJ_CHEMBUBBLE_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "ChemicalPool.h"
 
 // Object Class
-struct ObjectChemBubble {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectChemBubble;
 
 // Entity Class
-struct EntityChemBubble {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -19,7 +20,7 @@ struct EntityChemBubble {
     Vector2 startPos;
     EntityChemicalPool *parent;
     Animator animator;
-};
+} EntityChemBubble;
 
 // Object Struct
 extern ObjectChemBubble *ChemBubble;

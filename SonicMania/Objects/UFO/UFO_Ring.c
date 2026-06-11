@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UFO_Ring.h"
+#include "UFO_Setup.h"
 
 ObjectUFO_Ring *UFO_Ring;
 

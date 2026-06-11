@@ -5,7 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UIChoice.h"
+#include "UIButton.h"
+#include "UIWidgets.h"
 
 ObjectUIChoice *UIChoice;
 

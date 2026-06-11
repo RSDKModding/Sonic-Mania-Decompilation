@@ -1,7 +1,8 @@
 #ifndef OBJ_BALL_H
 #define OBJ_BALL_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 typedef enum {
     BALL_SINGLE,
@@ -12,23 +13,23 @@ typedef enum {
 } BallTypes;
 
 // Object Class
-struct ObjectBall {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBall;
     Hitbox hitboxRange;
     uint16 aniFrames;
     uint16 sfxSplash;
-};
+} ObjectBall;
 
 // Entity Class
-struct EntityBall {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
     EntityPlayer *targetPlayer;
     Vector2 startPos;
     Animator animator;
-};
+} EntityBall;
 
 // Object Entity
 extern ObjectBall *Ball;

@@ -1,7 +1,7 @@
 #ifndef OBJ_PRINTBLOCK_H
 #define OBJ_PRINTBLOCK_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     PRINTBLOCK_LETTER_E,
@@ -19,21 +19,21 @@ typedef enum {
 } PrintBlockLetters;
 
 // Object Class
-struct ObjectPrintBlock {
+typedef struct {
     RSDK_OBJECT
     Animator animator;
     uint16 aniFrames;
     uint16 sfxLetter;
-};
+} ObjectPrintBlock;
 
 // Entity Class
-struct EntityPrintBlock {
+typedef struct {
     MANIA_PLATFORM_BASE
     uint16 interval;
     uint16 intervalOffset;
     uint16 duration;
     uint8 letter;
-};
+} EntityPrintBlock;
 
 // Object Struct
 extern ObjectPrintBlock *PrintBlock;

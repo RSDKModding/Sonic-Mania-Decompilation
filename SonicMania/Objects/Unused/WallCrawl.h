@@ -1,20 +1,21 @@
 #ifndef OBJ_WALLCRAWL_H
 #define OBJ_WALLCRAWL_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 // Object Class
-struct ObjectWallCrawl {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxRange;
     Hitbox hitboxLaser;
     Hitbox hitboxProjectile;
     uint16 aniFrames;
-};
+} ObjectWallCrawl;
 
 // Entity Class
-struct EntityWallCrawl {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 idleTimer;
@@ -23,7 +24,7 @@ struct EntityWallCrawl {
     Vector2 startPos;
     uint8 startDir;
     Animator animator;
-};
+} EntityWallCrawl;
 
 // Object Entity
 extern ObjectWallCrawl *WallCrawl;

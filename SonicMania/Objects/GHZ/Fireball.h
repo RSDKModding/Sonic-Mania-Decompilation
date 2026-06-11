@@ -1,7 +1,7 @@
 #ifndef OBJ_FIREBALL_H
 #define OBJ_FIREBALL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     FIREBALL_SPAWNER,
@@ -10,15 +10,15 @@ typedef enum {
 } FireballTypes;
 
 // Object Class
-struct ObjectFireball {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxFireball;
     uint16 sfxFireball;
-};
+} ObjectFireball;
 
 // Entity Class
-struct EntityFireball {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -28,7 +28,7 @@ struct EntityFireball {
     uint8 intervalOffset;
     int32 unused1;
     int32 unused2;
-};
+} EntityFireball;
 
 // Object Entity
 extern ObjectFireball *Fireball;

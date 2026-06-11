@@ -1,25 +1,26 @@
 #ifndef OBJ_BATBRAIN_H
 #define OBJ_BATBRAIN_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 // Object Class
-struct ObjectBatbrain {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     uint16 aniFrames;
     uint16 sfxFlap;
-};
+} ObjectBatbrain;
 
 // Entity Class
-struct EntityBatbrain {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 targetY;
     EntityPlayer *target;
     Vector2 startPos;
     Animator animator;
-};
+} EntityBatbrain;
 
 // Object Struct
 extern ObjectBatbrain *Batbrain;

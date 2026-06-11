@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "CutsceneRules.h"
+#include "Global/Player.h"
+#include "Global/SpecialRing.h"
+#include "Global/StarPost.h"
+#include "Global/Zone.h"
+#include "Helpers/DrawHelpers.h"
 
-ObjectCutsceneRules *CutsceneRules = NULL;
+ObjectCutsceneRules *CutsceneRules;
 
 // NOTE:
 // I'm not actually sure *what* this object was for

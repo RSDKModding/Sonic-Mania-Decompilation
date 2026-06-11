@@ -5,7 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "DASetup.h"
+#include "UIWidgets.h"
+#include "Global/Localization.h"
+#include "Helpers/GameProgress.h"
+#include "Helpers/LogHelpers.h"
+#include "Menu/MenuSetup.h"
+#include "Title/TitleBG.h"
 
 ObjectDASetup *DASetup;
 

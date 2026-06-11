@@ -5,9 +5,18 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "AIZEncoreTutorial.h"
 
 #if MANIA_USE_PLUS
+#include "EncoreIntro.h"
+#include "Cutscene/CutsceneSeq.h"
+#include "Cutscene/FXRuby.h"
+#include "ERZ/PhantomRuby.h"
+#include "Global/Debris.h"
+#include "Global/HUD.h"
+#include "Global/Music.h"
+#include "Global/Zone.h"
+
 ObjectAIZEncoreTutorial *AIZEncoreTutorial;
 
 void AIZEncoreTutorial_Update(void)

@@ -1,10 +1,17 @@
 #ifndef OBJ_ERZSTART_H
 #define OBJ_ERZSTART_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "KleptoMobile.h"
+#include "PhantomKing.h"
+#include "PhantomRuby.h"
+#include "Cutscene/ChaosEmerald.h"
+#include "Cutscene/CutsceneSeq.h"
+#include "Cutscene/FXRuby.h"
+#include "Global/Player.h"
 
 // Object Class
-struct ObjectERZStart {
+typedef struct {
     RSDK_OBJECT
     int32 timer;
     int32 unused1;
@@ -19,13 +26,13 @@ struct ObjectERZStart {
     EntityChaosEmerald *emeralds[7];
     EntityPhantomKing *king;
     EntityKleptoMobile *eggman;
-};
+} ObjectERZStart;
 
 // Entity Class
-struct EntityERZStart {
+typedef struct {
     MANIA_CUTSCENE_BASE
     int32 timer;
-};
+} EntityERZStart;
 
 // Object Struct
 extern ObjectERZStart *ERZStart;

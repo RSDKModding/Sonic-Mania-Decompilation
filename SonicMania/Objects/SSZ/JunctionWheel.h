@@ -1,10 +1,10 @@
 #ifndef OBJ_JUNCTIONWHEEL_H
 #define OBJ_JUNCTIONWHEEL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectJunctionWheel {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxWheelRange;
     Hitbox hitboxSolidL;
@@ -13,15 +13,15 @@ struct ObjectJunctionWheel {
     Hitbox hitboxEntryR;
     Hitbox hitboxEntryL;
     uint16 aniFrames;
-};
+} ObjectJunctionWheel;
 
 // Entity Class
-struct EntityJunctionWheel {
+typedef struct {
     RSDK_ENTITY
     Animator slotAnimator;
     Animator maskAnimator;
     uint8 spinDir;
-};
+} EntityJunctionWheel;
 
 // Object Struct
 extern ObjectJunctionWheel *JunctionWheel;

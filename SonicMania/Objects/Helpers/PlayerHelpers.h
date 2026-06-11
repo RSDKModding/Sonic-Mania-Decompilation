@@ -1,17 +1,17 @@
 #ifndef OBJ_PLAYERHELPERS_H
 #define OBJ_PLAYERHELPERS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectPlayerHelpers {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectPlayerHelpers;
 
 // Entity Class
-struct EntityPlayerHelpers {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityPlayerHelpers;
 
 // Object Entity
 extern ObjectPlayerHelpers *PlayerHelpers;

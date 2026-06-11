@@ -5,7 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Smog.h"
+#include "OOZSetup.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Global/HUD.h"
+#include "Global/Player.h"
+#include "Global/StarPost.h"
+#include "Global/Zone.h"
 
 ObjectSmog *Smog;
 

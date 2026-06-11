@@ -5,9 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Batbot.h"
+#include "Global/DebugMode.h"
+#include "Global/Zone.h"
 
-ObjectBatbot *Batbot = NULL;
+ObjectBatbot *Batbot;
 
 void Batbot_Update(void)
 {

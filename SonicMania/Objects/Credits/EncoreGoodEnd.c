@@ -5,9 +5,21 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "EncoreGoodEnd.h"
 
 #if MANIA_USE_PLUS
+#include "Common/Decoration.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Cutscene/CutsceneSeq.h"
+#include "Cutscene/FXFade.h"
+#include "Global/Camera.h"
+#include "Global/Debris.h"
+#include "Global/HUD.h"
+#include "Global/Music.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#include "Menu/UICreditsText.h"
+
 ObjectEncoreGoodEnd *EncoreGoodEnd;
 
 void EncoreGoodEnd_Update(void)

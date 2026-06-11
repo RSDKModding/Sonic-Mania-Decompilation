@@ -1,12 +1,12 @@
 #ifndef OBJ_DBTOWER_H
 #define OBJ_DBTOWER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define DBTOWER_SEGMENT_COUNT (4)
 
 // Object Class
-struct ObjectDBTower {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxSegment;
     bool32 defeated;
@@ -19,10 +19,10 @@ struct ObjectDBTower {
     uint16 sfxRocketJet2;
     uint16 sfxRockemSockem;
     uint16 aniFrames;
-};
+} ObjectDBTower;
 
 // Entity Class
-struct EntityDBTower {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -43,7 +43,7 @@ struct EntityDBTower {
     uint8 playerTimers[PLAYER_COUNT];
     Animator headAnimator;
     Animator bodyAnimator;
-};
+} EntityDBTower;
 
 // Object Struct
 extern ObjectDBTower *DBTower;

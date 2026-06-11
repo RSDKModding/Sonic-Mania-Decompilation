@@ -1,16 +1,16 @@
 #ifndef OBJ_LIGHTBARRIER_H
 #define OBJ_LIGHTBARRIER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectLightBarrier {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectLightBarrier;
 
 // Entity Class
-struct EntityLightBarrier {
+typedef struct {
     RSDK_ENTITY
     int32 size;
     bool32 enabled;
@@ -20,7 +20,7 @@ struct EntityLightBarrier {
     Hitbox hitboxBarrier;
     Animator emitterAnimator;
     Animator barrierAnimator;
-};
+} EntityLightBarrier;
 
 // Object Struct
 extern ObjectLightBarrier *LightBarrier;

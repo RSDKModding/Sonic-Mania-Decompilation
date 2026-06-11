@@ -5,7 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ThoughtBubble.h"
+#include "Global/Debris.h"
+#include "Global/Zone.h"
 
 ObjectThoughtBubble *ThoughtBubble;
 

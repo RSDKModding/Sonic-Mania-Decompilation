@@ -1,20 +1,20 @@
 #ifndef OBJ_ERZSETUP_H
 #define OBJ_ERZSETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectERZSetup {
+typedef struct {
     RSDK_OBJECT
     int32 aniTileTimer;
     int32 timer;
     uint16 aniTiles;
-};
+} ObjectERZSetup;
 
 // Entity Class
-struct EntityERZSetup {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityERZSetup;
 
 // Object Struct
 extern ObjectERZSetup *ERZSetup;

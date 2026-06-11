@@ -1,10 +1,14 @@
 #ifndef OBJ_FBZ1OUTRO_H
 #define OBJ_FBZ1OUTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "BigSqueeze.h"
+#include "Crane.h"
+#include "Common/CollapsingPlatform.h"
+#include "Cutscene/CutsceneSeq.h"
 
 // Object Class
-struct ObjectFBZ1Outro {
+typedef struct {
     RSDK_OBJECT
     int32 unused1;
     uint16 sfxDrop;
@@ -14,13 +18,13 @@ struct ObjectFBZ1Outro {
     EntityCollapsingPlatform *collapsingPlatform;
     EntityCrane *craneP1;
     EntityCrane *craneP2;
-};
+} ObjectFBZ1Outro;
 
 // Entity Class
-struct EntityFBZ1Outro {
+typedef struct {
     MANIA_CUTSCENE_BASE
     int32 grabbedPlayers;
-};
+} EntityFBZ1Outro;
 
 // Object Struct
 extern ObjectFBZ1Outro *FBZ1Outro;

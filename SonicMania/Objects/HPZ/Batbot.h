@@ -1,10 +1,11 @@
 #ifndef OBJ_BATBOT_H
 #define OBJ_BATBOT_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 // Object Class
-struct ObjectBatbot {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxSpinCheck;
@@ -12,10 +13,10 @@ struct ObjectBatbot {
     Hitbox hitboxPlayer;
     uint16 aniFrames;
     uint8 directionTable[5];
-};
+} ObjectBatbot;
 
 // Entity Class
-struct EntityBatbot {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -33,7 +34,7 @@ struct EntityBatbot {
     uint16 unused3; // set to 0, not used, value isn't in S2
     Animator bodyAnimator;
     Animator jetAnimator;
-};
+} EntityBatbot;
 
 // Object Entity
 extern ObjectBatbot *Batbot;

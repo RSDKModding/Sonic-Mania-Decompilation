@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UFO_Plasma.h"
+#include "UFO_Setup.h"
 
 ObjectUFO_Plasma *UFO_Plasma;
 

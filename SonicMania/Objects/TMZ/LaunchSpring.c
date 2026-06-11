@@ -5,7 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "LaunchSpring.h"
+#include "Global/Zone.h"
+#include "SSZ/Firework.h"
 
 ObjectLaunchSpring *LaunchSpring;
 

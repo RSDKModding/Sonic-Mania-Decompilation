@@ -1,10 +1,10 @@
 #ifndef OBJ_REDZ_H
 #define OBJ_REDZ_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectRedz {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox attackbox;
@@ -12,10 +12,10 @@ struct ObjectRedz {
     Hitbox hitboxRange;
     uint16 aniFrames;
     uint16 sfxFlame;
-};
+} ObjectRedz;
 
 // Entity Class
-struct EntityRedz {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -23,7 +23,7 @@ struct EntityRedz {
     uint16 timer;
     uint16 attackDelay;
     Animator animator;
-};
+} EntityRedz;
 
 // Object Entity
 extern ObjectRedz *Redz;

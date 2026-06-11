@@ -1,16 +1,16 @@
 #ifndef OBJ_RINGFIELD_H
 #define OBJ_RINGFIELD_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectRingField {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectRingField;
 
 // Entity Class
-struct EntityRingField {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state); // unused
     Vector2 size;
@@ -22,7 +22,7 @@ struct EntityRingField {
     int32 timer;
     Hitbox hitbox;
     Animator animator;
-};
+} EntityRingField;
 
 // Object Struct
 extern ObjectRingField *RingField;

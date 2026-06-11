@@ -5,7 +5,17 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TMZ1Setup.h"
+#include "CrimsonEye.h"
+#include "MonarchBG.h"
+#include "TMZ1Outro.h"
+#include "Common/BGSwitch.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Global/ActClear.h"
+#include "Global/Animals.h"
+#include "Global/APICallback.h"
+#include "Global/Zone.h"
+#include "Helpers/GameProgress.h"
 
 ObjectTMZ1Setup *TMZ1Setup;
 

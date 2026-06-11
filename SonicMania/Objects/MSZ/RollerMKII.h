@@ -1,10 +1,12 @@
 #ifndef OBJ_ROLLERMKII_H
 #define OBJ_ROLLERMKII_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Common/Platform.h"
+#include "Global/Player.h"
 
 // Object Class
-struct ObjectRollerMKII {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxObject;
@@ -18,10 +20,10 @@ struct ObjectRollerMKII {
     uint16 sfxDropDash;
     uint16 sfxRelease;
     uint16 sfxSkidding;
-};
+} ObjectRollerMKII;
 
 // Entity Class
-struct EntityRollerMKII {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -30,7 +32,7 @@ struct EntityRollerMKII {
     bool32 touchedGround;
     EntityPlayer *playerPtr;
     Animator animator;
-};
+} EntityRollerMKII;
 
 // Object Struct
 extern ObjectRollerMKII *RollerMKII;

@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ZipLine.h"
+#include "Global/Zone.h"
 
 ObjectZipLine *ZipLine;
 

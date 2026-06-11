@@ -5,7 +5,27 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ERZOutro.h"
+#include "ERZStart.h"
+#include "KleptoMobile.h"
+#include "PhantomKing.h"
+#include "PhantomRuby.h"
+#include "RingField.h"
+#include "Cutscene/ChaosEmerald.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Cutscene/CutsceneSeq.h"
+#include "Cutscene/FXRuby.h"
+#include "Cutscene/RubyPortal.h"
+#include "Global/APICallback.h"
+#include "Global/Camera.h"
+#include "Global/Music.h"
+#include "Global/Player.h"
+#include "Global/Ring.h"
+#include "Global/SaveGame.h"
+#include "Global/Zone.h"
+#include "Helpers/GameProgress.h"
+#include "Helpers/MathHelpers.h"
+#include "Menu/UIWaitSpinner.h"
 
 ObjectERZOutro *ERZOutro;
 

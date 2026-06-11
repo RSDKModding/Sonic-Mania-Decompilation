@@ -1,17 +1,17 @@
 #ifndef OBJ_UIVSRESULTS_H
 #define OBJ_UIVSRESULTS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectUIVsResults {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 textFrames;
-};
+} ObjectUIVsResults;
 
 // Entity Class
-struct EntityUIVsResults {
+typedef struct {
     MANIA_UI_ITEM_BASE
     uint8 playerID;
     int32 numRows;
@@ -62,7 +62,7 @@ struct EntityUIVsResults {
     Animator trophyAnimator;
 #endif
     uint16 textFrames;
-};
+} EntityUIVsResults;
 
 // Object Struct
 extern ObjectUIVsResults *UIVsResults;

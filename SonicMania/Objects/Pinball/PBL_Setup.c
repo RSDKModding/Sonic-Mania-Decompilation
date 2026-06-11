@@ -5,9 +5,16 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PBL_Setup.h"
 
 #if MANIA_USE_PLUS
+#include "PBL_Camera.h"
+#include "PBL_HUD.h"
+#include "PBL_Player.h"
+#include "Global/Music.h"
+#include "Global/PauseMenu.h"
+#include "Global/SaveGame.h"
+
 ObjectPBL_Setup *PBL_Setup;
 
 void PBL_Setup_Update(void)

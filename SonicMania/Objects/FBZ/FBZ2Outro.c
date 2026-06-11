@@ -5,9 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "FBZ2Outro.h"
 
 #if MANIA_USE_PLUS
+#include "FBZ/FBZFan.h"
+#include "FBZ/HangGlider.h"
+#include "Global/HUD.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+
 ObjectFBZ2Outro *FBZ2Outro;
 
 void FBZ2Outro_Update(void)

@@ -5,7 +5,11 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "PullSwitch.h"
+#include "OOZSetup.h"
+#include "Smog.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
 ObjectPullSwitch *PullSwitch;
 

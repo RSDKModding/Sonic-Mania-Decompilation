@@ -1,7 +1,8 @@
 #ifndef OBJ_PLATFORM_H
 #define OBJ_PLATFORM_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 typedef enum {
     PLATFORM_FIXED,
@@ -43,7 +44,7 @@ typedef enum {
 } PlatformCollisionTypes;
 
 // Object Class
-struct ObjectPlatform {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Vector2 stoodPos[PLAYER_COUNT];
@@ -53,12 +54,12 @@ struct ObjectPlatform {
     uint16 sfxClack;
     bool32 playingPushSfx;
     bool32 useClack;
-};
+} ObjectPlatform;
 
 // Entity Class
-struct EntityPlatform {
+typedef struct {
     MANIA_PLATFORM_BASE
-};
+} EntityPlatform;
 
 // Object Struct
 extern ObjectPlatform *Platform;

@@ -1,19 +1,19 @@
 #ifndef OBJ_CATERKILLER_H
 #define OBJ_CATERKILLER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define CATERKILLER_BODY_COUNT (3)
 
 // Object Class
-struct ObjectCaterkiller {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
-};
+} ObjectCaterkiller;
 
 // Entity Class
-struct EntityCaterkiller {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -27,7 +27,7 @@ struct EntityCaterkiller {
     uint8 startDir;
     Animator headAnimator;
     Animator bodyAnimator;
-};
+} EntityCaterkiller;
 
 // Object Entity
 extern ObjectCaterkiller *Caterkiller;

@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "InvincibleStars.h"
+#include "PGZ/Ice.h"
 
 ObjectInvincibleStars *InvincibleStars;
 

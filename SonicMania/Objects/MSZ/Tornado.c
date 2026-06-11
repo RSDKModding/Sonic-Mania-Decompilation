@@ -5,7 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Tornado.h"
+#include "MSZSetup.h"
+#include "TornadoPath.h"
+#include "Global/Explosion.h"
+#include "Global/Player.h"
+#include "Global/StarPost.h"
+#include "Global/Zone.h"
 
 ObjectTornado *Tornado;
 

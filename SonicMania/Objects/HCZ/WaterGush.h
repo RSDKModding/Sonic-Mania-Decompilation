@@ -1,7 +1,7 @@
 #ifndef OBJ_WATERGUSH_H
 #define OBJ_WATERGUSH_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     WATERGUSH_UP,
@@ -10,14 +10,14 @@ typedef enum {
 } WaterGushOrientations;
 
 // Object Class
-struct ObjectWaterGush {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxGush;
-};
+} ObjectWaterGush;
 
 // Entity Class
-struct EntityWaterGush {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 orientation;
@@ -34,7 +34,7 @@ struct EntityWaterGush {
     Hitbox hitboxGush;
     Animator plumeAnimator;
     Animator topAnimator;
-};
+} EntityWaterGush;
 
 // Object Struct
 extern ObjectWaterGush *WaterGush;

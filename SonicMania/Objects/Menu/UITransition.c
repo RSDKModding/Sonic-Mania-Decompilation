@@ -5,7 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UITransition.h"
+#if MANIA_USE_PLUS
+#include "ManiaModeMenu.h"
+#endif
+#include "MenuSetup.h"
+#include "UIControl.h"
+#include "UIDialog.h"
+#include "UIWidgets.h"
 
 ObjectUITransition *UITransition;
 

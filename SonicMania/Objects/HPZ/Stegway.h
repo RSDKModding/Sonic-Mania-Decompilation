@@ -1,20 +1,20 @@
 #ifndef OBJ_STEGWAY_H
 #define OBJ_STEGWAY_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectStegway {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxRange;
     uint16 aniFrames;
     uint16 sfxRev;
     uint16 sfxRelease;
-};
+} ObjectStegway;
 
 // Entity Class
-struct EntityStegway {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -27,7 +27,7 @@ struct EntityStegway {
     bool32 showJet;
     int32 unused2;
     bool32 noFloor;
-};
+} EntityStegway;
 
 // Object Entity
 extern ObjectStegway *Stegway;

@@ -1,23 +1,23 @@
 #ifndef OBJ_UFO_SHADOW_H
 #define OBJ_UFO_SHADOW_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectUFO_Shadow {
+typedef struct {
     RSDK_OBJECT
     uint16 sceneID;
     uint16 modelIndex;
-};
+} ObjectUFO_Shadow;
 
 // Entity Class
-struct EntityUFO_Shadow {
+typedef struct {
     RSDK_ENTITY
     int32 shadowScale;
     Entity *parent;
     Matrix matrix;
     Animator animator;
-};
+} EntityUFO_Shadow;
 
 // Object Struct
 extern ObjectUFO_Shadow *UFO_Shadow;

@@ -1,17 +1,17 @@
 #ifndef OBJ_UIWINSIZE_H
 #define OBJ_UIWINSIZE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if GAME_VERSION != VER_100
 // Object Class
-struct ObjectUIWinSize {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectUIWinSize;
 
 // Entity Class
-struct EntityUIWinSize {
+typedef struct {
     MANIA_UI_ITEM_BASE
     Vector2 size;
     int32 align;
@@ -31,7 +31,7 @@ struct EntityUIWinSize {
     Animator textAnimator;
     Animator arrowAnimatorL;
     Animator arrowAnimatorR;
-};
+} EntityUIWinSize;
 
 // Object Struct
 extern ObjectUIWinSize *UIWinSize;

@@ -5,7 +5,26 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ERZStart.h"
+#include "ERZOutro.h"
+#include "KleptoMobile.h"
+#include "PhantomKing.h"
+#include "PhantomRuby.h"
+#include "RingField.h"
+#include "Cutscene/ChaosEmerald.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Cutscene/CutsceneSeq.h"
+#include "Cutscene/FXFade.h"
+#include "Cutscene/FXRuby.h"
+#include "Global/Camera.h"
+#if !MANIA_USE_PLUS
+#include "Global/HUD.h"
+#endif
+#include "Global/ItemBox.h"
+#include "Global/Music.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#include "Helpers/MathHelpers.h"
 
 ObjectERZStart *ERZStart;
 

@@ -1,10 +1,10 @@
 #ifndef OBJ_HCZSETUP_H
 #define OBJ_HCZSETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectHCZSetup {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 pendulumAniTileDurations[14], { 4, 3, 2, 2, 2, 3, 3, 4, 3, 2, 2, 2, 3, 3 });
     int32 unused1;
@@ -22,12 +22,12 @@ struct ObjectHCZSetup {
     uint16 sfxWaterfall;
     uint16 sfxWaterfallLoop;
 #endif
-};
+} ObjectHCZSetup;
 
 // Entity Class
-struct EntityHCZSetup {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityHCZSetup;
 
 // Object Struct
 extern ObjectHCZSetup *HCZSetup;

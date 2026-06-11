@@ -1,7 +1,9 @@
 #ifndef OBJ_LEVELSELECT_H
 #define OBJ_LEVELSELECT_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "UIPicture.h"
+#include "UIText.h"
 
 typedef enum {
     LSELECT_PLAYER_NONE,
@@ -15,7 +17,7 @@ typedef enum {
 } LevelSelectPlayerIDs;
 
 // Object Class
-struct ObjectLevelSelect {
+typedef struct {
     RSDK_OBJECT
 #if MANIA_USE_PLUS
     STATIC(int32 bgAniDuration, 240);
@@ -47,10 +49,10 @@ struct ObjectLevelSelect {
     int32 soundTestMax;
     uint16 sfxFail;
 #endif
-};
+} ObjectLevelSelect;
 
 // Entity Class
-struct EntityLevelSelect {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -77,7 +79,7 @@ struct EntityLevelSelect {
     int32 unused3;
     int32 unused4;
 #endif
-};
+} EntityLevelSelect;
 
 // Object Struct
 extern ObjectLevelSelect *LevelSelect;

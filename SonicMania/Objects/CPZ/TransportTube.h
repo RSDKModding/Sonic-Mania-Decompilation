@@ -1,7 +1,8 @@
 #ifndef OBJ_TRANSPORTTUBE_H
 #define OBJ_TRANSPORTTUBE_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 typedef enum {
     TRANSPORTTUBE_CHANGEDIR,
@@ -26,15 +27,15 @@ typedef enum {
 } TransportTubeDirMasks;
 
 // Object Class
-struct ObjectTransportTube {
+typedef struct {
     RSDK_OBJECT
     int32 nextSlot[4];
     uint16 aniFrames;
     uint16 sfxTravel;
-};
+} ObjectTransportTube;
 
 // Entity Class
-struct EntityTransportTube {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -45,7 +46,7 @@ struct EntityTransportTube {
     int32 playerTimers[PLAYER_COUNT];
     EntityPlayer *players[PLAYER_COUNT];
     Animator animator;
-};
+} EntityTransportTube;
 
 // Object Struct
 extern ObjectTransportTube *TransportTube;

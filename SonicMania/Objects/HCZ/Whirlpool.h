@@ -1,20 +1,20 @@
 #ifndef OBJ_WHIRLPOOL_H
 #define OBJ_WHIRLPOOL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectWhirlpool {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxWhirlpool;
     bool32 playingWhirlpoolSfx;
     int32 sfxChannel;
     int32 timer;
-};
+} ObjectWhirlpool;
 
 // Entity Class
-struct EntityWhirlpool {
+typedef struct {
     RSDK_ENTITY
     int32 angVel;
     int32 yVel;
@@ -27,7 +27,7 @@ struct EntityWhirlpool {
     int32 playerAmplitude[PLAYER_COUNT];
     Hitbox hitbox;
     Animator animator;
-};
+} EntityWhirlpool;
 
 // Object Struct
 extern ObjectWhirlpool *Whirlpool;

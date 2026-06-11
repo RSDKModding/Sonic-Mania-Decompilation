@@ -5,7 +5,20 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "HeavyRider.h"
+#include "Flamethrower.h"
+#include "Global/BoundsMarker.h"
+#include "Global/Debris.h"
+#include "Global/DebugMode.h"
+#include "Global/EggPrison.h"
+#include "Global/Explosion.h"
+#include "Global/Music.h"
+#include "Global/PlaneSwitch.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
 ObjectHeavyRider *HeavyRider;
 

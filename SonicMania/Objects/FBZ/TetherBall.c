@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TetherBall.h"
+#include "Global/Zone.h"
 
 ObjectTetherBall *TetherBall;
 

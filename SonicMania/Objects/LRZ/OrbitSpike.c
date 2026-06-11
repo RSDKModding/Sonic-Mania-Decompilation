@@ -5,7 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "OrbitSpike.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
 ObjectOrbitSpike *OrbitSpike;
 

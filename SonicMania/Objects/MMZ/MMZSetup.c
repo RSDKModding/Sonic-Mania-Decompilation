@@ -5,7 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "MMZSetup.h"
+#if MANIA_USE_PLUS
+#include "MMZ2Outro.h"
+#endif
+#include "Cutscene/CutsceneRules.h"
+#include "Global/Animals.h"
+#include "Global/Zone.h"
 
 ObjectMMZSetup *MMZSetup;
 

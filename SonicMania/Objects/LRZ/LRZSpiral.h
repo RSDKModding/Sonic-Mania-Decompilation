@@ -1,7 +1,8 @@
 #ifndef OBJ_LRZSPIRAL_H
 #define OBJ_LRZSPIRAL_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 typedef enum {
     LRZSPIRAL_CYLINDER,
@@ -10,7 +11,7 @@ typedef enum {
 } LRZSpiralTypes;
 
 // Object Class
-struct ObjectLRZSpiral {
+typedef struct {
     RSDK_OBJECT
     TABLE(int32 cylinderSpiralYOffsetTable[128],
           { 0,        0x10000,  0x20000,  0x30000,  0x40000,  0x50000,  0x60000,  0x70000,  0x80000,  0x90000,  0xA0000,  0xC0000,  0xD0000,
@@ -31,10 +32,10 @@ struct ObjectLRZSpiral {
             0x1E0000, 0x1E0000, 0x1E0000, 0x1F0000, 0x1F0000, 0x1F0000, 0x200000, 0x200000, 0x200000, 0x210000, 0x210000, 0x210000 });
     Animator animator;
     uint16 aniFrames;
-};
+} ObjectLRZSpiral;
 
 // Entity Class
-struct EntityLRZSpiral {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -43,7 +44,7 @@ struct EntityLRZSpiral {
     uint8 activePlayers;
     int32 playerSpiralPos[PLAYER_COUNT];
     Hitbox hitboxTrigger;
-};
+} EntityLRZSpiral;
 
 // Object Struct
 extern ObjectLRZSpiral *LRZSpiral;

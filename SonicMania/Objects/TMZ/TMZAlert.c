@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TMZAlert.h"
+#include "Global/Zone.h"
 
 ObjectTMZAlert *TMZAlert;
 

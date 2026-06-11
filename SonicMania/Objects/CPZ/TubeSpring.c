@@ -5,7 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TubeSpring.h"
+#include "Global/Player.h"
+#include "Global/Spring.h"
+#include "Global/Zone.h"
 
 ObjectTubeSpring *TubeSpring;
 

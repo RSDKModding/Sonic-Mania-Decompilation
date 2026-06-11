@@ -1,3 +1,6 @@
+#include "Game.h"
+
+#if RETRO_USE_MOD_LOADER
 #include "All.h"
 
 #define ADD_PUBLIC_FUNC(func) Mod.AddPublicFunction(#func, (void *)(func))
@@ -6655,3 +6658,4 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Wisp_State_FlyAway);
 
 }
+#endif

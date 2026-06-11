@@ -1,7 +1,7 @@
 #ifndef OBJ_PISTON_H
 #define OBJ_PISTON_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     PISTON_MOVE_VERTICAL,
@@ -20,14 +20,14 @@ typedef enum {
 } PistonSizes;
 
 // Object Class
-struct ObjectPiston {
+typedef struct {
     RSDK_OBJECT
     uint16 sfxLand;
     uint16 sfxLaunch;
-};
+} ObjectPiston;
 
 // Entity Class
-struct EntityPiston {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateCollide);
@@ -55,7 +55,7 @@ struct EntityPiston {
     uint16 intervalOffset;
     int32 distance;
     int32 pistonType;
-};
+} EntityPiston;
 
 // Object Struct
 extern ObjectPiston *Piston;

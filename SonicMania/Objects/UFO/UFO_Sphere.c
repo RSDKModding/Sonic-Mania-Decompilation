@@ -5,7 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UFO_Sphere.h"
+#include "UFO_Camera.h"
+#include "UFO_HUD.h"
+#include "UFO_Player.h"
+#include "UFO_Ring.h"
+#include "UFO_Setup.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
 ObjectUFO_Sphere *UFO_Sphere;
 

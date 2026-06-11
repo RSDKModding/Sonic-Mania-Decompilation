@@ -1,7 +1,8 @@
 #ifndef OBJ_TIPPINGPLATFORM_H
 #define OBJ_TIPPINGPLATFORM_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Syringe.h"
 
 typedef enum {
     TIPPINGPLATFORM_NONE,
@@ -10,12 +11,12 @@ typedef enum {
 } TippingPlatformBossIDs;
 
 // Object Class
-struct ObjectTippingPlatform {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectTippingPlatform;
 
 // Entity Class
-struct EntityTippingPlatform {
+typedef struct {
     MANIA_PLATFORM_BASE
 
     uint8 interval;
@@ -23,7 +24,7 @@ struct EntityTippingPlatform {
     uint8 duration;
     uint8 bossID;
     EntitySyringe *syringe;
-};
+} EntityTippingPlatform;
 
 // Object Struct
 extern ObjectTippingPlatform *TippingPlatform;

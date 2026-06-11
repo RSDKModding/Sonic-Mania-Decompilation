@@ -1,11 +1,19 @@
 #ifndef OBJ_TIMEATTACKMENU_H
 #define OBJ_TIMEATTACKMENU_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
+#include "UIButtonPrompt.h"
+#include "UICarousel.h"
+#include "UIControl.h"
+#include "UIDialog.h"
+#include "UILeaderboard.h"
+#include "UIReplayCarousel.h"
+#include "UITABanner.h"
+
 // Object Class
-struct ObjectTimeAttackMenu {
+typedef struct {
     RSDK_OBJECT
     EntityUIControl *timeAttackControl;
     EntityUIControl *timeAttackControl_Legacy;
@@ -24,15 +32,15 @@ struct ObjectTimeAttackMenu {
     bool32 encoreMode;
     bool32 prevIsUser;
     int32 isUser;
-};
+} ObjectTimeAttackMenu;
 
 // Entity Class
-struct EntityTimeAttackMenu {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(callback);
     int32 delay;
-};
+} EntityTimeAttackMenu;
 
 // Object Struct
 extern ObjectTimeAttackMenu *TimeAttackMenu;

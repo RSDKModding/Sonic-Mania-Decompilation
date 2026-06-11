@@ -1,22 +1,22 @@
 #ifndef OBJ_HATTERKILLER_H
 #define OBJ_HATTERKILLER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define HATTERKILLER_SEGMENT_COUNT (10)
 
 // Object Class
-struct ObjectHatterkiller {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxSegment;
     uint16 sfxRocketJet;
     uint16 sfxTransform2;
     uint16 sfxPowerup;
     uint16 aniFrames;
-};
+} ObjectHatterkiller;
 
 // Entity Class
-struct EntityHatterkiller {
+typedef struct {
     RSDK_ENTITY
     int32 timer;
     Vector2 bodyPositions[HATTERKILLER_SEGMENT_COUNT];
@@ -26,7 +26,7 @@ struct EntityHatterkiller {
     Animator headAnimator;
     Animator bodyAnimator;
     Animator tailAnimator;
-};
+} EntityHatterkiller;
 
 // Object Struct
 extern ObjectHatterkiller *Hatterkiller;

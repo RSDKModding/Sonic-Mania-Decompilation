@@ -1,18 +1,19 @@
 #ifndef OBJ_TUBESPRING_H
 #define OBJ_TUBESPRING_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Spring.h"
 
 // Object Class
-struct ObjectTubeSpring {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxExit;
     Hitbox hitbox;
-};
+} ObjectTubeSpring;
 
 // Entity Class
-struct EntityTubeSpring {
+typedef struct {
     // "Inherits" Spring
     RSDK_ENTITY
     StateMachine(state);
@@ -22,7 +23,7 @@ struct EntityTubeSpring {
     int32 timer;
     Animator animator;
     Hitbox hitbox;
-};
+} EntityTubeSpring;
 
 // Object Struct
 extern ObjectTubeSpring *TubeSpring;

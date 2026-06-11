@@ -1,24 +1,24 @@
 #ifndef OBJ_POINTDEXTER_H
 #define OBJ_POINTDEXTER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectPointdexter {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
-};
+} ObjectPointdexter;
 
 // Entity Class
-struct EntityPointdexter {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 timer;
     Vector2 startPos;
     uint8 startDir;
     Animator animator;
-};
+} EntityPointdexter;
 
 // Object Struct
 extern ObjectPointdexter *Pointdexter;

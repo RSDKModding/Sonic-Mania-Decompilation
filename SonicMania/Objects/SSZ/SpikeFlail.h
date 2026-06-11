@@ -1,17 +1,17 @@
 #ifndef OBJ_SPIKEFLAIL_H
 #define OBJ_SPIKEFLAIL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectSpikeFlail {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxFlail;
-};
+} ObjectSpikeFlail;
 
 // Entity Class
-struct EntitySpikeFlail {
+typedef struct {
     RSDK_ENTITY
     uint8 chainLength;
     uint16 phase512;
@@ -21,7 +21,7 @@ struct EntitySpikeFlail {
     Vector2 origin;
     bool32 playingFlailSfx;
     Hitbox hitbox;
-};
+} EntitySpikeFlail;
 
 // Object Struct
 extern ObjectSpikeFlail *SpikeFlail;

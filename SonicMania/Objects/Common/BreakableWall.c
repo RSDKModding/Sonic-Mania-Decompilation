@@ -5,7 +5,16 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "BreakableWall.h"
+#include "Global/DebugMode.h"
+#include "Global/Player.h"
+#include "Global/ScoreBonus.h"
+#include "Global/Shield.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
+#include "PGZ/Ice.h"
 
 ObjectBreakableWall *BreakableWall;
 

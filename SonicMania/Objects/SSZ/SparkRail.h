@@ -1,21 +1,21 @@
 #ifndef OBJ_SPARKRAIL_H
 #define OBJ_SPARKRAIL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectSparkRail {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxPon;
-};
+} ObjectSparkRail;
 
 // Entity Class
-struct EntitySparkRail {
+typedef struct {
     RSDK_ENTITY
     Vector2 size;
     Hitbox hitbox;
-};
+} EntitySparkRail;
 
 // Object Struct
 extern ObjectSparkRail *SparkRail;

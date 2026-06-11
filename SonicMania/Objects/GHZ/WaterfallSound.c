@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "WaterfallSound.h"
 
 #if MANIA_USE_PLUS
+#include "Global/Soundboard.h"
+#include "Global/Zone.h"
+#include "Helpers/DrawHelpers.h"
+#include "Helpers/MathHelpers.h"
+
 ObjectWaterfallSound *WaterfallSound;
 
 void WaterfallSound_Update(void) {}

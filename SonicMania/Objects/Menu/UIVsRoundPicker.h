@@ -1,16 +1,16 @@
 #ifndef OBJ_UIVSROUNDPICKER_H
 #define OBJ_UIVSROUNDPICKER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectUIVsRoundPicker {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectUIVsRoundPicker;
 
 // Entity Class
-struct EntityUIVsRoundPicker {
+typedef struct {
     MANIA_UI_ITEM_BASE
     Vector2 size;
     int32 align;
@@ -31,7 +31,7 @@ struct EntityUIVsRoundPicker {
     Animator arrowAnimatorL;
     Animator arrowAnimatorR;
     uint16 textFrames;
-};
+} EntityUIVsRoundPicker;
 
 // Object Struct
 extern ObjectUIVsRoundPicker *UIVsRoundPicker;

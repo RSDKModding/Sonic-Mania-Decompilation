@@ -1,20 +1,20 @@
 #ifndef OBJ_TITLESONIC_H
 #define OBJ_TITLESONIC_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectTitleSonic {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectTitleSonic;
 
 // Entity Class
-struct EntityTitleSonic {
+typedef struct {
     RSDK_ENTITY
     Animator animatorSonic;
     Animator animatorFinger;
-};
+} EntityTitleSonic;
 
 // Object Struct
 extern ObjectTitleSonic *TitleSonic;

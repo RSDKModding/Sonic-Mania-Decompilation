@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ERZRider.h"
+#include "Global/Zone.h"
 
 ObjectERZRider *ERZRider;
 

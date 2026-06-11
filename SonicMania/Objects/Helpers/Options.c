@@ -5,7 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Options.h"
+#include "LogHelpers.h"
+#include "Global/APICallback.h"
+#include "Global/Localization.h"
+#include "Menu/UIHeading.h"
+#include "Menu/UIWidgets.h"
 
 ObjectOptions *Options;
 

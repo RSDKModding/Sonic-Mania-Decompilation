@@ -5,9 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "EncoreRoute.h"
 
 #if MANIA_USE_PLUS
+#include "Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
+
 ObjectEncoreRoute *EncoreRoute;
 
 void EncoreRoute_Update(void)

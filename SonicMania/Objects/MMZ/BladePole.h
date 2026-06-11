@@ -1,25 +1,25 @@
 #ifndef OBJ_BLADEPOLE_H
 #define OBJ_BLADEPOLE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectBladePole {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxTop;
     Hitbox hitboxBottom;
-};
+} ObjectBladePole;
 
 // Entity Class
-struct EntityBladePole {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint16 timer;
     Animator poleAnimator;
     Animator bladeTopAnimator;
     Animator bladeBottomAnimator;
-};
+} EntityBladePole;
 
 // Object Struct
 extern ObjectBladePole *BladePole;

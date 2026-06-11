@@ -1,7 +1,7 @@
 #ifndef OBJ_SSZSPIKEBALL_H
 #define OBJ_SSZSPIKEBALL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     SSZSPIKEBALL_LAUNCHER_UP,
@@ -15,16 +15,16 @@ typedef enum {
 } SSZSpikeBallTypes;
 
 // Object Class
-struct ObjectSSZSpikeBall {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxPon;
     Hitbox hitboxSpikeBall;
     Hitbox hitboxBase[4];
-};
+} ObjectSSZSpikeBall;
 
 // Entity Class
-struct EntitySSZSpikeBall {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -36,7 +36,7 @@ struct EntitySSZSpikeBall {
     Vector2 spikeBallPos;
     Animator baseAnimator;
     Animator spikeBallAnimator;
-};
+} EntitySSZSpikeBall;
 
 // Object Struct
 extern ObjectSSZSpikeBall *SSZSpikeBall;

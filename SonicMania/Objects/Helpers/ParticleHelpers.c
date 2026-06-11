@@ -5,9 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ParticleHelpers.h"
+#include "Global/Zone.h"
 
-ObjectParticleHelpers *ParticleHelpers = NULL;
+ObjectParticleHelpers *ParticleHelpers;
 
 void ParticleHelpers_Update(void) {}
 

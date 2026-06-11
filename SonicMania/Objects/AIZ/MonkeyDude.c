@@ -5,7 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "MonkeyDude.h"
+#include "Global/DebugMode.h"
+#include "Global/Zone.h"
+#if MANIA_USE_PLUS
+#include "Global/Player.h"
+#endif
 
 ObjectMonkeyDude *MonkeyDude;
 

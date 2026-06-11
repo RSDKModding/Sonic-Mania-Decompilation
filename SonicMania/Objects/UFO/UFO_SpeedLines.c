@@ -5,7 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UFO_SpeedLines.h"
+#include "UFO_Camera.h"
+#include "UFO_Player.h"
+#include "UFO_Setup.h"
 
 ObjectUFO_SpeedLines *UFO_SpeedLines;
 

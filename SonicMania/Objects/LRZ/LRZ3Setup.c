@@ -5,7 +5,14 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "LRZ3Setup.h"
+#include "LRZ3Cutscene.h"
+#include "LRZ3Outro.h"
+#include "LRZ3OutroK.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Global/Animals.h"
+#include "Global/SaveGame.h"
+#include "Global/Zone.h"
 
 ObjectLRZ3Setup *LRZ3Setup;
 

@@ -5,7 +5,18 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Hatterkiller.h"
+#include "HeavyMystic.h"
+#include "TornadoPath.h"
+#include "UberCaterkiller.h"
+#include "Common/ParallaxSprite.h"
+#include "Cutscene/FXFade.h"
+#include "Cutscene/FXSpinRay.h"
+#include "Global/Debris.h"
+#include "Global/DebugMode.h"
+#include "Global/Music.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
 ObjectHatterkiller *Hatterkiller;
 

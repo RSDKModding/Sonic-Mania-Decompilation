@@ -1,20 +1,20 @@
 #ifndef OBJ_TITLECARD_H
 #define OBJ_TITLECARD_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectTitleCard {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
 #if MANIA_USE_PLUS
     StateMachine(finishedCB);
     StateMachine(suppressCB);
 #endif
-};
+} ObjectTitleCard;
 
 // Entity Class
-struct EntityTitleCard {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -57,7 +57,7 @@ struct EntityTitleCard {
 #if MANIA_USE_PLUS
     color colors[5];
 #endif
-};
+} EntityTitleCard;
 
 // Object Struct
 extern ObjectTitleCard *TitleCard;

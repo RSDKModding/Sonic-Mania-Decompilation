@@ -5,7 +5,19 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "RubyPortal.h"
+#include "FXFade.h"
+#include "Common/BreakableWall.h"
+#include "ERZ/PhantomRuby.h"
+#include "Global/Debris.h"
+#include "Global/Music.h"
+#include "Global/Player.h"
+#include "Global/SaveGame.h"
+#include "Global/StarPost.h"
+#include "Global/Zone.h"
+#include "FBZ/WarpDoor.h"
+#include "TMZ/TMZ2Setup.h"
+#include "TMZ/TMZBarrier.h"
 
 ObjectRubyPortal *RubyPortal;
 

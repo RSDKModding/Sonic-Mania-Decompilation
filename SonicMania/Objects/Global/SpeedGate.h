@@ -1,19 +1,20 @@
 #ifndef OBJ_SPEEDGATE_H
 #define OBJ_SPEEDGATE_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Player.h"
 
 // Object Class
-struct ObjectSpeedGate {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxGate;
     int32 unused;
     uint16 aniFrames;
     uint16 sfxStarPost;
-};
+} ObjectSpeedGate;
 
 // Entity Class
-struct EntitySpeedGate {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 id;
@@ -32,7 +33,7 @@ struct EntitySpeedGate {
     Animator finsAnimator;
     Animator bubbleAnimator;
     int32 interactedPlayers;
-};
+} EntitySpeedGate;
 
 // Object Struct
 extern ObjectSpeedGate *SpeedGate;

@@ -1,19 +1,22 @@
 #ifndef OBJ_SUMMARY_H
 #define OBJ_SUMMARY_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
+#include "Menu/UIPicture.h"
+#include "Menu/UIText.h"
+
 // Object Class
-struct ObjectSummary {
+typedef struct {
     RSDK_OBJECT
     STATIC(int32 bgAniDuration, 240);
     int32 bgAniFrame;
     TABLE(int32 bgAniDurationTable[4], { 240, 3, 3, 3 });
-};
+} ObjectSummary;
 
 // Entity Class
-struct EntitySummary {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -29,7 +32,7 @@ struct EntitySummary {
     EntityUIPicture *player2Icon;
     EntityUIPicture *player1Icon;
     void *unusedPtr;
-};
+} EntitySummary;
 
 // Object Struct
 extern ObjectSummary *Summary;

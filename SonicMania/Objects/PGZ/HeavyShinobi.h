@@ -1,7 +1,8 @@
 #ifndef OBJ_HEAVYSHINOBI_H
 #define OBJ_HEAVYSHINOBI_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "Global/Player.h"
 
 typedef enum {
     SHINOBI_MAIN,
@@ -12,7 +13,7 @@ typedef enum {
 } HeavyShinobiTypes;
 
 // Object Class
-struct ObjectHeavyShinobi {
+typedef struct {
     RSDK_OBJECT
     int8 health;
     uint8 invincibilityTimer;
@@ -41,10 +42,10 @@ struct ObjectHeavyShinobi {
     uint16 sfxSlash;
     uint16 sfxStick;
     uint16 sfxThrow;
-};
+} ObjectHeavyShinobi;
 
 // Entity Class
-struct EntityHeavyShinobi {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -55,7 +56,7 @@ struct EntityHeavyShinobi {
     Vector2 playerDistance;
     Animator mainAnimator;
     Animator fxAnimator;
-};
+} EntityHeavyShinobi;
 
 // Object Struct
 extern ObjectHeavyShinobi *HeavyShinobi;

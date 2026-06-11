@@ -1,18 +1,18 @@
 #ifndef OBJ_UFO_DUST_H
 #define OBJ_UFO_DUST_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectUFO_Dust {
+typedef struct {
     RSDK_OBJECT
     int32 unused1;
     int32 unused2;
     uint16 aniFrames;
-};
+} ObjectUFO_Dust;
 
 // Entity Class
-struct EntityUFO_Dust {
+typedef struct {
     RSDK_ENTITY
     int32 unused1;
     int32 unused2;
@@ -21,7 +21,7 @@ struct EntityUFO_Dust {
     int32 worldX;
     int32 worldY;
     Animator animator;
-};
+} EntityUFO_Dust;
 
 // Object Struct
 extern ObjectUFO_Dust *UFO_Dust;

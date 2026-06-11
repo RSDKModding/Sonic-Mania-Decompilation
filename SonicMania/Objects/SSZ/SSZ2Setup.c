@@ -5,7 +5,21 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SSZ2Setup.h"
+#include "HotaruMKII.h"
+#include "SparkRail.h"
+#include "SSZ3Cutscene.h"
+#include "Common/GenericTrigger.h"
+#include "Global/Animals.h"
+#include "Global/APICallback.h"
+#include "Global/Debris.h"
+#include "Global/Music.h"
+#include "Global/Player.h"
+#include "Global/SaveGame.h"
+#include "Global/StarPost.h"
+#include "Global/Zone.h"
+#include "Helpers/BadnikHelpers.h"
+#include "Helpers/GameProgress.h"
 
 ObjectSSZ2Setup *SSZ2Setup;
 

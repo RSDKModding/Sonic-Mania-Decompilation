@@ -5,7 +5,15 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Firework.h"
+#include "Global/Debris.h"
+#include "Global/Explosion.h"
+#include "Global/PauseMenu.h"
+#include "Global/Zone.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
+#include "Helpers/MathHelpers.h"
 
 ObjectFirework *Firework;
 

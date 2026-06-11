@@ -5,7 +5,12 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "HCZSetup.h"
+#include "Common/Water.h"
+#include "Cutscene/CutsceneRules.h"
+#include "Global/Animals.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
 ObjectHCZSetup *HCZSetup;
 

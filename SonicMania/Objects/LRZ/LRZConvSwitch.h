@@ -1,19 +1,19 @@
 #ifndef OBJ_LRZCONVSWITCH_H
 #define OBJ_LRZCONVSWITCH_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { LRZCONVSWITCH_RIGHT, LRZCONVSWITCH_LEFT } LRZConvSwitchCalibrateModes;
 
 // Object Class
-struct ObjectLRZConvSwitch {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxClack;
-};
+} ObjectLRZConvSwitch;
 
 // Entity Class
-struct EntityLRZConvSwitch {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 calibration;
@@ -26,7 +26,7 @@ struct EntityLRZConvSwitch {
     int32 unused3;
     int32 unused4;
     Animator animator;
-};
+} EntityLRZConvSwitch;
 
 // Object Struct
 extern ObjectLRZConvSwitch *LRZConvSwitch;

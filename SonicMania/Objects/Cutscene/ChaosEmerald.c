@@ -5,7 +5,8 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "ChaosEmerald.h"
+#include "Global/Zone.h"
 
 ObjectChaosEmerald *ChaosEmerald;
 

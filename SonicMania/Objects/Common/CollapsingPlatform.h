@@ -1,7 +1,7 @@
 #ifndef OBJ_COLLAPSINGPLATFORM_H
 #define OBJ_COLLAPSINGPLATFORM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     COLLAPSEPLAT_LEFT,
@@ -17,16 +17,16 @@ typedef enum {
 } CollapsingPlatformTargetLayers;
 
 // Object Class
-struct ObjectCollapsingPlatform {
+typedef struct {
     RSDK_OBJECT
     uint8 shift;
     Animator animator;
     uint16 aniFrames;
     uint16 sfxCrumble;
-};
+} ObjectCollapsingPlatform;
 
 // Entity Class
-struct EntityCollapsingPlatform {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 size;
@@ -41,7 +41,7 @@ struct EntityCollapsingPlatform {
     uint16 storedTiles[256];
     Hitbox hitboxTrigger;
     Vector2 stoodPos;
-};
+} EntityCollapsingPlatform;
 
 // Object Struct
 extern ObjectCollapsingPlatform *CollapsingPlatform;

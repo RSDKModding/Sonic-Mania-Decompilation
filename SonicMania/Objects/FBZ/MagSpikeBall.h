@@ -1,20 +1,20 @@
 #ifndef OBJ_MAGSPIKEBALL_H
 #define OBJ_MAGSPIKEBALL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectMagSpikeBall {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxSpikeBall;
     uint16 aniFrames;
-};
+} ObjectMagSpikeBall;
 
 // Entity Class
-struct EntityMagSpikeBall {
+typedef struct {
     RSDK_ENTITY
     Animator animator;
-};
+} EntityMagSpikeBall;
 
 // Object Struct
 extern ObjectMagSpikeBall *MagSpikeBall;

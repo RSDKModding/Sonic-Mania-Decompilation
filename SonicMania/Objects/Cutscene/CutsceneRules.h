@@ -1,17 +1,17 @@
 #ifndef OBJ_CUTSCENERULES_H
 #define OBJ_CUTSCENERULES_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectCutsceneRules {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectCutsceneRules;
 
 // Entity Class
-struct EntityCutsceneRules {
+typedef struct {
     MANIA_CUTSCENE_BASE
-};
+} EntityCutsceneRules;
 
 // Object Entity
 extern ObjectCutsceneRules *CutsceneRules;

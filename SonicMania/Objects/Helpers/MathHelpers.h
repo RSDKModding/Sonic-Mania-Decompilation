@@ -1,17 +1,17 @@
 #ifndef OBJ_MATHHELPERS_H
 #define OBJ_MATHHELPERS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectMathHelpers {
+typedef struct {
     RSDK_OBJECT
-};
+} ObjectMathHelpers;
 
 // Entity Class
-struct EntityMathHelpers {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityMathHelpers;
 
 // Object Entity
 extern ObjectMathHelpers *MathHelpers;

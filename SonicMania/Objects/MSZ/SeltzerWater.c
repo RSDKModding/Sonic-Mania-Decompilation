@@ -5,7 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "SeltzerWater.h"
+#include "Common/PlatformNode.h"
+#include "Global/Zone.h"
 
 ObjectSeltzerWater *SeltzerWater;
 

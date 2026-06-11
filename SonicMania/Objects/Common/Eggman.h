@@ -1,16 +1,16 @@
 #ifndef OBJ_EGGMAN_H
 #define OBJ_EGGMAN_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectEggman {
+typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-};
+} ObjectEggman;
 
 // Entity Class
-struct EntityEggman {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(nextState);
@@ -20,7 +20,7 @@ struct EntityEggman {
     Vector2 offset;
     Hitbox hitbox;
     Animator animator;
-};
+} EntityEggman;
 
 // Object Struct
 extern ObjectEggman *Eggman;

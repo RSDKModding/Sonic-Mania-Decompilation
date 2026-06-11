@@ -1,7 +1,14 @@
 #ifndef OBJ_AIZSETUP_H
 #define OBJ_AIZSETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "AIZTornado.h"
+#include "AIZKingClaw.h"
+#include "Common/Decoration.h"
+#include "Common/Platform.h"
+#include "Cutscene/CutsceneSeq.h"
+#include "Cutscene/FXRuby.h"
+#include "ERZ/PhantomRuby.h"
 
 typedef enum {
     AIZ_BG_JUNGLE,
@@ -16,7 +23,7 @@ typedef enum {
 } DecorTypesAIZ;
 
 // Object Class
-struct ObjectAIZSetup {
+typedef struct {
     RSDK_OBJECT
 #if MANIA_USE_PLUS
     TABLE(int32 bellPlantAniFramePos[13], { 0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1, -1 });
@@ -53,12 +60,12 @@ struct ObjectAIZSetup {
     uint16 sfxImpact;
     uint16 sfxHeliWoosh;
     uint16 aniTiles;
-};
+} ObjectAIZSetup;
 
 // Entity Class
-struct EntityAIZSetup {
+typedef struct {
     RSDK_ENTITY
-};
+} EntityAIZSetup;
 
 // Object Struct
 extern ObjectAIZSetup *AIZSetup;

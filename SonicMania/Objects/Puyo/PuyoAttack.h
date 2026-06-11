@@ -1,17 +1,17 @@
 #ifndef OBJ_PUYOATTACK_H
 #define OBJ_PUYOATTACK_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectPuyoAttack {
+typedef struct {
     RSDK_OBJECT
     uint16 sfxAttack;
     uint16 aniFrames;
-};
+} ObjectPuyoAttack;
 
 // Entity Class
-struct EntityPuyoAttack {
+typedef struct {
     RSDK_ENTITY
     int32 playerID;
     int32 delay;
@@ -19,7 +19,7 @@ struct EntityPuyoAttack {
     int32 score;
     Vector2 targetPos;
     Animator animator;
-};
+} EntityPuyoAttack;
 
 // Object Struct
 extern ObjectPuyoAttack *PuyoAttack;

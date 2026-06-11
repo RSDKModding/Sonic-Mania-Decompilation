@@ -1,7 +1,7 @@
 #ifndef OBJ_MUSIC_H
 #define OBJ_MUSIC_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     TRACK_NONE         = -1,
@@ -42,7 +42,7 @@ typedef enum {
 } TrackPriorityValues;
 
 // Object Class
-struct ObjectMusic {
+typedef struct {
     RSDK_OBJECT
     char trackNames[16][32];
     uint32 trackLoops[16];
@@ -61,10 +61,10 @@ struct ObjectMusic {
     bool32 playing1UPTrack;
 #endif
     uint16 aniFrames;
-};
+} ObjectMusic;
 
 // Entity Class
-struct EntityMusic {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     String trackFile;
@@ -79,7 +79,7 @@ struct EntityMusic {
     float volume;
     float fadeSpeed;
     Animator animator;
-};
+} EntityMusic;
 
 // Object Struct
 extern ObjectMusic *Music;

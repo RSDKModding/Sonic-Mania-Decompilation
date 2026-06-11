@@ -1,17 +1,18 @@
 #ifndef OBJ_BUGGERNAUT_H
 #define OBJ_BUGGERNAUT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectBuggernaut {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxParentRange;
     uint16 aniFrames;
-};
+} ObjectBuggernaut;
 
 // Entity Class
+typedef struct EntityBuggernaut EntityBuggernaut;
 struct EntityBuggernaut {
     RSDK_ENTITY
     StateMachine(state);

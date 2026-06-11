@@ -5,7 +5,13 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "UILeaderboard.h"
+#include "UIControl.h"
+#include "UIWidgets.h"
+#include "Global/APICallback.h"
+#include "Global/Localization.h"
+#include "Helpers/LogHelpers.h"
+#include "Helpers/TimeAttackData.h"
 
 ObjectUILeaderboard *UILeaderboard;
 

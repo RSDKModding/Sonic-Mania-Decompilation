@@ -5,7 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "HPZEmerald.h"
+#include "HeavyKing.h"
+#include "Global/Player.h"
+#include "Global/Zone.h"
 
 ObjectHPZEmerald *HPZEmerald;
 

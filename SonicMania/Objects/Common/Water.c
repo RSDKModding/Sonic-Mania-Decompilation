@@ -5,7 +5,19 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Water.h"
+#include "Button.h"
+#include "Global/Music.h"
+#include "Global/PauseMenu.h"
+#include "Global/Player.h"
+#include "Global/Shield.h"
+#include "Global/Spikes.h"
+#include "Global/Zone.h"
+#include "HCZ/Current.h"
+#include "HCZ/PullChain.h"
+#if GAME_INCLUDE_EDITOR
+#include "Helpers/DrawHelpers.h"
+#endif
 
 ObjectWater *Water;
 

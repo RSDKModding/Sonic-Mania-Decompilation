@@ -5,7 +5,9 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TitleLogo.h"
+#include "Global/APICallback.h"
+#include "Global/Localization.h"
 
 ObjectTitleLogo *TitleLogo;
 

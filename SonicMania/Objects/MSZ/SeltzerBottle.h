@@ -1,10 +1,10 @@
 #ifndef OBJ_SELTZERBOTTLE_H
 #define OBJ_SELTZERBOTTLE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
-struct ObjectSeltzerBottle {
+typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBottle;
     Hitbox hitboxButton;
@@ -12,10 +12,10 @@ struct ObjectSeltzerBottle {
     uint16 seltzerPathLayerMask;
     uint16 aniFrames;
     uint16 sfxSpray;
-};
+} ObjectSeltzerBottle;
 
 // Entity Class
-struct EntitySeltzerBottle {
+typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 sprayTime;
@@ -26,7 +26,7 @@ struct EntitySeltzerBottle {
     Animator buttonAnimator;
     Animator waterAnimator;
     Animator sprayAnimator;
-};
+} EntitySeltzerBottle;
 
 // Object Struct
 extern ObjectSeltzerBottle *SeltzerBottle;

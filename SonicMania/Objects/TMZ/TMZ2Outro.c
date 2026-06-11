@@ -5,7 +5,26 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "TMZ2Outro.h"
+#include "TMZAlert.h"
+#include "Common/Eggman.h"
+#include "Cutscene/FXFade.h"
+#include "ERZ/PhantomEgg.h"
+#include "Global/APICallback.h"
+#include "Global/BoundsMarker.h"
+#include "Global/HUD.h"
+#include "Global/Music.h"
+#include "Global/SaveGame.h"
+#include "Global/Zone.h"
+#include "Helpers/GameProgress.h"
+#include "Menu/UIWaitSpinner.h"
+#if MANIA_USE_PLUS
+#include "TMZFlames.h"
+#include "Cutscene/FXSpinRay.h"
+#include "Cutscene/RubyPortal.h"
+#include "ERZ/PhantomRuby.h"
+#include "Global/SuperSparkle.h"
+#endif
 
 ObjectTMZ2Outro *TMZ2Outro;
 

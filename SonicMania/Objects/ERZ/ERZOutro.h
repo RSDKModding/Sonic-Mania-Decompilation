@@ -1,10 +1,16 @@
 #ifndef OBJ_ERZOUTRO_H
 #define OBJ_ERZOUTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
+#include "KleptoMobile.h"
+#include "PhantomKing.h"
+#include "PhantomRuby.h"
+#include "Cutscene/CutsceneSeq.h"
+#include "Cutscene/FXRuby.h"
+#include "Cutscene/RubyPortal.h"
 
 // Object Class
-struct ObjectERZOutro {
+typedef struct {
     RSDK_OBJECT
     int32 unused; // Might be "uint16 aniFrames" and was used inEditor but I do not know
     Vector2 playerPos;
@@ -17,12 +23,12 @@ struct ObjectERZOutro {
     int32 rubyPortalRadius;
     int32 rubyPortalAngle;
     bool32 savedGame;
-};
+} ObjectERZOutro;
 
 // Entity Class
-struct EntityERZOutro {
+typedef struct {
     MANIA_CUTSCENE_BASE
-};
+} EntityERZOutro;
 
 // Object Struct
 extern ObjectERZOutro *ERZOutro;
