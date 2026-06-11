@@ -11,7 +11,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectMatryoshkaBom *MatryoshkaBom = NULL;
+ObjectMatryoshkaBom *MatryoshkaBom;
 
 void MatryoshkaBom_Update(void)
 {

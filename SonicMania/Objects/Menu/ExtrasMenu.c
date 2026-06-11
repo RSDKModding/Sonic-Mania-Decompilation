@@ -17,7 +17,7 @@
 #include "Helpers/LogHelpers.h"
 #include "Helpers/TimeAttackData.h"
 
-ObjectExtrasMenu *ExtrasMenu = NULL;
+ObjectExtrasMenu *ExtrasMenu;
 
 void ExtrasMenu_Update(void) {}
 

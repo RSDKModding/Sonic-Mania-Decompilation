@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectTVPole *TVPole = NULL;
+ObjectTVPole *TVPole;
 
 void TVPole_Update(void)
 {

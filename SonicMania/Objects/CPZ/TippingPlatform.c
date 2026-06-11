@@ -13,7 +13,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectTippingPlatform *TippingPlatform = NULL;
+ObjectTippingPlatform *TippingPlatform;
 
 void TippingPlatform_Update(void)
 {

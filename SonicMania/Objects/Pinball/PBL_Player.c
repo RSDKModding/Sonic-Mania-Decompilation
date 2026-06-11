@@ -12,7 +12,7 @@
 #include "PBL_Setup.h"
 #include "Global/PauseMenu.h"
 
-ObjectPBL_Player *PBL_Player = NULL;
+ObjectPBL_Player *PBL_Player;
 
 void PBL_Player_Update(void)
 {

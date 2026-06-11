@@ -13,7 +13,7 @@
 #include "Global/ScoreBonus.h"
 #include "Global/Zone.h"
 
-ObjectPinata *Pinata = NULL;
+ObjectPinata *Pinata;
 
 void Pinata_Update(void)
 {

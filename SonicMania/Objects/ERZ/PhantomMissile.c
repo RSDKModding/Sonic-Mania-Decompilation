@@ -11,7 +11,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectPhantomMissile *PhantomMissile = NULL;
+ObjectPhantomMissile *PhantomMissile;
 
 void PhantomMissile_Update(void) {}
 

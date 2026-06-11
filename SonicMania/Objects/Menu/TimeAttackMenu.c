@@ -30,7 +30,7 @@
 #include "Helpers/ReplayDB.h"
 #include "Helpers/TimeAttackData.h"
 
-ObjectTimeAttackMenu *TimeAttackMenu = NULL;
+ObjectTimeAttackMenu *TimeAttackMenu;
 
 void TimeAttackMenu_Update(void)
 {

@@ -18,7 +18,7 @@
 #include "FBZ/Blaster.h"
 #include "FBZ/Technosqueek.h"
 
-ObjectEggPrison *EggPrison = NULL;
+ObjectEggPrison *EggPrison;
 
 void EggPrison_Update(void)
 {

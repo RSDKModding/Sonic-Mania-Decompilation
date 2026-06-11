@@ -11,7 +11,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectMSPanel *MSPanel = NULL;
+ObjectMSPanel *MSPanel;
 
 void MSPanel_Update(void)
 {

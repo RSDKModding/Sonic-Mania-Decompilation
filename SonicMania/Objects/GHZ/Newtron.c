@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectNewtron *Newtron = NULL;
+ObjectNewtron *Newtron;
 
 void Newtron_Update(void)
 {

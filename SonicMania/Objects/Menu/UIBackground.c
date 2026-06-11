@@ -7,7 +7,7 @@
 
 #include "UIBackground.h"
 
-ObjectUIBackground *UIBackground = NULL;
+ObjectUIBackground *UIBackground;
 
 void UIBackground_Update(void)
 {

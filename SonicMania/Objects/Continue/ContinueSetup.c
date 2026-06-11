@@ -11,7 +11,7 @@
 #include "Global/Music.h"
 #include "Global/SaveGame.h"
 
-ObjectContinueSetup *ContinueSetup = NULL;
+ObjectContinueSetup *ContinueSetup;
 
 void ContinueSetup_Update(void)
 {

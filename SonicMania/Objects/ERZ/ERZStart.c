@@ -26,7 +26,7 @@
 #include "Global/Zone.h"
 #include "Helpers/MathHelpers.h"
 
-ObjectERZStart *ERZStart = NULL;
+ObjectERZStart *ERZStart;
 
 void ERZStart_Update(void)
 {

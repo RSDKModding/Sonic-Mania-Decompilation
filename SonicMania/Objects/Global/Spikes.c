@@ -11,7 +11,7 @@
 #include "PGZ/Ice.h"
 #include "PGZ/Press.h"
 
-ObjectSpikes *Spikes = NULL;
+ObjectSpikes *Spikes;
 
 void Spikes_Update(void)
 {

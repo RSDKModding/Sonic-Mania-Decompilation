@@ -12,7 +12,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectWaterGush *WaterGush = NULL;
+ObjectWaterGush *WaterGush;
 
 void WaterGush_Update(void)
 {

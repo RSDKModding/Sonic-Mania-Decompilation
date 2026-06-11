@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectGiantPistol *GiantPistol = NULL;
+ObjectGiantPistol *GiantPistol;
 
 void GiantPistol_Update(void)
 {

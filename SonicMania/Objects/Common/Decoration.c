@@ -8,7 +8,7 @@
 #include "Decoration.h"
 #include "Global/Zone.h"
 
-ObjectDecoration *Decoration = NULL;
+ObjectDecoration *Decoration;
 
 void Decoration_Update(void)
 {

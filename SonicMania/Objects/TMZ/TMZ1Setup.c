@@ -17,7 +17,7 @@
 #include "Global/Zone.h"
 #include "Helpers/GameProgress.h"
 
-ObjectTMZ1Setup *TMZ1Setup = NULL;
+ObjectTMZ1Setup *TMZ1Setup;
 
 void TMZ1Setup_Update(void)
 {

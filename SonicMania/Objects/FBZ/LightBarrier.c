@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectLightBarrier *LightBarrier = NULL;
+ObjectLightBarrier *LightBarrier;
 
 void LightBarrier_Update(void) {}
 

@@ -14,7 +14,7 @@
 
 // This Object is COMPLETELY unused, knux uses GHZCutsceneST anyways, so it's no surprise that its not finished either
 
-ObjectGHZCutsceneK *GHZCutsceneK = NULL;
+ObjectGHZCutsceneK *GHZCutsceneK;
 
 void GHZCutsceneK_Update(void)
 {

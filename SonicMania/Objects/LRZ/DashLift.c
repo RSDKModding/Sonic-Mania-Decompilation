@@ -14,7 +14,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectDashLift *DashLift = NULL;
+ObjectDashLift *DashLift;
 
 void DashLift_Update(void) { Platform_Update(); }
 

@@ -19,7 +19,7 @@
 #include "PGZ/Ice.h"
 #include "TMZ/TurboTurtle.h"
 
-ObjectPlatform *Platform = NULL;
+ObjectPlatform *Platform;
 
 void Platform_Update(void)
 {

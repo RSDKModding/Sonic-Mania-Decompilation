@@ -12,7 +12,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectPropellerShaft *PropellerShaft = NULL;
+ObjectPropellerShaft *PropellerShaft;
 
 void PropellerShaft_Update(void)
 {

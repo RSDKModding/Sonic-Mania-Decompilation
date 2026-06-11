@@ -12,7 +12,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectHotaru *Hotaru = NULL;
+ObjectHotaru *Hotaru;
 
 void Hotaru_Update(void)
 {

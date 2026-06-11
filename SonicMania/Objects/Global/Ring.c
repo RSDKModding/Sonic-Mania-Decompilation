@@ -18,7 +18,7 @@
 #include "PGZ/Crate.h"
 #include "PGZ/Ice.h"
 
-ObjectRing *Ring = NULL;
+ObjectRing *Ring;
 
 void Ring_Update(void)
 {

@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectSpikeCorridor *SpikeCorridor = NULL;
+ObjectSpikeCorridor *SpikeCorridor;
 
 void SpikeCorridor_Update(void)
 {

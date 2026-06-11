@@ -8,7 +8,7 @@
 #include "Snowflakes.h"
 #include "Global/Zone.h"
 
-ObjectSnowflakes *Snowflakes = NULL;
+ObjectSnowflakes *Snowflakes;
 
 void Snowflakes_Update(void)
 {

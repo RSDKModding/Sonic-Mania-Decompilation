@@ -12,7 +12,7 @@
 #include "Global/StarPost.h"
 #include "Global/Zone.h"
 
-ObjectAIZTornadoPath *AIZTornadoPath = NULL;
+ObjectAIZTornadoPath *AIZTornadoPath;
 
 void AIZTornadoPath_Update(void)
 {

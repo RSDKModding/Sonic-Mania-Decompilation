@@ -17,7 +17,7 @@
 #include "Helpers/CompetitionSession.h"
 #include "Menu/UIWaitSpinner.h"
 
-ObjectGameOver *GameOver = NULL;
+ObjectGameOver *GameOver;
 
 void GameOver_Update(void)
 {

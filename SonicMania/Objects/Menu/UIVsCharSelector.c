@@ -12,7 +12,7 @@
 #include "Global/Announcer.h"
 #include "Global/APICallback.h"
 
-ObjectUIVsCharSelector *UIVsCharSelector = NULL;
+ObjectUIVsCharSelector *UIVsCharSelector;
 
 void UIVsCharSelector_Update(void)
 {

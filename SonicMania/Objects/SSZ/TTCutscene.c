@@ -10,7 +10,7 @@
 #include "Global/Zone.h"
 #include "Helpers/MathHelpers.h"
 
-ObjectTTCutscene *TTCutscene = NULL;
+ObjectTTCutscene *TTCutscene;
 
 void TTCutscene_Update(void)
 {

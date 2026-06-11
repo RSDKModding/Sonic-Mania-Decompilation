@@ -12,7 +12,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectCylinder *Cylinder = NULL;
+ObjectCylinder *Cylinder;
 
 void Cylinder_Update(void)
 {

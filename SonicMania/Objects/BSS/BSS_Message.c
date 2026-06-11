@@ -14,7 +14,7 @@
 #include "Menu/MenuParam.h"
 #include "Menu/UIWaitSpinner.h"
 
-ObjectBSS_Message *BSS_Message = NULL;
+ObjectBSS_Message *BSS_Message;
 
 void BSS_Message_Update(void)
 {

@@ -21,7 +21,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectSpiderMobile *SpiderMobile = NULL;
+ObjectSpiderMobile *SpiderMobile;
 
 void SpiderMobile_Update(void)
 {

@@ -16,7 +16,7 @@
 #include "HCZ/PullChain.h"
 #include "SSZ/SDashWheel.h"
 
-ObjectPlatformControl *PlatformControl = NULL;
+ObjectPlatformControl *PlatformControl;
 
 void PlatformControl_Update(void)
 {

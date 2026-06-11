@@ -14,7 +14,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectUberCaterkiller *UberCaterkiller = NULL;
+ObjectUberCaterkiller *UberCaterkiller;
 
 void UberCaterkiller_Update(void)
 {

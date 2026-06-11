@@ -24,7 +24,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectGigaMetal *GigaMetal = NULL;
+ObjectGigaMetal *GigaMetal;
 
 void GigaMetal_Update(void)
 {

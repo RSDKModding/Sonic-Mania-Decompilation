@@ -13,7 +13,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectLRZConveyor *LRZConveyor = NULL;
+ObjectLRZConveyor *LRZConveyor;
 
 void LRZConveyor_Update(void)
 {

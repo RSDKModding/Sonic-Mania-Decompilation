@@ -10,7 +10,7 @@
 #include "UFO_Player.h"
 #include "Global/Zone.h"
 
-ObjectUFO_Springboard *UFO_Springboard = NULL;
+ObjectUFO_Springboard *UFO_Springboard;
 
 void UFO_Springboard_Update(void)
 {

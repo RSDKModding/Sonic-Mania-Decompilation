@@ -8,7 +8,7 @@
 #include "TMZFlames.h"
 #include "Global/Zone.h"
 
-ObjectTMZFlames *TMZFlames = NULL;
+ObjectTMZFlames *TMZFlames;
 
 void TMZFlames_Update(void)
 {

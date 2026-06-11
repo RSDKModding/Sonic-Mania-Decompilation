@@ -18,7 +18,7 @@
 #include "Helpers/TimeAttackData.h"
 #include "Menu/UISaveSlot.h"
 
-ObjectSaveGame *SaveGame = NULL;
+ObjectSaveGame *SaveGame;
 
 void SaveGame_Update(void) {}
 

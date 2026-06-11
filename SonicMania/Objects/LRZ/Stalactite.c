@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectStalactite *Stalactite = NULL;
+ObjectStalactite *Stalactite;
 
 void Stalactite_Update(void)
 {

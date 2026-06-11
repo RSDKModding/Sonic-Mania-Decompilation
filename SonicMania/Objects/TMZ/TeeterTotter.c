@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectTeeterTotter *TeeterTotter = NULL;
+ObjectTeeterTotter *TeeterTotter;
 
 void TeeterTotter_Update(void)
 {

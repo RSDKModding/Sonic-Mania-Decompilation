@@ -13,7 +13,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectHotaruMKII *HotaruMKII = NULL;
+ObjectHotaruMKII *HotaruMKII;
 
 void HotaruMKII_Update(void)
 {

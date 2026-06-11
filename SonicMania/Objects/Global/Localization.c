@@ -11,7 +11,7 @@
 #include "Helpers/LogHelpers.h"
 #include "Helpers/Options.h"
 
-ObjectLocalization *Localization = NULL;
+ObjectLocalization *Localization;
 
 void Localization_Update(void) {}
 

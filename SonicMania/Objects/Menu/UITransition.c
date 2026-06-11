@@ -14,7 +14,7 @@
 #include "UIDialog.h"
 #include "UIWidgets.h"
 
-ObjectUITransition *UITransition = NULL;
+ObjectUITransition *UITransition;
 
 void UITransition_Update(void)
 {

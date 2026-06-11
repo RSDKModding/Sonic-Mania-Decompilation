@@ -15,7 +15,7 @@
 #include "Helpers/BadnikHelpers.h"
 #include "Helpers/MathHelpers.h"
 
-ObjectKleptoMobile *KleptoMobile = NULL;
+ObjectKleptoMobile *KleptoMobile;
 
 void KleptoMobile_Update(void)
 {

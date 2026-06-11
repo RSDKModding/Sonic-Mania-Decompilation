@@ -10,7 +10,7 @@
 #include "DebugMode.h"
 #include "Zone.h"
 
-ObjectBoundsMarker *BoundsMarker = NULL;
+ObjectBoundsMarker *BoundsMarker;
 
 void BoundsMarker_Update(void)
 {

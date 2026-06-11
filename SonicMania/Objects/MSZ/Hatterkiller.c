@@ -18,7 +18,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectHatterkiller *Hatterkiller = NULL;
+ObjectHatterkiller *Hatterkiller;
 
 void Hatterkiller_Update(void)
 {

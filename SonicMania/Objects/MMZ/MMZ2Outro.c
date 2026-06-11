@@ -12,7 +12,7 @@
 #include "Global/HUD.h"
 #include "Global/Zone.h"
 
-ObjectMMZ2Outro *MMZ2Outro = NULL;
+ObjectMMZ2Outro *MMZ2Outro;
 
 void MMZ2Outro_Update(void)
 {

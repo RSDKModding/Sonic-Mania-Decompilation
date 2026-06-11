@@ -9,7 +9,7 @@
 #include "Global/APICallback.h"
 #include "Helpers/GameProgress.h"
 
-ObjectUIMedallionPanel *UIMedallionPanel = NULL;
+ObjectUIMedallionPanel *UIMedallionPanel;
 
 void UIMedallionPanel_Update(void) {}
 

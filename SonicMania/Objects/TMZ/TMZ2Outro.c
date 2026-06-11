@@ -26,7 +26,7 @@
 #include "Global/SuperSparkle.h"
 #endif
 
-ObjectTMZ2Outro *TMZ2Outro = NULL;
+ObjectTMZ2Outro *TMZ2Outro;
 
 void TMZ2Outro_Update(void)
 {

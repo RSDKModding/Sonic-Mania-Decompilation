@@ -16,7 +16,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectChemicalPool *ChemicalPool = NULL;
+ObjectChemicalPool *ChemicalPool;
 
 void ChemicalPool_Update(void)
 {

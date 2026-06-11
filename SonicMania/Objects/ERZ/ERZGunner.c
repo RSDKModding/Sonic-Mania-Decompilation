@@ -14,7 +14,7 @@
 #include "Global/Zone.h"
 #include "Helpers/BadnikHelpers.h"
 
-ObjectERZGunner *ERZGunner = NULL;
+ObjectERZGunner *ERZGunner;
 
 void ERZGunner_Update(void)
 {

@@ -10,7 +10,7 @@
 #include "UFO_Player.h"
 #include "UFO_Setup.h"
 
-ObjectUFO_SpeedLines *UFO_SpeedLines = NULL;
+ObjectUFO_SpeedLines *UFO_SpeedLines;
 
 void UFO_SpeedLines_Update(void) {}
 

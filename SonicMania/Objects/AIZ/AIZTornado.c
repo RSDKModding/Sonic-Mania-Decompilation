@@ -11,7 +11,7 @@
 #include "Global/StarPost.h"
 #include "Global/Zone.h"
 
-ObjectAIZTornado *AIZTornado = NULL;
+ObjectAIZTornado *AIZTornado;
 
 void AIZTornado_Update(void)
 {

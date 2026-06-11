@@ -12,7 +12,7 @@
 #include "UFO_Ring.h"
 #include "UFO_Setup.h"
 
-ObjectUFO_ItemBox *UFO_ItemBox = NULL;
+ObjectUFO_ItemBox *UFO_ItemBox;
 
 void UFO_ItemBox_Update(void)
 {

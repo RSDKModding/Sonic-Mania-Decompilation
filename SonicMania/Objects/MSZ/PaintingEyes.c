@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectPaintingEyes *PaintingEyes = NULL;
+ObjectPaintingEyes *PaintingEyes;
 
 void PaintingEyes_Update(void)
 {

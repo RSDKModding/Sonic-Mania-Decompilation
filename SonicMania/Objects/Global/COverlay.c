@@ -10,7 +10,7 @@
 #include "Player.h"
 #include "Zone.h"
 
-ObjectCOverlay *COverlay = NULL;
+ObjectCOverlay *COverlay;
 
 void COverlay_Update(void) {}
 

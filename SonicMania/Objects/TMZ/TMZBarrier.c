@@ -11,7 +11,7 @@
 #include "Global/Zone.h"
 #include "Helpers/DrawHelpers.h"
 
-ObjectTMZBarrier *TMZBarrier = NULL;
+ObjectTMZBarrier *TMZBarrier;
 
 void TMZBarrier_Update(void)
 {

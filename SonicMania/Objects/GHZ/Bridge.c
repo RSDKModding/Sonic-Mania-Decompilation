@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectBridge *Bridge = NULL;
+ObjectBridge *Bridge;
 
 void Bridge_Update(void)
 {

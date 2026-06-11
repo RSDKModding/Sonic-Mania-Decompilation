@@ -13,7 +13,7 @@
 #include "Global/Animals.h"
 #include "Global/Zone.h"
 
-ObjectMMZSetup *MMZSetup = NULL;
+ObjectMMZSetup *MMZSetup;
 
 void MMZSetup_Update(void) {}
 

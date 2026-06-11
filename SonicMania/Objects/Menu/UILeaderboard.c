@@ -13,7 +13,7 @@
 #include "Helpers/LogHelpers.h"
 #include "Helpers/TimeAttackData.h"
 
-ObjectUILeaderboard *UILeaderboard = NULL;
+ObjectUILeaderboard *UILeaderboard;
 
 void UILeaderboard_Update(void)
 {

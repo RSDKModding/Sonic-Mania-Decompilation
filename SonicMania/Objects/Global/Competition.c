@@ -12,7 +12,7 @@
 #include "Helpers/CompetitionSession.h"
 #include "Helpers/LogHelpers.h"
 
-ObjectCompetition *Competition = NULL;
+ObjectCompetition *Competition;
 
 void Competition_Update(void)
 {

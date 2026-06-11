@@ -12,7 +12,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectIceBomba *IceBomba = NULL;
+ObjectIceBomba *IceBomba;
 
 void IceBomba_Update(void)
 {

@@ -8,7 +8,7 @@
 #include "BSS_HUD.h"
 #include "BSS_Setup.h"
 
-ObjectBSS_HUD *BSS_HUD = NULL;
+ObjectBSS_HUD *BSS_HUD;
 
 void BSS_HUD_Update(void) {}
 

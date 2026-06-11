@@ -8,7 +8,7 @@
 #include "AIZEggRobo.h"
 #include "Global/Zone.h"
 
-ObjectAIZEggRobo *AIZEggRobo = NULL;
+ObjectAIZEggRobo *AIZEggRobo;
 
 void AIZEggRobo_Update(void)
 {

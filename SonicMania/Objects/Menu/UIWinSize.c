@@ -13,7 +13,7 @@
 #include "Global/APICallback.h"
 #include "Global/Localization.h"
 
-ObjectUIWinSize *UIWinSize = NULL;
+ObjectUIWinSize *UIWinSize;
 
 void UIWinSize_Update(void)
 {

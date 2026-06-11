@@ -8,7 +8,7 @@
 #include "MMZLightning.h"
 
 #if MANIA_USE_PLUS
-ObjectMMZLightning *MMZLightning = NULL;
+ObjectMMZLightning *MMZLightning;
 
 void MMZLightning_Update(void)
 {

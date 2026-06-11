@@ -12,7 +12,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectSSZSpotlight *SSZSpotlight = NULL;
+ObjectSSZSpotlight *SSZSpotlight;
 
 void SSZSpotlight_Update(void)
 {

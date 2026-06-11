@@ -9,7 +9,7 @@
 #include "UIButton.h"
 #include "UIWidgets.h"
 
-ObjectUIChoice *UIChoice = NULL;
+ObjectUIChoice *UIChoice;
 
 void UIChoice_Update(void)
 {

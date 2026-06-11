@@ -14,7 +14,7 @@
 #include "Global/Animals.h"
 #include "Global/Zone.h"
 
-ObjectGHZSetup *GHZSetup = NULL;
+ObjectGHZSetup *GHZSetup;
 
 void GHZSetup_Update(void) {}
 

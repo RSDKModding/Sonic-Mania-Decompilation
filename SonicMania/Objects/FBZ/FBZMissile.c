@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectFBZMissile *FBZMissile = NULL;
+ObjectFBZMissile *FBZMissile;
 
 void FBZMissile_Update(void)
 {

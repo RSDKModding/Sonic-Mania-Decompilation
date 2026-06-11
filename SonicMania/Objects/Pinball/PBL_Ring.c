@@ -12,7 +12,7 @@
 #include "PBL_Player.h"
 #include "PBL_Setup.h"
 
-ObjectPBL_Ring *PBL_Ring = NULL;
+ObjectPBL_Ring *PBL_Ring;
 
 void PBL_Ring_Update(void)
 {

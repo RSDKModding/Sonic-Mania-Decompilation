@@ -12,7 +12,7 @@
 #include "Global/SaveGame.h"
 #include "Global/Zone.h"
 
-ObjectEscapeCar *EscapeCar = NULL;
+ObjectEscapeCar *EscapeCar;
 
 void EscapeCar_Update(void)
 {

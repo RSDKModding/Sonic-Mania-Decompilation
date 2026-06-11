@@ -11,7 +11,7 @@
 #include "Global/Music.h"
 #include "Global/TitleCard.h"
 
-ObjectSSZ1Intro *SSZ1Intro = NULL;
+ObjectSSZ1Intro *SSZ1Intro;
 
 void SSZ1Intro_Update(void)
 {

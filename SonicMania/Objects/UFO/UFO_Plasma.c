@@ -8,7 +8,7 @@
 #include "UFO_Plasma.h"
 #include "UFO_Setup.h"
 
-ObjectUFO_Plasma *UFO_Plasma = NULL;
+ObjectUFO_Plasma *UFO_Plasma;
 
 void UFO_Plasma_Update(void) {}
 

@@ -12,7 +12,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectRotatingStair *RotatingStair = NULL;
+ObjectRotatingStair *RotatingStair;
 
 void RotatingStair_Update(void) { Platform_Update(); }
 

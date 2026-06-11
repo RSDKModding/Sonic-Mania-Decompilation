@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectPSZLauncher *PSZLauncher = NULL;
+ObjectPSZLauncher *PSZLauncher;
 
 void PSZLauncher_Update(void)
 {

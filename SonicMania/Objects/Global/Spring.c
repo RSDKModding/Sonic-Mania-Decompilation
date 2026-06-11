@@ -10,7 +10,7 @@
 #include "Zone.h"
 #include "PGZ/Ice.h"
 
-ObjectSpring *Spring = NULL;
+ObjectSpring *Spring;
 
 void Spring_Update(void)
 {

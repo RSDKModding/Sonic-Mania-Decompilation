@@ -12,7 +12,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectSpiralPlatform *SpiralPlatform = NULL;
+ObjectSpiralPlatform *SpiralPlatform;
 
 void SpiralPlatform_Update(void)
 {

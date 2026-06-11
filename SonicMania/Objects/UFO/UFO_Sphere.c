@@ -15,7 +15,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectUFO_Sphere *UFO_Sphere = NULL;
+ObjectUFO_Sphere *UFO_Sphere;
 
 void UFO_Sphere_Update(void)
 {

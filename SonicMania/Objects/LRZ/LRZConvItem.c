@@ -13,7 +13,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectLRZConvItem *LRZConvItem = NULL;
+ObjectLRZConvItem *LRZConvItem;
 
 void LRZConvItem_Update(void)
 {

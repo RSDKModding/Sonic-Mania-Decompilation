@@ -10,7 +10,7 @@
 #include "Helpers/LogHelpers.h"
 #include "Helpers/MathHelpers.h"
 
-ObjectUIDialog *UIDialog = NULL;
+ObjectUIDialog *UIDialog;
 
 void UIDialog_Update(void)
 {

@@ -9,7 +9,7 @@
 #include "UIControl.h"
 #include "UIWidgets.h"
 
-ObjectUIVsRoundPicker *UIVsRoundPicker = NULL;
+ObjectUIVsRoundPicker *UIVsRoundPicker;
 
 void UIVsRoundPicker_Update(void)
 {

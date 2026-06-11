@@ -12,7 +12,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectTilePlatform *TilePlatform = NULL;
+ObjectTilePlatform *TilePlatform;
 
 void TilePlatform_Update(void) { Platform_Update(); }
 

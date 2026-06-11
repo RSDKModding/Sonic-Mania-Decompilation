@@ -11,7 +11,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectPohBee *PohBee = NULL;
+ObjectPohBee *PohBee;
 
 void PohBee_Update(void)
 {

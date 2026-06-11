@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectPhantomShield *PhantomShield = NULL;
+ObjectPhantomShield *PhantomShield;
 
 void PhantomShield_Update(void)
 {

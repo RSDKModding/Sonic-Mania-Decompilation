@@ -14,7 +14,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectJuggleSaw *JuggleSaw = NULL;
+ObjectJuggleSaw *JuggleSaw;
 
 // 🦀 crab in da code
 

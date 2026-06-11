@@ -12,7 +12,7 @@
 #include "Helpers/DrawHelpers.h"
 #include "Helpers/LogHelpers.h"
 
-ObjectCutsceneSeq *CutsceneSeq = NULL;
+ObjectCutsceneSeq *CutsceneSeq;
 
 void CutsceneSeq_Update(void)
 {

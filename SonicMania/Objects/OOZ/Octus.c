@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectOctus *Octus = NULL;
+ObjectOctus *Octus;
 
 void Octus_Update(void)
 {

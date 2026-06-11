@@ -8,7 +8,7 @@
 #include "FXFade.h"
 #include "Global/Zone.h"
 
-ObjectFXFade *FXFade = NULL;
+ObjectFXFade *FXFade;
 
 void FXFade_Update(void)
 {

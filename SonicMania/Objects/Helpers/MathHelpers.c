@@ -7,7 +7,7 @@
 
 #include "MathHelpers.h"
 
-ObjectMathHelpers *MathHelpers = NULL;
+ObjectMathHelpers *MathHelpers;
 
 void MathHelpers_Update(void) {}
 

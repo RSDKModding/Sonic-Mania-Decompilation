@@ -15,7 +15,7 @@
 #include "Global/Zone.h"
 #include "Helpers/MathHelpers.h"
 
-ObjectPhantomKing *PhantomKing = NULL;
+ObjectPhantomKing *PhantomKing;
 
 void PhantomKing_Update(void)
 {

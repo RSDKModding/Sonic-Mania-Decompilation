@@ -19,7 +19,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectAmoebaDroid *AmoebaDroid = NULL;
+ObjectAmoebaDroid *AmoebaDroid;
 
 void AmoebaDroid_Update(void)
 {

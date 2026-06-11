@@ -17,7 +17,7 @@
 #include "Global/Music.h"
 #include "Global/Zone.h"
 
-ObjectAIZEncoreTutorial *AIZEncoreTutorial = NULL;
+ObjectAIZEncoreTutorial *AIZEncoreTutorial;
 
 void AIZEncoreTutorial_Update(void)
 {

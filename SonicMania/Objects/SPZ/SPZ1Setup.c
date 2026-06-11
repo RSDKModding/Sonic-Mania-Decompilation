@@ -11,7 +11,7 @@
 #include "Global/Animals.h"
 #include "Global/Zone.h"
 
-ObjectSPZ1Setup *SPZ1Setup = NULL;
+ObjectSPZ1Setup *SPZ1Setup;
 
 void SPZ1Setup_Update(void) {}
 

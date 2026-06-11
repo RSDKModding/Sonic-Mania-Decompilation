@@ -16,7 +16,7 @@
 #endif
 #include "PGZ/Ice.h"
 
-ObjectBreakableWall *BreakableWall = NULL;
+ObjectBreakableWall *BreakableWall;
 
 void BreakableWall_Update(void)
 {

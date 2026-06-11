@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectSpiny *Spiny = NULL;
+ObjectSpiny *Spiny;
 
 void Spiny_Update(void)
 {

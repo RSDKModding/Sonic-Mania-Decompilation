@@ -11,7 +11,7 @@
 #include "Global/Zone.h"
 #include "Helpers/DrawHelpers.h"
 
-ObjectSP500MkII *SP500MkII = NULL;
+ObjectSP500MkII *SP500MkII;
 
 void SP500MkII_Update(void)
 {

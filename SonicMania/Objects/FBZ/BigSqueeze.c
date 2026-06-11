@@ -18,7 +18,7 @@
 #include "Global/Soundboard.h"
 #include "Global/Zone.h"
 
-ObjectBigSqueeze *BigSqueeze = NULL;
+ObjectBigSqueeze *BigSqueeze;
 
 void BigSqueeze_Update(void)
 {

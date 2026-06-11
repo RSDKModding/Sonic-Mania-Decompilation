@@ -15,7 +15,7 @@
 #endif
 #include "Helpers/MathHelpers.h"
 
-ObjectFirework *Firework = NULL;
+ObjectFirework *Firework;
 
 void Firework_Update(void)
 {

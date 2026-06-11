@@ -25,7 +25,7 @@
 #include "Helpers/LogHelpers.h"
 #include <time.h>
 
-ObjectZone *Zone = NULL;
+ObjectZone *Zone;
 
 void Zone_Update(void) {}
 

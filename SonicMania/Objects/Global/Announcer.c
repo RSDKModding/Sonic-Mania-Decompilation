@@ -10,7 +10,7 @@
 #include "Helpers/LogHelpers.h"
 #include "Helpers/MathHelpers.h"
 
-ObjectAnnouncer *Announcer = NULL;
+ObjectAnnouncer *Announcer;
 
 void Announcer_Update(void)
 {

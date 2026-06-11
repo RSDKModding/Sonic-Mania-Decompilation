@@ -8,7 +8,7 @@
 #include "OOZFlames.h"
 #include "Global/Zone.h"
 
-ObjectOOZFlames *OOZFlames = NULL;
+ObjectOOZFlames *OOZFlames;
 
 void OOZFlames_Update(void)
 {

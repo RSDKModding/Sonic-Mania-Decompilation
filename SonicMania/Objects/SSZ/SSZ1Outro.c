@@ -11,7 +11,7 @@
 #include "Helpers/BadnikHelpers.h"
 #include "Helpers/MathHelpers.h"
 
-ObjectSSZ1Outro *SSZ1Outro = NULL;
+ObjectSSZ1Outro *SSZ1Outro;
 
 void SSZ1Outro_Update(void)
 {

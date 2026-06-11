@@ -19,7 +19,7 @@
 #include "Global/Music.h"
 #include "Helpers/GameProgress.h"
 
-ObjectMainMenu *MainMenu = NULL;
+ObjectMainMenu *MainMenu;
 
 void MainMenu_Update(void) {}
 

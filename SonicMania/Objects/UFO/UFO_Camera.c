@@ -9,7 +9,7 @@
 #include "UFO_Player.h"
 #include "UFO_Setup.h"
 
-ObjectUFO_Camera *UFO_Camera = NULL;
+ObjectUFO_Camera *UFO_Camera;
 
 void UFO_Camera_Update(void) {}
 

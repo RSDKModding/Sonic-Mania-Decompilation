@@ -16,7 +16,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectDCEvent *DCEvent = NULL;
+ObjectDCEvent *DCEvent;
 
 void DCEvent_Update(void)
 {

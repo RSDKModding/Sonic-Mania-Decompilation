@@ -9,7 +9,7 @@
 #include "Common/PlatformNode.h"
 #include "Global/Zone.h"
 
-ObjectSeltzerWater *SeltzerWater = NULL;
+ObjectSeltzerWater *SeltzerWater;
 
 void SeltzerWater_Update(void)
 {

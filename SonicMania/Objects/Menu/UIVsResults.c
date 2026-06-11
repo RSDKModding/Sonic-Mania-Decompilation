@@ -11,7 +11,7 @@
 #include "UIWidgets.h"
 #include "Helpers/CompetitionSession.h"
 
-ObjectUIVsResults *UIVsResults = NULL;
+ObjectUIVsResults *UIVsResults;
 
 void UIVsResults_Update(void)
 {

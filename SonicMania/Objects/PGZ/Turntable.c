@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectTurntable *Turntable = NULL;
+ObjectTurntable *Turntable;
 
 void Turntable_Update(void)
 {

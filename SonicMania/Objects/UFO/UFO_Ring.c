@@ -8,7 +8,7 @@
 #include "UFO_Ring.h"
 #include "UFO_Setup.h"
 
-ObjectUFO_Ring *UFO_Ring = NULL;
+ObjectUFO_Ring *UFO_Ring;
 
 void UFO_Ring_Update(void)
 {

@@ -8,7 +8,7 @@
 #include "TAEmerald.h"
 #include "Global/SaveGame.h"
 
-ObjectTAEmerald *TAEmerald = NULL;
+ObjectTAEmerald *TAEmerald;
 
 void TAEmerald_Update(void)
 {

@@ -25,7 +25,7 @@
 #include "Menu/UIDialog.h"
 #include "Menu/UIWidgets.h"
 
-ObjectPauseMenu *PauseMenu = NULL;
+ObjectPauseMenu *PauseMenu;
 
 void PauseMenu_Update(void)
 {

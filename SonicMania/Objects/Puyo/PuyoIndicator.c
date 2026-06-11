@@ -8,7 +8,7 @@
 #include "PuyoIndicator.h"
 #include "Global/Zone.h"
 
-ObjectPuyoIndicator *PuyoIndicator = NULL;
+ObjectPuyoIndicator *PuyoIndicator;
 
 void PuyoIndicator_Update(void)
 {

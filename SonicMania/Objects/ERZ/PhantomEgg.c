@@ -34,7 +34,7 @@
 #include "TMZ/TMZAlert.h"
 #include "TMZ/TMZCable.h"
 
-ObjectPhantomEgg *PhantomEgg = NULL;
+ObjectPhantomEgg *PhantomEgg;
 
 void PhantomEgg_Update(void)
 {

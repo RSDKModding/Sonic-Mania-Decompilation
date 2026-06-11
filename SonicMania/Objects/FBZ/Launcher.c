@@ -12,7 +12,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectLauncher *Launcher = NULL;
+ObjectLauncher *Launcher;
 
 void Launcher_Update(void)
 {

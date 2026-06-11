@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectKanabun *Kanabun = NULL;
+ObjectKanabun *Kanabun;
 
 void Kanabun_Update(void)
 {

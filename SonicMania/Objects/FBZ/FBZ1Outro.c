@@ -15,7 +15,7 @@
 #include "Global/SignPost.h"
 #include "Global/Zone.h"
 
-ObjectFBZ1Outro *FBZ1Outro = NULL;
+ObjectFBZ1Outro *FBZ1Outro;
 
 void FBZ1Outro_Update(void)
 {

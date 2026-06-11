@@ -9,7 +9,7 @@
 #include "BSS_Setup.h"
 #include "Global/PauseMenu.h"
 
-ObjectBSS_Player *BSS_Player = NULL;
+ObjectBSS_Player *BSS_Player;
 
 void BSS_Player_Update(void)
 {

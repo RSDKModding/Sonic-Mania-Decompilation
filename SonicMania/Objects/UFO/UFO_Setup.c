@@ -16,7 +16,7 @@
 #include "Helpers/GameProgress.h"
 #include "Menu/UIBackground.h"
 
-ObjectUFO_Setup *UFO_Setup = NULL;
+ObjectUFO_Setup *UFO_Setup;
 
 void UFO_Setup_Update(void)
 {

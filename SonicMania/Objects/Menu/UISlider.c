@@ -9,7 +9,7 @@
 #include "UIControl.h"
 #include "UIWidgets.h"
 
-ObjectUISlider *UISlider = NULL;
+ObjectUISlider *UISlider;
 
 void UISlider_Update(void)
 {

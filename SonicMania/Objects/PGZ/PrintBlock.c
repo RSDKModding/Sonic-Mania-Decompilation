@@ -12,7 +12,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectPrintBlock *PrintBlock = NULL;
+ObjectPrintBlock *PrintBlock;
 
 void PrintBlock_Update(void)
 {

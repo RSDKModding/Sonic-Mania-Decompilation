@@ -14,7 +14,7 @@
 #include "Global/Zone.h"
 #include "Helpers/MathHelpers.h"
 
-ObjectMSZ2Cutscene *MSZ2Cutscene = NULL;
+ObjectMSZ2Cutscene *MSZ2Cutscene;
 
 void MSZ2Cutscene_Update(void)
 {

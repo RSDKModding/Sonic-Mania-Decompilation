@@ -15,7 +15,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectBlastoid *Blastoid = NULL;
+ObjectBlastoid *Blastoid;
 
 void Blastoid_Update(void)
 {

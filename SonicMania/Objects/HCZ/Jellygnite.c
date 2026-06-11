@@ -12,7 +12,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectJellygnite *Jellygnite = NULL;
+ObjectJellygnite *Jellygnite;
 
 void Jellygnite_Update(void)
 {

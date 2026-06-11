@@ -11,7 +11,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectHangPoint *HangPoint = NULL;
+ObjectHangPoint *HangPoint;
 
 void HangPoint_Update(void)
 {

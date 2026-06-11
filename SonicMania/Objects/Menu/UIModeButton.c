@@ -13,7 +13,7 @@
 #include "Global/APICallback.h"
 #include "Global/Music.h"
 
-ObjectUIModeButton *UIModeButton = NULL;
+ObjectUIModeButton *UIModeButton;
 
 void UIModeButton_Update(void)
 {

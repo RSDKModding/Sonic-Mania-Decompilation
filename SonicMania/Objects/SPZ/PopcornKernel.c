@@ -8,7 +8,7 @@
 #include "PopcornKernel.h"
 #include "Global/Zone.h"
 
-ObjectPopcornKernel *PopcornKernel = NULL;
+ObjectPopcornKernel *PopcornKernel;
 
 void PopcornKernel_Update(void)
 {

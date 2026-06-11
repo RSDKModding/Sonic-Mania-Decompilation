@@ -9,7 +9,7 @@
 #include "ChemicalPool.h"
 #include "Global/Zone.h"
 
-ObjectReagent *Reagent = NULL;
+ObjectReagent *Reagent;
 
 void Reagent_Update(void)
 {

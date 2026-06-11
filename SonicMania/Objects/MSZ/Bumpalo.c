@@ -11,7 +11,7 @@
 #include "Global/Spikes.h"
 #include "Global/Zone.h"
 
-ObjectBumpalo *Bumpalo = NULL;
+ObjectBumpalo *Bumpalo;
 
 void Bumpalo_Update(void)
 {

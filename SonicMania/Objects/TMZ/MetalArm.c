@@ -10,7 +10,7 @@
 #include "Global/Soundboard.h"
 #include "Global/Zone.h"
 
-ObjectMetalArm *MetalArm = NULL;
+ObjectMetalArm *MetalArm;
 
 void MetalArm_Update(void)
 {

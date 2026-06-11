@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectPSZEggman *PSZEggman = NULL;
+ObjectPSZEggman *PSZEggman;
 
 void PSZEggman_Update(void)
 {

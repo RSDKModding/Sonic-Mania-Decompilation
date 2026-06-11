@@ -13,7 +13,7 @@
 #include "Global/Zone.h"
 #include "Helpers/BadnikHelpers.h"
 
-ObjectSSZEggman *SSZEggman = NULL;
+ObjectSSZEggman *SSZEggman;
 
 void SSZEggman_Update(void)
 {

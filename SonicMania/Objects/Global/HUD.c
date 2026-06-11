@@ -19,7 +19,7 @@
 #include "Menu/UIButtonPrompt.h"
 #endif
 
-ObjectHUD *HUD = NULL;
+ObjectHUD *HUD;
 
 void HUD_Update(void)
 {

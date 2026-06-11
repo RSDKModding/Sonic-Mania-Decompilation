@@ -21,7 +21,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectDrillerdroid *Drillerdroid = NULL;
+ObjectDrillerdroid *Drillerdroid;
 
 void Drillerdroid_Update(void)
 {

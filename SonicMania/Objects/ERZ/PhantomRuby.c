@@ -9,7 +9,7 @@
 #include "Global/Zone.h"
 #include "Helpers/BadnikHelpers.h"
 
-ObjectPhantomRuby *PhantomRuby = NULL;
+ObjectPhantomRuby *PhantomRuby;
 
 void PhantomRuby_Update(void)
 {

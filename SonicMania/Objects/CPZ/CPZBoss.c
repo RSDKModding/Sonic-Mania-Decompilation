@@ -21,7 +21,7 @@
 #include "Puyo/PuyoMatch.h"
 #include <time.h>
 
-ObjectCPZBoss *CPZBoss = NULL;
+ObjectCPZBoss *CPZBoss;
 
 void CPZBoss_Update(void)
 {

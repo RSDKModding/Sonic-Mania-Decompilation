@@ -8,7 +8,7 @@
 #include "UFO_Water.h"
 #include "UFO_Setup.h"
 
-ObjectUFO_Water *UFO_Water = NULL;
+ObjectUFO_Water *UFO_Water;
 
 void UFO_Water_Update(void) {}
 

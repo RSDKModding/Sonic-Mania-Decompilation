@@ -9,7 +9,7 @@
 #include "Common/Platform.h"
 #include "Global/Zone.h"
 
-ObjectFoldingPlatform *FoldingPlatform = NULL;
+ObjectFoldingPlatform *FoldingPlatform;
 
 void FoldingPlatform_Update(void)
 {

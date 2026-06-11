@@ -13,7 +13,7 @@
 #include "Global/StarPost.h"
 #include "Global/Zone.h"
 
-ObjectSmog *Smog = NULL;
+ObjectSmog *Smog;
 
 void Smog_Update(void)
 {

@@ -10,7 +10,7 @@
 #include "Global/SaveGame.h"
 #include "Global/Zone.h"
 
-ObjectTMZ3Setup *TMZ3Setup = NULL;
+ObjectTMZ3Setup *TMZ3Setup;
 
 void TMZ3Setup_Update(void) {}
 

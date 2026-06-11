@@ -8,7 +8,7 @@
 #include "InvincibleStars.h"
 #include "PGZ/Ice.h"
 
-ObjectInvincibleStars *InvincibleStars = NULL;
+ObjectInvincibleStars *InvincibleStars;
 
 void InvincibleStars_Update(void)
 {

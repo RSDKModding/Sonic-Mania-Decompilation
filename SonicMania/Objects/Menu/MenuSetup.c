@@ -44,7 +44,7 @@
 #include "Helpers/TimeAttackData.h"
 #endif
 
-ObjectMenuSetup *MenuSetup = NULL;
+ObjectMenuSetup *MenuSetup;
 
 void MenuSetup_Update(void)
 {

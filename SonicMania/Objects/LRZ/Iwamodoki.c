@@ -12,7 +12,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectIwamodoki *Iwamodoki = NULL;
+ObjectIwamodoki *Iwamodoki;
 
 void Iwamodoki_Update(void)
 {

@@ -20,7 +20,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectMeterDroid *MeterDroid = NULL;
+ObjectMeterDroid *MeterDroid;
 
 void MeterDroid_Update(void)
 {

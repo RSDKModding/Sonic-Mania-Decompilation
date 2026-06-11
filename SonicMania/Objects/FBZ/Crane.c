@@ -12,7 +12,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectCrane *Crane = NULL;
+ObjectCrane *Crane;
 
 void Crane_Update(void)
 {

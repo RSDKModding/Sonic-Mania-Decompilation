@@ -9,7 +9,7 @@
 #include "Global/Debris.h"
 #include "Global/Zone.h"
 
-ObjectThoughtBubble *ThoughtBubble = NULL;
+ObjectThoughtBubble *ThoughtBubble;
 
 void ThoughtBubble_Update(void)
 {

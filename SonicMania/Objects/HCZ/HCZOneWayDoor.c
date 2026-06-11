@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectHCZOneWayDoor *HCZOneWayDoor = NULL;
+ObjectHCZOneWayDoor *HCZOneWayDoor;
 
 void HCZOneWayDoor_Update(void)
 {

@@ -20,7 +20,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectHeavyRider *HeavyRider = NULL;
+ObjectHeavyRider *HeavyRider;
 
 void HeavyRider_Update(void)
 {

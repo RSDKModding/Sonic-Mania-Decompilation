@@ -21,7 +21,7 @@
 #include "Menu/MenuParam.h"
 #include "Menu/UIWaitSpinner.h"
 
-ObjectTimeAttackGate *TimeAttackGate = NULL;
+ObjectTimeAttackGate *TimeAttackGate;
 
 void TimeAttackGate_Update(void)
 {

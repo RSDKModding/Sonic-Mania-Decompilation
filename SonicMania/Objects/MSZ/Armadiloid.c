@@ -11,7 +11,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectArmadiloid *Armadiloid = NULL;
+ObjectArmadiloid *Armadiloid;
 
 void Armadiloid_Update(void)
 {

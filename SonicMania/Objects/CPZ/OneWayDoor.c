@@ -12,7 +12,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectOneWayDoor *OneWayDoor = NULL;
+ObjectOneWayDoor *OneWayDoor;
 
 void OneWayDoor_Update(void)
 {

@@ -15,7 +15,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectElectroMagnet *ElectroMagnet = NULL;
+ObjectElectroMagnet *ElectroMagnet;
 
 void ElectroMagnet_Update(void)
 {

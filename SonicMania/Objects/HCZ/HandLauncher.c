@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectHandLauncher *HandLauncher = NULL;
+ObjectHandLauncher *HandLauncher;
 
 void HandLauncher_Update(void)
 {

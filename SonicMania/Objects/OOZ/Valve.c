@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectValve *Valve = NULL;
+ObjectValve *Valve;
 
 void Valve_Update(void)
 {

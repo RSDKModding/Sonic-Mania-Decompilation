@@ -8,7 +8,7 @@
 #include "ZipLine.h"
 #include "Global/Zone.h"
 
-ObjectZipLine *ZipLine = NULL;
+ObjectZipLine *ZipLine;
 
 void ZipLine_Update(void)
 {

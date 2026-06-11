@@ -12,7 +12,7 @@
 #include "Global/Zone.h"
 #include "Helpers/BadnikHelpers.h"
 
-ObjectERZMystic *ERZMystic = NULL;
+ObjectERZMystic *ERZMystic;
 
 void ERZMystic_Update(void)
 {

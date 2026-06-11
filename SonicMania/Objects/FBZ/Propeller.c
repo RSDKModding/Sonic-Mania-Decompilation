@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectPropeller *Propeller = NULL;
+ObjectPropeller *Propeller;
 
 void Propeller_Update(void)
 {

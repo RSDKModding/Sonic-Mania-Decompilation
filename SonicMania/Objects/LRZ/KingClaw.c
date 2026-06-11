@@ -11,7 +11,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectKingClaw *KingClaw = NULL;
+ObjectKingClaw *KingClaw;
 
 void KingClaw_Update(void)
 {

@@ -14,7 +14,7 @@
 #include "UFO_Sphere.h"
 #include "Helpers/LogHelpers.h"
 
-ObjectUFO_Shadow *UFO_Shadow = NULL;
+ObjectUFO_Shadow *UFO_Shadow;
 
 void UFO_Shadow_Update(void) {}
 

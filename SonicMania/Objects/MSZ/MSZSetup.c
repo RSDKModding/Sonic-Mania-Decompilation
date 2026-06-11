@@ -18,7 +18,7 @@
 #include "Global/Zone.h"
 #include "Helpers/GameProgress.h"
 
-ObjectMSZSetup *MSZSetup = NULL;
+ObjectMSZSetup *MSZSetup;
 
 void MSZSetup_Update(void)
 {

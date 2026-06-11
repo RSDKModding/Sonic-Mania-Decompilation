@@ -10,7 +10,7 @@
 #include "Global/Explosion.h"
 #include "Global/Zone.h"
 
-ObjectBadnikHelpers *BadnikHelpers = NULL;
+ObjectBadnikHelpers *BadnikHelpers;
 
 void BadnikHelpers_Update(void) {}
 

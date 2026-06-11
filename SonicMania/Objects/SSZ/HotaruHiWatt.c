@@ -20,7 +20,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectHotaruHiWatt *HotaruHiWatt = NULL;
+ObjectHotaruHiWatt *HotaruHiWatt;
 
 void HotaruHiWatt_Update(void)
 {

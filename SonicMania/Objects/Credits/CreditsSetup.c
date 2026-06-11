@@ -15,7 +15,7 @@
 #include "Menu/MenuParam.h"
 #include "Menu/UICreditsText.h"
 
-ObjectCreditsSetup *CreditsSetup = NULL;
+ObjectCreditsSetup *CreditsSetup;
 
 void CreditsSetup_Update(void) {}
 

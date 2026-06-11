@@ -15,7 +15,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectFBZSinkTrash *FBZSinkTrash = NULL;
+ObjectFBZSinkTrash *FBZSinkTrash;
 
 void FBZSinkTrash_Update(void)
 {

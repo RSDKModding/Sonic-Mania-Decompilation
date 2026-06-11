@@ -18,7 +18,7 @@
 #endif
 #include "Helpers/GameProgress.h"
 
-ObjectGachapandora *Gachapandora = NULL;
+ObjectGachapandora *Gachapandora;
 
 void Gachapandora_Update(void)
 {

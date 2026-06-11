@@ -10,7 +10,7 @@
 #include "Cutscene/CutsceneRules.h"
 
 #if MANIA_USE_PLUS
-ObjectPSZ1Intro *PSZ1Intro = NULL;
+ObjectPSZ1Intro *PSZ1Intro;
 
 void PSZ1Intro_Update(void)
 {

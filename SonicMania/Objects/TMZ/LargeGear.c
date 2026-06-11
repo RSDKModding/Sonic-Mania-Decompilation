@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectLargeGear *LargeGear = NULL;
+ObjectLargeGear *LargeGear;
 
 void LargeGear_Update(void)
 {

@@ -11,7 +11,7 @@
 #include "Global/Zone.h"
 
 #if MANIA_USE_PLUS
-ObjectRhinobot *Rhinobot = NULL;
+ObjectRhinobot *Rhinobot;
 
 void Rhinobot_Update(void)
 {

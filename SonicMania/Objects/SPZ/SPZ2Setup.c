@@ -10,7 +10,7 @@
 #include "Global/Animals.h"
 #include "Global/Zone.h"
 
-ObjectSPZ2Setup *SPZ2Setup = NULL;
+ObjectSPZ2Setup *SPZ2Setup;
 
 void SPZ2Setup_Update(void)
 {

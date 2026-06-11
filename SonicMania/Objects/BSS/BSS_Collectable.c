@@ -7,7 +7,7 @@
 
 #include "BSS_Collectable.h"
 
-ObjectBSS_Collectable *BSS_Collectable = NULL;
+ObjectBSS_Collectable *BSS_Collectable;
 
 void BSS_Collectable_Update(void) {}
 

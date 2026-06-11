@@ -11,7 +11,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectPointdexter *Pointdexter = NULL;
+ObjectPointdexter *Pointdexter;
 
 void Pointdexter_Update(void)
 {

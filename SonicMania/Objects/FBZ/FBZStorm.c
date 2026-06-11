@@ -11,7 +11,7 @@
 #include "Global/Zone.h"
 #include "HCZ/Current.h"
 
-ObjectFBZStorm *FBZStorm = NULL;
+ObjectFBZStorm *FBZStorm;
 
 void FBZStorm_Update(void)
 {

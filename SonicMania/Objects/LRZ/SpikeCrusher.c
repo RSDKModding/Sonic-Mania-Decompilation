@@ -12,7 +12,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectSpikeCrusher *SpikeCrusher = NULL;
+ObjectSpikeCrusher *SpikeCrusher;
 
 void SpikeCrusher_Update(void) { Platform_Update(); }
 

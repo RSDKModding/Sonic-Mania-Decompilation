@@ -15,7 +15,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectHeavyShinobi *HeavyShinobi = NULL;
+ObjectHeavyShinobi *HeavyShinobi;
 
 void HeavyShinobi_Update(void)
 {

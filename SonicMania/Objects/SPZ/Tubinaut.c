@@ -10,7 +10,7 @@
 #include "Global/Dust.h"
 #include "Global/Zone.h"
 
-ObjectTubinaut *Tubinaut = NULL;
+ObjectTubinaut *Tubinaut;
 
 void Tubinaut_Update(void)
 {

@@ -21,7 +21,7 @@
 #include "Helpers/BadnikHelpers.h"
 #include "Helpers/GameProgress.h"
 
-ObjectSSZ2Setup *SSZ2Setup = NULL;
+ObjectSSZ2Setup *SSZ2Setup;
 
 void SSZ2Setup_Update(void) {}
 

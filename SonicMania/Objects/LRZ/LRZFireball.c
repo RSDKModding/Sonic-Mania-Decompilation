@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectLRZFireball *LRZFireball = NULL;
+ObjectLRZFireball *LRZFireball;
 
 void LRZFireball_Update(void)
 {

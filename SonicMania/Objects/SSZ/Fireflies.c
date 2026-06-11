@@ -9,7 +9,7 @@
 #include "Global/Zone.h"
 #include "Helpers/MathHelpers.h"
 
-ObjectFireflies *Fireflies = NULL;
+ObjectFireflies *Fireflies;
 
 void Fireflies_Update(void)
 {

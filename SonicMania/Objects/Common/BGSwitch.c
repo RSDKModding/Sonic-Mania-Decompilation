@@ -11,7 +11,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectBGSwitch *BGSwitch = NULL;
+ObjectBGSwitch *BGSwitch;
 
 void BGSwitch_Update(void)
 {

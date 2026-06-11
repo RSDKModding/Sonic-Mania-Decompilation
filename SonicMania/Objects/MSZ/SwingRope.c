@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectSwingRope *SwingRope = NULL;
+ObjectSwingRope *SwingRope;
 
 void SwingRope_Update(void)
 {

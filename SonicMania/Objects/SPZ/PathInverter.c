@@ -8,7 +8,7 @@
 #include "PathInverter.h"
 #include "Global/Zone.h"
 
-ObjectPathInverter *PathInverter = NULL;
+ObjectPathInverter *PathInverter;
 
 void PathInverter_Update(void)
 {

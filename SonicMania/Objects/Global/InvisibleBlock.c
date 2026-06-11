@@ -10,7 +10,7 @@
 #include "Player.h"
 #include "Zone.h"
 
-ObjectInvisibleBlock *InvisibleBlock = NULL;
+ObjectInvisibleBlock *InvisibleBlock;
 
 void InvisibleBlock_Update(void)
 {

@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Shield.h"
 
-ObjectProjectile *Projectile = NULL;
+ObjectProjectile *Projectile;
 
 void Projectile_Update(void)
 {

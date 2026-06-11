@@ -13,7 +13,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectSparkRail *SparkRail = NULL;
+ObjectSparkRail *SparkRail;
 
 void SparkRail_Update(void)
 {

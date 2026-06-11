@@ -10,7 +10,7 @@
 #include "Global/Zone.h"
 #include "Helpers/MathHelpers.h"
 
-ObjectWeatherTV *WeatherTV = NULL;
+ObjectWeatherTV *WeatherTV;
 
 void WeatherTV_Update(void)
 {

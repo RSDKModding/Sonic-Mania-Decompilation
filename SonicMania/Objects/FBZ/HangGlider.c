@@ -10,7 +10,7 @@
 #if MANIA_USE_PLUS
 #include "Global/Zone.h"
 
-ObjectHangGlider *HangGlider = NULL;
+ObjectHangGlider *HangGlider;
 
 void HangGlider_Update(void)
 {

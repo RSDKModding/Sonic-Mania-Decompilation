@@ -11,7 +11,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectButton *Button = NULL;
+ObjectButton *Button;
 
 void Button_Update(void)
 {

@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectMicDrop *MicDrop = NULL;
+ObjectMicDrop *MicDrop;
 
 void MicDrop_Update(void)
 {

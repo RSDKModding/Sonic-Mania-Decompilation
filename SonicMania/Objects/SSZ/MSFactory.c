@@ -14,7 +14,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectMSFactory *MSFactory = NULL;
+ObjectMSFactory *MSFactory;
 
 void MSFactory_Update(void)
 {

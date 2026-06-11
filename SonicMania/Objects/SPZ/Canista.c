@@ -12,7 +12,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectCanista *Canista = NULL;
+ObjectCanista *Canista;
 
 // This object looks like it was based on Unused/WallCrawl
 // Would explain WallCrawl's presence in the blueprint sheet, being a "proto" form of this

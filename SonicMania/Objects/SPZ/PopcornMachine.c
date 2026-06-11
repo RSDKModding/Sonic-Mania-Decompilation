@@ -9,7 +9,7 @@
 #include "PopcornKernel.h"
 #include "Global/Zone.h"
 
-ObjectPopcornMachine *PopcornMachine = NULL;
+ObjectPopcornMachine *PopcornMachine;
 
 void PopcornMachine_Update(void)
 {

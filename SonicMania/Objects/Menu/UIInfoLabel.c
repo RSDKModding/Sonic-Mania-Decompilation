@@ -8,7 +8,7 @@
 #include "UIInfoLabel.h"
 #include "UIWidgets.h"
 
-ObjectUIInfoLabel *UIInfoLabel = NULL;
+ObjectUIInfoLabel *UIInfoLabel;
 
 void UIInfoLabel_Update(void) {}
 

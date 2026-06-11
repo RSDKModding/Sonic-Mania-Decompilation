@@ -23,7 +23,7 @@
 #include "Global/Zone.h"
 #include "Helpers/GameProgress.h"
 
-ObjectOOZSetup *OOZSetup = NULL;
+ObjectOOZSetup *OOZSetup;
 
 void OOZSetup_Update(void) {}
 

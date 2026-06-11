@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectJacobsLadder *JacobsLadder = NULL;
+ObjectJacobsLadder *JacobsLadder;
 
 void JacobsLadder_Update(void)
 {

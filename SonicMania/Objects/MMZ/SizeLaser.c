@@ -14,7 +14,7 @@
 #endif
 #include "Helpers/MathHelpers.h"
 
-ObjectSizeLaser *SizeLaser = NULL;
+ObjectSizeLaser *SizeLaser;
 
 void SizeLaser_Update(void)
 {

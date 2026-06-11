@@ -10,7 +10,7 @@
 #include "Global/Music.h"
 #include "Global/TitleCard.h"
 
-ObjectMSZ1KIntro *MSZ1KIntro = NULL;
+ObjectMSZ1KIntro *MSZ1KIntro;
 
 void MSZ1KIntro_Update(void)
 {

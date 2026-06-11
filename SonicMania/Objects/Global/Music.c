@@ -8,7 +8,7 @@
 #include "Music.h"
 #include "APICallback.h"
 
-ObjectMusic *Music = NULL;
+ObjectMusic *Music;
 
 void Music_Update(void)
 {

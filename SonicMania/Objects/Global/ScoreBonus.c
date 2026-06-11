@@ -8,7 +8,7 @@
 #include "ScoreBonus.h"
 #include "Zone.h"
 
-ObjectScoreBonus *ScoreBonus = NULL;
+ObjectScoreBonus *ScoreBonus;
 
 void ScoreBonus_Update(void)
 {

@@ -10,7 +10,7 @@
 #include "Global/Shield.h"
 #include "Global/Zone.h"
 
-ObjectLavaFall *LavaFall = NULL;
+ObjectLavaFall *LavaFall;
 
 void LavaFall_Update(void)
 {

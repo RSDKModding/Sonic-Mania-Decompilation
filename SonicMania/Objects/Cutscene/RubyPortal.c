@@ -19,7 +19,7 @@
 #include "TMZ/TMZ2Setup.h"
 #include "TMZ/TMZBarrier.h"
 
-ObjectRubyPortal *RubyPortal = NULL;
+ObjectRubyPortal *RubyPortal;
 
 void RubyPortal_Update(void)
 {

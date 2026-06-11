@@ -12,7 +12,7 @@
 #include "Global/Player.h"
 #endif
 
-ObjectMonkeyDude *MonkeyDude = NULL;
+ObjectMonkeyDude *MonkeyDude;
 
 void MonkeyDude_Update(void)
 {

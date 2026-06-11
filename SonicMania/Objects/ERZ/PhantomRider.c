@@ -15,7 +15,7 @@
 #include "Global/Zone.h"
 #include "TMZ/PopOut.h"
 
-ObjectPhantomRider *PhantomRider = NULL;
+ObjectPhantomRider *PhantomRider;
 
 void PhantomRider_Update(void)
 {

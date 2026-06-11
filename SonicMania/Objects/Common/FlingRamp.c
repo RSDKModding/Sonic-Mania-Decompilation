@@ -11,7 +11,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectFlingRamp *FlingRamp = NULL;
+ObjectFlingRamp *FlingRamp;
 
 void FlingRamp_Update(void)
 {

@@ -8,7 +8,7 @@
 #include "SpeedGate.h"
 #include "Zone.h"
 
-ObjectSpeedGate *SpeedGate = NULL;
+ObjectSpeedGate *SpeedGate;
 
 void SpeedGate_Update(void)
 {

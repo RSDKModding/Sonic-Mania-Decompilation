@@ -15,7 +15,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectBuggernaut *Buggernaut = NULL;
+ObjectBuggernaut *Buggernaut;
 
 void Buggernaut_Update(void)
 {

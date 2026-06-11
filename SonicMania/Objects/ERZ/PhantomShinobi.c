@@ -11,7 +11,7 @@
 #include "Global/Soundboard.h"
 #include "Global/Zone.h"
 
-ObjectPhantomShinobi *PhantomShinobi = NULL;
+ObjectPhantomShinobi *PhantomShinobi;
 
 void PhantomShinobi_Update(void)
 {

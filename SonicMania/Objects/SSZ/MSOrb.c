@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectMSOrb *MSOrb = NULL;
+ObjectMSOrb *MSOrb;
 
 void MSOrb_Update(void)
 {

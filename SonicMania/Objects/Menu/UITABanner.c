@@ -11,7 +11,7 @@
 #include "UIWidgets.h"
 #include "Global/Localization.h"
 
-ObjectUITABanner *UITABanner = NULL;
+ObjectUITABanner *UITABanner;
 
 void UITABanner_Update(void)
 {

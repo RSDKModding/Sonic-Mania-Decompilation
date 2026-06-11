@@ -8,7 +8,7 @@
 #include "UIShifter.h"
 
 #if MANIA_USE_PLUS
-ObjectUIShifter *UIShifter = NULL;
+ObjectUIShifter *UIShifter;
 
 void UIShifter_Update(void) {}
 

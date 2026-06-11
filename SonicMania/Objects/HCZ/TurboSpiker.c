@@ -11,7 +11,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectTurboSpiker *TurboSpiker = NULL;
+ObjectTurboSpiker *TurboSpiker;
 
 // back in 3mixed, i was assigned this object
 // i was never able to get it properly working

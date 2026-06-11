@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectSpeedBooster *SpeedBooster = NULL;
+ObjectSpeedBooster *SpeedBooster;
 
 void SpeedBooster_Update(void)
 {

@@ -15,7 +15,7 @@
 #include "LRZ/TurretSwitch.h"
 #include "LRZ/LRZ2Setup.h"
 
-ObjectButtonDoor *ButtonDoor = NULL;
+ObjectButtonDoor *ButtonDoor;
 
 void ButtonDoor_Update(void)
 {

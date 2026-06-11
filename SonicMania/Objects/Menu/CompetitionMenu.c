@@ -29,7 +29,7 @@
 #include "Menu/MenuSetup.h"
 #include "Menu/UIDialog.h"
 
-ObjectCompetitionMenu *CompetitionMenu = NULL;
+ObjectCompetitionMenu *CompetitionMenu;
 
 void CompetitionMenu_Update(void) {}
 

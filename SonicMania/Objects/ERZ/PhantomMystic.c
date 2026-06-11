@@ -11,7 +11,7 @@
 #include "Global/Zone.h"
 #include "Helpers/BadnikHelpers.h"
 
-ObjectPhantomMystic *PhantomMystic = NULL;
+ObjectPhantomMystic *PhantomMystic;
 
 void PhantomMystic_Update(void)
 {

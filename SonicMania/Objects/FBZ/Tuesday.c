@@ -14,7 +14,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectTuesday *Tuesday = NULL;
+ObjectTuesday *Tuesday;
 
 void Tuesday_Update(void)
 {

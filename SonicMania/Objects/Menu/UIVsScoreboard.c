@@ -9,7 +9,7 @@
 #include "UIWidgets.h"
 #include "Helpers/DrawHelpers.h"
 
-ObjectUIVsScoreboard *UIVsScoreboard = NULL;
+ObjectUIVsScoreboard *UIVsScoreboard;
 
 void UIVsScoreboard_Update(void)
 {

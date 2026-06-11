@@ -13,7 +13,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectRingField *RingField = NULL;
+ObjectRingField *RingField;
 
 void RingField_Update(void)
 {

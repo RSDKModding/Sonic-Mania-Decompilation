@@ -14,7 +14,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectPopOut *PopOut = NULL;
+ObjectPopOut *PopOut;
 
 void PopOut_Update(void)
 {

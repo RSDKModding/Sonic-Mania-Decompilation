@@ -21,7 +21,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectCrimsonEye *CrimsonEye = NULL;
+ObjectCrimsonEye *CrimsonEye;
 
 void CrimsonEye_Update(void)
 {

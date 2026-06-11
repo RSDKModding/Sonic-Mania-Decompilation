@@ -8,7 +8,7 @@
 #include "PuyoScore.h"
 #include "Global/Zone.h"
 
-ObjectPuyoScore *PuyoScore = NULL;
+ObjectPuyoScore *PuyoScore;
 
 void PuyoScore_Update(void)
 {

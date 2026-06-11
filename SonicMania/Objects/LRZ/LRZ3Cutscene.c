@@ -8,7 +8,7 @@
 #include "LRZ3Cutscene.h"
 #include "Global/TitleCard.h"
 
-ObjectLRZ3Cutscene *LRZ3Cutscene = NULL;
+ObjectLRZ3Cutscene *LRZ3Cutscene;
 
 // INFO: This is the LRZ3 Intro
 

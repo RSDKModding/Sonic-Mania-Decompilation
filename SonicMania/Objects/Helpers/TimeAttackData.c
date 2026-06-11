@@ -11,7 +11,7 @@
 #include "Global/Zone.h"
 #include "Menu/MenuParam.h"
 
-ObjectTimeAttackData *TimeAttackData = NULL;
+ObjectTimeAttackData *TimeAttackData;
 
 #if MANIA_USE_PLUS
 static const char *playerNames[] = { "Invalid", "Sonic", "Tails", "Knuckles", "Mighty", "Ray" };

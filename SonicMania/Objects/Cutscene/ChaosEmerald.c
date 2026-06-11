@@ -8,7 +8,7 @@
 #include "ChaosEmerald.h"
 #include "Global/Zone.h"
 
-ObjectChaosEmerald *ChaosEmerald = NULL;
+ObjectChaosEmerald *ChaosEmerald;
 
 void ChaosEmerald_Update(void)
 {

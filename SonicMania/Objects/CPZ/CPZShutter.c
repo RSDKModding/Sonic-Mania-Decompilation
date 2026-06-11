@@ -8,7 +8,7 @@
 #include "CPZShutter.h"
 #include "Global/Zone.h"
 
-ObjectCPZShutter *CPZShutter = NULL;
+ObjectCPZShutter *CPZShutter;
 
 void CPZShutter_Update(void)
 {

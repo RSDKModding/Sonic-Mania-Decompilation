@@ -9,7 +9,7 @@
 #include "Global/Localization.h"
 #include "Helpers/LogHelpers.h"
 
-ObjectUIWidgets *UIWidgets = NULL;
+ObjectUIWidgets *UIWidgets;
 
 void UIWidgets_Update(void) {}
 

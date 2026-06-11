@@ -16,7 +16,7 @@
 #include "Menu/MenuParam.h"
 #include <time.h>
 
-ObjectPuyoGame *PuyoGame = NULL;
+ObjectPuyoGame *PuyoGame;
 
 void PuyoGame_Update(void)
 {

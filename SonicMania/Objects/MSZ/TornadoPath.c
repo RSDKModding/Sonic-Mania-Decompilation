@@ -15,7 +15,7 @@
 #include "Global/Zone.h"
 #include "Cutscene/CutsceneRules.h"
 
-ObjectTornadoPath *TornadoPath = NULL;
+ObjectTornadoPath *TornadoPath;
 
 void TornadoPath_Update(void)
 {

@@ -13,7 +13,7 @@
 #include "Global/Shield.h"
 #include "Global/Zone.h"
 
-ObjectAIZRockPile *AIZRockPile = NULL;
+ObjectAIZRockPile *AIZRockPile;
 
 void AIZRockPile_Update(void)
 {

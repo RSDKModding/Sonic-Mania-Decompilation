@@ -7,7 +7,7 @@
 
 #include "Soundboard.h"
 
-ObjectSoundboard *Soundboard = NULL;
+ObjectSoundboard *Soundboard;
 
 void Soundboard_Update(void) {}
 

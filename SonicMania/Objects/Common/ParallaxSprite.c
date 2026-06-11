@@ -8,7 +8,7 @@
 #include "ParallaxSprite.h"
 #include "Global/Zone.h"
 
-ObjectParallaxSprite *ParallaxSprite = NULL;
+ObjectParallaxSprite *ParallaxSprite;
 
 void ParallaxSprite_Update(void)
 {

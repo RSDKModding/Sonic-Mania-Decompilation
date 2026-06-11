@@ -10,7 +10,7 @@
 #include "Player.h"
 #include "Zone.h"
 
-ObjectDebugMode *DebugMode = NULL;
+ObjectDebugMode *DebugMode;
 
 void DebugMode_Update(void)
 {

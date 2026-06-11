@@ -7,7 +7,7 @@
 
 #include "EggTower.h"
 
-ObjectEggTower *EggTower = NULL;
+ObjectEggTower *EggTower;
 
 void EggTower_Update(void) {}
 

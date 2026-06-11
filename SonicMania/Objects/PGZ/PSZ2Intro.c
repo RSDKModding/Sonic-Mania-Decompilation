@@ -13,7 +13,7 @@
 #include "Global/TitleCard.h"
 #include "Global/Zone.h"
 
-ObjectPSZ2Intro *PSZ2Intro = NULL;
+ObjectPSZ2Intro *PSZ2Intro;
 
 void PSZ2Intro_Update(void)
 {

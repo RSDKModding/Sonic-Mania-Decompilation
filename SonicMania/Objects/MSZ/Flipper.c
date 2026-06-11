@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectFlipper *Flipper = NULL;
+ObjectFlipper *Flipper;
 
 void Flipper_Update(void)
 {

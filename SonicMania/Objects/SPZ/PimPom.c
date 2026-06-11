@@ -12,7 +12,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectPimPom *PimPom = NULL;
+ObjectPimPom *PimPom;
 
 void PimPom_Update(void)
 {

@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectERZSetup *ERZSetup = NULL;
+ObjectERZSetup *ERZSetup;
 
 void ERZSetup_Update(void) {}
 

@@ -7,7 +7,7 @@
 
 #include "UIWaitSpinner.h"
 
-ObjectUIWaitSpinner *UIWaitSpinner = NULL;
+ObjectUIWaitSpinner *UIWaitSpinner;
 
 void UIWaitSpinner_Update(void)
 {

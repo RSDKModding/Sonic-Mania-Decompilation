@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectRockemSockem *RockemSockem = NULL;
+ObjectRockemSockem *RockemSockem;
 
 void RockemSockem_Update(void)
 {

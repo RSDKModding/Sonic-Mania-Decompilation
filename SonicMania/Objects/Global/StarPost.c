@@ -15,7 +15,7 @@
 #include "Helpers/GameProgress.h"
 #include "TMZ/TMZ2Setup.h"
 
-ObjectStarPost *StarPost = NULL;
+ObjectStarPost *StarPost;
 
 void StarPost_Update(void)
 {

@@ -10,7 +10,7 @@
 #include "Global/TimeAttackGate.h"
 #include "Global/Zone.h"
 
-ObjectChemicalBall *ChemicalBall = NULL;
+ObjectChemicalBall *ChemicalBall;
 
 void ChemicalBall_Update(void)
 {

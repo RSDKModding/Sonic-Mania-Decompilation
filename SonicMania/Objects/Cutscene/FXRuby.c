@@ -9,7 +9,7 @@
 #include "Global/Zone.h"
 #include "Menu/UIWidgets.h"
 
-ObjectFXRuby *FXRuby = NULL;
+ObjectFXRuby *FXRuby;
 
 void FXRuby_Update(void)
 {

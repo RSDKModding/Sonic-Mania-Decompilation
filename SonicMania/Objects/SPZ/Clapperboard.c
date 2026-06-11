@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectClapperboard *Clapperboard = NULL;
+ObjectClapperboard *Clapperboard;
 
 void Clapperboard_Update(void)
 {

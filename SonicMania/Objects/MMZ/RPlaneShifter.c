@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectRPlaneShifter *RPlaneShifter = NULL;
+ObjectRPlaneShifter *RPlaneShifter;
 
 void RPlaneShifter_Update(void)
 {

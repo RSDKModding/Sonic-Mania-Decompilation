@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectVultron *Vultron = NULL;
+ObjectVultron *Vultron;
 
 void Vultron_Update(void)
 {

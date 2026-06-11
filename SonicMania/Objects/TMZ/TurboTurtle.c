@@ -12,7 +12,7 @@
 #include "Global/Soundboard.h"
 #include "Global/Zone.h"
 
-ObjectTurboTurtle *TurboTurtle = NULL;
+ObjectTurboTurtle *TurboTurtle;
 
 void TurboTurtle_Update(void)
 {

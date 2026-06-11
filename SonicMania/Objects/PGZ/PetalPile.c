@@ -13,7 +13,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectPetalPile *PetalPile = NULL;
+ObjectPetalPile *PetalPile;
 
 void PetalPile_Update(void)
 {

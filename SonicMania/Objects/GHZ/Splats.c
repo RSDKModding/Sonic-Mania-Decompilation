@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectSplats *Splats = NULL;
+ObjectSplats *Splats;
 
 void Splats_Update(void)
 {

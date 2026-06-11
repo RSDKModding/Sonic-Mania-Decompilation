@@ -14,7 +14,7 @@
 #include "Global/Zone.h"
 #include "Helpers/GameProgress.h"
 
-ObjectPuyoMatch *PuyoMatch = NULL;
+ObjectPuyoMatch *PuyoMatch;
 
 void PuyoMatch_Update(void)
 {

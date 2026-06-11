@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectSpinSign *SpinSign = NULL;
+ObjectSpinSign *SpinSign;
 
 void SpinSign_Update(void)
 {

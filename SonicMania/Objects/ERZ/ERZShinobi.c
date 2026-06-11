@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectERZShinobi *ERZShinobi = NULL;
+ObjectERZShinobi *ERZShinobi;
 
 void ERZShinobi_Update(void)
 {

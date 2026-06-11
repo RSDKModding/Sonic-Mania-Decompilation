@@ -10,7 +10,7 @@
 #include "Global/PauseMenu.h"
 #include "Global/Zone.h"
 
-ObjectTVFlyingBattery *TVFlyingBattery = NULL;
+ObjectTVFlyingBattery *TVFlyingBattery;
 
 void TVFlyingBattery_Update(void)
 {

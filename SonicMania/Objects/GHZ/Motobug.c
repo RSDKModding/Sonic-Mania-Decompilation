@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectMotobug *Motobug = NULL;
+ObjectMotobug *Motobug;
 
 void Motobug_Update(void)
 {

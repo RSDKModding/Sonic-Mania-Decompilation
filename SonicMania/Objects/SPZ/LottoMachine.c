@@ -12,7 +12,7 @@
 #include "Global/Ring.h"
 #include "Global/Zone.h"
 
-ObjectLottoMachine *LottoMachine = NULL;
+ObjectLottoMachine *LottoMachine;
 
 void LottoMachine_Update(void)
 {

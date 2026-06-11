@@ -14,7 +14,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectSilverSonic *SilverSonic = NULL;
+ObjectSilverSonic *SilverSonic;
 
 void SilverSonic_Update(void)
 {

@@ -36,7 +36,7 @@
 #include "MMZ/SizeLaser.h"
 #include "TMZ/GymBar.h"
 
-ObjectReplayRecorder *ReplayRecorder = NULL;
+ObjectReplayRecorder *ReplayRecorder;
 
 void ReplayRecorder_Update(void)
 {

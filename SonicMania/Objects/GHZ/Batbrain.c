@@ -9,7 +9,7 @@
 #include "Global/DebugMode.h"
 #include "Global/Zone.h"
 
-ObjectBatbrain *Batbrain = NULL;
+ObjectBatbrain *Batbrain;
 
 void Batbrain_Update(void)
 {

@@ -8,7 +8,7 @@
 #include "ERZRider.h"
 #include "Global/Zone.h"
 
-ObjectERZRider *ERZRider = NULL;
+ObjectERZRider *ERZRider;
 
 void ERZRider_Update(void)
 {

@@ -27,7 +27,7 @@
 #include "Helpers/MathHelpers.h"
 #include "Menu/UIWaitSpinner.h"
 
-ObjectERZOutro *ERZOutro = NULL;
+ObjectERZOutro *ERZOutro;
 
 void ERZOutro_Update(void)
 {

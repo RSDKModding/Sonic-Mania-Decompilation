@@ -11,7 +11,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectMechaBu *MechaBu = NULL;
+ObjectMechaBu *MechaBu;
 
 void MechaBu_Update(void)
 {

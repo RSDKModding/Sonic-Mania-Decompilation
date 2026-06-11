@@ -7,7 +7,7 @@
 
 #include "DAControl.h"
 
-ObjectDAControl *DAControl = NULL;
+ObjectDAControl *DAControl;
 
 void DAControl_Update(void)
 {

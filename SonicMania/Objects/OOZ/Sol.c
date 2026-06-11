@@ -11,7 +11,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectSol *Sol = NULL;
+ObjectSol *Sol;
 
 void Sol_Update(void)
 {

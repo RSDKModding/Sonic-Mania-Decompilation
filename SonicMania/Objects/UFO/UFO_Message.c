@@ -7,7 +7,7 @@
 
 #include "UFO_Message.h"
 
-ObjectUFO_Message *UFO_Message = NULL;
+ObjectUFO_Message *UFO_Message;
 
 void UFO_Message_Update(void)
 {

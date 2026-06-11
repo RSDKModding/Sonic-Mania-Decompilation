@@ -13,7 +13,7 @@
 #include "Menu/MenuSetup.h"
 #include "Title/TitleBG.h"
 
-ObjectDASetup *DASetup = NULL;
+ObjectDASetup *DASetup;
 
 void DASetup_Update(void) {}
 

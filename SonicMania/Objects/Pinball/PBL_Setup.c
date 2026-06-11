@@ -15,7 +15,7 @@
 #include "Global/PauseMenu.h"
 #include "Global/SaveGame.h"
 
-ObjectPBL_Setup *PBL_Setup = NULL;
+ObjectPBL_Setup *PBL_Setup;
 
 void PBL_Setup_Update(void)
 {

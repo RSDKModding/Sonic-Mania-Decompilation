@@ -10,7 +10,7 @@
 #include "Global/ScoreBonus.h"
 #include "Global/Zone.h"
 
-ObjectFunnel *Funnel = NULL;
+ObjectFunnel *Funnel;
 
 void Funnel_Update(void)
 {

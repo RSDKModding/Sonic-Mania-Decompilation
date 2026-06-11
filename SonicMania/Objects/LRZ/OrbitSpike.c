@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectOrbitSpike *OrbitSpike = NULL;
+ObjectOrbitSpike *OrbitSpike;
 
 void OrbitSpike_Update(void)
 {

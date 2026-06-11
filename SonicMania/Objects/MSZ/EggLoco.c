@@ -12,7 +12,7 @@
 #include "Global/Zone.h"
 #include "Helpers/MathHelpers.h"
 
-ObjectEggLoco *EggLoco = NULL;
+ObjectEggLoco *EggLoco;
 
 void EggLoco_Update(void)
 {

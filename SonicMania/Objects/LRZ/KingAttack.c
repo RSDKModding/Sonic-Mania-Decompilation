@@ -11,7 +11,7 @@
 #include "Global/Soundboard.h"
 #include "Global/Zone.h"
 
-ObjectKingAttack *KingAttack = NULL;
+ObjectKingAttack *KingAttack;
 
 void KingAttack_Update(void)
 {

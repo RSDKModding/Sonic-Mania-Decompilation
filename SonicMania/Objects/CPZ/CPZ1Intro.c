@@ -18,7 +18,7 @@
 #include "Global/Zone.h"
 #include "Helpers/ParticleHelpers.h"
 
-ObjectCPZ1Intro *CPZ1Intro = NULL;
+ObjectCPZ1Intro *CPZ1Intro;
 
 void CPZ1Intro_Update(void)
 {

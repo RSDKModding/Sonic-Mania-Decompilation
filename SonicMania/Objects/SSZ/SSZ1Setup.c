@@ -12,7 +12,7 @@
 #include "Global/Animals.h"
 #include "Global/Zone.h"
 
-ObjectSSZ1Setup *SSZ1Setup = NULL;
+ObjectSSZ1Setup *SSZ1Setup;
 
 void SSZ1Setup_Update(void) {}
 

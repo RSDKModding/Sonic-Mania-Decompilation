@@ -24,7 +24,7 @@
 #include "Menu/UIWaitSpinner.h"
 #include "Menu/UIWidgets.h"
 
-ObjectActClear *ActClear = NULL;
+ObjectActClear *ActClear;
 
 void ActClear_Update(void) {}
 

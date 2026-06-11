@@ -15,7 +15,7 @@
 #include "SSZEggman.h"
 #endif
 
-ObjectSSZ3Cutscene *SSZ3Cutscene = NULL;
+ObjectSSZ3Cutscene *SSZ3Cutscene;
 
 void SSZ3Cutscene_Update(void)
 {

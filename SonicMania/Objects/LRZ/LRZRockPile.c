@@ -11,7 +11,7 @@
 #include "Global/Shield.h"
 #include "Global/Zone.h"
 
-ObjectLRZRockPile *LRZRockPile = NULL;
+ObjectLRZRockPile *LRZRockPile;
 
 void LRZRockPile_Update(void)
 {

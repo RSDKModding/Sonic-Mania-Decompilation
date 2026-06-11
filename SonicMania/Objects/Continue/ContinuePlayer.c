@@ -8,7 +8,7 @@
 #include "ContinuePlayer.h"
 #include "Global/Player.h"
 
-ObjectContinuePlayer *ContinuePlayer = NULL;
+ObjectContinuePlayer *ContinuePlayer;
 
 void ContinuePlayer_Update(void)
 {

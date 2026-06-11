@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectRotatingSpikes *RotatingSpikes = NULL;
+ObjectRotatingSpikes *RotatingSpikes;
 
 void RotatingSpikes_Update(void)
 {

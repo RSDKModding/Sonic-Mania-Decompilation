@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectAcetone *Acetone = NULL;
+ObjectAcetone *Acetone;
 
 // This object goes completely unused in regular gameplay
 // afterall, so does the entire PGZ1 ink gimmick

@@ -11,7 +11,7 @@
 #include "UIWidgets.h"
 #include "Helpers/LogHelpers.h"
 
-ObjectUIPopover *UIPopover = NULL;
+ObjectUIPopover *UIPopover;
 
 void UIPopover_Update(void)
 {

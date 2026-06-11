@@ -8,7 +8,7 @@
 #include "Palette.h"
 
 #if MANIA_USE_PLUS
-ObjectPalette *Palette = NULL;
+ObjectPalette *Palette;
 
 void Palette_Update(void) {}
 

@@ -18,7 +18,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectRockDrill *RockDrill = NULL;
+ObjectRockDrill *RockDrill;
 
 void RockDrill_Update(void)
 {

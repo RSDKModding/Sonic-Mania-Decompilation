@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectMagSpikeBall *MagSpikeBall = NULL;
+ObjectMagSpikeBall *MagSpikeBall;
 
 void MagSpikeBall_Update(void)
 {

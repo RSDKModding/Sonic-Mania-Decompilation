@@ -11,7 +11,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectMSHologram *MSHologram = NULL;
+ObjectMSHologram *MSHologram;
 
 void MSHologram_Update(void)
 {

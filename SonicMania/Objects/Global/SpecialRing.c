@@ -13,7 +13,7 @@
 #include "SaveGame.h"
 #include "Zone.h"
 
-ObjectSpecialRing *SpecialRing = NULL;
+ObjectSpecialRing *SpecialRing;
 
 void SpecialRing_Update(void)
 {

@@ -9,7 +9,7 @@
 #include "Global/Debris.h"
 #include "Global/Zone.h"
 
-ObjectBreakBar *BreakBar = NULL;
+ObjectBreakBar *BreakBar;
 
 void BreakBar_Update(void)
 {

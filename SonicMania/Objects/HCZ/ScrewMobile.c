@@ -15,7 +15,7 @@
 #include "Global/Zone.h"
 #include "Helpers/BadnikHelpers.h"
 
-ObjectScrewMobile *ScrewMobile = NULL;
+ObjectScrewMobile *ScrewMobile;
 
 void ScrewMobile_Update(void)
 {

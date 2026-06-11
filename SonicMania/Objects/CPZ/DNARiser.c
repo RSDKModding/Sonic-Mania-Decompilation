@@ -12,7 +12,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectDNARiser *DNARiser = NULL;
+ObjectDNARiser *DNARiser;
 
 void DNARiser_Update(void)
 {

@@ -11,7 +11,7 @@
 #include "Global/ScoreBonus.h"
 #include "Global/Zone.h"
 
-ObjectTargetBumper *TargetBumper = NULL;
+ObjectTargetBumper *TargetBumper;
 
 void TargetBumper_Update(void)
 {

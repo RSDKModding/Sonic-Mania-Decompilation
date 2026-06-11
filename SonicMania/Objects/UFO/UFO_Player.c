@@ -11,7 +11,7 @@
 #include "UFO_Setup.h"
 #include "Global/PauseMenu.h"
 
-ObjectUFO_Player *UFO_Player = NULL;
+ObjectUFO_Player *UFO_Player;
 
 void UFO_Player_Update(void)
 {

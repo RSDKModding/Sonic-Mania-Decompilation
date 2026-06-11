@@ -18,7 +18,7 @@
 #include "Global/Zone.h"
 #include "Helpers/MathHelpers.h"
 
-ObjectMSZCutsceneST *MSZCutsceneST = NULL;
+ObjectMSZCutsceneST *MSZCutsceneST;
 
 void MSZCutsceneST_Update(void)
 {

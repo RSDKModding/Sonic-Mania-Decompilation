@@ -14,7 +14,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectJawz *Jawz = NULL;
+ObjectJawz *Jawz;
 
 void Jawz_Update(void)
 {

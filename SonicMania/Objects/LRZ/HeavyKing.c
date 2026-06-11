@@ -22,7 +22,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectHeavyKing *HeavyKing = NULL;
+ObjectHeavyKing *HeavyKing;
 
 void HeavyKing_Update(void)
 {

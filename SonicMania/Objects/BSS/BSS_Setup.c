@@ -21,7 +21,7 @@
 #include "Menu/MenuParam.h"
 #include <time.h>
 
-ObjectBSS_Setup *BSS_Setup = NULL;
+ObjectBSS_Setup *BSS_Setup;
 
 void BSS_Setup_Update(void)
 {

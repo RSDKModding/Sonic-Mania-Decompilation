@@ -17,7 +17,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectPBL_Sector *PBL_Sector = NULL;
+ObjectPBL_Sector *PBL_Sector;
 
 void PBL_Sector_Update(void)
 {

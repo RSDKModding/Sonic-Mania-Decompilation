@@ -14,7 +14,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectCPZ2Outro *CPZ2Outro = NULL;
+ObjectCPZ2Outro *CPZ2Outro;
 
 void CPZ2Outro_Update(void)
 {

@@ -13,7 +13,7 @@
 #include "Global/Zone.h"
 #include "Helpers/GameProgress.h"
 
-ObjectLevelSelect *LevelSelect = NULL;
+ObjectLevelSelect *LevelSelect;
 
 void LevelSelect_Update(void)
 {

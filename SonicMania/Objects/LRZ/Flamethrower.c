@@ -13,7 +13,7 @@
 #include "Global/Zone.h"
 #include "Helpers/MathHelpers.h"
 
-ObjectFlamethrower *Flamethrower = NULL;
+ObjectFlamethrower *Flamethrower;
 
 void Flamethrower_Update(void)
 {

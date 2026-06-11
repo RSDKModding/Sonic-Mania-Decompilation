@@ -8,7 +8,7 @@
 #include "TMZAlert.h"
 #include "Global/Zone.h"
 
-ObjectTMZAlert *TMZAlert = NULL;
+ObjectTMZAlert *TMZAlert;
 
 void TMZAlert_Update(void)
 {

@@ -11,7 +11,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectCaterkillerJr *CaterkillerJr = NULL;
+ObjectCaterkillerJr *CaterkillerJr;
 
 void CaterkillerJr_Update(void)
 {

@@ -9,7 +9,7 @@
 #include "Common/Platform.h"
 #include "Global/Zone.h"
 
-ObjectMagPlatform *MagPlatform = NULL;
+ObjectMagPlatform *MagPlatform;
 
 void MagPlatform_Update(void) { Platform_Update(); }
 

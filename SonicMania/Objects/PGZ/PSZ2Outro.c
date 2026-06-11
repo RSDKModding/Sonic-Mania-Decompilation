@@ -12,7 +12,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectPSZ2Outro *PSZ2Outro = NULL;
+ObjectPSZ2Outro *PSZ2Outro;
 
 void PSZ2Outro_Update(void)
 {

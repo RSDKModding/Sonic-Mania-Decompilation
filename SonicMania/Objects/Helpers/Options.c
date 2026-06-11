@@ -12,7 +12,7 @@
 #include "Menu/UIHeading.h"
 #include "Menu/UIWidgets.h"
 
-ObjectOptions *Options = NULL;
+ObjectOptions *Options;
 
 void Options_Update(void) {}
 

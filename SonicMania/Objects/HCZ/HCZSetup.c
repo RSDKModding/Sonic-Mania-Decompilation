@@ -12,7 +12,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectHCZSetup *HCZSetup = NULL;
+ObjectHCZSetup *HCZSetup;
 
 void HCZSetup_Update(void) {}
 

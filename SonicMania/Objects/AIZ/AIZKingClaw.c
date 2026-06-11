@@ -9,7 +9,7 @@
 #include "Common/Platform.h"
 #include "Global/Zone.h"
 
-ObjectAIZKingClaw *AIZKingClaw = NULL;
+ObjectAIZKingClaw *AIZKingClaw;
 
 void AIZKingClaw_Update(void)
 {

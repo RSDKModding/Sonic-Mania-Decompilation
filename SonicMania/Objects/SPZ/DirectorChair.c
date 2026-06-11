@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectDirectorChair *DirectorChair = NULL;
+ObjectDirectorChair *DirectorChair;
 
 void DirectorChair_Update(void) { Platform_Update(); }
 

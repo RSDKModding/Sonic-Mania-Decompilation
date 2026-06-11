@@ -14,7 +14,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectShopWindow *ShopWindow = NULL;
+ObjectShopWindow *ShopWindow;
 
 void ShopWindow_Update(void)
 {

@@ -12,7 +12,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectConveyorPlatform *ConveyorPlatform = NULL;
+ObjectConveyorPlatform *ConveyorPlatform;
 
 void ConveyorPlatform_Update(void)
 {

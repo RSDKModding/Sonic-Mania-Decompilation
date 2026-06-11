@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectWallBumper *WallBumper = NULL;
+ObjectWallBumper *WallBumper;
 
 void WallBumper_Update(void) { WallBumper_HandleInteractions(); }
 

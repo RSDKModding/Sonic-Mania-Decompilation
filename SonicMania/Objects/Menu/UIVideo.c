@@ -8,7 +8,7 @@
 #include "UIVideo.h"
 #include "Global/Music.h"
 
-ObjectUIVideo *UIVideo = NULL;
+ObjectUIVideo *UIVideo;
 
 void UIVideo_Update(void)
 {

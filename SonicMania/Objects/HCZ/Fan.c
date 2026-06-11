@@ -17,7 +17,7 @@
 #endif
 #include "Helpers/MathHelpers.h"
 
-ObjectFan *Fan = NULL;
+ObjectFan *Fan;
 
 void Fan_Update(void)
 {

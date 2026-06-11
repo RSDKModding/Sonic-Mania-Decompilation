@@ -11,7 +11,7 @@
 #include "Global/Zone.h"
 #include "Cutscene/CutsceneRules.h"
 
-ObjectSPZ1Intro *SPZ1Intro = NULL;
+ObjectSPZ1Intro *SPZ1Intro;
 
 void SPZ1Intro_Update(void)
 {

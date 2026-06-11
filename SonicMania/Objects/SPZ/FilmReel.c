@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectFilmReel *FilmReel = NULL;
+ObjectFilmReel *FilmReel;
 
 void FilmReel_Update(void)
 {

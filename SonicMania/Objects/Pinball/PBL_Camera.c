@@ -10,7 +10,7 @@
 #if MANIA_USE_PLUS
 #include "PBL_Setup.h"
 
-ObjectPBL_Camera *PBL_Camera = NULL;
+ObjectPBL_Camera *PBL_Camera;
 
 void PBL_Camera_Update(void) {}
 

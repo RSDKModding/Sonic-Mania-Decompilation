@@ -12,7 +12,7 @@
 #include "Global/ItemBox.h"
 #include "Global/Zone.h"
 
-ObjectTVVan *TVVan = NULL;
+ObjectTVVan *TVVan;
 
 void TVVan_Update(void)
 {

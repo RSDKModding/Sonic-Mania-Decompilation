@@ -9,7 +9,7 @@
 #include "PuyoBean.h"
 #include "Global/Zone.h"
 
-ObjectPuyoAI *PuyoAI = NULL;
+ObjectPuyoAI *PuyoAI;
 
 void PuyoAI_Update(void) {}
 

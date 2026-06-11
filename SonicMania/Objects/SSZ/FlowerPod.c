@@ -11,7 +11,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectFlowerPod *FlowerPod = NULL;
+ObjectFlowerPod *FlowerPod;
 
 void FlowerPod_Update(void)
 {

@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectSeeSaw *SeeSaw = NULL;
+ObjectSeeSaw *SeeSaw;
 
 void SeeSaw_Update(void)
 {

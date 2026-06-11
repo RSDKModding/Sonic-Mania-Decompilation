@@ -11,7 +11,7 @@
 #include "Ring.h"
 #include "Zone.h"
 
-ObjectSuperSparkle *SuperSparkle = NULL;
+ObjectSuperSparkle *SuperSparkle;
 
 void SuperSparkle_Update(void)
 {

@@ -12,7 +12,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectSyringe *Syringe = NULL;
+ObjectSyringe *Syringe;
 
 void Syringe_Update(void)
 {

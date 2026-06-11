@@ -12,7 +12,7 @@
 #include "Global/HUD.h"
 #include "Global/Zone.h"
 
-ObjectLRZ3Outro *LRZ3Outro = NULL;
+ObjectLRZ3Outro *LRZ3Outro;
 
 void LRZ3Outro_Update(void)
 {

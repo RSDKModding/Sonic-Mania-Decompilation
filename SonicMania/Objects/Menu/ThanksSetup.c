@@ -7,7 +7,7 @@
 
 #include "ThanksSetup.h"
 
-ObjectThanksSetup *ThanksSetup = NULL;
+ObjectThanksSetup *ThanksSetup;
 
 void ThanksSetup_Update(void)
 {

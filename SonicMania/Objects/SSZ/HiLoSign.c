@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectHiLoSign *HiLoSign = NULL;
+ObjectHiLoSign *HiLoSign;
 
 void HiLoSign_Update(void)
 {

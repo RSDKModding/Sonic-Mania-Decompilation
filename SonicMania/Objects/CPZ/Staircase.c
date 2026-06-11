@@ -10,7 +10,7 @@
 #include "Global/Soundboard.h"
 #include "Global/Zone.h"
 
-ObjectStaircase *Staircase = NULL;
+ObjectStaircase *Staircase;
 
 void Staircase_Update(void)
 {

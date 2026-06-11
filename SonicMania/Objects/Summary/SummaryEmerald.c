@@ -10,7 +10,7 @@
 #if MANIA_USE_PLUS
 #include "Global/SaveGame.h"
 
-ObjectSummaryEmerald *SummaryEmerald = NULL;
+ObjectSummaryEmerald *SummaryEmerald;
 
 void SummaryEmerald_Update(void) {}
 

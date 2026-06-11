@@ -14,7 +14,7 @@
 #include "Global/Spikes.h"
 #include "Global/Zone.h"
 
-ObjectRollerMKII *RollerMKII = NULL;
+ObjectRollerMKII *RollerMKII;
 
 void RollerMKII_Update(void)
 {

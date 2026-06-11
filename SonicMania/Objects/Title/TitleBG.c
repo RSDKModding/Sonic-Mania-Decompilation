@@ -8,7 +8,7 @@
 #include "TitleBG.h"
 #include "Title3DSprite.h"
 
-ObjectTitleBG *TitleBG = NULL;
+ObjectTitleBG *TitleBG;
 
 void TitleBG_Update(void)
 {

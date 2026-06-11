@@ -14,7 +14,7 @@
 #include "Global/Zone.h"
 #include "Helpers/DrawHelpers.h"
 
-ObjectLRZConvDropper *LRZConvDropper = NULL;
+ObjectLRZConvDropper *LRZConvDropper;
 
 void LRZConvDropper_Update(void)
 {

@@ -12,7 +12,7 @@
 #include "Global/Ring.h"
 #include "Global/Zone.h"
 
-ObjectMegaChopper *MegaChopper = NULL;
+ObjectMegaChopper *MegaChopper;
 
 void MegaChopper_Update(void)
 {

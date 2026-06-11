@@ -7,7 +7,7 @@
 
 #include "PlatformNode.h"
 
-ObjectPlatformNode *PlatformNode = NULL;
+ObjectPlatformNode *PlatformNode;
 
 void PlatformNode_Update(void) {}
 

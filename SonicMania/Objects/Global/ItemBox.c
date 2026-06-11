@@ -25,7 +25,7 @@
 #include "PGZ/Ice.h"
 #include "LRZ/LRZConvItem.h"
 
-ObjectItemBox *ItemBox = NULL;
+ObjectItemBox *ItemBox;
 
 void ItemBox_Update(void)
 {

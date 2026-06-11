@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectAquis *Aquis = NULL;
+ObjectAquis *Aquis;
 
 void Aquis_Update(void)
 {

@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectBladePole *BladePole = NULL;
+ObjectBladePole *BladePole;
 
 void BladePole_Update(void)
 {

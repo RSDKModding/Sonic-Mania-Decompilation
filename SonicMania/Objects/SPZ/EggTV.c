@@ -11,7 +11,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectEggTV *EggTV = NULL;
+ObjectEggTV *EggTV;
 
 void EggTV_Update(void)
 {

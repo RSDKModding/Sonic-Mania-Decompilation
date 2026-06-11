@@ -12,7 +12,7 @@
 #include "Global/Zone.h"
 #include "Helpers/DrawHelpers.h"
 
-ObjectFarPlane *FarPlane = NULL;
+ObjectFarPlane *FarPlane;
 
 void FarPlane_Update(void) {}
 

@@ -12,7 +12,7 @@
 #include "Global/Spring.h"
 #include "Global/Zone.h"
 
-ObjectIceSpring *IceSpring = NULL;
+ObjectIceSpring *IceSpring;
 
 void IceSpring_Update(void)
 {

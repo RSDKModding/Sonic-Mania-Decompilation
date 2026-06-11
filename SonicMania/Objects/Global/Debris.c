@@ -8,7 +8,7 @@
 #include "Debris.h"
 #include "Zone.h"
 
-ObjectDebris *Debris = NULL;
+ObjectDebris *Debris;
 
 void Debris_Update(void)
 {

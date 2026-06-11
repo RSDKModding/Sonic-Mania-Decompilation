@@ -16,7 +16,7 @@
 #include "Helpers/CompetitionSession.h"
 #include "Helpers/TimeAttackData.h"
 
-ObjectTitleCard *TitleCard = NULL;
+ObjectTitleCard *TitleCard;
 
 void TitleCard_Update(void)
 {

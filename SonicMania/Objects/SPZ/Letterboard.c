@@ -12,7 +12,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectLetterboard *Letterboard = NULL;
+ObjectLetterboard *Letterboard;
 
 void Letterboard_Update(void)
 {

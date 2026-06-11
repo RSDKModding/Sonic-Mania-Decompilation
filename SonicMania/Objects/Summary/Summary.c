@@ -15,7 +15,7 @@
 #include "Global/SaveGame.h"
 #include "Menu/UIWidgets.h"
 
-ObjectSummary *Summary = NULL;
+ObjectSummary *Summary;
 
 void Summary_Update(void)
 {

@@ -9,7 +9,7 @@
 #include "UIWidgets.h"
 #include "Global/Localization.h"
 
-ObjectUIHeading *UIHeading = NULL;
+ObjectUIHeading *UIHeading;
 
 void UIHeading_Update(void)
 {

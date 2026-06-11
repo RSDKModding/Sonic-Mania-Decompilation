@@ -10,7 +10,7 @@
 #include "Global/DebugMode.h"
 #include "Global/Zone.h"
 
-ObjectPlayerProbe *PlayerProbe = NULL;
+ObjectPlayerProbe *PlayerProbe;
 
 void PlayerProbe_Update(void)
 {

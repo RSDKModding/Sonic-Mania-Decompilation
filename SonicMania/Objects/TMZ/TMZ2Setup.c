@@ -12,7 +12,7 @@
 #include "Global/Animals.h"
 #include "Global/Zone.h"
 
-ObjectTMZ2Setup *TMZ2Setup = NULL;
+ObjectTMZ2Setup *TMZ2Setup;
 
 void TMZ2Setup_Update(void) {}
 

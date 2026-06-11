@@ -7,7 +7,7 @@
 
 #include "MonarchBG.h"
 
-ObjectMonarchBG *MonarchBG = NULL;
+ObjectMonarchBG *MonarchBG;
 
 void MonarchBG_Update(void)
 {

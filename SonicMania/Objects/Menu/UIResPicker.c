@@ -13,7 +13,7 @@
 #include "Global/APICallback.h"
 #include "Global/Localization.h"
 
-ObjectUIResPicker *UIResPicker = NULL;
+ObjectUIResPicker *UIResPicker;
 
 void UIResPicker_Update(void)
 {

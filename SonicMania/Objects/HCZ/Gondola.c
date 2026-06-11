@@ -11,7 +11,7 @@
 #include "Helpers/GameProgress.h"
 #include "Global/APICallback.h"
 
-ObjectGondola *Gondola = NULL;
+ObjectGondola *Gondola;
 
 void Gondola_Update(void)
 {

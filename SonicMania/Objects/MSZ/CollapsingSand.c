@@ -12,7 +12,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectCollapsingSand *CollapsingSand = NULL;
+ObjectCollapsingSand *CollapsingSand;
 
 void CollapsingSand_Update(void)
 {

@@ -9,7 +9,7 @@
 #include "Global/Zone.h"
 
 #if MANIA_USE_PLUS
-ObjectFernParallax *FernParallax = NULL;
+ObjectFernParallax *FernParallax;
 
 void FernParallax_Update(void) {}
 

@@ -19,7 +19,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectWater *Water = NULL;
+ObjectWater *Water;
 
 void Water_Update(void)
 {

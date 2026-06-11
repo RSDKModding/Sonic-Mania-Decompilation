@@ -15,7 +15,7 @@
 #include "Global/Animals.h"
 #include "Global/Zone.h"
 
-ObjectFBZSetup *FBZSetup = NULL;
+ObjectFBZSetup *FBZSetup;
 
 void FBZSetup_Update(void) {}
 

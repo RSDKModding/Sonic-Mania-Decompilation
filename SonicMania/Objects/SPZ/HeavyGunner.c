@@ -20,7 +20,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectHeavyGunner *HeavyGunner = NULL;
+ObjectHeavyGunner *HeavyGunner;
 
 void HeavyGunner_Update(void)
 {

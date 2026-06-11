@@ -20,7 +20,7 @@
 #include "TMZ/TMZBarrier.h"
 #include "TMZ/TMZ2Setup.h"
 
-ObjectWarpDoor *WarpDoor = NULL;
+ObjectWarpDoor *WarpDoor;
 
 void WarpDoor_Update(void)
 {

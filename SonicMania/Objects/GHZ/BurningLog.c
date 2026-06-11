@@ -10,7 +10,7 @@
 #include "Global/Shield.h"
 #include "Global/Zone.h"
 
-ObjectBurningLog *BurningLog = NULL;
+ObjectBurningLog *BurningLog;
 
 void BurningLog_Update(void)
 {

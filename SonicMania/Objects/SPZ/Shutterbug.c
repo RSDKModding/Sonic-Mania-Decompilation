@@ -14,7 +14,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectShutterbug *Shutterbug = NULL;
+ObjectShutterbug *Shutterbug;
 
 void Shutterbug_Update(void)
 {

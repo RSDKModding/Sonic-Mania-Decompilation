@@ -13,7 +13,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectLRZ1Intro *LRZ1Intro = NULL;
+ObjectLRZ1Intro *LRZ1Intro;
 
 void LRZ1Intro_Update(void)
 {

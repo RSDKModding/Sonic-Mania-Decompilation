@@ -8,7 +8,7 @@
 #include "FilmProjector.h"
 #include "Global/Zone.h"
 
-ObjectFilmProjector *FilmProjector = NULL;
+ObjectFilmProjector *FilmProjector;
 
 void FilmProjector_Update(void)
 {

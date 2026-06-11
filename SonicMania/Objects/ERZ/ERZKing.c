@@ -21,7 +21,7 @@
 #include "Helpers/GameProgress.h"
 #include "Helpers/MathHelpers.h"
 
-ObjectERZKing *ERZKing = NULL;
+ObjectERZKing *ERZKing;
 
 void ERZKing_Update(void)
 {

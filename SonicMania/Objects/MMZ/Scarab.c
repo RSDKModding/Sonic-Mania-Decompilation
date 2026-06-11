@@ -14,7 +14,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectScarab *Scarab = NULL;
+ObjectScarab *Scarab;
 
 void Scarab_Update(void)
 {

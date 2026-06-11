@@ -14,7 +14,7 @@
 #include "Global/Zone.h"
 #include "Helpers/BadnikHelpers.h"
 
-ObjectPhantomGunner *PhantomGunner = NULL;
+ObjectPhantomGunner *PhantomGunner;
 
 void PhantomGunner_Update(void)
 {

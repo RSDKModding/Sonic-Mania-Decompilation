@@ -8,7 +8,7 @@
 #include "UIText.h"
 #include "UIWidgets.h"
 
-ObjectUIText *UIText = NULL;
+ObjectUIText *UIText;
 
 void UIText_Update(void)
 {

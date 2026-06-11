@@ -9,7 +9,7 @@
 #include "PuyoMatch.h"
 #include "Global/Zone.h"
 
-ObjectPuyoAttack *PuyoAttack = NULL;
+ObjectPuyoAttack *PuyoAttack;
 
 void PuyoAttack_Update(void)
 {

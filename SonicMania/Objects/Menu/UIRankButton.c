@@ -11,7 +11,7 @@
 #include "UIControl.h"
 #include "UIWidgets.h"
 
-ObjectUIRankButton *UIRankButton = NULL;
+ObjectUIRankButton *UIRankButton;
 
 void UIRankButton_Update(void)
 {

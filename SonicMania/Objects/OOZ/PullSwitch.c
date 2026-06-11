@@ -11,7 +11,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectPullSwitch *PullSwitch = NULL;
+ObjectPullSwitch *PullSwitch;
 
 void PullSwitch_Update(void)
 {

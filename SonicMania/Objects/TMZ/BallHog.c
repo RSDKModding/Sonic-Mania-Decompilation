@@ -11,7 +11,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectBallHog *BallHog = NULL;
+ObjectBallHog *BallHog;
 
 void BallHog_Update(void)
 {

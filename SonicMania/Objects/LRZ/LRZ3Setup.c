@@ -14,7 +14,7 @@
 #include "Global/SaveGame.h"
 #include "Global/Zone.h"
 
-ObjectLRZ3Setup *LRZ3Setup = NULL;
+ObjectLRZ3Setup *LRZ3Setup;
 
 void LRZ3Setup_Update(void) {}
 

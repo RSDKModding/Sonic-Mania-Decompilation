@@ -9,7 +9,7 @@
 #include "Global/Debris.h"
 #include "Global/Zone.h"
 
-ObjectLocoSmoke *LocoSmoke = NULL;
+ObjectLocoSmoke *LocoSmoke;
 
 void LocoSmoke_Update(void)
 {

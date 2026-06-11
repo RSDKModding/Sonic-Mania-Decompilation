@@ -13,7 +13,7 @@
 #include "UITAZoneModule.h"
 #include "Helpers/TimeAttackData.h"
 
-ObjectE3MenuSetup *E3MenuSetup = NULL;
+ObjectE3MenuSetup *E3MenuSetup;
 
 void E3MenuSetup_Update(void)
 {

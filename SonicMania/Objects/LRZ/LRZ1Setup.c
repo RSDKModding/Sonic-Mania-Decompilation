@@ -17,7 +17,7 @@
 #include "Global/Shield.h"
 #include "Global/Zone.h"
 
-ObjectLRZ1Setup *LRZ1Setup = NULL;
+ObjectLRZ1Setup *LRZ1Setup;
 
 void LRZ1Setup_Update(void) {}
 

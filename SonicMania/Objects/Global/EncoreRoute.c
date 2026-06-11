@@ -13,7 +13,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectEncoreRoute *EncoreRoute = NULL;
+ObjectEncoreRoute *EncoreRoute;
 
 void EncoreRoute_Update(void)
 {

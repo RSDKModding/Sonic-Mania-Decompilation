@@ -13,7 +13,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectBuzzBomber *BuzzBomber = NULL;
+ObjectBuzzBomber *BuzzBomber;
 
 void BuzzBomber_Update(void)
 {

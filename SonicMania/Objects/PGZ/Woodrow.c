@@ -15,7 +15,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectWoodrow *Woodrow = NULL;
+ObjectWoodrow *Woodrow;
 
 void Woodrow_Update(void)
 {

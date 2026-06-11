@@ -11,7 +11,7 @@
 #include "Global/TitleCard.h"
 #include "Global/Zone.h"
 
-ObjectLRZ1Outro *LRZ1Outro = NULL;
+ObjectLRZ1Outro *LRZ1Outro;
 
 void LRZ1Outro_Update(void)
 {

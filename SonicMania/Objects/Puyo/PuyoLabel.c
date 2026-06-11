@@ -7,7 +7,7 @@
 
 #include "PuyoLabel.h"
 
-ObjectPuyoLabel *PuyoLabel = NULL;
+ObjectPuyoLabel *PuyoLabel;
 
 void PuyoLabel_Update(void) {}
 

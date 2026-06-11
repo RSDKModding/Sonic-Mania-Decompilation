@@ -12,7 +12,7 @@
 #include "Global/Zone.h"
 #include "PGZ/Ice.h"
 
-ObjectTurretSwitch *TurretSwitch = NULL;
+ObjectTurretSwitch *TurretSwitch;
 
 void TurretSwitch_Update(void)
 {

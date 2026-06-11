@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectFBZFan *FBZFan = NULL;
+ObjectFBZFan *FBZFan;
 
 void FBZFan_Update(void)
 {

@@ -11,7 +11,7 @@
 #include "Global/Zone.h"
 #include "Helpers/BadnikHelpers.h"
 
-ObjectRTeleporter *RTeleporter = NULL;
+ObjectRTeleporter *RTeleporter;
 
 void RTeleporter_Update(void)
 {

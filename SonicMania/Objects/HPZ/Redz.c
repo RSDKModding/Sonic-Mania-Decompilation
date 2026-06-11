@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectRedz *Redz = NULL;
+ObjectRedz *Redz;
 
 void Redz_Update(void)
 {

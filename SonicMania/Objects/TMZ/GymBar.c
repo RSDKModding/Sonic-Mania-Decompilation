@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectGymBar *GymBar = NULL;
+ObjectGymBar *GymBar;
 
 void GymBar_Update(void) { GymBar_HandlePlayerInteractions(); }
 

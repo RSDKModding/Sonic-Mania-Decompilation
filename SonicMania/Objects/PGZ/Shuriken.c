@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectShuriken *Shuriken = NULL;
+ObjectShuriken *Shuriken;
 
 void Shuriken_Update(void)
 {

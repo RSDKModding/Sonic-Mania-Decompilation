@@ -8,7 +8,7 @@
 #include "TitleEggman.h"
 
 #if MANIA_USE_PLUS
-ObjectTitleEggman *TitleEggman = NULL;
+ObjectTitleEggman *TitleEggman;
 
 void TitleEggman_Update(void)
 {

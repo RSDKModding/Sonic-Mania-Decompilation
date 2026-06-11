@@ -37,7 +37,7 @@
 #include "Global/Explosion.h"
 #endif
 
-ObjectMetalSonic *MetalSonic = NULL;
+ObjectMetalSonic *MetalSonic;
 
 void MetalSonic_Update(void)
 {

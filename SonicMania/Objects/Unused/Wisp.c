@@ -9,7 +9,7 @@
 #include "Global/DebugMode.h"
 #include "Global/Zone.h"
 
-ObjectWisp *Wisp = NULL;
+ObjectWisp *Wisp;
 
 void Wisp_Update(void)
 {

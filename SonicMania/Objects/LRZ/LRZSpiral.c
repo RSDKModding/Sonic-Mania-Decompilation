@@ -11,7 +11,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectLRZSpiral *LRZSpiral = NULL;
+ObjectLRZSpiral *LRZSpiral;
 
 void LRZSpiral_Update(void)
 {

@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectBouncePlant *BouncePlant = NULL;
+ObjectBouncePlant *BouncePlant;
 
 void BouncePlant_Update(void)
 {

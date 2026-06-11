@@ -9,7 +9,7 @@
 #include "Global/Zone.h"
 
 #if MANIA_USE_PLUS
-ObjectFXWaveRing *FXWaveRing = NULL;
+ObjectFXWaveRing *FXWaveRing;
 
 void FXWaveRing_Update(void)
 {

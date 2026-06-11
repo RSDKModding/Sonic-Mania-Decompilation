@@ -11,7 +11,7 @@
 #include "Global/Zone.h"
 #include "Helpers/MathHelpers.h"
 
-ObjectBeanstalk *Beanstalk = NULL;
+ObjectBeanstalk *Beanstalk;
 
 void Beanstalk_Update(void)
 {

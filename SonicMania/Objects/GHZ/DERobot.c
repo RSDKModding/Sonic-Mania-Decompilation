@@ -19,7 +19,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectDERobot *DERobot = NULL;
+ObjectDERobot *DERobot;
 
 void DERobot_Update(void)
 {

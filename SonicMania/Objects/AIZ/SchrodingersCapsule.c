@@ -18,7 +18,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectSchrodingersCapsule *SchrodingersCapsule = NULL;
+ObjectSchrodingersCapsule *SchrodingersCapsule;
 
 void SchrodingersCapsule_Update(void)
 {

@@ -8,7 +8,7 @@
 #include "Bungee.h"
 #include "Global/Zone.h"
 
-ObjectBungee *Bungee = NULL;
+ObjectBungee *Bungee;
 
 void Bungee_Update(void)
 {

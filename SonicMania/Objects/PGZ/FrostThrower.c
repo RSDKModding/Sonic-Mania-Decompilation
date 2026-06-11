@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectFrostThrower *FrostThrower = NULL;
+ObjectFrostThrower *FrostThrower;
 
 void FrostThrower_Update(void)
 {

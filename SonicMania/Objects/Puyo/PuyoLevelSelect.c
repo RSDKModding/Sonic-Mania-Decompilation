@@ -9,7 +9,7 @@
 #include "Global/APICallback.h"
 #include "Global/Zone.h"
 
-ObjectPuyoLevelSelect *PuyoLevelSelect = NULL;
+ObjectPuyoLevelSelect *PuyoLevelSelect;
 
 void PuyoLevelSelect_Update(void)
 {

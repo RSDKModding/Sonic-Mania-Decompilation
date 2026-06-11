@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectWoodChipper *WoodChipper = NULL;
+ObjectWoodChipper *WoodChipper;
 
 void WoodChipper_Update(void)
 {

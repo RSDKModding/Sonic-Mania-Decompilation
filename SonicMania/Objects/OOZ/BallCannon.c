@@ -12,7 +12,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectBallCannon *BallCannon = NULL;
+ObjectBallCannon *BallCannon;
 
 void BallCannon_Update(void)
 {

@@ -14,7 +14,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectFBZ2Outro *FBZ2Outro = NULL;
+ObjectFBZ2Outro *FBZ2Outro;
 
 void FBZ2Outro_Update(void)
 {

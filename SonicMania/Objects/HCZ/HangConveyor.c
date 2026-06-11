@@ -10,7 +10,7 @@
 #include "Global/Zone.h"
 #include "Helpers/MathHelpers.h"
 
-ObjectHangConveyor *HangConveyor = NULL;
+ObjectHangConveyor *HangConveyor;
 
 void HangConveyor_Update(void)
 {

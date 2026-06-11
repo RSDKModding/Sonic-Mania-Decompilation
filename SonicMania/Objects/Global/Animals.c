@@ -11,7 +11,7 @@
 #include "Common/Platform.h"
 #include "GHZ/Bridge.h"
 
-ObjectAnimals *Animals = NULL;
+ObjectAnimals *Animals;
 
 void Animals_Update(void)
 {

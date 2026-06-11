@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectHonkytonk *Honkytonk = NULL;
+ObjectHonkytonk *Honkytonk;
 
 void Honkytonk_Update(void)
 {

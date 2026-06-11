@@ -19,7 +19,7 @@
 #endif
 #include "Helpers/MathHelpers.h"
 
-ObjectDiveEggman *DiveEggman = NULL;
+ObjectDiveEggman *DiveEggman;
 
 void DiveEggman_Update(void)
 {

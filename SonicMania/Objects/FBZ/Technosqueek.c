@@ -13,7 +13,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectTechnosqueek *Technosqueek = NULL;
+ObjectTechnosqueek *Technosqueek;
 
 void Technosqueek_Update(void)
 {

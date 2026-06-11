@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectUncurlPlant *UncurlPlant = NULL;
+ObjectUncurlPlant *UncurlPlant;
 
 void UncurlPlant_Update(void)
 {

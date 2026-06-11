@@ -13,7 +13,7 @@
 #include "Helpers/GameProgress.h"
 #include "Global/APICallback.h"
 
-ObjectSpikeLog *SpikeLog = NULL;
+ObjectSpikeLog *SpikeLog;
 
 void SpikeLog_Update(void)
 {

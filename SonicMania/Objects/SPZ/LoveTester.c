@@ -9,7 +9,7 @@
 #include "Global/ScoreBonus.h"
 #include "Global/Zone.h"
 
-ObjectLoveTester *LoveTester = NULL;
+ObjectLoveTester *LoveTester;
 
 void LoveTester_Update(void)
 {

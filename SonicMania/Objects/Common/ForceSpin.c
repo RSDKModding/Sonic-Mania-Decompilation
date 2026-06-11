@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectForceSpin *ForceSpin = NULL;
+ObjectForceSpin *ForceSpin;
 
 void ForceSpin_Update(void)
 {

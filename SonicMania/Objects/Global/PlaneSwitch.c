@@ -10,7 +10,7 @@
 #include "Player.h"
 #include "Zone.h"
 
-ObjectPlaneSwitch *PlaneSwitch = NULL;
+ObjectPlaneSwitch *PlaneSwitch;
 
 void PlaneSwitch_Update(void)
 {

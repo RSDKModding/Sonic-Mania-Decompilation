@@ -8,7 +8,7 @@
 #include "TetherBall.h"
 #include "Global/Zone.h"
 
-ObjectTetherBall *TetherBall = NULL;
+ObjectTetherBall *TetherBall;
 
 void TetherBall_Update(void)
 {

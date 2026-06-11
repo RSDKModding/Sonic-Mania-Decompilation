@@ -12,7 +12,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectTransportTube *TransportTube = NULL;
+ObjectTransportTube *TransportTube;
 
 void TransportTube_Update(void)
 {

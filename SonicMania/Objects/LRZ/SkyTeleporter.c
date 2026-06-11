@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectSkyTeleporter *SkyTeleporter = NULL;
+ObjectSkyTeleporter *SkyTeleporter;
 
 void SkyTeleporter_Update(void)
 {

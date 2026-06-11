@@ -13,7 +13,7 @@
 #include "Helpers/DrawHelpers.h"
 #include "Helpers/MathHelpers.h"
 
-ObjectWaterfallSound *WaterfallSound = NULL;
+ObjectWaterfallSound *WaterfallSound;
 
 void WaterfallSound_Update(void) {}
 

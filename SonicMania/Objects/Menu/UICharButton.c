@@ -12,7 +12,7 @@
 #include "UIWidgets.h"
 #include "Global/Announcer.h"
 
-ObjectUICharButton *UICharButton = NULL;
+ObjectUICharButton *UICharButton;
 
 void UICharButton_Update(void)
 {

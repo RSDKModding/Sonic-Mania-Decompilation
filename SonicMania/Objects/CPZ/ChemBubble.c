@@ -9,7 +9,7 @@
 #include "ChemicalPool.h"
 #include "Global/Zone.h"
 
-ObjectChemBubble *ChemBubble = NULL;
+ObjectChemBubble *ChemBubble;
 
 void ChemBubble_Update(void)
 {

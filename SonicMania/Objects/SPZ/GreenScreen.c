@@ -8,7 +8,7 @@
 #include "GreenScreen.h"
 #include "Global/Zone.h"
 
-ObjectGreenScreen *GreenScreen = NULL;
+ObjectGreenScreen *GreenScreen;
 
 void GreenScreen_Update(void) {}
 

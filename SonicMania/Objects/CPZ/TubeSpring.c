@@ -10,7 +10,7 @@
 #include "Global/Spring.h"
 #include "Global/Zone.h"
 
-ObjectTubeSpring *TubeSpring = NULL;
+ObjectTubeSpring *TubeSpring;
 
 void TubeSpring_Update(void)
 {

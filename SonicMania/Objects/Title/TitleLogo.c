@@ -9,7 +9,7 @@
 #include "Global/APICallback.h"
 #include "Global/Localization.h"
 
-ObjectTitleLogo *TitleLogo = NULL;
+ObjectTitleLogo *TitleLogo;
 
 void TitleLogo_Update(void)
 {

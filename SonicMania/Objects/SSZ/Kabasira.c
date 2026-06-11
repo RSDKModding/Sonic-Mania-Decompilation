@@ -11,7 +11,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectKabasira *Kabasira = NULL;
+ObjectKabasira *Kabasira;
 
 void Kabasira_Update(void)
 {

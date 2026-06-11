@@ -21,7 +21,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectMegaOctus *MegaOctus = NULL;
+ObjectMegaOctus *MegaOctus;
 
 void MegaOctus_Update(void)
 {

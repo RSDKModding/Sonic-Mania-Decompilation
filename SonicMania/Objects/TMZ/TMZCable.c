@@ -12,7 +12,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectTMZCable *TMZCable = NULL;
+ObjectTMZCable *TMZCable;
 
 void TMZCable_Update(void)
 {

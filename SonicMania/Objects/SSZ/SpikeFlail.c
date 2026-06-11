@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectSpikeFlail *SpikeFlail = NULL;
+ObjectSpikeFlail *SpikeFlail;
 
 void SpikeFlail_Update(void)
 {

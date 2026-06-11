@@ -35,7 +35,7 @@ AchievementID achievementList[] = {
 };
 // clang-format on
 
-ObjectGameProgress *GameProgress = NULL;
+ObjectGameProgress *GameProgress;
 
 void GameProgress_Update(void) {}
 

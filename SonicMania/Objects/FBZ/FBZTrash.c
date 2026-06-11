@@ -11,7 +11,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectFBZTrash *FBZTrash = NULL;
+ObjectFBZTrash *FBZTrash;
 
 void FBZTrash_Update(void)
 {

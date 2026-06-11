@@ -11,7 +11,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectTwistingSlide *TwistingSlide = NULL;
+ObjectTwistingSlide *TwistingSlide;
 
 void TwistingSlide_Update(void)
 {

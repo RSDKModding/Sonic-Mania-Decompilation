@@ -7,7 +7,7 @@
 
 #include "LogHelpers.h"
 
-ObjectLogHelpers *LogHelpers = NULL;
+ObjectLogHelpers *LogHelpers;
 
 void LogHelpers_Update(void) {}
 

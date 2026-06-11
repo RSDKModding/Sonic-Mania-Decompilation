@@ -12,7 +12,7 @@
 #include "UIWidgets.h"
 #include "Global/Localization.h"
 
-ObjectUIReplayCarousel *UIReplayCarousel = NULL;
+ObjectUIReplayCarousel *UIReplayCarousel;
 
 void UIReplayCarousel_Update(void)
 {

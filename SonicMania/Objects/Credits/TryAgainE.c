@@ -14,7 +14,7 @@
 #include "Global/HUD.h"
 #include "Global/SaveGame.h"
 
-ObjectTryAgainE *TryAgainE = NULL;
+ObjectTryAgainE *TryAgainE;
 
 void TryAgainE_Update(void)
 {

@@ -14,7 +14,7 @@
 #include "PBL_TargetBumper.h"
 #include "Global/Zone.h"
 
-ObjectPBL_Flipper *PBL_Flipper = NULL;
+ObjectPBL_Flipper *PBL_Flipper;
 
 void PBL_Flipper_Update(void)
 {

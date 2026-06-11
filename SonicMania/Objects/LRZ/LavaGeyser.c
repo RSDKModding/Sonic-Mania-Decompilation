@@ -10,7 +10,7 @@
 #include "Global/Shield.h"
 #include "Global/Zone.h"
 
-ObjectLavaGeyser *LavaGeyser = NULL;
+ObjectLavaGeyser *LavaGeyser;
 
 void LavaGeyser_Update(void)
 {

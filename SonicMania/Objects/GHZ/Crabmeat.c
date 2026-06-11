@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectCrabmeat *Crabmeat = NULL;
+ObjectCrabmeat *Crabmeat;
 
 void Crabmeat_Update(void)
 {

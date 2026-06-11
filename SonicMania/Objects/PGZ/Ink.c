@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectInk *Ink = NULL;
+ObjectInk *Ink;
 
 void Ink_Update(void)
 {

@@ -9,7 +9,7 @@
 #include "Global/Zone.h"
 
 #if MANIA_USE_PLUS
-ObjectMonarchPlans *MonarchPlans = NULL;
+ObjectMonarchPlans *MonarchPlans;
 
 void MonarchPlans_Update(void)
 {

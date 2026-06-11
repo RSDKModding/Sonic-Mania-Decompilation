@@ -11,7 +11,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectPhantomHand *PhantomHand = NULL;
+ObjectPhantomHand *PhantomHand;
 
 void PhantomHand_Update(void)
 {

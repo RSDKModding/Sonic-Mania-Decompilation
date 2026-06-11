@@ -14,7 +14,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectBall *Ball = NULL;
+ObjectBall *Ball;
 
 void Ball_Update(void)
 {

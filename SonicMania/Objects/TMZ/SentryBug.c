@@ -10,7 +10,7 @@
 #include "Global/Zone.h"
 #include "Helpers/BadnikHelpers.h"
 
-ObjectSentryBug *SentryBug = NULL;
+ObjectSentryBug *SentryBug;
 
 void SentryBug_Update(void)
 {

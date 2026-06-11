@@ -9,7 +9,7 @@
 #include "Player.h"
 #include "Zone.h"
 
-ObjectDust *Dust = NULL;
+ObjectDust *Dust;
 
 void Dust_Update(void) {}
 

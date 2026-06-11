@@ -8,7 +8,7 @@
 #include "InkWipe.h"
 #include "Global/Zone.h"
 
-ObjectInkWipe *InkWipe = NULL;
+ObjectInkWipe *InkWipe;
 
 // This object doesn't look like it was ever fully finished, a bummer indeed
 

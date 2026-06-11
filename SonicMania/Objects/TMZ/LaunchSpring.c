@@ -9,7 +9,7 @@
 #include "Global/Zone.h"
 #include "SSZ/Firework.h"
 
-ObjectLaunchSpring *LaunchSpring = NULL;
+ObjectLaunchSpring *LaunchSpring;
 
 void LaunchSpring_Update(void)
 {

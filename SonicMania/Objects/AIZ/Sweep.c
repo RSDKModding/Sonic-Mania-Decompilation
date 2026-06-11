@@ -12,7 +12,7 @@
 #include "Global/Shield.h"
 #include "Global/Zone.h"
 
-ObjectSweep *Sweep = NULL;
+ObjectSweep *Sweep;
 
 void Sweep_Update(void)
 {

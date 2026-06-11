@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectCaterkiller *Caterkiller = NULL;
+ObjectCaterkiller *Caterkiller;
 
 void Caterkiller_Update(void)
 {

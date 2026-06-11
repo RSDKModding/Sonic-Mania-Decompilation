@@ -12,7 +12,7 @@
 #include "Global/Zone.h"
 #include "Helpers/DrawHelpers.h"
 
-ObjectLRZConvControl *LRZConvControl = NULL;
+ObjectLRZConvControl *LRZConvControl;
 
 void LRZConvControl_Update(void)
 {

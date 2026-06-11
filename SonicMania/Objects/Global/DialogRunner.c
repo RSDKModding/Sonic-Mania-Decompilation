@@ -25,7 +25,7 @@
 #include "Menu/UIWaitSpinner.h"
 #include "UFO/UFO_Setup.h"
 
-ObjectDialogRunner *DialogRunner = NULL;
+ObjectDialogRunner *DialogRunner;
 
 void DialogRunner_Update(void)
 {

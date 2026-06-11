@@ -7,7 +7,7 @@
 
 #include "ColorHelpers.h"
 
-ObjectColorHelpers *ColorHelpers = NULL;
+ObjectColorHelpers *ColorHelpers;
 
 // NOTE:
 // I'm not actually sure *what* this object was for

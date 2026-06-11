@@ -21,7 +21,7 @@
 #endif
 #include "Helpers/LogHelpers.h"
 
-ObjectBuckwildBall *BuckwildBall = NULL;
+ObjectBuckwildBall *BuckwildBall;
 
 void BuckwildBall_Update(void)
 {

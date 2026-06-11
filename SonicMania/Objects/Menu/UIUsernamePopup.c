@@ -13,7 +13,7 @@
 #endif
 #include "Global/APICallback.h"
 
-ObjectUIUsernamePopup *UIUsernamePopup = NULL;
+ObjectUIUsernamePopup *UIUsernamePopup;
 
 void UIUsernamePopup_Update(void)
 {

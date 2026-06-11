@@ -11,7 +11,7 @@
 #include "Global/Zone.h"
 #include "Helpers/MathHelpers.h"
 
-ObjectBuzzSaw *BuzzSaw = NULL;
+ObjectBuzzSaw *BuzzSaw;
 
 void BuzzSaw_Update(void)
 {

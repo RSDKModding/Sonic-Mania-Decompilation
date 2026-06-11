@@ -20,7 +20,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectShiversaw *Shiversaw = NULL;
+ObjectShiversaw *Shiversaw;
 
 void Shiversaw_Update(void)
 {

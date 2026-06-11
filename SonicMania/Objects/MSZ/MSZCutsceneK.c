@@ -12,7 +12,7 @@
 #include "Global/Zone.h"
 #include "Helpers/TimeAttackData.h"
 
-ObjectMSZCutsceneK *MSZCutsceneK = NULL;
+ObjectMSZCutsceneK *MSZCutsceneK;
 
 void MSZCutsceneK_Update(void)
 {

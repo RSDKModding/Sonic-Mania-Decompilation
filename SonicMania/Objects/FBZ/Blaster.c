@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectBlaster *Blaster = NULL;
+ObjectBlaster *Blaster;
 
 void Blaster_Update(void)
 {

@@ -13,7 +13,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectUFO_Circuit *UFO_Circuit = NULL;
+ObjectUFO_Circuit *UFO_Circuit;
 
 void UFO_Circuit_Update(void)
 {

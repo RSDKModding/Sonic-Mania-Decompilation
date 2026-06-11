@@ -11,7 +11,7 @@
 #include "Global/Zone.h"
 #include "Helpers/MathHelpers.h"
 
-ObjectPullChain *PullChain = NULL;
+ObjectPullChain *PullChain;
 
 void PullChain_Update(void)
 {

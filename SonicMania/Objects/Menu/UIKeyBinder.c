@@ -13,7 +13,7 @@
 #include "Global/Localization.h"
 #include "Helpers/LogHelpers.h"
 
-ObjectUIKeyBinder *UIKeyBinder = NULL;
+ObjectUIKeyBinder *UIKeyBinder;
 
 void UIKeyBinder_Update(void)
 {

@@ -8,7 +8,7 @@
 #include "LottoBall.h"
 #include "Global/Zone.h"
 
-ObjectLottoBall *LottoBall = NULL;
+ObjectLottoBall *LottoBall;
 
 void LottoBall_Update(void)
 {

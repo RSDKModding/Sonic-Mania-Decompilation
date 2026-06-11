@@ -11,7 +11,7 @@
 #include "Global/Music.h"
 #include "Global/Zone.h"
 
-ObjectGHZCutsceneST *GHZCutsceneST = NULL;
+ObjectGHZCutsceneST *GHZCutsceneST;
 
 void GHZCutsceneST_Update(void)
 {

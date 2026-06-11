@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectHPZEmerald *HPZEmerald = NULL;
+ObjectHPZEmerald *HPZEmerald;
 
 void HPZEmerald_Update(void)
 {

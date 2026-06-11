@@ -21,7 +21,7 @@
 #include "Global/Music.h"
 #endif
 
-ObjectUITAZoneModule *UITAZoneModule = NULL;
+ObjectUITAZoneModule *UITAZoneModule;
 
 void UITAZoneModule_Update(void)
 {

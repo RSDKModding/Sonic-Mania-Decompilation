@@ -8,7 +8,7 @@
 #include "Explosion.h"
 #include "Zone.h"
 
-ObjectExplosion *Explosion = NULL;
+ObjectExplosion *Explosion;
 
 void Explosion_Update(void)
 {

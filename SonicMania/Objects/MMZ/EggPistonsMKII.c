@@ -15,7 +15,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectEggPistonsMKII *EggPistonsMKII = NULL;
+ObjectEggPistonsMKII *EggPistonsMKII;
 
 void EggPistonsMKII_Update(void)
 {

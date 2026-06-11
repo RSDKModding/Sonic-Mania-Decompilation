@@ -7,7 +7,7 @@
 
 #include "DrawHelpers.h"
 
-ObjectDrawHelpers *DrawHelpers = NULL;
+ObjectDrawHelpers *DrawHelpers;
 
 void DrawHelpers_Update(void) {}
 

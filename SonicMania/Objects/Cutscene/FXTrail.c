@@ -8,7 +8,7 @@
 #include "FXTrail.h"
 #include "Global/ImageTrail.h"
 
-ObjectFXTrail *FXTrail = NULL;
+ObjectFXTrail *FXTrail;
 
 void FXTrail_Update(void) {}
 

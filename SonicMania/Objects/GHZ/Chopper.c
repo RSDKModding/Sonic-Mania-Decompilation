@@ -11,7 +11,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectChopper *Chopper = NULL;
+ObjectChopper *Chopper;
 
 void Chopper_Update(void)
 {

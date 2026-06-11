@@ -13,7 +13,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectWhirlpool *Whirlpool = NULL;
+ObjectWhirlpool *Whirlpool;
 
 void Whirlpool_Update(void)
 {

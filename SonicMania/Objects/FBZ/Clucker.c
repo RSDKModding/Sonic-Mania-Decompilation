@@ -11,7 +11,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectClucker *Clucker = NULL;
+ObjectClucker *Clucker;
 
 void Clucker_Update(void)
 {

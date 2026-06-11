@@ -8,7 +8,7 @@
 #include "UIButtonLabel.h"
 #include "UIWidgets.h"
 
-ObjectUIButtonLabel *UIButtonLabel = NULL;
+ObjectUIButtonLabel *UIButtonLabel;
 
 void UIButtonLabel_Update(void)
 {

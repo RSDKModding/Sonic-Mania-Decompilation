@@ -11,7 +11,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectSwitchDoor *SwitchDoor = NULL;
+ObjectSwitchDoor *SwitchDoor;
 
 void SwitchDoor_Update(void)
 {

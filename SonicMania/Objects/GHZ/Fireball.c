@@ -10,7 +10,7 @@
 #include "Global/Shield.h"
 #include "Global/Zone.h"
 
-ObjectFireball *Fireball = NULL;
+ObjectFireball *Fireball;
 
 void Fireball_Update(void)
 {

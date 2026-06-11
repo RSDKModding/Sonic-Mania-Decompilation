@@ -31,7 +31,7 @@
 #include "Helpers/ReplayDB.h"
 #include "Helpers/TimeAttackData.h"
 
-ObjectOptionsMenu *OptionsMenu = NULL;
+ObjectOptionsMenu *OptionsMenu;
 
 void OptionsMenu_Update(void) {}
 

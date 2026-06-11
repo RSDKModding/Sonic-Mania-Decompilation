@@ -13,7 +13,7 @@
 #include "Global/APICallback.h"
 #include "Global/ReplayRecorder.h"
 
-ObjectReplayDB *ReplayDB = NULL;
+ObjectReplayDB *ReplayDB;
 
 void ReplayDB_Update(void) {}
 

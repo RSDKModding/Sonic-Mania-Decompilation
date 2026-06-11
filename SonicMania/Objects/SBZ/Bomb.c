@@ -11,7 +11,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectBomb *Bomb = NULL;
+ObjectBomb *Bomb;
 
 void Bomb_Update(void)
 {

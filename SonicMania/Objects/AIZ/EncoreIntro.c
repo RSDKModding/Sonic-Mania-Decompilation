@@ -31,7 +31,7 @@
 #include "Menu/UIWaitSpinner.h"
 #include "MSZ/HeavyMystic.h"
 
-ObjectEncoreIntro *EncoreIntro = NULL;
+ObjectEncoreIntro *EncoreIntro;
 
 void EncoreIntro_Update(void)
 {

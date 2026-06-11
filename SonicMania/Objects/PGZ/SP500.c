@@ -13,7 +13,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectSP500 *SP500 = NULL;
+ObjectSP500 *SP500;
 
 void SP500_Update(void)
 {

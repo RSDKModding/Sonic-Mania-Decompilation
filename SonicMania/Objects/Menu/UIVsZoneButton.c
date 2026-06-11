@@ -13,7 +13,7 @@
 #include "Global/Music.h"
 #include "Helpers/TimeAttackData.h"
 
-ObjectUIVsZoneButton *UIVsZoneButton = NULL;
+ObjectUIVsZoneButton *UIVsZoneButton;
 
 void UIVsZoneButton_Update(void)
 {

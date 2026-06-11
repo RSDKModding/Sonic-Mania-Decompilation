@@ -11,7 +11,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectTwistingDoor *TwistingDoor = NULL;
+ObjectTwistingDoor *TwistingDoor;
 
 void TwistingDoor_Update(void)
 {

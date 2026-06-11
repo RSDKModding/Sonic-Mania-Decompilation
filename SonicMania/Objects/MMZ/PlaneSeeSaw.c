@@ -11,7 +11,7 @@
 #include "Global/Shield.h"
 #include "Global/Zone.h"
 
-ObjectPlaneSeeSaw *PlaneSeeSaw = NULL;
+ObjectPlaneSeeSaw *PlaneSeeSaw;
 
 void PlaneSeeSaw_Update(void)
 {

@@ -23,7 +23,7 @@
 #include "Helpers/GameProgress.h"
 #include "Helpers/MathHelpers.h"
 
-ObjectPSZ1Setup *PSZ1Setup = NULL;
+ObjectPSZ1Setup *PSZ1Setup;
 
 void PSZ1Setup_Update(void) {}
 

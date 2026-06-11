@@ -12,7 +12,7 @@
 #include "Global/Music.h"
 #endif
 
-ObjectTryAgain *TryAgain = NULL;
+ObjectTryAgain *TryAgain;
 
 void TryAgain_Update(void)
 {

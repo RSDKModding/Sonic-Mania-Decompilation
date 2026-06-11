@@ -12,7 +12,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectRisingLava *RisingLava = NULL;
+ObjectRisingLava *RisingLava;
 
 void RisingLava_Update(void)
 {

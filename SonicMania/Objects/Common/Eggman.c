@@ -8,7 +8,7 @@
 #include "Eggman.h"
 #include "Global/Zone.h"
 
-ObjectEggman *Eggman = NULL;
+ObjectEggman *Eggman;
 
 void Eggman_Update(void)
 {

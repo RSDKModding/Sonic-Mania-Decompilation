@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectSpinBooster *SpinBooster = NULL;
+ObjectSpinBooster *SpinBooster;
 
 void SpinBooster_Update(void)
 {

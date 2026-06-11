@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectFlasherMKII *FlasherMKII = NULL;
+ObjectFlasherMKII *FlasherMKII;
 
 void FlasherMKII_Update(void)
 {

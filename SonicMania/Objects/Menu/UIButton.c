@@ -21,7 +21,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectUIButton *UIButton = NULL;
+ObjectUIButton *UIButton;
 
 void UIButton_Update(void)
 {

@@ -12,7 +12,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectPSZDoor *PSZDoor = NULL;
+ObjectPSZDoor *PSZDoor;
 
 void PSZDoor_Update(void)
 {

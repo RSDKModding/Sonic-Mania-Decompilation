@@ -7,7 +7,7 @@
 
 #include "MenuParam.h"
 
-ObjectMenuParam *MenuParam = NULL;
+ObjectMenuParam *MenuParam;
 
 void MenuParam_Update(void) {}
 

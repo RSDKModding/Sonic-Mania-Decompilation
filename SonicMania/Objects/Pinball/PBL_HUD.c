@@ -12,7 +12,7 @@
 #include "PBL_Player.h"
 #include "PBL_Setup.h"
 
-ObjectPBL_HUD *PBL_HUD = NULL;
+ObjectPBL_HUD *PBL_HUD;
 
 void PBL_HUD_Update(void)
 {

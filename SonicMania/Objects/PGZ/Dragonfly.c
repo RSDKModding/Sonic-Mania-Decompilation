@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectDragonfly *Dragonfly = NULL;
+ObjectDragonfly *Dragonfly;
 
 void Dragonfly_Update(void)
 {

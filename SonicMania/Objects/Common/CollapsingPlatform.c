@@ -14,7 +14,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectCollapsingPlatform *CollapsingPlatform = NULL;
+ObjectCollapsingPlatform *CollapsingPlatform;
 
 void CollapsingPlatform_Update(void)
 {

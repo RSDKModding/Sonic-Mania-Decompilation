@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectPushSpring *PushSpring = NULL;
+ObjectPushSpring *PushSpring;
 
 void PushSpring_Update(void)
 {

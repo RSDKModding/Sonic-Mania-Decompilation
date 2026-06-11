@@ -42,7 +42,7 @@
 #include "PGZ/Ice.h"
 #include "SPZ/LottoMachine.h"
 
-ObjectPlayer *Player = NULL;
+ObjectPlayer *Player;
 
 Hitbox Player_FallbackHitbox = { -10, -20, 10, 20 };
 

@@ -16,7 +16,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectDDWrecker *DDWrecker = NULL;
+ObjectDDWrecker *DDWrecker;
 
 void DDWrecker_Update(void)
 {

@@ -12,7 +12,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectConveyorWheel *ConveyorWheel = NULL;
+ObjectConveyorWheel *ConveyorWheel;
 
 void ConveyorWheel_Update(void)
 {

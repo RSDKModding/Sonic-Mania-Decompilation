@@ -8,7 +8,7 @@
 #include "FXSpinRay.h"
 #include "Global/Zone.h"
 
-ObjectFXSpinRay *FXSpinRay = NULL;
+ObjectFXSpinRay *FXSpinRay;
 
 void FXSpinRay_Update(void)
 {

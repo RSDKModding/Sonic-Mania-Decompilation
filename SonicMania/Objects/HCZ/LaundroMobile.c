@@ -22,7 +22,7 @@
 #include "Global/Zone.h"
 #include "Helpers/BadnikHelpers.h"
 
-ObjectLaundroMobile *LaundroMobile = NULL;
+ObjectLaundroMobile *LaundroMobile;
 
 void LaundroMobile_Update(void)
 {

@@ -13,7 +13,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectDango *Dango = NULL;
+ObjectDango *Dango;
 
 void Dango_Update(void)
 {

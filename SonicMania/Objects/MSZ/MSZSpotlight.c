@@ -9,7 +9,7 @@
 #include "HeavyMystic.h"
 #include "Global/Zone.h"
 
-ObjectMSZSpotlight *MSZSpotlight = NULL;
+ObjectMSZSpotlight *MSZSpotlight;
 
 void MSZSpotlight_Update(void)
 {

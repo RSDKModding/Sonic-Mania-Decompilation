@@ -9,7 +9,7 @@
 #include "Global/Music.h"
 #include "Title/TitleSetup.h"
 
-ObjectDemoMenu *DemoMenu = NULL;
+ObjectDemoMenu *DemoMenu;
 
 void DemoMenu_Update(void)
 {

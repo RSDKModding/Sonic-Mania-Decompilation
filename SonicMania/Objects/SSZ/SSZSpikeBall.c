@@ -12,7 +12,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectSSZSpikeBall *SSZSpikeBall = NULL;
+ObjectSSZSpikeBall *SSZSpikeBall;
 
 void SSZSpikeBall_Update(void)
 {

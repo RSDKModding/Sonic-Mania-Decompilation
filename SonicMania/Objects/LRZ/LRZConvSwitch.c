@@ -11,7 +11,7 @@
 #include "Global/Zone.h"
 #include "Helpers/MathHelpers.h"
 
-ObjectLRZConvSwitch *LRZConvSwitch = NULL;
+ObjectLRZConvSwitch *LRZConvSwitch;
 
 void LRZConvSwitch_Update(void)
 {

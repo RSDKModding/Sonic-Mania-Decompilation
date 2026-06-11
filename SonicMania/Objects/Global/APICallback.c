@@ -19,7 +19,7 @@
 #include "Menu/UIControl.h"
 #include "Menu/UIWaitSpinner.h"
 
-ObjectAPICallback *APICallback = NULL;
+ObjectAPICallback *APICallback;
 
 void APICallback_Update(void)
 {

@@ -16,7 +16,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectEggJanken *EggJanken = NULL;
+ObjectEggJanken *EggJanken;
 
 void EggJanken_Update(void)
 {

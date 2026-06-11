@@ -10,7 +10,7 @@
 #include "Global/Zone.h"
 #include "Helpers/ParticleHelpers.h"
 
-ObjectTimePost *TimePost = NULL;
+ObjectTimePost *TimePost;
 
 void TimePost_Update(void)
 {

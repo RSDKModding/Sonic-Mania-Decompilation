@@ -28,7 +28,7 @@
 #include "Helpers/LogHelpers.h"
 #include "Helpers/MathHelpers.h"
 
-ObjectUIControl *UIControl = NULL;
+ObjectUIControl *UIControl;
 
 void UIControl_Update(void)
 {

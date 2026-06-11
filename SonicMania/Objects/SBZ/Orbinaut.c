@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectOrbinaut *Orbinaut = NULL;
+ObjectOrbinaut *Orbinaut;
 
 void Orbinaut_Update(void)
 {

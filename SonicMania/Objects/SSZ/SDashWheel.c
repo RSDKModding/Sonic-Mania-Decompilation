@@ -11,7 +11,7 @@
 #include "Global/Soundboard.h"
 #include "Global/Zone.h"
 
-ObjectSDashWheel *SDashWheel = NULL;
+ObjectSDashWheel *SDashWheel;
 
 void SDashWheel_Update(void)
 {

@@ -11,7 +11,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectStegway *Stegway = NULL;
+ObjectStegway *Stegway;
 
 void Stegway_Update(void)
 {

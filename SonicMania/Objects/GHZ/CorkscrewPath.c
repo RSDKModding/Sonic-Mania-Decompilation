@@ -11,7 +11,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectCorkscrewPath *CorkscrewPath = NULL;
+ObjectCorkscrewPath *CorkscrewPath;
 
 void CorkscrewPath_Update(void)
 {

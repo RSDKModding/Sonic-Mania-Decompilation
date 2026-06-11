@@ -23,7 +23,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectHeavyMystic *HeavyMystic = NULL;
+ObjectHeavyMystic *HeavyMystic;
 
 void HeavyMystic_Update(void)
 {

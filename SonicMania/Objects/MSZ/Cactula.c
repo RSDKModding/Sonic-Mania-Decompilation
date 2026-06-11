@@ -12,7 +12,7 @@
 #include "Global/Soundboard.h"
 #include "Global/Zone.h"
 
-ObjectCactula *Cactula = NULL;
+ObjectCactula *Cactula;
 
 void Cactula_Update(void)
 {

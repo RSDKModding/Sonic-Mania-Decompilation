@@ -15,7 +15,7 @@
 #include "Global/Animals.h"
 #include "Global/Zone.h"
 
-ObjectCPZSetup *CPZSetup = NULL;
+ObjectCPZSetup *CPZSetup;
 
 void CPZSetup_Update(void) {}
 

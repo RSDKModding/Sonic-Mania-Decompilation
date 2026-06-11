@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectBarStool *BarStool = NULL;
+ObjectBarStool *BarStool;
 
 void BarStool_Update(void)
 {

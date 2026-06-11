@@ -18,7 +18,7 @@
 #include "Helpers/GameProgress.h"
 #include "Helpers/MathHelpers.h"
 
-ObjectWalkerLegs *WalkerLegs = NULL;
+ObjectWalkerLegs *WalkerLegs;
 
 void WalkerLegs_Update(void)
 {

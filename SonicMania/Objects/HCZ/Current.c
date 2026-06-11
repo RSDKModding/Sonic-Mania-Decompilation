@@ -16,7 +16,7 @@
 #include "Helpers/MathHelpers.h"
 #include "Global/APICallback.h"
 
-ObjectCurrent *Current = NULL;
+ObjectCurrent *Current;
 
 void Current_Update(void)
 {

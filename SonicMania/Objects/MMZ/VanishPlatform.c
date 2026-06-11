@@ -12,7 +12,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectVanishPlatform *VanishPlatform = NULL;
+ObjectVanishPlatform *VanishPlatform;
 
 void VanishPlatform_Update(void)
 {

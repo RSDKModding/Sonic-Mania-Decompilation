@@ -12,7 +12,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectDoorTrigger *DoorTrigger = NULL;
+ObjectDoorTrigger *DoorTrigger;
 
 void DoorTrigger_Update(void)
 {

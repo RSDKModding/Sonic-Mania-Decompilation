@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectFlameSpring *FlameSpring = NULL;
+ObjectFlameSpring *FlameSpring;
 
 void FlameSpring_Update(void)
 {

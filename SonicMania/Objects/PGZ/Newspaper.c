@@ -14,7 +14,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectNewspaper *Newspaper = NULL;
+ObjectNewspaper *Newspaper;
 
 void Newspaper_Update(void)
 {

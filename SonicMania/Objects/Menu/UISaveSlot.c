@@ -18,7 +18,7 @@
 #include "Global/SaveGame.h"
 #include "Global/Zone.h"
 
-ObjectUISaveSlot *UISaveSlot = NULL;
+ObjectUISaveSlot *UISaveSlot;
 
 void UISaveSlot_Update(void)
 {

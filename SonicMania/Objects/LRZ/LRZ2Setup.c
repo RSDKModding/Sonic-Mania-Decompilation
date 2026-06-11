@@ -20,7 +20,7 @@
 #include "Global/StarPost.h"
 #include "Global/Zone.h"
 
-ObjectLRZ2Setup *LRZ2Setup = NULL;
+ObjectLRZ2Setup *LRZ2Setup;
 
 void LRZ2Setup_Update(void) {}
 

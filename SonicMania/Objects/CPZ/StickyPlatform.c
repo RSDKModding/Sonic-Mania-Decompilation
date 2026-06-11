@@ -12,7 +12,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectStickyPlatform *StickyPlatform = NULL;
+ObjectStickyPlatform *StickyPlatform;
 
 void StickyPlatform_Update(void)
 {

@@ -14,7 +14,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectSeltzerBottle *SeltzerBottle = NULL;
+ObjectSeltzerBottle *SeltzerBottle;
 
 void SeltzerBottle_Update(void)
 {

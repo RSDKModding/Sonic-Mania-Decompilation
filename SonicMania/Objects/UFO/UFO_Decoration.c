@@ -8,7 +8,7 @@
 #include "UFO_Decoration.h"
 #include "UFO_Camera.h"
 
-ObjectUFO_Decoration *UFO_Decoration = NULL;
+ObjectUFO_Decoration *UFO_Decoration;
 
 void UFO_Decoration_Update(void)
 {

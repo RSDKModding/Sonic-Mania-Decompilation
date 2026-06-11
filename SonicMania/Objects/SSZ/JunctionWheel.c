@@ -13,7 +13,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectJunctionWheel *JunctionWheel = NULL;
+ObjectJunctionWheel *JunctionWheel;
 
 void JunctionWheel_Update(void)
 {

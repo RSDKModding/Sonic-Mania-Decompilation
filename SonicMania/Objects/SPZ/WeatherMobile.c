@@ -21,7 +21,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectWeatherMobile *WeatherMobile = NULL;
+ObjectWeatherMobile *WeatherMobile;
 
 void WeatherMobile_Update(void)
 {

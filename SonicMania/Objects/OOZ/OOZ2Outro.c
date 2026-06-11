@@ -15,7 +15,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectOOZ2Outro *OOZ2Outro = NULL;
+ObjectOOZ2Outro *OOZ2Outro;
 
 void OOZ2Outro_Update(void)
 {

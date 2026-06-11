@@ -13,7 +13,7 @@
 #include "Global/StarPost.h"
 #include "Global/Zone.h"
 
-ObjectTornado *Tornado = NULL;
+ObjectTornado *Tornado;
 
 void Tornado_Update(void)
 {

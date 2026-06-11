@@ -11,7 +11,7 @@
 #include "Global/Zone.h"
 #include "Helpers/DrawHelpers.h"
 
-ObjectPiston *Piston = NULL;
+ObjectPiston *Piston;
 
 void Piston_Update(void)
 {

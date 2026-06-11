@@ -25,7 +25,7 @@
 #include "Helpers/MathHelpers.h"
 #include "Global/APICallback.h"
 
-ObjectSignPost *SignPost = NULL;
+ObjectSignPost *SignPost;
 
 void SignPost_Update(void)
 {

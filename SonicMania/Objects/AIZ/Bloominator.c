@@ -12,7 +12,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectBloominator *Bloominator = NULL;
+ObjectBloominator *Bloominator;
 
 void Bloominator_Update(void)
 {

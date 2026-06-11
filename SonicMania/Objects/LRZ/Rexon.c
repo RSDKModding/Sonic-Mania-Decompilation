@@ -12,7 +12,7 @@
 #include "Global/Zone.h"
 #include "Helpers/BadnikHelpers.h"
 
-ObjectRexon *Rexon = NULL;
+ObjectRexon *Rexon;
 
 void Rexon_Update(void)
 {

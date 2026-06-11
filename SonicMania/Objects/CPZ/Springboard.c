@@ -10,7 +10,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectSpringboard *Springboard = NULL;
+ObjectSpringboard *Springboard;
 
 void Springboard_Update(void)
 {

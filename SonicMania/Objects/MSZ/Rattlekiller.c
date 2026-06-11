@@ -14,7 +14,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectRattlekiller *Rattlekiller = NULL;
+ObjectRattlekiller *Rattlekiller;
 
 void Rattlekiller_Update(void)
 {

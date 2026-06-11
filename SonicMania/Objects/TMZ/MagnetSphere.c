@@ -9,7 +9,7 @@
 #include "Global/DebugMode.h"
 #include "Global/Zone.h"
 
-ObjectMagnetSphere *MagnetSphere = NULL;
+ObjectMagnetSphere *MagnetSphere;
 
 void MagnetSphere_Update(void)
 {

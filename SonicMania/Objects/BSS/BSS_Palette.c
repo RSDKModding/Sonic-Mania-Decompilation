@@ -7,7 +7,7 @@
 
 #include "BSS_Palette.h"
 
-ObjectBSS_Palette *BSS_Palette = NULL;
+ObjectBSS_Palette *BSS_Palette;
 
 void BSS_Palette_Update(void) {}
 

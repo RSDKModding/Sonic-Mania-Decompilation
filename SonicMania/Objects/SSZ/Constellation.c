@@ -7,7 +7,7 @@
 
 #include "Constellation.h"
 
-ObjectConstellation *Constellation = NULL;
+ObjectConstellation *Constellation;
 
 void Constellation_Update(void)
 {

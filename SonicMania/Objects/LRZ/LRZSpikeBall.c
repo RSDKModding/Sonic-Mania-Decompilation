@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectLRZSpikeBall *LRZSpikeBall = NULL;
+ObjectLRZSpikeBall *LRZSpikeBall;
 
 void LRZSpikeBall_Update(void)
 {

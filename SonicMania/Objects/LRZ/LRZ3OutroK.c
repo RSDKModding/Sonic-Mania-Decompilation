@@ -11,7 +11,7 @@
 #include "Global/Zone.h"
 #include "MSZ/MSZCutsceneK.h"
 
-ObjectLRZ3OutroK *LRZ3OutroK = NULL;
+ObjectLRZ3OutroK *LRZ3OutroK;
 
 void LRZ3OutroK_Update(void)
 {

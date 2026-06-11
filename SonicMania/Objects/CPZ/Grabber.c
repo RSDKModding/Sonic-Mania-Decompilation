@@ -11,7 +11,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectGrabber *Grabber = NULL;
+ObjectGrabber *Grabber;
 
 void Grabber_Update(void)
 {

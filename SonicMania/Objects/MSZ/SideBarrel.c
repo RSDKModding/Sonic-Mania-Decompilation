@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectSideBarrel *SideBarrel = NULL;
+ObjectSideBarrel *SideBarrel;
 
 void SideBarrel_Update(void)
 {

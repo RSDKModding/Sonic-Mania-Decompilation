@@ -9,7 +9,7 @@
 #include "UIPicture.h"
 #include "Global/APICallback.h"
 
-ObjectLogoSetup *LogoSetup = NULL;
+ObjectLogoSetup *LogoSetup;
 
 void LogoSetup_Update(void)
 {

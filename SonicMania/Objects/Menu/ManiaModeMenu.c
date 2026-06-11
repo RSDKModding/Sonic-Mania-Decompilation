@@ -31,7 +31,7 @@
 #include "Helpers/ReplayDB.h"
 #include "Helpers/TimeAttackData.h"
 
-ObjectManiaModeMenu *ManiaModeMenu = NULL;
+ObjectManiaModeMenu *ManiaModeMenu;
 
 void ManiaModeMenu_Update(void) {}
 

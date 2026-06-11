@@ -8,7 +8,7 @@
 #include "ImageTrail.h"
 #include "DebugMode.h"
 
-ObjectImageTrail *ImageTrail = NULL;
+ObjectImageTrail *ImageTrail;
 
 void ImageTrail_Update(void) {}
 

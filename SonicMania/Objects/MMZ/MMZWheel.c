@@ -11,7 +11,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectMMZWheel *MMZWheel = NULL;
+ObjectMMZWheel *MMZWheel;
 
 void MMZWheel_Update(void)
 {

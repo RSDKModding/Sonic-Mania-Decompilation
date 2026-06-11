@@ -16,7 +16,7 @@
 #include "Global/SaveGame.h"
 #include "Global/Zone.h"
 
-ObjectPSZ2Setup *PSZ2Setup = NULL;
+ObjectPSZ2Setup *PSZ2Setup;
 
 void PSZ2Setup_Update(void) {}
 

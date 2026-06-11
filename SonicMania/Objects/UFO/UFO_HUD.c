@@ -10,7 +10,7 @@
 #include "UFO_Setup.h"
 #include "UFO_Sphere.h"
 
-ObjectUFO_HUD *UFO_HUD = NULL;
+ObjectUFO_HUD *UFO_HUD;
 
 void UFO_HUD_Update(void)
 {

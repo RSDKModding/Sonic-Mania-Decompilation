@@ -12,7 +12,7 @@
 #include "Global/Localization.h"
 #include "Global/Player.h"
 
-ObjectUIDiorama *UIDiorama = NULL;
+ObjectUIDiorama *UIDiorama;
 
 void UIDiorama_Update(void)
 {

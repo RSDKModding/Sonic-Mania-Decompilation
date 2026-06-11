@@ -17,7 +17,7 @@
 #include "Global/Music.h"
 #include "Helpers/TimeAttackData.h"
 
-ObjectTitleSetup *TitleSetup = NULL;
+ObjectTitleSetup *TitleSetup;
 
 void TitleSetup_Update(void)
 {

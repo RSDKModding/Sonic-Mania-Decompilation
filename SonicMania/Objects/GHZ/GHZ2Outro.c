@@ -14,7 +14,7 @@
 #include "Global/Music.h"
 #include "Global/Zone.h"
 
-ObjectGHZ2Outro *GHZ2Outro = NULL;
+ObjectGHZ2Outro *GHZ2Outro;
 
 void GHZ2Outro_Update(void)
 {

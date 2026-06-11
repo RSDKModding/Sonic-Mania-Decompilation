@@ -19,7 +19,7 @@
 #include "Global/SaveGame.h"
 #include "Helpers/LogHelpers.h"
 
-ObjectPBL_Crane *PBL_Crane = NULL;
+ObjectPBL_Crane *PBL_Crane;
 
 void PBL_Crane_Update(void)
 {

@@ -20,7 +20,7 @@
 #include "Global/Zone.h"
 #include "Menu/UICreditsText.h"
 
-ObjectEncoreGoodEnd *EncoreGoodEnd = NULL;
+ObjectEncoreGoodEnd *EncoreGoodEnd;
 
 void EncoreGoodEnd_Update(void)
 {

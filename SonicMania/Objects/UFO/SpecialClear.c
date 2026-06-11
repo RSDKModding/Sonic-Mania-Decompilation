@@ -15,7 +15,7 @@
 #include "Menu/MenuParam.h"
 #include "Menu/UIWaitSpinner.h"
 
-ObjectSpecialClear *SpecialClear = NULL;
+ObjectSpecialClear *SpecialClear;
 
 void SpecialClear_Update(void) {}
 

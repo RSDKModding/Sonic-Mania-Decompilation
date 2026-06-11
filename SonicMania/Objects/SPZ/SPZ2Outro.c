@@ -11,7 +11,7 @@
 #include "Global/Zone.h"
 #include "Cutscene/CutsceneRules.h"
 
-ObjectSPZ2Outro *SPZ2Outro = NULL;
+ObjectSPZ2Outro *SPZ2Outro;
 
 void SPZ2Outro_Update(void)
 {

@@ -18,7 +18,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectDBTower *DBTower = NULL;
+ObjectDBTower *DBTower;
 
 void DBTower_Update(void)
 {

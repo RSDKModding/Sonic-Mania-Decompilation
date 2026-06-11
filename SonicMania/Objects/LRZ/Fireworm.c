@@ -11,7 +11,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectFireworm *Fireworm = NULL;
+ObjectFireworm *Fireworm;
 
 void Fireworm_Update(void)
 {

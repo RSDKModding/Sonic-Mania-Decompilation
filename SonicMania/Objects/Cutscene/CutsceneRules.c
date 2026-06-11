@@ -12,7 +12,7 @@
 #include "Global/Zone.h"
 #include "Helpers/DrawHelpers.h"
 
-ObjectCutsceneRules *CutsceneRules = NULL;
+ObjectCutsceneRules *CutsceneRules;
 
 // NOTE:
 // I'm not actually sure *what* this object was for

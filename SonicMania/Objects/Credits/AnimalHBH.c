@@ -8,7 +8,7 @@
 #include "AnimalHBH.h"
 #include "Cutscene/FXFade.h"
 
-ObjectAnimalHBH *AnimalHBH = NULL;
+ObjectAnimalHBH *AnimalHBH;
 
 void AnimalHBH_Update(void)
 {

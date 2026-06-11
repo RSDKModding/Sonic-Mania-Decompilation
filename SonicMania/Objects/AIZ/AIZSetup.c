@@ -26,7 +26,7 @@
 #include "Global/Zone.h"
 #include "Helpers/MathHelpers.h"
 
-ObjectAIZSetup *AIZSetup = NULL;
+ObjectAIZSetup *AIZSetup;
 
 void AIZSetup_Update(void) {}
 

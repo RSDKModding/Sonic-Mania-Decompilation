@@ -11,7 +11,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectGenericTrigger *GenericTrigger = NULL;
+ObjectGenericTrigger *GenericTrigger;
 
 void GenericTrigger_Update(void)
 {

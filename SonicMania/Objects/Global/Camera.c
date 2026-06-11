@@ -12,7 +12,7 @@
 #endif
 #include "Helpers/MathHelpers.h"
 
-ObjectCamera *Camera = NULL;
+ObjectCamera *Camera;
 
 void Camera_Update(void) {}
 

@@ -14,7 +14,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectCrate *Crate = NULL;
+ObjectCrate *Crate;
 
 void Crate_Update(void)
 {

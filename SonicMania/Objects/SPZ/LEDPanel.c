@@ -11,7 +11,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectLEDPanel *LEDPanel = NULL;
+ObjectLEDPanel *LEDPanel;
 
 void LEDPanel_Update(void)
 {

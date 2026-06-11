@@ -12,7 +12,7 @@
 #include "Global/APICallback.h"
 #include "Global/Localization.h"
 
-ObjectUIButtonPrompt *UIButtonPrompt = NULL;
+ObjectUIButtonPrompt *UIButtonPrompt;
 
 void UIButtonPrompt_Update(void)
 {

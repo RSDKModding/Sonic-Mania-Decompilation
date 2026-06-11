@@ -15,7 +15,7 @@
 // This object is 100% fully functional.
 // However, they're never placed in any stage, Making them unused.
 
-ObjectHCZSpikeBall *HCZSpikeBall = NULL;
+ObjectHCZSpikeBall *HCZSpikeBall;
 
 void HCZSpikeBall_Update(void)
 {

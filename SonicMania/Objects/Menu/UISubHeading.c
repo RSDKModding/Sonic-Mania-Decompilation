@@ -20,7 +20,7 @@
 #include "Helpers/TimeAttackData.h"
 #endif
 
-ObjectUISubHeading *UISubHeading = NULL;
+ObjectUISubHeading *UISubHeading;
 
 void UISubHeading_Update(void)
 {

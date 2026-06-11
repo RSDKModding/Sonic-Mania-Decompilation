@@ -10,7 +10,7 @@
 #include "Global/Ring.h"
 #include "Global/Zone.h"
 
-ObjectToxomister *Toxomister = NULL;
+ObjectToxomister *Toxomister;
 
 void Toxomister_Update(void)
 {

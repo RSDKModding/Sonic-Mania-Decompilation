@@ -13,7 +13,7 @@
 #include "Global/Spring.h"
 #include "Global/Zone.h"
 
-ObjectIce *Ice = NULL;
+ObjectIce *Ice;
 
 void Ice_Update(void)
 {

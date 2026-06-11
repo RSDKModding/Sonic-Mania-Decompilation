@@ -13,7 +13,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectHatch *Hatch = NULL;
+ObjectHatch *Hatch;
 
 void Hatch_Update(void)
 {

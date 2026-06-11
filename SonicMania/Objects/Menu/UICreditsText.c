@@ -8,7 +8,7 @@
 #include "UICreditsText.h"
 #include "UIWidgets.h"
 
-ObjectUICreditsText *UICreditsText = NULL;
+ObjectUICreditsText *UICreditsText;
 
 void UICreditsText_Update(void)
 {

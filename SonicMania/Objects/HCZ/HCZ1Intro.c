@@ -11,7 +11,7 @@
 #include "Global/TitleCard.h"
 #include "Global/Zone.h"
 
-ObjectHCZ1Intro *HCZ1Intro = NULL;
+ObjectHCZ1Intro *HCZ1Intro;
 
 void HCZ1Intro_Update(void)
 {

@@ -13,7 +13,7 @@
 #include "PBL_Setup.h"
 #include "Global/Zone.h"
 
-ObjectPBL_TargetBumper *PBL_TargetBumper = NULL;
+ObjectPBL_TargetBumper *PBL_TargetBumper;
 
 void PBL_TargetBumper_Update(void)
 {

@@ -10,7 +10,7 @@
 #include "Global/Zone.h"
 #include "Helpers/MathHelpers.h"
 
-ObjectPaperRoller *PaperRoller = NULL;
+ObjectPaperRoller *PaperRoller;
 
 void PaperRoller_Update(void)
 {

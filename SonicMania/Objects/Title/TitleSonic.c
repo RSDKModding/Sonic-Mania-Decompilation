@@ -7,7 +7,7 @@
 
 #include "TitleSonic.h"
 
-ObjectTitleSonic *TitleSonic = NULL;
+ObjectTitleSonic *TitleSonic;
 
 void TitleSonic_Update(void)
 {

@@ -8,7 +8,7 @@
 #include "UIOptionPanel.h"
 #include "UIWidgets.h"
 
-ObjectUIOptionPanel *UIOptionPanel = NULL;
+ObjectUIOptionPanel *UIOptionPanel;
 
 void UIOptionPanel_Update(void)
 {

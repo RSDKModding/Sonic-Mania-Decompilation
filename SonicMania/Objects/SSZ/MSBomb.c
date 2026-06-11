@@ -14,7 +14,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectMSBomb *MSBomb = NULL;
+ObjectMSBomb *MSBomb;
 
 void MSBomb_Update(void)
 {

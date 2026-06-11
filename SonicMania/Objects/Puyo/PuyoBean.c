@@ -10,7 +10,7 @@
 #include "Global/Debris.h"
 #include "Global/Zone.h"
 
-ObjectPuyoBean *PuyoBean = NULL;
+ObjectPuyoBean *PuyoBean;
 
 void PuyoBean_Update(void)
 {

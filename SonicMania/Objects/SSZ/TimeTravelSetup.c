@@ -10,7 +10,7 @@
 #include "Global/Zone.h"
 #include "Helpers/ParticleHelpers.h"
 
-ObjectTimeTravelSetup *TimeTravelSetup = NULL;
+ObjectTimeTravelSetup *TimeTravelSetup;
 
 void TimeTravelSetup_Update(void) {}
 

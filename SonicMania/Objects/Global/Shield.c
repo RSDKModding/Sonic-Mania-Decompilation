@@ -10,7 +10,7 @@
 #include "Player.h"
 #include "Zone.h"
 
-ObjectShield *Shield = NULL;
+ObjectShield *Shield;
 
 void Shield_Update(void)
 {

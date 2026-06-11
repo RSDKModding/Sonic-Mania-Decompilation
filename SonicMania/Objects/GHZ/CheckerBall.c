@@ -29,7 +29,7 @@
 #include "Global/Zone.h"
 #include "Helpers/BadnikHelpers.h"
 
-ObjectCheckerBall *CheckerBall = NULL;
+ObjectCheckerBall *CheckerBall;
 
 void CheckerBall_Update(void)
 {

@@ -9,7 +9,7 @@
 #include "Player.h"
 
 #if MANIA_USE_PLUS
-ObjectNoSwap *NoSwap = NULL;
+ObjectNoSwap *NoSwap;
 
 void NoSwap_Update(void)
 {

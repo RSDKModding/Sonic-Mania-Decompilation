@@ -11,7 +11,7 @@
 #include "Global/Camera.h"
 #include "Global/Zone.h"
 
-ObjectCutsceneHBH *CutsceneHBH = NULL;
+ObjectCutsceneHBH *CutsceneHBH;
 
 void CutsceneHBH_Update(void)
 {

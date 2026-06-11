@@ -13,7 +13,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectUICarousel *UICarousel = NULL;
+ObjectUICarousel *UICarousel;
 
 void UICarousel_Update(void) {}
 

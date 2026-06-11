@@ -12,7 +12,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectCableWarp *CableWarp = NULL;
+ObjectCableWarp *CableWarp;
 
 void CableWarp_Update(void)
 {

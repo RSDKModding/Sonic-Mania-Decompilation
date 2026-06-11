@@ -7,7 +7,7 @@
 
 #include "UIPicture.h"
 
-ObjectUIPicture *UIPicture = NULL;
+ObjectUIPicture *UIPicture;
 
 void UIPicture_Update(void)
 {

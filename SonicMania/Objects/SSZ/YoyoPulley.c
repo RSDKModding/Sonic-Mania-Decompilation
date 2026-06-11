@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectYoyoPulley *YoyoPulley = NULL;
+ObjectYoyoPulley *YoyoPulley;
 
 void YoyoPulley_Update(void)
 {

@@ -14,7 +14,7 @@
 #include "Global/ScoreBonus.h"
 #include "Global/Zone.h"
 
-ObjectLightBulb *LightBulb = NULL;
+ObjectLightBulb *LightBulb;
 
 void LightBulb_Update(void)
 {

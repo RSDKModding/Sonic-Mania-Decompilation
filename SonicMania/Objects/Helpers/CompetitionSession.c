@@ -10,7 +10,7 @@
 #include "LogHelpers.h"
 #endif
 
-ObjectCompetitionSession *CompetitionSession = NULL;
+ObjectCompetitionSession *CompetitionSession;
 
 void CompetitionSession_Update(void) {}
 

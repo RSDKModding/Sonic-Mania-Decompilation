@@ -8,7 +8,7 @@
 #include "BSS_Horizon.h"
 #include "BSS_Palette.h"
 
-ObjectBSS_Horizon *BSS_Horizon = NULL;
+ObjectBSS_Horizon *BSS_Horizon;
 
 void BSS_Horizon_Update(void) {}
 

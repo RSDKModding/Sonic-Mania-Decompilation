@@ -14,7 +14,7 @@
 #include "Helpers/DrawHelpers.h"
 #endif
 
-ObjectCircleBumper *CircleBumper = NULL;
+ObjectCircleBumper *CircleBumper;
 
 void CircleBumper_Update(void)
 {

@@ -11,7 +11,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectMine *Mine = NULL;
+ObjectMine *Mine;
 
 void Mine_Update(void)
 {

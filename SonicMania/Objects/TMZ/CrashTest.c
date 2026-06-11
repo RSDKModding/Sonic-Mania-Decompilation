@@ -11,7 +11,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectCrashTest *CrashTest = NULL;
+ObjectCrashTest *CrashTest;
 
 void CrashTest_Update(void)
 {

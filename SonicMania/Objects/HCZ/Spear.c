@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectSpear *Spear = NULL;
+ObjectSpear *Spear;
 
 void Spear_Update(void)
 {

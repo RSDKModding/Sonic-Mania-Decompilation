@@ -11,7 +11,7 @@
 #include "Global/Ring.h"
 #include "Global/Zone.h"
 
-ObjectPKingAttack *PKingAttack = NULL;
+ObjectPKingAttack *PKingAttack;
 
 // NOTE:
 // This object is likely highly based off LRZ/KingAttack

@@ -9,7 +9,7 @@
 #include "Global/Player.h"
 #include "Global/Zone.h"
 
-ObjectTwistedTubes *TwistedTubes = NULL;
+ObjectTwistedTubes *TwistedTubes;
 
 void TwistedTubes_Update(void)
 {

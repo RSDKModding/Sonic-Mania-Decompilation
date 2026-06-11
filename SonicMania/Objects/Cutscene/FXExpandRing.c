@@ -8,7 +8,7 @@
 #include "FXExpandRing.h"
 #include "Global/Zone.h"
 
-ObjectFXExpandRing *FXExpandRing = NULL;
+ObjectFXExpandRing *FXExpandRing;
 
 void FXExpandRing_Update(void)
 {
