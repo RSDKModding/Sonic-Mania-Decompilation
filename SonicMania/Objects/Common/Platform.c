@@ -2451,13 +2451,6 @@ void Platform_EditorDraw(void)
             break;
 
         case PLATFORM_DOORSLIDE:
-            amplitude.x <<= 10;
-            self->updateRange.x = TO_FIXED(128) + abs(amplitude.x);
-            self->updateRange.y = TO_FIXED(128) + abs(amplitude.x);
-
-            if (self->speed < 0)
-                self->direction = FLIP_X;
-
             Platform_EditorDraw_Normal();
 
             if (showGizmos()) {
@@ -2466,27 +2459,17 @@ void Platform_EditorDraw(void)
                 self->inkEffect = INK_BLEND;
 
                 drawPos     = self->drawPos;
-                amplitude.y = 0;
-                while (self->speed && amplitude.x) {
-                    if (amplitude.y < amplitude.x) {
-                        amplitude.y += (abs(self->speed) << 16);
-                        if (amplitude.y >= amplitude.x) {
-                            amplitude.y = amplitude.x;
-                            break;
-                        }
-                    }
 
-                    if (self->direction) {
-                        self->drawPos.x = (-amplitude.y >> 8) * RSDK.Cos256(self->angle) + self->centerPos.x;
-                        self->drawPos.y = (-amplitude.y >> 8) * RSDK.Sin256(self->angle) + self->centerPos.y;
-                    }
-                    else {
-                        self->drawPos.x = (amplitude.y >> 8) * RSDK.Cos256(self->angle) + self->centerPos.x;
-                        self->drawPos.y = (amplitude.y >> 8) * RSDK.Sin256(self->angle) + self->centerPos.y;
-                    }
+                if (self->speed < 0) {
+                    drawPos.x = self->position.x + -(self->amplitude.x >> 8) * RSDK.Cos256(self->angle);
+                    drawPos.y = self->position.y + -(self->amplitude.y >> 8) * RSDK.Sin256(self->angle);
+                }
+                else {
+                    drawPos.x = self->position.x + (self->amplitude.x >> 8) * RSDK.Cos256(self->angle);
+                    drawPos.y = self->position.y + (self->amplitude.y >> 8) * RSDK.Sin256(self->angle);
                 }
 
-                Platform_EditorDraw_Normal();
+                RSDK.DrawSprite(&self->animator, &drawPos, false);
 
                 self->inkEffect = INK_NONE;
 
