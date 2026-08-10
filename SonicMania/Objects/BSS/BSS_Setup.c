@@ -697,6 +697,9 @@ void BSS_Setup_HandleSteppedObjects(void)
                     if (pos >= 0) {
                         ProgressRAM *progress = GameProgress_GetProgressRAM();
                         if (progress) {
+                            int32 goldMedalCount   = progress->goldMedalCount;
+                            int32 silverMedalCount = progress->silverMedalCount;
+
                             uint8 medal = BSS_Setup->playField[fieldPos] == BSS_MEDAL_SILVER ? 1
                                           : BSS_Setup->playField[fieldPos] == BSS_MEDAL_GOLD ? 2
                                                                                              : 0;
@@ -704,11 +707,11 @@ void BSS_Setup_HandleSteppedObjects(void)
                             if (medal)
                                 GameProgress_GiveMedal(pos, medal);
 
-                            if (progress->allGoldMedals && progress->goldMedalCount == 31) {
+                            if (progress->allGoldMedals && goldMedalCount == GAMEPROGRESS_MEDAL_COUNT - 1) {
                                 API_UnlockAchievement(&achievementList[ACH_GOLD_MEDAL]);
                             }
 
-                            if (progress->allSilverMedals && progress->silverMedalCount == 31) {
+                            if (progress->allSilverMedals && silverMedalCount == GAMEPROGRESS_MEDAL_COUNT - 1) {
                                 API_UnlockAchievement(&achievementList[ACH_SILVER_MEDAL]);
                             }
                         }
