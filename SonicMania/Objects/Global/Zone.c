@@ -938,23 +938,25 @@ void Zone_HandlePlayerSwap(void)
     uint8 layerIDs[PLAYER_COUNT][LAYER_COUNT];
 
 #if MANIA_USE_PLUS
-    for (int32 p = 0; p < Player->playerCount; ++p) {
+    for (int32 p = 0; p < Zone->swapPlayerCount; ++p) {
         EntityPlayer *player = RSDK_GET_ENTITY(Zone->preSwapPlayerIDs[p], Player);
         RSDK.CopyEntity(&Zone->entityStorage[p], player, false);
 
-        cameraBoundsL[p]      = Zone->cameraBoundsL[p];
-        cameraBoundsR[p]      = Zone->cameraBoundsR[p];
-        cameraBoundsT[p]      = Zone->cameraBoundsT[p];
-        cameraBoundsB[p]      = Zone->cameraBoundsB[p];
-        playerBoundsL[p]      = Zone->playerBoundsL[p];
-        playerBoundsR[p]      = Zone->playerBoundsR[p];
-        playerBoundsT[p]      = Zone->playerBoundsT[p];
-        playerBoundsB[p]      = Zone->playerBoundsB[p];
-        deathBounds[p]        = Zone->deathBoundary[p];
-        playerBoundActiveL[p] = Zone->playerBoundActiveL[p];
-        playerBoundActiveR[p] = Zone->playerBoundActiveR[p];
-        playerBoundActiveT[p] = Zone->playerBoundActiveT[p];
-        playerBoundActiveB[p] = Zone->playerBoundActiveB[p];
+        int32 id              = Zone->preSwapPlayerIDs[p]; 
+
+        cameraBoundsL[p]      = Zone->cameraBoundsL[id];
+        cameraBoundsR[p]      = Zone->cameraBoundsR[id];
+        cameraBoundsT[p]      = Zone->cameraBoundsT[id];
+        cameraBoundsB[p]      = Zone->cameraBoundsB[id];
+        playerBoundsL[p]      = Zone->playerBoundsL[id];
+        playerBoundsR[p]      = Zone->playerBoundsR[id];
+        playerBoundsT[p]      = Zone->playerBoundsT[id];
+        playerBoundsB[p]      = Zone->playerBoundsB[id];
+        deathBounds[p]        = Zone->deathBoundary[id];
+        playerBoundActiveL[p] = Zone->playerBoundActiveL[id];
+        playerBoundActiveR[p] = Zone->playerBoundActiveR[id];
+        playerBoundActiveT[p] = Zone->playerBoundActiveT[id];
+        playerBoundActiveB[p] = Zone->playerBoundActiveB[id];
 
         for (int32 l = 0; l < LAYER_COUNT; ++l) {
             TileLayer *layer = RSDK.GetTileLayer(l);
@@ -973,7 +975,7 @@ void Zone_HandlePlayerSwap(void)
         RSDK.CopyEntity(&Zone->entityStorage[12 + p], RSDK_GET_ENTITY((2 * Player->playerCount) + Zone->preSwapPlayerIDs[p], ImageTrail), false);
     }
 
-    for (int32 p = 0; p < Player->playerCount; ++p) {
+    for (int32 p = 0; p < Zone->swapPlayerCount; ++p) {
         EntityPlayer *player       = RSDK_GET_ENTITY(Zone->swappedPlayerIDs[p], Player);
         EntityPlayer *storedPlayer = (EntityPlayer *)&Zone->entityStorage[p];
 
@@ -1051,11 +1053,11 @@ void Zone_HandlePlayerSwap(void)
 
         EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + Zone->swappedPlayerIDs[p], Shield);
         RSDK.CopyEntity(shield, &Zone->entityStorage[4 + p], false);
-        shield->player = storedPlayer;
+        shield->player = player;
 
         EntityImageTrail *trail = RSDK_GET_ENTITY((2 * Player->playerCount) + Zone->swappedPlayerIDs[p], ImageTrail);
         RSDK.CopyEntity(trail, &Zone->entityStorage[12 + p], false);
-        trail->player = storedPlayer;
+        trail->player = player;
 
         EntityCamera *cam = player->camera;
         if (cam) {

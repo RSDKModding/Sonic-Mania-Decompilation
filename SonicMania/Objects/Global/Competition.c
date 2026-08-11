@@ -166,7 +166,7 @@ void Competition_ResetOptions(void)
         session->items[p]             = 0;
         session->totalRings[p]        = 0;
         session->wins[p]              = 0;
-        session->lives[p]             = 0;
+        session->lives[p]             = 3;
     }
 }
 
