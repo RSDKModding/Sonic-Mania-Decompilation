@@ -404,7 +404,7 @@ void CompetitionMenu_SetupResultsUI(EntityUIControl *roundControl)
 {
     EntityCompetitionSession *session = CompetitionSession_GetSession();
 
-    int32 offsets[] = { -580000, 0x580000, 0x0, 0x0, -0x7A0000, 0x000000, 0x7A0000, 0x000000, -0x9C0000, -0x340000, 0x340000, 0x9C0000 };
+    int32 offsets[] = { -0x580000, 0x580000, 0x0, 0x0, -0x7A0000, 0x000000, 0x7A0000, 0x000000, -0x9C0000, -0x340000, 0x340000, 0x9C0000 };
 
     int32 offsetPtr = 4 * (session->playerCount - 2);
     for (int32 p = 0; p < PLAYER_COUNT; ++p) {
@@ -862,7 +862,7 @@ void CompetitionMenu_Results_MenuSetupCB(void)
 
         for (int32 r = 0; r < results->numRows; ++r) {
             char buffer[0x40];
-            sprintf_s(buffer, (int32)sizeof(buffer), "%d", session->matchWinner[r]);
+            sprintf_s(buffer, (int32)sizeof(buffer), "%d", r + 1);
 
             if (!SceneInfo->inEditor) {
                 RSDK.InitString(&results->rowText[r], buffer, 0);
