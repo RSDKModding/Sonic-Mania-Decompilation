@@ -302,12 +302,12 @@ void JuggleSaw_StateCrab_ThrowSaw(void)
     RSDK.ProcessAnimation(&self->animator);
 
     if (self->animator.frameID == 3) {
-        EntityJuggleSaw *reciever = self->friends[0];
+        EntityJuggleSaw *receiver = self->friends[0];
 
-        if (reciever->classID == JuggleSaw->classID) {
+        if (receiver->classID == JuggleSaw->classID) {
             RSDK.PlaySfx(JuggleSaw->sfxThrow, false, 0xFF);
-            reciever->hasSaw = JUGGLESAW_AWAITING_SAW;
-            reciever->active = ACTIVE_NORMAL;
+            receiver->hasSaw = JUGGLESAW_AWAITING_SAW;
+            receiver->active = ACTIVE_NORMAL;
 
             EntityJuggleSaw *saw = CREATE_ENTITY(JuggleSaw, INT_TO_VOID(true), self->position.x, self->position.y);
             int32 sx = 0x2C0000, sy = -0xE0000;
@@ -322,22 +322,22 @@ void JuggleSaw_StateCrab_ThrowSaw(void)
             int32 targetX = 0;
             int32 targetY = 0;
             int32 sawDir  = 0;
-            if (reciever->startDir >= FLIP_Y) {
-                targetX = reciever->position.x + 0x220000 * ((reciever->direction & FLIP_X) ? -1 : 1);
-                targetY = reciever->position.y + 0x140000 * (reciever->startPos.y >= self->startPos.y ? 1 : -1);
-                sawDir  = (reciever->direction & FLIP_X) | (reciever->startPos.y >= self->startPos.y ? FLIP_Y : 0);
+            if (receiver->startDir >= FLIP_Y) {
+                targetX = receiver->position.x + 0x220000 * ((receiver->direction & FLIP_X) ? -1 : 1);
+                targetY = receiver->position.y + 0x140000 * (receiver->startPos.y >= self->startPos.y ? 1 : -1);
+                sawDir  = (receiver->direction & FLIP_X) | (receiver->startPos.y >= self->startPos.y ? FLIP_Y : 0);
             }
             else {
-                targetX = reciever->position.x + 0x140000 * (reciever->startPos.x >= self->startPos.x ? 1 : -1);
-                targetY = reciever->position.y + 0x220000 * ((reciever->direction & FLIP_Y) ? 1 : -1);
-                sawDir  = (reciever->direction & FLIP_Y) | (reciever->startPos.x >= self->startPos.x ? FLIP_X : FLIP_NONE);
+                targetX = receiver->position.x + 0x140000 * (receiver->startPos.x >= self->startPos.x ? 1 : -1);
+                targetY = receiver->position.y + 0x220000 * ((receiver->direction & FLIP_Y) ? 1 : -1);
+                sawDir  = (receiver->direction & FLIP_Y) | (receiver->startPos.x >= self->startPos.x ? FLIP_X : FLIP_NONE);
             }
 
             saw->direction    = sawDir;
             int32 targetAngle = RSDK.ATan2(targetX - saw->position.x, targetY - saw->position.y);
             saw->velocity.x   = self->sawSpeed * RSDK.Cos256(targetAngle);
             saw->velocity.y   = self->sawSpeed * RSDK.Sin256(targetAngle);
-            saw->friends[0]   = reciever;
+            saw->friends[0]   = receiver;
             saw->hasSaw       = JUGGLESAW_HAS_SAW;
             saw->active       = ACTIVE_NORMAL;
             self->sawTimer    = 0;
@@ -367,25 +367,25 @@ void JuggleSaw_StateSaw_Handle(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
-    EntityJuggleSaw *reciever = self->friends[0];
-    int32 oldDir              = reciever->direction;
-    reciever->direction       = self->direction;
+    EntityJuggleSaw *receiver = self->friends[0];
+    int32 oldDir              = receiver->direction;
+    receiver->direction       = self->direction;
 
     Hitbox *hitboxGrab = &JuggleSaw->hitboxGrabV;
-    if (reciever->startDir >= FLIP_Y)
+    if (receiver->startDir >= FLIP_Y)
         hitboxGrab = &JuggleSaw->hitboxGrabH;
 
     // I have decided to imortalize this bit of code that the below code replaces because this cost RMG and I at least 4 hours of our lives
     // collectively.
-    // reciever->direction = oldDir;
-    // if (RSDK.CheckObjectCollisionTouchBox(reciever, hitboxGrab, self, &JuggleSaw->hitboxSaw)) {
+    // receiver->direction = oldDir;
+    // if (RSDK.CheckObjectCollisionTouchBox(receiver, hitboxGrab, self, &JuggleSaw->hitboxSaw)) {
 
-    bool32 collided     = RSDK.CheckObjectCollisionTouchBox(reciever, hitboxGrab, self, &JuggleSaw->hitboxSaw);
-    reciever->direction = oldDir;
+    bool32 collided     = RSDK.CheckObjectCollisionTouchBox(receiver, hitboxGrab, self, &JuggleSaw->hitboxSaw);
+    receiver->direction = oldDir;
 
     if (collided) {
         int32 newDir = 0;
-        if (reciever->startDir >= FLIP_Y) {
+        if (receiver->startDir >= FLIP_Y) {
             if (self->velocity.y > 0)
                 newDir = oldDir | FLIP_Y;
             else if (self->velocity.y < 0)
@@ -398,10 +398,10 @@ void JuggleSaw_StateSaw_Handle(void)
                 newDir = oldDir & ~FLIP_X;
         }
 
-        reciever->direction = newDir;
+        receiver->direction = newDir;
 
-        reciever->hasSaw = JUGGLESAW_HAS_SAW;
-        RSDK.SetSpriteAnimation(JuggleSaw->aniFrames, reciever->startDir >= FLIP_Y ? 4 : 1, &reciever->animator, true, 0);
+        receiver->hasSaw = JUGGLESAW_HAS_SAW;
+        RSDK.SetSpriteAnimation(JuggleSaw->aniFrames, receiver->startDir >= FLIP_Y ? 4 : 1, &receiver->animator, true, 0);
         destroyEntity(self);
     }
     else if (RSDK.CheckOnScreen(self, &self->updateRange)) {
