@@ -80,26 +80,26 @@ void Gachapandora_Create(void *data)
                     for (int32 i = GACHAPANDORA_CAPSULE_COUNT - 1; i >= 0; --i) {
                         uint32 id = 0;
 
-                        Gachapandora->capsuleTypeL[i] = RSDK.Rand(0, 6);
-                        id                            = Gachapandora->capsuleTypeL[i] % 3;
+                        do {
+                            do {
+                                Gachapandora->capsuleTypeL[i] = RSDK.Rand(0, 6);
 
-                        while ((id == Gachapandora->lastCapsuleType) || Gachapandora->capsuleCount[id] == 3) {
-                            Gachapandora->capsuleTypeL[i] = RSDK.Rand(0, 6);
-                            id                            = Gachapandora->capsuleTypeL[i] % 3;
-                        }
+                                id = Gachapandora->capsuleTypeL[i] % 3;
+                            } while (id == Gachapandora->lastCapsuleType);
+                        } while (Gachapandora->capsuleCount[id] == 3);
 
                         Gachapandora->lastCapsuleType = Gachapandora->capsuleTypeL[i] % 3;
                         ++Gachapandora->capsuleCount[Gachapandora->lastCapsuleType];
                         Gachapandora->capsuleOffsetL[i] = 4 * capsuleOffset;
                         Gachapandora->capsuleMaxL[i]    = 4 * capsuleOffset;
 
-                        Gachapandora->capsuleTypeR[i] = RSDK.Rand(0, 6);
-                        id                            = Gachapandora->capsuleTypeR[i] % 3;
+                        do {
+                            do {
+                                Gachapandora->capsuleTypeR[i] = RSDK.Rand(0, 6);
 
-                        while ((id == Gachapandora->lastCapsuleType && i) || Gachapandora->capsuleCount[id] == 3) {
-                            Gachapandora->capsuleTypeR[i] = RSDK.Rand(0, 6);
-                            id                            = Gachapandora->capsuleTypeR[i] % 3;
-                        }
+                                id = Gachapandora->capsuleTypeR[i] % 3;
+                            } while (id == Gachapandora->lastCapsuleType && i);
+                        } while (Gachapandora->capsuleCount[id] == 3);
 
                         Gachapandora->lastCapsuleType = Gachapandora->capsuleTypeR[i] % 3;
                         ++Gachapandora->capsuleCount[Gachapandora->lastCapsuleType];
