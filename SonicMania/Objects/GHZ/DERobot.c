@@ -227,14 +227,15 @@ void DERobot_HandleLegMovement(int32 offset)
     foot->onGround   = false;
     int32 storeX     = foot->position.x;
     int32 storeY     = foot->position.y;
-    if (RSDK.ObjectTileGrip(foot, Zone->collisionLayers, CMODE_FLOOR, 0, -0x100000, 0x100000, 32)) {
+    if (RSDK.ObjectTileGrip(foot, Zone->collisionLayers, CMODE_FLOOR, 0, -0x100000, 0x100000, 32) == true) {
+        int32 collideYSL = foot->position.y;
         foot->position.y = storeY;
         if (RSDK.ObjectTileGrip(foot, Zone->collisionLayers, CMODE_FLOOR, 0, 0x100000, 0x100000, 32))
-            foot->rotation = 2 * RSDK.ATan2(32, (foot->position.y >> 16) - (foot->position.y >> 16));
+            foot->rotation = 2 * RSDK.ATan2(32, (foot->position.y >> 16) - (collideYSL >> 16));
     }
     foot->position.x = storeX;
     foot->position.y = storeY;
-    if (RSDK.ObjectTileCollision(foot, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x110000, true))
+    if (RSDK.ObjectTileCollision(foot, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x110000, true) == true)
         foot->onGround = true;
 }
 
