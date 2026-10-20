@@ -82,7 +82,7 @@ void Cylinder_Create(void *data)
 
                 self->hitboxR.left   = self->radius;
                 self->hitboxR.top    = self->length - 64;
-                self->hitboxR.right  = self->length + 112;
+                self->hitboxR.right  = self->radius + 112;
                 self->hitboxR.bottom = self->length;
 
                 self->state = Cylinder_State_Spiral;
