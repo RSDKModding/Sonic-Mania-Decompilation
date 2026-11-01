@@ -77,7 +77,7 @@ typedef struct {
     uint8 dudsRemaining;
     uint8 bubbleFlags;
     int8 bubbleType2;
-    int32 numDuds;
+    uint8 numDuds;
     int32 countdownID;
     bool32 playerInBubble;
     Vector2 size;

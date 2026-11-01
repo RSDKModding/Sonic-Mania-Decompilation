@@ -97,7 +97,7 @@ typedef struct {
     Vector2 lastSpherePos;
     int32 unused3;
     bool32 completedRingLoop;
-    int32 paletteID;
+    uint8 paletteID;
     int32 stopMovement;
     Animator globeSpinAnimator;
     Animator shadowAnimator;

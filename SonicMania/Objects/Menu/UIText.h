@@ -23,7 +23,7 @@ typedef struct {
     String text;
     String tag;
     bool32 selectable;
-    uint16 listID;
+    int32 listID;
     int32 align;
     int32 data0;
     int32 data1;

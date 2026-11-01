@@ -42,7 +42,7 @@ typedef struct {
     bool32 moving;
     uint8 count;
     uint8 stagger;
-    int16 timer;
+    uint8 timer;
     int32 planeFilter;
     int32 stateMove;
     int32 moveOffset;

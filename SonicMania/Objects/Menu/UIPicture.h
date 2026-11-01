@@ -15,8 +15,8 @@ typedef struct {
     int32 listID;
     int32 frameID;
     int32 tag;
-    uint8 zonePalette;
-    int32 zoneID;
+    bool32 zonePalette;
+    uint8 zoneID;
     Animator animator;
 } EntityUIPicture;
 
